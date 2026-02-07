@@ -1,0 +1,25 @@
+name: Greet First-Time Contributors
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Greet first-time contributors
+        uses: actions/first-interaction@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋 Thanks for opening your first issue in this repository!
+            We appreciate your interest and will take a look as soon as possible.
+          pr-message: |
+            🎉 Thanks for your first pull request to this repository!
+            A maintainer will review it soon. In the meantime, please make sure checks pass and feel free to add context in the PR description.
