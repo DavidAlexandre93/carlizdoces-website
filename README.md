@@ -14,3 +14,15 @@ This project is a Node.js React application bundled with Webpack and managed wit
 npm install
 npm run build
 ```
+
+## Deploy na Vercel (erro `missing-public-directory`)
+
+Este projeto gera saída de produção em `dist/` (Webpack), não em `public/`.
+
+Para evitar o erro **Missing public directory** na Vercel:
+
+1. Use `vercel.json` com `outputDirectory: "dist"`.
+2. Mantenha `buildCommand` como `npm run build`.
+3. Em projetos SPA, preserve o rewrite para `index.html`.
+
+As configurações já estão aplicadas no repositório.
