@@ -3,7 +3,9 @@ import './App.css'
 const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
-  { label: 'Contato', sectionId: 'contato' },
+  { label: 'Realizar Pedido', sectionId: 'realizar-pedido' },
+  { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
+  { label: 'contato', sectionId: 'contato' },
 ]
 
 const products = [
