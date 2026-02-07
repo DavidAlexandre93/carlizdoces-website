@@ -74,6 +74,23 @@
   margin: 10px 0;
 }
 
+.summary-band {
+  background: #e6bfd2;
+  margin: 36px 0 60px;
+  padding: 64px 24px;
+}
+
+.summary-band h2 {
+  font-size: 58px;
+  margin: 0 0 18px;
+}
+
+.summary-band p {
+  max-width: 1100px;
+  margin: 0 auto;
+  font-size: 34px;
+}
+
 .photo-band {
   max-width: 1500px;
   margin: 36px auto 60px;
@@ -175,6 +192,14 @@
 
   .content-block p,
   .contact-band p {
+    font-size: 26px;
+  }
+
+  .summary-band h2 {
+    font-size: 44px;
+  }
+
+  .summary-band p {
     font-size: 26px;
   }
 
