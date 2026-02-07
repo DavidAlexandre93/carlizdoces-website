@@ -12,7 +12,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background: #fdebf2;
+  background: radial-gradient(circle at top, #ffe7f2 0%, #fdebf2 40%, #fae3ee 100%);
 }
