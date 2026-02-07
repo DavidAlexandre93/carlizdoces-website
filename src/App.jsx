@@ -51,12 +51,11 @@ export default function App() {
         <h1>Carliz Doces</h1>
       </section>
 
-      <section id="quem-somos" className="content-block centered">
-        <div className="section-icon">🧁</div>
+      <section id="quem-somos" className="summary-band centered">
         <h2>QUEM SOMOS</h2>
         <p>
-          A Carliz Doces é uma confeitaria artesanal focada em experiências doces para festas, eventos
-          corporativos e datas especiais.
+          Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
+          ovos de páscoa.
         </p>
       </section>
 
