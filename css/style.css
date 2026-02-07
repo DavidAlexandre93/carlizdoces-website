@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Source Serif 4", serif;
+}
+
+body {
+  background-color: white ;
+}
+
+/* Cabeçalho do site */
+header {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#header-container {
+  width: 1440px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#header-container img {
+  width: 60px;
+  height: 60px;
+}
+
+#header-container #header-menu-links {
+  width: 344px;
+  height: 20px;
+}
+
+#header-container #header-menu-links .menu-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+}
+
+#header-container #header-menu-links .menu-links a {
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 10px;
+  color: #000000;
+  cursor: pointer;
+}
+
+#header-container #header-menu-links .menu-links a:hover {
+  background-color: #A68181;
+}
+
+/* Conteudo inicial - main */
+#main-container {
+  width: 100%;
+  height: 636px;
+}
+
+#main-container #main-background {
+  position: relative;
+  height: 636px;
+  width: 1440px;
+  margin: 0 auto;
+  background-image: url(../imagens/painel.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+} 
+
+#main-container #main-background h1 {
+  position: absolute;
+  top: 290px;
+  left: 369px;
+  color: white;
+  font-size: 60px;
+}
+
+/* sessão sobre */
+.section-container {
+  width: 100%;
+  height: 630px;
+}
+
+.section-container .section-sobre {
+  position: relative;
+  top: 120px;
+  width: 702px;
+  height: 402px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0px auto 0px auto;
+}
+
+.section-container .section-sobre .section-logo {
+  width: 170px;
+  height: 170px;
+}
+
+.section-container .section-sobre .section-tittle {
+  font-size: 45px;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+.section-container .section-sobre .section-paragrafo {
+  font-size: 18px;
+  color: #000000;
+  text-align: center;
+}
+
+/* sessão de imagens */
+#section-cupcakes {
+  position: relative;
+  width: 1440px;
+  height: 600px;
+  margin: 0 auto 0 auto;
+}
+
+#section-cupcakes #section-box-imgCupcakes {
+  height: 600px;
+  width: 100%;
+}
+
+#section-cupcakes #section-box-imgCupcakes #section-imgcupcake01 {
+  width: 720px;
+  height: 600px;
+}
+
+#section-cupcakes #section-box-imgCupcakes #section-imgcupcake02 {
+  position: relative;
+  right: 2px;
+  width: 716.2px;
+  height: 300px;
+}
+
+/* Box de imagens de cupcake 2 */
+#sectiong-box-img-Cupcakes2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 720px;
+  width: 720px;
+  height: 300px;
+}
+
+#section-cupcakes #section-box-imgCupcakes .section-imgcupcakes {
+  width: 360px;
+  height: 300px;
+}
+
+/* Parágrafo de localização da confeitaria */
+.section-paragrafo-localization {
+  font-size: 22px;
+}
+
+/* Sessão de contato  */
+#section-contato {
+  background-image: url(../imagens/fundo-contato.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 750px;
+}
+
+#section-contato #section-containercontatos {
+  width: 400px;
+  height: 300px;
+  position: relative;
+  top: 250px;
+  left: 1000px;
+}
+
+#section-contato #section-containercontatos h2 {
+  color: #fff;
+  font-size: 45px;
+}
+
+#section-contato #section-containercontatos #section-contatolist {
+  margin-top: 20px;
+  width: 400px;
+  height: 200px;
+}
+
+#section-contato #section-containercontatos #section-contatolist p {
+  font-size: 25px;
+  color: #fff;
+}
+
+/* rodape */
+footer {
+  background-image: url(../imagens/fundo-rodape.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 211px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#footer-container {
+  width: 1440px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#footer-container #footer-menu-links {
+  width: 344px;
+  height: 20px;
+}
+
+#footer-container #footer-menu-links .menu-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+}
+
+#footer-container #footer-menu-links .menu-links a {
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+#footer-container #footer-menu-links .menu-links a:hover {
+  background-color: #A68181;
+}
+
+footer p {
+  position: relative;
+  top: 80px;
+  left: -1440px;
+  color: white;
+}
+#footer-contatosocial {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 150px;
+  margin-left: -205px;
+  width: 80px;
+  height: 20px;
+}
+
+#footer-contatosocial a {
+  color: white;
+  transition: 0.8s;
+}
+
+#footer-contatosocial a:hover {
+  transform: translateY(-10px);
+  transition: 0.8s;
+}
