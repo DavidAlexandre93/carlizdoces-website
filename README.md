@@ -15,14 +15,24 @@ npm install
 npm run build
 ```
 
-## Deploy na Vercel (erro `missing-public-directory`)
+## Deploy na Vercel
 
-Este projeto gera saída de produção em `dist/` (Webpack), não em `public/`.
+Este projeto gera saída de produção em `dist/` (Webpack), não em `build/` ou `public/`.
 
-Para evitar o erro **Missing public directory** na Vercel:
+### Fonte da verdade
 
-1. Use `vercel.json` com `outputDirectory: "dist"`.
-2. Mantenha `buildCommand` como `npm run build`.
-3. Em projetos SPA, preserve o rewrite para `index.html`.
+As configurações de deploy ficam no arquivo [`vercel.json`](./vercel.json):
 
-As configurações já estão aplicadas no repositório.
+- `framework`: `other`
+- `installCommand`: `npm ci --include=dev`
+- `buildCommand`: `npm run build`
+- `outputDirectory`: `dist`
+
+### Ajuste recomendado no painel da Vercel
+
+Para evitar conflitos entre **Production Overrides** e **Project Settings**:
+
+1. Configure os **Project Settings** com os mesmos valores do `vercel.json`; **ou**
+2. Remova os **overrides** e deixe a Vercel seguir apenas o `vercel.json`.
+
+Se houver divergência, a Vercel mostrará aviso de configuração diferente entre deployment e projeto.
