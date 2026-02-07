@@ -1,8 +1,5 @@
 import { useMemo, useState } from 'react'
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Alert,
   AppBar,
   Avatar,
@@ -29,8 +26,6 @@ import {
   FormGroup,
   Grid,
   IconButton,
-  ImageList,
-  ImageListItem,
   InputAdornment,
   LinearProgress,
   Link,
@@ -47,14 +42,12 @@ import {
   StepLabel,
   Stepper,
   Switch,
-  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Tabs,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -64,24 +57,30 @@ import {
   styled,
 } from '@mui/material'
 
-const navItems = ['Quem somos', 'Onde estamos', 'Realizar Pedido', 'Ovos de páscoa', 'contato']
+const navItems = [
+  { label: 'Quem somos', sectionId: 'quem-somos' },
+  { label: 'Onde estamos', sectionId: 'onde-estamos' },
+  { label: 'Realizar Pedido', sectionId: 'realizar-pedido' },
+  { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
+  { label: 'Contato', sectionId: 'contato' },
+]
 
 const products = [
   {
-    name: 'Brigadeiro Gourmet',
-    price: 'R$ 6,00',
+    name: 'Ovo Brigadeiro Gourmet',
+    price: 'R$ 59,00',
     rating: 5,
     image: '/images/brigadeiro.svg',
   },
   {
-    name: 'Ninho com Nutella',
-    price: 'R$ 8,50',
+    name: 'Ovo Ninho com Nutella',
+    price: 'R$ 68,50',
     rating: 4,
     image: '/images/ninho-nutella.svg',
   },
   {
-    name: 'Prestígio Cremoso',
-    price: 'R$ 7,00',
+    name: 'Ovo Prestígio Cremoso',
+    price: 'R$ 62,00',
     rating: 5,
     image: '/images/prestigio.svg',
   },
@@ -99,8 +98,12 @@ const HeroCard = styled(Paper)(({ theme }) => ({
   background: 'linear-gradient(135deg, #ffe4ec 0%, #f7c7d9 100%)',
 }))
 
+const Band = styled(Box)(({ theme }) => ({
+  paddingBlock: theme.spacing(5),
+  borderBottom: '1px solid #f1d8e1',
+}))
+
 const Section = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
   padding: theme.spacing(3),
   borderRadius: 20,
   border: '1px solid #f2d5df',
@@ -113,13 +116,17 @@ const ProductCard = styled(Card)(() => ({
 
 export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [tab, setTab] = useState(0)
   const [delivery, setDelivery] = useState('retirada')
   const [sweetness, setSweetness] = useState(60)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [snackOpen, setSnackOpen] = useState(false)
 
   const completion = useMemo(() => (delivery === 'retirada' ? 72 : 88), [delivery])
+
+  const scrollToSection = (sectionId) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setDrawerOpen(false)
+  }
 
   return (
     <Box sx={{ bgcolor: '#fff8fb', minHeight: '100vh' }}>
@@ -137,8 +144,8 @@ export default function App() {
             Carliz Doces
           </Typography>
           <ButtonGroup variant="outlined" size="small">
-            <Button>Cardápio</Button>
-            <Button>Ofertas</Button>
+            <Button onClick={() => scrollToSection('ovos-de-pascoa')}>Cardápio</Button>
+            <Button onClick={() => scrollToSection('realizar-pedido')}>Pedidos</Button>
           </ButtonGroup>
         </Toolbar>
       </AppBar>
@@ -150,8 +157,14 @@ export default function App() {
           <Typography variant="h6">Navegação</Typography>
           <List>
             {navItems.map((item) => (
-              <ListItem key={item} disablePadding>
-                <Button fullWidth sx={{ justifyContent: 'flex-start', p: 1.2 }}>{item}</Button>
+              <ListItem key={item.sectionId} disablePadding>
+                <Button
+                  fullWidth
+                  sx={{ justifyContent: 'flex-start', p: 1.2 }}
+                  onClick={() => scrollToSection(item.sectionId)}
+                >
+                  {item.label}
+                </Button>
               </ListItem>
             ))}
           </List>
@@ -165,39 +178,161 @@ export default function App() {
           </Link>
           <Typography color="text.primary">Loja</Typography>
         </Breadcrumbs>
+      </Container>
 
-        <HeroCard elevation={0}>
-          <Stack spacing={2}>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Badge badgeContent="Novo" color="secondary">
-                <Avatar sx={{ bgcolor: '#ad1457' }}>CD</Avatar>
-              </Badge>
-              <Typography variant="h4" fontWeight={700}>
-                Doçura artesanal com componentes MUI + styled
+      <Band id="quem-somos" sx={{ backgroundColor: '#fff8fb' }}>
+        <Container maxWidth="lg">
+          <HeroCard elevation={0}>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Badge badgeContent="Novo" color="secondary">
+                  <Avatar sx={{ bgcolor: '#ad1457' }}>CD</Avatar>
+                </Badge>
+                <Typography variant="h4" fontWeight={700}>
+                  Quem somos
+                </Typography>
+              </Stack>
+              <Typography>
+                A Carliz Doces é uma confeitaria artesanal focada em experiências doces para festas, eventos
+                corporativos e datas especiais.
               </Typography>
+              <Alert severity="success">Pedidos para festas com 15% de desconto até sexta-feira.</Alert>
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                <Chip label="Sem conservantes" color="primary" />
+                <Chip label="Entrega rápida" color="secondary" />
+                <Chip label="Produção do dia" />
+              </Stack>
             </Stack>
-            <Typography>
-              Esta página demonstra uma vitrine moderna usando vários componentes do Material UI estilizados com
-              <strong> styled components</strong>.
+          </HeroCard>
+        </Container>
+      </Band>
+
+      <Band id="onde-estamos" sx={{ backgroundColor: '#fff3f7' }}>
+        <Container maxWidth="lg">
+          <Section elevation={0}>
+            <Typography variant="h5" gutterBottom>
+              Onde estamos
             </Typography>
-            <Alert severity="success">Pedidos para festas com 15% de desconto até sexta-feira.</Alert>
-            <Stack direction="row" spacing={1} flexWrap="wrap">
-              <Chip label="Sem conservantes" color="primary" />
-              <Chip label="Entrega rápida" color="secondary" />
-              <Chip label="Produção do dia" />
+            <Typography color="text.secondary" sx={{ mb: 2 }}>
+              Rua dos Doces, 145 - Centro, São Paulo - SP. Atendemos retirada e entregas locais com agendamento.
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Paper variant="outlined" sx={{ p: 2, borderRadius: 3 }}>
+                  <Typography fontWeight={600}>Horário de atendimento</Typography>
+                  <Typography>Segunda a Sábado • 09h às 19h</Typography>
+                  <Typography>Domingo • 10h às 15h</Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Paper variant="outlined" sx={{ p: 2, borderRadius: 3 }}>
+                  <Typography fontWeight={600}>Referência</Typography>
+                  <Typography>Próximo à Praça Central e estação de metrô.</Typography>
+                  <Button sx={{ mt: 1 }} variant="outlined">
+                    Ver rota
+                  </Button>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Section>
+        </Container>
+      </Band>
+
+      <Band id="realizar-pedido" sx={{ backgroundColor: '#fff8fb' }}>
+        <Container maxWidth="lg">
+          <Section elevation={0}>
+            <Typography variant="h5" gutterBottom>
+              Realizar Pedido
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Stack spacing={2}>
+                  <TextField
+                    fullWidth
+                    label="Seu nome"
+                    placeholder="Ex: Carla"
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">👩‍🍳</InputAdornment>,
+                    }}
+                  />
+                  <FormControl fullWidth>
+                    <Select value={delivery} onChange={(e) => setDelivery(e.target.value)}>
+                      <MenuItem value="retirada">Retirada na loja</MenuItem>
+                      <MenuItem value="entrega">Entrega local</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Box>
+                    <Typography gutterBottom>Nível de doçura ideal</Typography>
+                    <Slider value={sweetness} onChange={(_, v) => setSweetness(v)} valueLabelDisplay="auto" />
+                  </Box>
+                  <FormGroup>
+                    <FormControlLabel control={<Switch defaultChecked />} label="Embalagem presenteável" />
+                    <FormControlLabel control={<Switch />} label="Adicionar mensagem personalizada" />
+                  </FormGroup>
+                </Stack>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TableContainer component={Paper} variant="outlined">
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Métrica</TableCell>
+                        <TableCell align="right">Valor</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {metrics.map(([label, value]) => (
+                        <TableRow key={label}>
+                          <TableCell>{label}</TableCell>
+                          <TableCell align="right">{value}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body2" gutterBottom>
+                    Progresso de disponibilidade hoje
+                  </Typography>
+                  <LinearProgress variant="determinate" value={completion} />
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Stepper sx={{ mt: 3 }} activeStep={1} alternativeLabel>
+              <Step>
+                <StepLabel>Escolha os sabores</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Defina personalizações</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>Finalize o pedido</StepLabel>
+              </Step>
+            </Stepper>
+
+            <Stack direction="row" spacing={2} sx={{ mt: 2, flexWrap: 'wrap' }}>
+              <ToggleButtonGroup exclusive value={delivery} onChange={(_, value) => value && setDelivery(value)}>
+                <ToggleButton value="retirada">Retirada</ToggleButton>
+                <ToggleButton value="entrega">Entrega</ToggleButton>
+              </ToggleButtonGroup>
+              <Button variant="contained" onClick={() => setDialogOpen(true)}>
+                Revisar pedido
+              </Button>
             </Stack>
-          </Stack>
-        </HeroCard>
+          </Section>
+        </Container>
+      </Band>
 
-        <Section elevation={0}>
-          <Tabs value={tab} onChange={(_, value) => setTab(value)}>
-            <Tab label="Destaques" />
-            <Tab label="Sabores" />
-            <Tab label="Depoimentos" />
-          </Tabs>
-          <Divider sx={{ my: 2 }} />
-
-          {tab === 0 && (
+      <Band id="ovos-de-pascoa" sx={{ backgroundColor: '#fff3f7' }}>
+        <Container maxWidth="lg">
+          <Section elevation={0}>
+            <Typography variant="h5" gutterBottom>
+              Ovos de páscoa
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
             <Grid container spacing={2}>
               {products.map((item) => (
                 <Grid item xs={12} md={4} key={item.name}>
@@ -219,117 +354,33 @@ export default function App() {
                 </Grid>
               ))}
             </Grid>
-          )}
+          </Section>
+        </Container>
+      </Band>
 
-          {tab === 1 && (
-            <ImageList cols={3} gap={12} sx={{ m: 0 }}>
-              {['ninho.svg', 'ferrero.svg', 'trufado-maracuja.svg'].map((img) => (
-                <ImageListItem key={img}>
-                  <img src={`/images/${img}`} alt={img} loading="lazy" />
-                </ImageListItem>
-              ))}
-            </ImageList>
-          )}
+      <Band id="contato" sx={{ backgroundColor: '#fff8fb' }}>
+        <Container maxWidth="lg">
+          <Section elevation={0}>
+            <Typography variant="h5" gutterBottom>
+              Contato
+            </Typography>
+            <Typography sx={{ mb: 2 }} color="text.secondary">
+              Fale com a nossa equipe para encomendas especiais e eventos.
+            </Typography>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+              <TextField fullWidth label="E-mail" placeholder="voce@email.com" />
+              <TextField fullWidth label="Telefone" placeholder="(11) 99999-9999" />
+              <Button variant="contained">Enviar</Button>
+            </Stack>
+          </Section>
+        </Container>
+      </Band>
 
-          {tab === 2 && (
-            <Accordion defaultExpanded>
-              <AccordionSummary>Por que escolher a Carliz?</AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Atendimento humano, ingredientes de qualidade e personalização para aniversários, casamentos e
-                  empresas.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          )}
-        </Section>
-
-        <Section elevation={0}>
-          <Typography variant="h5" gutterBottom>
-            Monte seu pedido
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Stack spacing={2}>
-                <TextField
-                  fullWidth
-                  label="Seu nome"
-                  placeholder="Ex: Carla"
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">👩‍🍳</InputAdornment>,
-                  }}
-                />
-                <FormControl fullWidth>
-                  <Select value={delivery} onChange={(e) => setDelivery(e.target.value)}>
-                    <MenuItem value="retirada">Retirada na loja</MenuItem>
-                    <MenuItem value="entrega">Entrega local</MenuItem>
-                  </Select>
-                </FormControl>
-                <Box>
-                  <Typography gutterBottom>Nível de doçura ideal</Typography>
-                  <Slider value={sweetness} onChange={(_, v) => setSweetness(v)} valueLabelDisplay="auto" />
-                </Box>
-                <FormGroup>
-                  <FormControlLabel control={<Switch defaultChecked />} label="Embalagem presenteável" />
-                  <FormControlLabel control={<Switch />} label="Adicionar mensagem personalizada" />
-                </FormGroup>
-              </Stack>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TableContainer component={Paper} variant="outlined">
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Métrica</TableCell>
-                      <TableCell align="right">Valor</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {metrics.map(([label, value]) => (
-                      <TableRow key={label}>
-                        <TableCell>{label}</TableCell>
-                        <TableCell align="right">{value}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" gutterBottom>
-                  Progresso de disponibilidade hoje
-                </Typography>
-                <LinearProgress variant="determinate" value={completion} />
-              </Box>
-            </Grid>
-          </Grid>
-
-          <Stepper sx={{ mt: 3 }} activeStep={1} alternativeLabel>
-            <Step>
-              <StepLabel>Escolha os sabores</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Defina personalizações</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Finalize o pedido</StepLabel>
-            </Step>
-          </Stepper>
-
-          <Stack direction="row" spacing={2} sx={{ mt: 2, flexWrap: 'wrap' }}>
-            <ToggleButtonGroup exclusive value={delivery} onChange={(_, value) => value && setDelivery(value)}>
-              <ToggleButton value="retirada">Retirada</ToggleButton>
-              <ToggleButton value="entrega">Entrega</ToggleButton>
-            </ToggleButtonGroup>
-            <Button variant="contained" onClick={() => setDialogOpen(true)}>
-              Revisar pedido
-            </Button>
-          </Stack>
-        </Section>
-      </Container>
-
-      <Fab color="secondary" sx={{ position: 'fixed', right: 24, bottom: 24 }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+      <Fab
+        color="secondary"
+        sx={{ position: 'fixed', right: 24, bottom: 24 }}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
         ↑
       </Fab>
 
