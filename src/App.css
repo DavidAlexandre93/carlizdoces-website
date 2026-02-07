@@ -105,27 +105,17 @@
   justify-content: space-between;
 }
 
-.contact-hero {
-  background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
-    url('../public/images/banner-carliz.svg') center/cover no-repeat;
-  min-height: 540px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  padding: 24px;
+.contact-band {
+  background: #e6bfd2;
+  padding: 56px 24px;
 }
 
-.contact-hero div {
-  max-width: 760px;
-}
-
-.contact-hero h2 {
-  font-size: 64px;
+.contact-band h2 {
+  font-size: 58px;
   margin: 0 0 20px;
 }
 
-.contact-hero p {
+.contact-band p {
   font-size: 34px;
   margin: 10px 0;
 }
@@ -184,7 +174,7 @@
   }
 
   .content-block p,
-  .contact-hero p {
+  .contact-band p {
     font-size: 26px;
   }
 
@@ -192,7 +182,7 @@
     grid-template-columns: 1fr;
   }
 
-  .contact-hero h2 {
+  .contact-band h2 {
     font-size: 46px;
   }
 }
