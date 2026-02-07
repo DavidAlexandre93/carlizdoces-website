@@ -3,21 +3,50 @@ import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
 import { QueryClient, QueryClientProvider, useQuery } from 'https://esm.sh/@tanstack/react-query@5.59.16';
 import htm from 'https://esm.sh/htm@3.1.1';
 import { BRL, EASTER_ENABLED_DEFAULT, PHONE, fetchCatalog } from './catalog-data.js';
+import type { CatalogData, Product } from './catalog-data.js';
+
 const html = htm.bind(React.createElement);
 const queryClient = new QueryClient();
+
+type Cart = Record<string, number>;
+
+interface SelectedProduct extends Product {
+  qty: number;
+}
+
+interface ProductCardProps {
+  product: Product;
+  qty: number;
+  onAdd: () => void;
+  onRemove: () => void;
+  badge?: string;
+}
+
+interface EasterToggleProps {
+  showEaster: boolean;
+  onToggle: () => void;
+}
+
+interface OrderSummaryProps {
+  selectedProducts: SelectedProduct[];
+  subtotal: number;
+  onSend: () => void;
+}
+
 function Header() {
-    return html `<section className="rounded-3xl bg-gradient-to-r from-carliz-pink to-fuchsia-400 p-6 text-white shadow-lg md:p-10">
+  return html`<section className="rounded-3xl bg-gradient-to-r from-carliz-pink to-fuchsia-400 p-6 text-white shadow-lg md:p-10">
     <p className="mb-2 text-sm font-medium uppercase tracking-wider">Landing page oficial</p>
     <h1 className="mb-2 text-4xl font-black">Carliz doces</h1>
     <p className="max-w-2xl text-white/95">Doces artesanais para momentos especiais. Monte seu pedido e envie direto no WhatsApp em um clique.</p>
   </section>`;
 }
-function ProductCard({ product, qty, onAdd, onRemove, badge }) {
-    return html `
+
+function ProductCard({ product, qty, onAdd, onRemove, badge }: ProductCardProps) {
+  return html`
     <article className="rounded-2xl border border-carliz-pink/20 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-2">
         <h3 className="font-semibold text-carliz-dark">${product.name}</h3>
-        ${badge ? html `<span className="rounded-full bg-carliz-pink px-2 py-1 text-xs font-medium text-white">${badge}</span>` : null}
+        ${badge ? html`<span className="rounded-full bg-carliz-pink px-2 py-1 text-xs font-medium text-white">${badge}</span>` : null}
       </div>
       <p className="mb-3 text-lg font-bold text-carliz-pink">${BRL.format(product.price)}</p>
       <div className="flex items-center gap-3">
@@ -40,8 +69,9 @@ function ProductCard({ product, qty, onAdd, onRemove, badge }) {
     </article>
   `;
 }
-function EasterToggle({ showEaster, onToggle }) {
-    return html `
+
+function EasterToggle({ showEaster, onToggle }: EasterToggleProps) {
+  return html`
     <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
@@ -58,16 +88,19 @@ function EasterToggle({ showEaster, onToggle }) {
     </section>
   `;
 }
-function OrderSummary({ selectedProducts, subtotal, onSend }) {
-    return html `
+
+function OrderSummary({ selectedProducts, subtotal, onSend }: OrderSummaryProps) {
+  return html`
     <section className="mt-8 rounded-2xl bg-white p-5 shadow-md">
       <h2 className="text-2xl font-bold text-carliz-dark">Resumo do pedido</h2>
       ${selectedProducts.length
-        ? html `<ul className="mt-4 space-y-2 text-sm text-slate-700">
-              ${selectedProducts.map((item) => html `<li key=${item.id}>${item.qty}x ${item.name} — <strong>${BRL.format(item.qty * item.price)}</strong></li>`)}
+        ? html`<ul className="mt-4 space-y-2 text-sm text-slate-700">
+              ${selectedProducts.map((item: SelectedProduct) =>
+                html`<li key=${item.id}>${item.qty}x ${item.name} — <strong>${BRL.format(item.qty * item.price)}</strong></li>`
+              )}
             </ul>
             <p className="mt-4 text-lg font-bold text-carliz-pink">Total: ${BRL.format(subtotal)}</p>`
-        : html `<p className="mt-4 text-slate-600">Nenhum item selecionado ainda.</p>`}
+        : html`<p className="mt-4 text-slate-600">Nenhum item selecionado ainda.</p>`}
 
       <button
         onClick=${onSend}
@@ -78,68 +111,89 @@ function OrderSummary({ selectedProducts, subtotal, onSend }) {
     </section>
   `;
 }
+
 function App() {
-    const urlFlag = new URLSearchParams(window.location.search).get('pascoa');
-    const [showEaster, setShowEaster] = useState(urlFlag === 'off' ? false : EASTER_ENABLED_DEFAULT);
-    const [cart, setCart] = useState({});
-    const queryResult = useQuery({
-        queryKey: ['catalog'],
-        queryFn: fetchCatalog,
-    });
-    const { data, isLoading } = queryResult;
-    const allProducts = useMemo(() => {
-        if (!data) {
-            return [];
-        }
-        return showEaster ? [...data.regularProducts, ...data.easterProducts] : [...data.regularProducts];
-    }, [data, showEaster]);
-    const selectedProducts = useMemo(() => allProducts.filter((item) => (cart[item.id] || 0) > 0).map((item) => ({ ...item, qty: cart[item.id] || 0 })), [allProducts, cart]);
-    const subtotal = selectedProducts.reduce((total, item) => total + item.qty * item.price, 0);
-    const updateQty = (id, increment) => {
-        setCart((current) => {
-            const next = Math.max((current[id] || 0) + increment, 0);
-            return { ...current, [id]: next };
-        });
-    };
-    const sendWhatsAppOrder = () => {
-        if (!selectedProducts.length) {
-            window.alert('Selecione ao menos um produto antes de realizar o pedido.');
-            return;
-        }
-        const items = selectedProducts
-            .map((item) => `- ${item.name} | Qtd: ${item.qty} | ${BRL.format(item.price * item.qty)}`)
-            .join('%0A');
-        const message = `Olá, Carliz doces! Tenho interesse em realizar um pedido:%0A%0A${items}%0A%0ATotal estimado: ${BRL.format(subtotal)}.%0A%0APode me ajudar com disponibilidade, entrega e pagamento?`;
-        window.open(`https://wa.me/${PHONE}?text=${message}`, '_blank');
-    };
-    if (isLoading || !data) {
-        return html `<main className="mx-auto max-w-4xl p-8"><p className="text-center text-carliz-dark">Carregando cardápio...</p></main>`;
+  const urlFlag = new URLSearchParams(window.location.search).get('pascoa');
+  const [showEaster, setShowEaster] = useState(urlFlag === 'off' ? false : EASTER_ENABLED_DEFAULT) as [boolean, (value: boolean | ((current: boolean) => boolean)) => void];
+  const [cart, setCart] = useState({}) as [Cart, (update: (current: Cart) => Cart) => void];
+
+  const queryResult = useQuery({
+    queryKey: ['catalog'],
+    queryFn: fetchCatalog,
+  }) as { data?: CatalogData; isLoading: boolean };
+
+  const { data, isLoading } = queryResult;
+
+  const allProducts = useMemo(() => {
+    if (!data) {
+      return [] as Product[];
     }
-    return html `
+
+    return showEaster ? [...data.regularProducts, ...data.easterProducts] : [...data.regularProducts];
+  }, [data, showEaster]) as Product[];
+
+  const selectedProducts = useMemo(
+    () => allProducts.filter((item: Product) => (cart[item.id] || 0) > 0).map((item: Product) => ({ ...item, qty: cart[item.id] || 0 })),
+    [allProducts, cart]
+  ) as SelectedProduct[];
+
+  const subtotal = selectedProducts.reduce((total: number, item: SelectedProduct) => total + item.qty * item.price, 0);
+
+  const updateQty = (id: string, increment: number): void => {
+    setCart((current: Cart) => {
+      const next = Math.max((current[id] || 0) + increment, 0);
+      return { ...current, [id]: next };
+    });
+  };
+
+  const sendWhatsAppOrder = (): void => {
+    if (!selectedProducts.length) {
+      window.alert('Selecione ao menos um produto antes de realizar o pedido.');
+      return;
+    }
+
+    const items = selectedProducts
+      .map((item: SelectedProduct) => `- ${item.name} | Qtd: ${item.qty} | ${BRL.format(item.price * item.qty)}`)
+      .join('%0A');
+
+    const message = `Olá, Carliz doces! Tenho interesse em realizar um pedido:%0A%0A${items}%0A%0ATotal estimado: ${BRL.format(subtotal)}.%0A%0APode me ajudar com disponibilidade, entrega e pagamento?`;
+
+    window.open(`https://wa.me/${PHONE}?text=${message}`, '_blank');
+  };
+
+  if (isLoading || !data) {
+    return html`<main className="mx-auto max-w-4xl p-8"><p className="text-center text-carliz-dark">Carregando cardápio...</p></main>`;
+  }
+
+  return html`
     <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-8 md:px-8">
       <${Header} />
-      <${EasterToggle} showEaster=${showEaster} onToggle=${() => setShowEaster((value) => !value)} />
+      <${EasterToggle} showEaster=${showEaster} onToggle=${() => setShowEaster((value: boolean) => !value)} />
 
       <section className="mt-6">
         <h2 className="mb-4 text-2xl font-bold text-carliz-dark">Escolha seus produtos</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          ${data.regularProducts.map((product) => html `<${ProductCard}
+          ${data.regularProducts.map(
+            (product: Product) => html`<${ProductCard}
               key=${product.id}
               product=${product}
               qty=${cart[product.id] || 0}
               onAdd=${() => updateQty(product.id, 1)}
               onRemove=${() => updateQty(product.id, -1)}
-            />`)}
+            />`
+          )}
           ${showEaster
-        ? data.easterProducts.map((product) => html `<${ProductCard}
+            ? data.easterProducts.map(
+                (product: Product) => html`<${ProductCard}
                   key=${product.id}
                   product=${product}
                   qty=${cart[product.id] || 0}
                   onAdd=${() => updateQty(product.id, 1)}
                   onRemove=${() => updateQty(product.id, -1)}
                   badge="Páscoa"
-                />`)
-        : null}
+                />`
+              )
+            : null}
         </div>
       </section>
 
@@ -147,8 +201,11 @@ function App() {
     </main>
   `;
 }
+
 const rootElement = document.getElementById('root');
+
 if (!rootElement) {
-    throw new Error('Elemento #root não encontrado para renderizar o app.');
+  throw new Error('Elemento #root não encontrado para renderizar o app.');
 }
-createRoot(rootElement).render(html `<${QueryClientProvider} client=${queryClient}><${App} /></${QueryClientProvider}>`);
+
+createRoot(rootElement).render(html`<${QueryClientProvider} client=${queryClient}><${App} /></${QueryClientProvider}>`);

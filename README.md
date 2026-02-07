@@ -10,14 +10,20 @@ Landing page da Carliz doces com catálogo em ReactJS e interface construída co
 - Botão **Realizar solicitação** com redirecionamento para WhatsApp já com mensagem pronta.
 
 ## Tecnologias
+- TypeScript (fonte tipada)
 - ReactJS (via ESM no navegador)
 - Tailwind CSS (CDN)
 - TanStack Query (`useQuery`)
 
 ## Estrutura
 - `index.html`: base da aplicação e configuração do Tailwind.
-- `js/app.js`: componentes React e fluxo da página.
-- `js/catalog-data.js`: dados do catálogo e utilitários.
+- `src/app.ts`: aplicação React com componentes, props e estado tipados.
+- `src/catalog-data.ts`: interfaces e dados tipados do catálogo.
+- `js/*.js`: JavaScript gerado pelo compilador TypeScript para execução no navegador.
+
+## Desenvolvimento
+- Gerar build JS a partir do TypeScript: `tsc --project tsconfig.json`
+- Validar tipagem sem gerar arquivos: `tsc --project tsconfig.json --noEmit`
 
 ## Número para pedidos
 - +55 11 99217-5496
