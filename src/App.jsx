@@ -1,8 +1,8 @@
 import './App.css'
 
 const navItems = [
-  { label: 'Quem Somos', sectionId: 'quem-somos' },
-  { label: 'Onde estamos', sectionId: 'onde-estamos' },
+  { label: 'Quem somos', sectionId: 'quem-somos' },
+  { label: 'Onde estamos', sectionId: 'onde-estamos-band' },
   { label: 'Realizar Pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
   { label: 'contato', sectionId: 'contato' },
@@ -74,10 +74,14 @@ export default function App() {
       <section id="onde-estamos" className="content-block centered">
         <div className="section-icon">🧁</div>
         <h2>ONDE ESTAMOS</h2>
-        <p>Rua dos Doces, 145 - Centro, São Paulo - SP.</p>
+        <p>Visite nossa loja para retirada e encomendas presenciais.</p>
         <p>Atendemos retirada e entregas locais com agendamento.</p>
         <p>Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</p>
         <p>Próximo à Praça Central e estação de metrô.</p>
+      </section>
+
+      <section id="onde-estamos-band" className="location-band">
+        <p>Estr. Louis Pasteur Embu das Artes - SP, 06835-700</p>
       </section>
 
       <section id="contato" className="contact-hero">

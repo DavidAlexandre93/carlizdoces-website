@@ -122,6 +122,19 @@
   justify-content: space-between;
 }
 
+.location-band {
+  background: #ad1457;
+  color: #fff;
+  padding: 22px 24px;
+  text-align: center;
+}
+
+.location-band p {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
 .contact-hero {
   background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
     url('../public/images/banner-carliz.svg') center/cover no-repeat;
