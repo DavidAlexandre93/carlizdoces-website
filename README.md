@@ -1,17 +1,21 @@
-# Landingpage Confeitaria 🧁
+# Carliz doces 🍬
 
-Uma confeitaria de cupcakes online, com uma ótima experiencia visual garantida.
+Landing page da Carliz doces com seleção de produtos e envio de pedido direto no WhatsApp.
 
+## Funcionalidades
+- Catálogo de doces fixos (ano inteiro).
+- Catálogo de ovos de Páscoa com opção de desligar facilmente.
+- Montagem de pedido com quantidade por item.
+- Botão **Realizar solicitação** com redirecionamento para WhatsApp já com mensagem pronta.
 
-## Layout 💻
-<img src="" alt="imagem demonstração do projeto" width="680" >
+## Tecnologias
+- ReactJS (via ESM no navegador)
+- Tailwind CSS (CDN)
+- TanStack Query (`useQuery`)
 
-## [Link Demonstração](https://the-best-cupcake.vercel.app/)
+## Número para pedidos
+- +55 11 99217-5496
 
-## ⚙️ Tecnologias Utilizadas 
-- CSS
-- HTML
-
-## Próximos Passos 
-- Upgrade na responsividade
-- Adicionar funcionalidades com JavaScript
+## Como desligar a seção de Páscoa
+- No site, clique no botão **Páscoa ON/OFF**.
+- Ou use a URL com `?pascoa=off`.
