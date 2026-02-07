@@ -1,33 +1,18 @@
 # Carliz doces 🍬
 
-Landing page da Carliz doces com catálogo em ReactJS e interface construída com Tailwind CSS.
+Projeto estruturado com Vite + React + TypeScript.
 
-## Funcionalidades
-- Catálogo de doces fixos (ano inteiro).
-- Catálogo de ovos de Páscoa com opção de desligar facilmente.
-- Montagem de pedido com quantidade por item.
-- Resumo automático do pedido com subtotal.
-- Botão **Realizar solicitação** com redirecionamento para WhatsApp já com mensagem pronta.
+## Scripts
 
-## Tecnologias
-- TypeScript (fonte tipada)
-- ReactJS (via ESM no navegador)
-- Tailwind CSS (CDN)
-- TanStack Query (`useQuery`)
+- `npm install`: instala as dependências.
+- `npm run dev`: inicia o servidor de desenvolvimento do Vite.
+- `npm run build`: gera o build de produção.
+- `npm run preview`: visualiza localmente o build de produção.
+- `npm run typecheck`: valida a tipagem TypeScript.
 
-## Estrutura
-- `index.html`: base da aplicação e configuração do Tailwind.
-- `src/app.ts`: aplicação React com componentes, props e estado tipados.
-- `src/catalog-data.ts`: interfaces e dados tipados do catálogo.
-- `js/*.js`: JavaScript gerado pelo compilador TypeScript para execução no navegador.
+## Estrutura principal
 
-## Desenvolvimento
-- Gerar build JS a partir do TypeScript: `tsc --project tsconfig.json`
-- Validar tipagem sem gerar arquivos: `tsc --project tsconfig.json --noEmit`
-
-## Número para pedidos
-- +55 11 99217-5496
-
-## Como desligar a seção de Páscoa
-- No site, clique no botão **Páscoa ON/OFF**.
-- Ou use a URL com `?pascoa=off`.
+- `index.html`: entrada do Vite.
+- `src/main.tsx`: bootstrap da aplicação React.
+- `src/App.tsx`: interface e regras da página.
+- `src/catalog-data.ts`: dados e tipos do catálogo.
