@@ -64,7 +64,7 @@ import {
   styled,
 } from '@mui/material'
 
-const navItems = ['Início', 'Catálogo', 'Combos', 'Contato']
+const navItems = ['Quem somos', 'Onde estamos', 'Realizar Pedido', 'Ovos de páscoa', 'contato']
 
 const products = [
   {
