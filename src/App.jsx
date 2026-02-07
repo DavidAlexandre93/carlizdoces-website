@@ -1,351 +1,73 @@
-import { useMemo, useState } from 'react'
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  AppBar,
-  Avatar,
-  Badge,
-  Box,
-  Breadcrumbs,
-  Button,
-  ButtonGroup,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Chip,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Drawer,
-  Fab,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  IconButton,
-  ImageList,
-  ImageListItem,
-  InputAdornment,
-  LinearProgress,
-  Link,
-  List,
-  ListItem,
-  MenuItem,
-  Paper,
-  Rating,
-  Select,
-  Slider,
-  Snackbar,
-  Stack,
-  Step,
-  StepLabel,
-  Stepper,
-  Switch,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tabs,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Toolbar,
-  Tooltip,
-  Typography,
-  styled,
-} from '@mui/material'
+import { useState } from 'react'
 
 const navItems = ['Quem somos', 'Onde estamos', 'Realizar Pedido', 'Ovos de páscoa', 'contato']
 
-const products = [
-  {
-    name: 'Brigadeiro Gourmet',
-    price: 'R$ 6,00',
-    rating: 5,
-    image: '/images/brigadeiro.svg',
-  },
-  {
-    name: 'Ninho com Nutella',
-    price: 'R$ 8,50',
-    rating: 4,
-    image: '/images/ninho-nutella.svg',
-  },
-  {
-    name: 'Prestígio Cremoso',
-    price: 'R$ 7,00',
-    rating: 5,
-    image: '/images/prestigio.svg',
-  },
-]
-
-const metrics = [
-  ['Pedidos por dia', '120+'],
-  ['Sabores disponíveis', '30'],
-  ['Eventos atendidos', '450'],
-]
-
-const HeroCard = styled(Paper)(({ theme }) => ({
-  borderRadius: 24,
-  padding: theme.spacing(5),
-  background: 'linear-gradient(135deg, #ffe4ec 0%, #f7c7d9 100%)',
-}))
-
-const Section = styled(Paper)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(3),
-  borderRadius: 20,
-  border: '1px solid #f2d5df',
-}))
-
-const ProductCard = styled(Card)(() => ({
-  height: '100%',
-  borderRadius: 18,
-}))
-
 export default function App() {
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [tab, setTab] = useState(0)
-  const [delivery, setDelivery] = useState('retirada')
-  const [sweetness, setSweetness] = useState(60)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [snackOpen, setSnackOpen] = useState(false)
-
-  const completion = useMemo(() => (delivery === 'retirada' ? 72 : 88), [delivery])
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <Box sx={{ bgcolor: '#fff8fb', minHeight: '100vh' }}>
-      <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: '1px solid #f1d8e1' }}>
-        <Toolbar>
-          <IconButton edge="start" onClick={() => setDrawerOpen(true)}>
-            ☰
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
-            Carliz Doces
-          </Typography>
-          <ButtonGroup variant="outlined" size="small">
-            <Button>Cardápio</Button>
-            <Button>Ofertas</Button>
-          </ButtonGroup>
-        </Toolbar>
-      </AppBar>
+    <div style={{ minHeight: '100vh', background: '#fff8fb', color: '#3a2030' }}>
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '14px 20px',
+          borderBottom: '1px solid #f1d8e1',
+          position: 'sticky',
+          top: 0,
+          background: '#fff8fb',
+          zIndex: 20,
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          style={{ border: '1px solid #d4a8bc', background: '#fff', borderRadius: 8, padding: '6px 10px' }}
+        >
+          ☰
+        </button>
+        <h1 style={{ margin: 0, fontSize: 22 }}>Carliz Doces</h1>
+      </header>
 
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 250, p: 2 }}>
-          <Typography variant="h6">Navegação</Typography>
-          <List>
+      {menuOpen && (
+        <nav
+          style={{
+            maxWidth: 360,
+            margin: '16px 20px',
+            background: '#fff',
+            border: '1px solid #f2d5df',
+            borderRadius: 12,
+            padding: 12,
+          }}
+        >
+          <strong style={{ display: 'block', marginBottom: 8 }}>Navegação</strong>
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {navItems.map((item) => (
-              <ListItem key={item} disablePadding>
-                <Button fullWidth sx={{ justifyContent: 'flex-start', p: 1.2 }}>{item}</Button>
-              </ListItem>
+              <li key={item} style={{ padding: '10px 8px', borderRadius: 8 }}>
+                {item}
+              </li>
             ))}
-          </List>
-        </Box>
-      </Drawer>
+          </ul>
+        </nav>
+      )}
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Breadcrumbs sx={{ mb: 2 }}>
-          <Link underline="hover" color="inherit" href="#">
-            Home
-          </Link>
-          <Typography color="text.primary">Loja</Typography>
-        </Breadcrumbs>
-
-        <HeroCard elevation={0}>
-          <Stack spacing={2}>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Badge badgeContent="Novo" color="secondary">
-                <Avatar sx={{ bgcolor: '#ad1457' }}>CD</Avatar>
-              </Badge>
-              <Typography variant="h4" fontWeight={700}>
-                Doçura artesanal com componentes MUI + styled
-              </Typography>
-            </Stack>
-            <Typography>
-              Esta página demonstra uma vitrine moderna usando vários componentes do Material UI estilizados com
-              <strong> styled components</strong>.
-            </Typography>
-            <Alert severity="success">Pedidos para festas com 15% de desconto até sexta-feira.</Alert>
-            <Stack direction="row" spacing={1} flexWrap="wrap">
-              <Chip label="Sem conservantes" color="primary" />
-              <Chip label="Entrega rápida" color="secondary" />
-              <Chip label="Produção do dia" />
-            </Stack>
-          </Stack>
-        </HeroCard>
-
-        <Section elevation={0}>
-          <Tabs value={tab} onChange={(_, value) => setTab(value)}>
-            <Tab label="Destaques" />
-            <Tab label="Sabores" />
-            <Tab label="Depoimentos" />
-          </Tabs>
-          <Divider sx={{ my: 2 }} />
-
-          {tab === 0 && (
-            <Grid container spacing={2}>
-              {products.map((item) => (
-                <Grid item xs={12} md={4} key={item.name}>
-                  <ProductCard>
-                    <CardMedia component="img" height="190" image={item.image} alt={item.name} />
-                    <CardContent>
-                      <Typography variant="h6">{item.name}</Typography>
-                      <Rating value={item.rating} readOnly />
-                      <Typography color="text.secondary">{item.price}</Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Tooltip title="Adicionar ao carrinho">
-                        <Button variant="contained" fullWidth onClick={() => setSnackOpen(true)}>
-                          Comprar
-                        </Button>
-                      </Tooltip>
-                    </CardActions>
-                  </ProductCard>
-                </Grid>
-              ))}
-            </Grid>
-          )}
-
-          {tab === 1 && (
-            <ImageList cols={3} gap={12} sx={{ m: 0 }}>
-              {['ninho.svg', 'ferrero.svg', 'trufado-maracuja.svg'].map((img) => (
-                <ImageListItem key={img}>
-                  <img src={`/images/${img}`} alt={img} loading="lazy" />
-                </ImageListItem>
-              ))}
-            </ImageList>
-          )}
-
-          {tab === 2 && (
-            <Accordion defaultExpanded>
-              <AccordionSummary>Por que escolher a Carliz?</AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Atendimento humano, ingredientes de qualidade e personalização para aniversários, casamentos e
-                  empresas.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          )}
-        </Section>
-
-        <Section elevation={0}>
-          <Typography variant="h5" gutterBottom>
-            Monte seu pedido
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Stack spacing={2}>
-                <TextField
-                  fullWidth
-                  label="Seu nome"
-                  placeholder="Ex: Carla"
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">👩‍🍳</InputAdornment>,
-                  }}
-                />
-                <FormControl fullWidth>
-                  <Select value={delivery} onChange={(e) => setDelivery(e.target.value)}>
-                    <MenuItem value="retirada">Retirada na loja</MenuItem>
-                    <MenuItem value="entrega">Entrega local</MenuItem>
-                  </Select>
-                </FormControl>
-                <Box>
-                  <Typography gutterBottom>Nível de doçura ideal</Typography>
-                  <Slider value={sweetness} onChange={(_, v) => setSweetness(v)} valueLabelDisplay="auto" />
-                </Box>
-                <FormGroup>
-                  <FormControlLabel control={<Switch defaultChecked />} label="Embalagem presenteável" />
-                  <FormControlLabel control={<Switch />} label="Adicionar mensagem personalizada" />
-                </FormGroup>
-              </Stack>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TableContainer component={Paper} variant="outlined">
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Métrica</TableCell>
-                      <TableCell align="right">Valor</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {metrics.map(([label, value]) => (
-                      <TableRow key={label}>
-                        <TableCell>{label}</TableCell>
-                        <TableCell align="right">{value}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" gutterBottom>
-                  Progresso de disponibilidade hoje
-                </Typography>
-                <LinearProgress variant="determinate" value={completion} />
-              </Box>
-            </Grid>
-          </Grid>
-
-          <Stepper sx={{ mt: 3 }} activeStep={1} alternativeLabel>
-            <Step>
-              <StepLabel>Escolha os sabores</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Defina personalizações</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Finalize o pedido</StepLabel>
-            </Step>
-          </Stepper>
-
-          <Stack direction="row" spacing={2} sx={{ mt: 2, flexWrap: 'wrap' }}>
-            <ToggleButtonGroup exclusive value={delivery} onChange={(_, value) => value && setDelivery(value)}>
-              <ToggleButton value="retirada">Retirada</ToggleButton>
-              <ToggleButton value="entrega">Entrega</ToggleButton>
-            </ToggleButtonGroup>
-            <Button variant="contained" onClick={() => setDialogOpen(true)}>
-              Revisar pedido
-            </Button>
-          </Stack>
-        </Section>
-      </Container>
-
-      <Fab color="secondary" sx={{ position: 'fixed', right: 24, bottom: 24 }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-        ↑
-      </Fab>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Resumo do pedido</DialogTitle>
-        <DialogContent>
-          <Typography>Entrega: {delivery}</Typography>
-          <Typography>Doçura: {sweetness}%</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Fechar</Button>
-          <Button variant="contained" onClick={() => setDialogOpen(false)}>
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={snackOpen}
-        autoHideDuration={2500}
-        onClose={() => setSnackOpen(false)}
-        message="Item adicionado ao carrinho!"
-      />
-    </Box>
+      <main style={{ padding: '20px' }}>
+        <section
+          style={{
+            maxWidth: 800,
+            borderRadius: 18,
+            padding: 24,
+            background: 'linear-gradient(135deg, #ffe4ec 0%, #f7c7d9 100%)',
+            border: '1px solid #f1d8e1',
+          }}
+        >
+          <h2 style={{ marginTop: 0 }}>Doces artesanais para todas as ocasiões</h2>
+          <p style={{ marginBottom: 0 }}>
+            O menu lateral já está atualizado com as opções solicitadas e sem dependência de bibliotecas externas.
+          </p>
+        </section>
+      </main>
+    </div>
   )
 }
