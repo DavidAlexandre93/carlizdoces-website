@@ -19,18 +19,14 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Drawer,
   Fab,
   FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
-  IconButton,
   InputAdornment,
   LinearProgress,
   Link,
-  List,
-  ListItem,
   MenuItem,
   Paper,
   Rating,
@@ -115,7 +111,6 @@ const ProductCard = styled(Card)(() => ({
 }))
 
 export default function App() {
-  const [drawerOpen, setDrawerOpen] = useState(false)
   const [delivery, setDelivery] = useState('retirada')
   const [sweetness, setSweetness] = useState(60)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -125,7 +120,6 @@ export default function App() {
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    setDrawerOpen(false)
   }
 
   return (
@@ -136,10 +130,7 @@ export default function App() {
         elevation={0}
         sx={{ top: 0, left: 0, right: 0, borderBottom: '1px solid #f1d8e1' }}
       >
-        <Toolbar>
-          <IconButton edge="start" onClick={() => setDrawerOpen(true)}>
-            ☰
-          </IconButton>
+        <Toolbar sx={{ gap: 2 }}>
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
             Carliz Doces
           </Typography>
@@ -148,28 +139,32 @@ export default function App() {
             <Button onClick={() => scrollToSection('realizar-pedido')}>Pedidos</Button>
           </ButtonGroup>
         </Toolbar>
+
+        <Toolbar
+          variant="dense"
+          sx={{
+            borderTop: '1px solid #f1d8e1',
+            justifyContent: 'center',
+            px: 2,
+            gap: 1,
+            overflowX: 'auto',
+          }}
+        >
+          {navItems.map((item) => (
+            <Button
+              key={item.sectionId}
+              size="small"
+              onClick={() => scrollToSection(item.sectionId)}
+              sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </Toolbar>
       </AppBar>
 
       <Toolbar />
-
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 250, p: 2 }}>
-          <Typography variant="h6">Navegação</Typography>
-          <List>
-            {navItems.map((item) => (
-              <ListItem key={item.sectionId} disablePadding>
-                <Button
-                  fullWidth
-                  sx={{ justifyContent: 'flex-start', p: 1.2 }}
-                  onClick={() => scrollToSection(item.sectionId)}
-                >
-                  {item.label}
-                </Button>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
+      <Toolbar variant="dense" />
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Breadcrumbs sx={{ mb: 2 }}>
