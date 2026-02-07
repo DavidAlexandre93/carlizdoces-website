@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9d7ff"/><stop offset="1" stop-color="#d773ff"/></linearGradient>
+</defs>
+<rect width="100%" height="100%" fill="url(#g)" rx="24"/>
+<ellipse cx="150.0" cy="235.20000000000002" rx="60.0" ry="96.60000000000001" fill="#fff4db"/>
+<ellipse cx="450.0" cy="235.20000000000002" rx="60.0" ry="96.60000000000001" fill="#fef3cf"/>
+<circle cx="300.0" cy="176.4" r="58.800000000000004" fill="#5e3015"/>
+<circle cx="282.0" cy="159.6" r="16.8" fill="#8e4a23"/>
+<circle cx="318.0" cy="159.6" r="16.8" fill="#8e4a23"/>
+<rect x="264.0" y="197.39999999999998" width="72.0" height="42.0" rx="18" fill="#ffc7de"/>
+<text x="50%" y="369.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#5f2238" font-weight="700">Ninho Nutella</text>
+</svg>
