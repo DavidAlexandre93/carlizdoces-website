@@ -1,8 +1,16 @@
-# React + Vite
+# React + Webpack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a Node.js React application bundled with Webpack and managed with npm.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `npm start` - Run the development server with hot reload on http://localhost:3000
+- `npm run build` - Create a production bundle in `dist/`
+- `npm run lint` - Run ESLint
+
+## Build
+
+```bash
+npm install
+npm run build
+```
