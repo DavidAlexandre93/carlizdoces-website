@@ -123,7 +123,12 @@ export default function App() {
 
   return (
     <Box sx={{ bgcolor: '#fff8fb', minHeight: '100vh' }}>
-      <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: '1px solid #f1d8e1' }}>
+      <AppBar
+        position="fixed"
+        color="inherit"
+        elevation={0}
+        sx={{ top: 0, left: 0, right: 0, borderBottom: '1px solid #f1d8e1' }}
+      >
         <Toolbar>
           <IconButton edge="start" onClick={() => setDrawerOpen(true)}>
             ☰
@@ -137,6 +142,8 @@ export default function App() {
           </ButtonGroup>
         </Toolbar>
       </AppBar>
+
+      <Toolbar />
 
       <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <Box sx={{ width: 250, p: 2 }}>
