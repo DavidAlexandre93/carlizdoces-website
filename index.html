@@ -1,97 +1,216 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="./imagens/logo.png" type="image/x-icon">
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <title>The Best Cupcake</title>
-</head>
-<body>
-  <header>
-    <div id="header-container">
-      <img src="./imagens/logo.png" alt="Logo da The Best Cupcake">
-      <div id="header-menu-links">
-        <ul class="menu-links">
-          <li><a href="">Quem Somos</a></li>
-          <li><a href="">Onde Estamos</a></li>
-          <li><a href="">Contato</a></li>
-        </ul>
-      </div>
-    </div>
-  </header>
-  
-  <main id="main-container">
-    <div id="main-background">
-      <h1>The Best Cupcake</h1>
-    </div> 
- </main>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carliz doces | Doces e Ovos de Páscoa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              carliz: {
+                pink: '#D63384',
+                soft: '#FFE4EF',
+                dark: '#5A2142'
+              }
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body class="bg-carliz-soft">
+    <div id="root"></div>
 
- <!-- sessão sobre -->
- <section class="section-container">
-  <div class="section-sobre">
-    <img src="./imagens/logo-seções.png" alt="" class="section-logo">
-    <h2 class="section-tittle">Quem Somos</h2>
-    <p class="section-paragrafo">Na The Best Cupcake, somos apaixonados por criar cupcakes artesanais que trazem alegria e doçura ao seu dia. Fundada em 2024, nossa loja utiliza ingredientes frescos e de alta qualidade para oferecer uma ampla variedade de sabores, desde os clássicos até combinações inovadoras. Nossa missão é proporcionar momentos doces e inesquecíveis, e estamos sempre prontos para atender você com um sorriso. Venha nos visitar e descubra por que somos a escolha favorita para cupcakes.
-    </p>
-  </div>
- </section>
+    <script type="module">
+      import React, { useMemo, useState } from 'https://esm.sh/react@18.3.1';
+      import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
+      import { QueryClient, QueryClientProvider, useQuery } from 'https://esm.sh/@tanstack/react-query@5.59.16';
+      import htm from 'https://esm.sh/htm@3.1.1';
 
- <!-- sessão de imagens -->
- <section id="section-cupcakes">
-  <div id="section-box-imgCupcakes">
-    <img src="./imagens/1.png" alt="Loja Confeitaria" id="section-imgcupcake01">
-    <div id="sectiong-box-img-Cupcakes2">
-      <img src="./imagens/2.jpg" alt="Trio de cupcakes" class="section-imgcupcakes">
-      <img src="./imagens/3.jpg" alt="Vitrine de cupcakes" class="section-imgcupcakes">
-    </div>
-      <img src="./imagens/4.png" alt="Cupcakes com coração" id="section-imgcupcake02">
-  </div>
- </section>
+      const html = htm.bind(React.createElement);
+      const queryClient = new QueryClient();
 
- <!-- sessão de localização -->
- <section class="section-container">
-  <div class="section-sobre">
-    <img src="./imagens/logo-seções.png" alt="" class="section-logo">
-    <h2 class="section-tittle">Onde estamos</h2>
-    <p class="section-paragrafo-localization">Rua Elvira Harkot Ramina, Mossunguê, 484</p>
-    <p class="section-paragrafo-localization">Curitiba</p>
-  </div>
- </section>
+      const phone = '5511992175496';
+      const EASTER_FLAG_DEFAULT = true;
 
- <!-- sessão de contato -->
- <section id="section-contato">
-  <div id="section-containercontatos">
-    <h2>Contato</h2>
-    <div id="section-contatolist">
-      <p>Telefone: (41) 9-9999-9999</p>
-      <p>Email: contato@codecupcake.com</p>
-      <br>
-      <p>Horário de atendimento:</p>
-      <p>seg a sex - 9h até 18h</p>
-    </div>
-  </div>
- </section>
+      const regularProducts = [
+        { id: 'brigadeiro-12', name: 'Caixa com 12 brigadeiros gourmet', price: 32 },
+        { id: 'beijinho-12', name: 'Caixa com 12 beijinhos', price: 30 },
+        { id: 'bento', name: 'Bento cake personalizado', price: 55 },
+        { id: 'mini-bolo', name: 'Mini bolo caseiro (400g)', price: 28 },
+        { id: 'copo-da-felicidade', name: 'Copo da felicidade', price: 18 },
+      ];
 
- <!-- rodape -->
- <footer>
-  <div id="footer-container">
-    <img src="./imagens/logo.png" alt="Logo da The Best Cupcake">
-    <nav id="footer-menu-links">
-      <ul class="menu-links">
-        <li><a href="">Quem Somos</a></li>
-        <li><a href="">Onde Estamos</a></li>
-        <li><a href="">Contato</a></li>
-      </ul>
-    </nav>
-  </div>
-    <p>&copy;2024 Code Cupcake</p>
-    <div id="footer-contatosocial">
-      <a href=""><i class="bi bi-instagram"></i></a>
-      <a href=""><i class="bi bi-facebook"></i></a>
-    </div>
-  </div>
- </footer>
-</body>
+      const easterProducts = [
+        { id: 'ninho-uva-250', name: 'Ovo de colher Ninho com uva (250g)', price: 75 },
+        { id: 'ninho-nutella-250', name: 'Ovo de colher Ninho com Nutella (250g)', price: 89 },
+        { id: 'ferrero-250', name: 'Ovo de colher Ferrero Rocher (250g)', price: 95 },
+        { id: 'trufado-ninho-150', name: 'Ovo trufado Ninho com Nutella (150g)', price: 37 },
+        { id: 'petisqueira-4', name: 'Petisqueira 4 sabores (limitado)', price: 39.99 },
+      ];
+
+      const fetchCatalog = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        return { regularProducts, easterProducts };
+      };
+
+      const BRL = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+
+      function ProductCard({ product, qty, onAdd, onRemove, badge }) {
+        return html`
+          <article className="rounded-2xl border border-carliz-pink/20 bg-white p-4 shadow-sm">
+            <div className="mb-3 flex items-start justify-between gap-2">
+              <h3 className="font-semibold text-carliz-dark">${product.name}</h3>
+              ${badge ? html`<span className="rounded-full bg-carliz-pink px-2 py-1 text-xs font-medium text-white">${badge}</span>` : null}
+            </div>
+            <p className="mb-3 text-lg font-bold text-carliz-pink">${BRL.format(product.price)}</p>
+            <div className="flex items-center gap-3">
+              <button onClick=${onRemove} className="h-9 w-9 rounded-full border border-carliz-pink text-lg text-carliz-pink">-</button>
+              <span className="min-w-8 text-center text-base font-semibold">${qty || 0}</span>
+              <button onClick=${onAdd} className="h-9 w-9 rounded-full bg-carliz-pink text-lg text-white">+</button>
+            </div>
+          </article>
+        `;
+      }
+
+      function App() {
+        const urlFlag = new URLSearchParams(window.location.search).get('pascoa');
+        const [showEaster, setShowEaster] = useState(urlFlag === 'off' ? false : EASTER_FLAG_DEFAULT);
+        const [cart, setCart] = useState({});
+
+        const { data, isLoading } = useQuery({
+          queryKey: ['catalog'],
+          queryFn: fetchCatalog,
+        });
+
+        const allProducts = useMemo(() => {
+          if (!data) return [];
+          return showEaster
+            ? [...data.regularProducts, ...data.easterProducts]
+            : [...data.regularProducts];
+        }, [data, showEaster]);
+
+        const selectedProducts = useMemo(
+          () =>
+            allProducts
+              .filter((item) => (cart[item.id] || 0) > 0)
+              .map((item) => ({ ...item, qty: cart[item.id] })),
+          [allProducts, cart]
+        );
+
+        const subtotal = selectedProducts.reduce((total, item) => total + item.qty * item.price, 0);
+
+        const updateQty = (id, increment) => {
+          setCart((current) => {
+            const next = Math.max((current[id] || 0) + increment, 0);
+            return { ...current, [id]: next };
+          });
+        };
+
+        const sendWhatsAppOrder = () => {
+          if (!selectedProducts.length) {
+            alert('Selecione ao menos um produto antes de realizar o pedido.');
+            return;
+          }
+
+          const items = selectedProducts
+            .map((item) => `- ${item.name} | Qtd: ${item.qty} | ${BRL.format(item.price * item.qty)}`)
+            .join('\n');
+
+          const message = `Olá, Carliz doces! Tenho interesse em realizar um pedido:%0A%0A${items}%0A%0ATotal estimado: ${BRL.format(subtotal)}.%0A%0APode me ajudar com disponibilidade, entrega e pagamento?`;
+
+          window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+        };
+
+        if (isLoading) {
+          return html`<main className="mx-auto max-w-4xl p-8"><p className="text-center text-carliz-dark">Carregando cardápio...</p></main>`;
+        }
+
+        return html`
+          <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-8 md:px-8">
+            <section className="rounded-3xl bg-gradient-to-r from-carliz-pink to-fuchsia-400 p-6 text-white shadow-lg md:p-10">
+              <p className="mb-2 text-sm font-medium uppercase tracking-wider">Landing page oficial</p>
+              <h1 className="mb-2 text-4xl font-black">Carliz doces</h1>
+              <p className="max-w-2xl text-white/95">Doces artesanais para momentos especiais. Monte seu pedido e envie direto no WhatsApp em um clique.</p>
+            </section>
+
+            <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-carliz-dark">Produtos de Páscoa</h2>
+                  <p className="text-sm text-slate-600">Ative/desative facilmente. Dica: para desligar no mês seguinte, altere para OFF ou use <code>?pascoa=off</code> na URL.</p>
+                </div>
+                <button
+                  onClick=${() => setShowEaster((value) => !value)}
+                  className=${`rounded-full px-5 py-2 text-sm font-semibold text-white ${showEaster ? 'bg-emerald-500' : 'bg-slate-500'}`}
+                >
+                  ${showEaster ? 'Páscoa ON' : 'Páscoa OFF'}
+                </button>
+              </div>
+            </section>
+
+            <section className="mt-6">
+              <h2 className="mb-4 text-2xl font-bold text-carliz-dark">Escolha seus produtos</h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                ${data.regularProducts.map(
+                  (product) =>
+                    html`<${ProductCard}
+                      key=${product.id}
+                      product=${product}
+                      qty=${cart[product.id] || 0}
+                      onAdd=${() => updateQty(product.id, 1)}
+                      onRemove=${() => updateQty(product.id, -1)}
+                    />`
+                )}
+                ${showEaster
+                  ? data.easterProducts.map(
+                      (product) =>
+                        html`<${ProductCard}
+                          key=${product.id}
+                          product=${product}
+                          qty=${cart[product.id] || 0}
+                          onAdd=${() => updateQty(product.id, 1)}
+                          onRemove=${() => updateQty(product.id, -1)}
+                          badge="Páscoa"
+                        />`
+                    )
+                  : null}
+              </div>
+            </section>
+
+            <section className="mt-8 rounded-2xl bg-white p-5 shadow-md">
+              <h2 className="text-2xl font-bold text-carliz-dark">Resumo do pedido</h2>
+              ${selectedProducts.length
+                ? html`
+                    <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                      ${selectedProducts.map(
+                        (item) => html`<li key=${item.id}>${item.qty}x ${item.name} — <strong>${BRL.format(item.qty * item.price)}</strong></li>`
+                      )}
+                    </ul>
+                    <p className="mt-4 text-lg font-bold text-carliz-pink">Total: ${BRL.format(subtotal)}</p>
+                  `
+                : html`<p className="mt-4 text-slate-600">Nenhum item selecionado ainda.</p>`}
+
+              <button
+                onClick=${sendWhatsAppOrder}
+                className="mt-6 w-full rounded-xl bg-carliz-pink px-4 py-3 text-base font-bold text-white transition hover:brightness-110"
+              >
+                Realizar solicitação no WhatsApp
+              </button>
+            </section>
+          </main>
+        `;
+      }
+
+      createRoot(document.getElementById('root')).render(
+        html`<${QueryClientProvider} client=${queryClient}><${App} /></${QueryClientProvider}>`
+      );
+    </script>
+  </body>
 </html>
