@@ -1,0 +1,198 @@
+.site-wrapper {
+  background: #e9e9e9;
+  color: #111;
+}
+
+.topbar {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 36px;
+}
+
+.brand,
+.section-icon {
+  font-size: 72px;
+  line-height: 1;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 36px;
+}
+
+.topbar a,
+.footer a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+}
+
+.hero {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 36px 36px;
+  position: relative;
+}
+
+.hero img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  display: block;
+}
+
+.hero h1 {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  color: #fff;
+  font-size: 76px;
+}
+
+.content-block {
+  max-width: 900px;
+  margin: 90px auto;
+  padding: 0 24px;
+}
+
+.centered {
+  text-align: center;
+}
+
+.content-block h2 {
+  font-size: 58px;
+  margin: 8px 0 20px;
+}
+
+.content-block p {
+  font-size: 34px;
+  margin: 10px 0;
+}
+
+.photo-band {
+  max-width: 1500px;
+  margin: 36px auto 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.photo-band article {
+  position: relative;
+  overflow: hidden;
+  min-height: 310px;
+}
+
+.photo-band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-band article div {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.84);
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact-hero {
+  background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
+    url('/images/banner-carliz.svg') center/cover no-repeat;
+  min-height: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 24px;
+}
+
+.contact-hero div {
+  max-width: 760px;
+}
+
+.contact-hero h2 {
+  font-size: 64px;
+  margin: 0 0 20px;
+}
+
+.contact-hero p {
+  font-size: 34px;
+  margin: 10px 0;
+}
+
+.footer {
+  background: #e6bfd2;
+  padding: 28px 36px 36px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.footer .brand {
+  font-size: 56px;
+}
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.metrics {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 14px;
+}
+
+@media (max-width: 960px) {
+  .topbar,
+  .hero {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero img {
+    height: 340px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    text-align: center;
+  }
+
+  .content-block h2 {
+    font-size: 44px;
+  }
+
+  .content-block p,
+  .contact-hero p {
+    font-size: 26px;
+  }
+
+  .photo-band {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-hero h2 {
+    font-size: 46px;
+  }
+}
