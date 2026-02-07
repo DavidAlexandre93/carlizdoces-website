@@ -5,7 +5,7 @@ const navItems = [
   { label: 'Onde estamos', sectionId: 'onde-estamos-band' },
   { label: 'Realizar Pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
-  { label: 'contato', sectionId: 'contato' },
+  { label: 'Contato', sectionId: 'contato' },
 ]
 
 const products = [
@@ -80,17 +80,12 @@ export default function App() {
         <p>Próximo à Praça Central e estação de metrô.</p>
       </section>
 
-      <section id="onde-estamos-band" className="location-band">
-        <p>Estr. Louis Pasteur Embu das Artes - SP, 06835-700</p>
-      </section>
-
-      <section id="contato" className="contact-hero">
-        <div>
-          <h2>Contato</h2>
-          <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
-          <p>Email: voce@email.com</p>
-          <p>Telefone: (11) 99999-9999</p>
-        </div>
+      <section id="contato" className="contact-band centered">
+        <h2>CONTATO</h2>
+        <p>Numero telefone (11) 99217-5496</p>
+        <p>Email: contato@carlizdoces.com</p>
+        <p>Horário de atendimento:</p>
+        <p>seg a seg - 9h até 18h</p>
       </section>
 
       <footer className="footer">
