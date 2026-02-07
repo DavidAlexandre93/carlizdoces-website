@@ -105,6 +105,121 @@
   justify-content: space-between;
 }
 
+.order-section {
+  max-width: 1400px;
+  margin: 30px auto 90px;
+  padding: 0 24px;
+}
+
+.order-section h2 {
+  font-size: 54px;
+  margin: 0 0 12px;
+}
+
+.order-section p {
+  font-size: 22px;
+  margin: 0 0 20px;
+}
+
+.order-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.order-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.order-list article {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e6bfd2;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-list img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.order-list h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.order-list span {
+  color: #ad1457;
+  font-weight: 700;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-controls button {
+  border: none;
+  background: #ad1457;
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.order-summary {
+  background: #fff;
+  border: 1px solid #e6bfd2;
+  border-radius: 16px;
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.order-summary h3 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.order-summary p,
+.order-summary li {
+  font-size: 16px;
+}
+
+.order-summary ul {
+  padding-left: 20px;
+  margin: 12px 0;
+}
+
+.summary-total {
+  font-weight: 700;
+  margin-top: 16px;
+}
+
+.finish-order {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  background: #25d366;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+}
+
 .contact-hero {
   background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
     url('../public/images/banner-carliz.svg') center/cover no-repeat;
@@ -158,6 +273,16 @@
   font-size: 14px;
 }
 
+@media (max-width: 1100px) {
+  .order-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-summary {
+    position: static;
+  }
+}
+
 @media (max-width: 960px) {
   .topbar,
   .hero {
@@ -179,7 +304,8 @@
     text-align: center;
   }
 
-  .content-block h2 {
+  .content-block h2,
+  .order-section h2 {
     font-size: 44px;
   }
 
@@ -188,8 +314,18 @@
     font-size: 26px;
   }
 
-  .photo-band {
+  .photo-band,
+  .order-list {
     grid-template-columns: 1fr;
+  }
+
+  .order-list article {
+    grid-template-columns: 80px 1fr auto;
+  }
+
+  .order-list img {
+    width: 80px;
+    height: 80px;
   }
 
   .contact-hero h2 {
