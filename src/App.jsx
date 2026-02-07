@@ -1,153 +1,128 @@
 import './App.css'
 
-const ENABLE_EASTER_2026 = true
-
-const orderHighlights = [
-  'Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍',
-  '🎥 Sorteio ao vivo no Instagram: 03/04/2026',
-  '🍀 Boa sorte!',
-  '🚚 Entrega (com taxa) ou retirada no ponto de referência mais próximo.',
-  '❄️ Conservar na geladeira. Retire alguns minutinhos antes de consumir para aproveitar toda a cremosidade!',
-  '🥄 Ovos de colher: 250g podendo chegar a 400g',
-  '🍬 Ovos trufados: 150g — embalados nas cores verde ou rosa, com laço feito à mão 💝',
-  '🧁 Produção artesanal, sem conservantes.',
-  '⏳ Validade: consumir em até 5 dias, mantendo refrigerado.',
-  '📸 Marque a gente: @carlizdoces',
-  'Queremos ver sua experiência! Deus abençoe! 🙌',
-]
-
-const eggFlavors = [
-  { name: 'Ninho com uva', weight: '250g', price: 'R$ 75,00', image: '/images/ninho-uva.svg' },
-  { name: 'Ninho com Nutella', weight: '250g', price: 'R$ 89,00', image: '/images/ninho-nutella.svg' },
-  { name: 'Ninho', weight: '250g', price: 'R$ 69,00', image: '/images/ninho.svg' },
-  { name: 'Brigadeiro', weight: '250g', price: 'R$ 69,00', image: '/images/brigadeiro.svg' },
-  { name: 'Ferrero Rocher', weight: '250g', price: 'R$ 95,00', image: '/images/ferrero.svg' },
-  { name: 'Prestígio', weight: '250g', price: 'R$ 69,00', image: '/images/prestigio.svg' },
-  { name: 'Matilda', weight: '250g', price: 'R$ 67,00', image: '/images/matilda.svg' },
-  { name: 'M&Ms', weight: '250g', price: 'R$ 69,00', image: '/images/mms.svg' },
-  { name: 'Guloseimas', weight: '250g', price: 'R$ 79,00', image: '/images/guloseimas.svg' },
-  { name: 'Trufado ninho com Nutella', weight: '150g', price: 'R$ 37,00', image: '/images/trufado-nutella.svg' },
-  { name: 'Trufado brigadeiro', weight: '150g', price: 'R$ 34,00', image: '/images/trufado-brigadeiro.svg' },
-  { name: 'Trufado mousse de maracujá', weight: '150g', price: 'R$ 30,00', image: '/images/trufado-maracuja.svg' },
-  { name: 'Petisqueira 4 sabores (limitado)', weight: 'especial', price: 'R$ 39,99', image: '/images/petisqueira.svg' },
-]
-
-const shellOptions = ['Chocolate meio amargo', 'Chocolate ao leite', 'Chocolate blend']
-const choiceOptions = ['Colher 250g', 'Trufado 150g embrulhado']
-const packageOptions = ['Embalagem ROSA', 'Embalagem VERDE']
-const paymentOptions = ['Débito', 'Crédito', 'PIX']
-
 const menuItems = [
   { id: 'quem-somos', label: 'Quem Somos' },
-  { id: 'onde-estamos', label: 'Onde estamos' },
+  { id: 'onde-estamos', label: 'Onde Estamos' },
   { id: 'contato', label: 'Contato' },
-  { id: 'pedidos', label: 'Pedidos' },
-  ...(ENABLE_EASTER_2026 ? [{ id: 'ovos-2026', label: 'Ovos de Páscoa 2026' }] : []),
 ]
+
+const aboutImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Vitrine de confeitaria',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Cupcakes em fundo rosado',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Balcão com cupcakes sortidos',
+  },
+]
+
+function CupcakeIcon() {
+  return (
+    <svg className="cupcake-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M20 30c-6 0-11-4-11-10 0-5 4-9 9-10 2-6 7-9 14-9s12 3 14 9c5 1 9 5 9 10 0 6-5 10-11 10H20z" />
+      <path d="M22 30h20l-2 24H24l-2-24z" />
+      <path d="M29 10c0-3 2-6 5-6s5 3 5 6c0 2-1 4-3 5l-2 2-2-2c-2-1-3-3-3-5z" />
+      <line x1="30" y1="31" x2="30" y2="53" />
+      <line x1="36" y1="31" x2="36" y2="53" />
+      <line x1="24" y1="31" x2="24" y2="53" />
+    </svg>
+  )
+}
 
 function App() {
   return (
     <main className="page">
-      <header className="hero">
-        <img
-          className="hero__banner"
-          src="/images/banner-carliz.svg"
-          alt="Banner da Carliz Doces"
-        />
-        <h1>Carliz Doces</h1>
-        <p>Doces artesanais feitos com carinho para deixar seus momentos ainda mais especiais.</p>
+      <header className="topbar">
+        <a href="#inicio" aria-label="Ir para o início" className="logo-link">
+          <CupcakeIcon />
+        </a>
+
+        <nav aria-label="Menu principal" className="menu">
+          {menuItems.map((item) => (
+            <a href={`#${item.id}`} key={item.id}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
       </header>
 
-      <nav className="top-menu" aria-label="Menu principal">
-        {menuItems.map((item) => (
-          <a key={item.id} href={`#${item.id}`}>
-            {item.label}
-          </a>
+      <section id="inicio" className="hero">
+        <img
+          src="https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=2000&q=80"
+          alt="Cupcakes decorados com corações"
+        />
+        <h1>The Best Cupcake</h1>
+      </section>
+
+      <section id="quem-somos" className="info-block">
+        <CupcakeIcon />
+        <h2>QUEM SOMOS</h2>
+        <p>
+          Na Carliz Doces, somos apaixonados por criar doces artesanais que trazem alegria para o
+          seu dia. Usamos ingredientes frescos e de alta qualidade para oferecer sabores clássicos
+          e combinações especiais. Nossa missão é proporcionar momentos doces e inesquecíveis, com
+          um atendimento acolhedor em cada pedido.
+        </p>
+      </section>
+
+      <section className="gallery" aria-label="Galeria de cupcakes">
+        {aboutImages.map((image) => (
+          <img key={image.src} src={image.src} alt={image.alt} loading="lazy" />
         ))}
-      </nav>
-
-      <section className="card" id="quem-somos">
-        <h2>Quem Somos</h2>
-        <p>
-          A Carliz Doces trabalha com produção artesanal, sem conservantes, priorizando sabor,
-          frescor e apresentação em cada detalhe.
-        </p>
-        <p>
-          Nosso objetivo é transformar cada pedido em uma experiência especial, seja para presentear,
-          celebrar ou simplesmente adoçar o dia.
-        </p>
       </section>
 
-      <section className="card" id="onde-estamos">
-        <h2>Onde estamos</h2>
-        <p>
-          Atendemos por encomenda com retirada em ponto de referência e também com entrega (mediante
-          taxa) para facilitar seu pedido.
-        </p>
-        <p>
-          Entre em contato para confirmar a região atendida e combinar o melhor formato de entrega.
-        </p>
-      </section>
+      <section id="onde-estamos" className="location-wrap">
+        <img
+          className="location-wrap__banner"
+          src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=2000&q=80"
+          alt="Cupcakes em exposição"
+          loading="lazy"
+        />
 
-      <section className="card" id="contato">
-        <h2>Contato</h2>
-        <ul>
-          <li>Instagram: @carlizdoces</li>
-          <li>Pedidos e informações por mensagem direta.</li>
-          <li>Marque a gente nas fotos para compartilharmos sua experiência! 📸</li>
-        </ul>
-      </section>
-
-      <section className="card choices" id="pedidos">
-        <h2>Pedidos</h2>
-        <div>
-          <h3>Casca de preferência</h3>
-          <ul>{shellOptions.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-        <div>
-          <h3>Sua escolha é de</h3>
-          <ul>{choiceOptions.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-        <div>
-          <h3>Para ovo embrulhado 150g</h3>
-          <ul>{packageOptions.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-        <div>
-          <h3>Forma de pagamento</h3>
-          <ul>{paymentOptions.map((item) => <li key={item}>{item}</li>)}</ul>
+        <div className="info-block info-block--small">
+          <CupcakeIcon />
+          <h2>ONDE ESTAMOS</h2>
+          <p>Rua Elvira Harkot Ramina, Mossunguê, 484</p>
+          <p>Curitiba</p>
         </div>
       </section>
 
-      {ENABLE_EASTER_2026 && (
-        <section className="card" id="ovos-2026">
-          <h2>Ovos de Páscoa 2026</h2>
-          <p className="replace-tip">
-            Dica: para desabilitar este bloco fora de época, altere a constante{' '}
-            <code>ENABLE_EASTER_2026</code> para <code>false</code> no arquivo <code>src/App.jsx</code>.
+      <section id="contato" className="contact">
+        <img
+          src="https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&w=2000&q=80"
+          alt="Cupcake rosa em fundo minimalista"
+          loading="lazy"
+        />
+        <div className="contact__content">
+          <h2>Contato</h2>
+          <p>Telefone: (41) 9-9999-9999</p>
+          <p>Email: contato@carlizdoces.com</p>
+          <p>
+            Horário de atendimento:
+            <br />
+            seg a sex - 9h até 18h
           </p>
+        </div>
+      </section>
 
-          <h3>Informações importantes</h3>
-          <ul>
-            {orderHighlights.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-
-          <h3>Sabores disponíveis</h3>
-          <div className="products-grid">
-            {eggFlavors.map((item) => (
-              <article className="product" key={item.name}>
-                <img src={item.image} alt={`Ovo de páscoa sabor ${item.name}`} loading="lazy" />
-                <div>
-                  <h4>{item.name}</h4>
-                  <p>{item.weight}</p>
-                  <strong>{item.price}</strong>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+      <footer className="footer">
+        <div>
+          <CupcakeIcon />
+          <p>©2024 Carliz Doces</p>
+        </div>
+        <nav aria-label="Menu rodapé" className="menu menu--footer">
+          {menuItems.map((item) => (
+            <a href={`#${item.id}`} key={item.id}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </footer>
     </main>
   )
 }
