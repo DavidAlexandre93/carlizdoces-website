@@ -364,17 +364,22 @@
   background: rgba(255, 255, 255, 0.72) !important;
 }
 
+.site-wrapper.dark-mode .theme-toggle-button {
+  border-color: #302f2f !important;
+  background: #302f2f !important;
+}
+
 .site-wrapper.dark-mode {
   color: inherit;
 }
 
 .site-wrapper.dark-mode main {
-  background: #151218;
+  background: #302f2f;
   color: #f4ecf2;
 }
 
 .site-wrapper.dark-mode aside {
-  background: #151218;
+  background: #302f2f;
   color: #f4ecf2;
 }
 
@@ -405,7 +410,7 @@
 }
 
 .site-wrapper.dark-mode .summary-band {
-  background: #2f2230;
+  background: #302f2f;
 }
 
 .site-wrapper.dark-mode .photo-band-head p {
@@ -1945,7 +1950,7 @@
 }
 
 .site-wrapper.dark-mode .updates-card {
-  background: #201725;
+  background: #302f2f;
   border-color: #5f4154;
 }
 
@@ -1962,7 +1967,7 @@
 }
 
 .site-wrapper.dark-mode .updates-cta {
-  background: #2b1c2b;
+  background: #302f2f;
   border-color: #8f5a79;
 }
 
