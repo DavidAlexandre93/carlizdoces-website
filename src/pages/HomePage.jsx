@@ -35,6 +35,9 @@ export function HomePage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [favoriteProductIds, setFavoriteProductIds] = useState([])
   const [favoriteCounts, setFavoriteCounts] = useState({})
+  const [totalLikes, setTotalLikes] = useState(0)
+  const [hasLikedStore, setHasLikedStore] = useState(false)
+  const [showLikeCelebration, setShowLikeCelebration] = useState(false)
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
 
@@ -85,6 +88,33 @@ export function HomePage() {
       setSnackbar({ open: true, message: `${item.name} adicionado aos favoritos!`, severity: 'success' })
       return [...currentFavorites, item.id]
     })
+  const handleContactSubmit = (event) => {
+    event.preventDefault()
+
+    const name = contactForm.name.trim()
+    const email = contactForm.email.trim()
+    const message = contactForm.message.trim()
+
+    if (!name || !message) {
+      setSnackbar({ open: true, message: 'Preencha nome e mensagem para enviar no WhatsApp.', severity: 'warning' })
+      return
+    }
+
+    const formattedMessage = [
+      'Olá, Carliz Doces! Vim pelo site e gostaria de atendimento. 🍫',
+      '',
+      `*Nome:* ${name}`,
+      email ? `*Email:* ${email}` : null,
+      '*Mensagem:*',
+      message,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const whatsappContactLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(formattedMessage)}`
+
+    window.open(whatsappContactLink, '_blank', 'noopener,noreferrer')
+    setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
   useEffect(() => {
@@ -129,6 +159,67 @@ export function HomePage() {
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  const handleGoToOrderSection = (event) => {
+    event.preventDefault()
+    const orderSection = document.getElementById('realizar-pedido')
+    if (orderSection) {
+      orderSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    window.history.replaceState(null, '', '#realizar-pedido')
+  }
+
+  useEffect(() => {
+    try {
+      const savedLikes = Number(window.localStorage.getItem('carliz-store-likes') ?? '0')
+      const normalizedLikes = Number.isFinite(savedLikes) ? Math.max(0, Math.floor(savedLikes)) : 0
+      setTotalLikes(normalizedLikes)
+      setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
+    } catch {
+      setTotalLikes(0)
+      setHasLikedStore(false)
+    }
+  }, [])
+
+  const handleToggleLike = () => {
+    setHasLikedStore((currentLiked) => {
+      const nextLiked = !currentLiked
+
+      setTotalLikes((currentLikes) => {
+        const nextLikes = nextLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1)
+
+        try {
+          window.localStorage.setItem('carliz-store-likes', String(nextLikes))
+          window.localStorage.setItem('carliz-store-liked', String(nextLiked))
+        } catch {
+          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+        }
+
+        return nextLikes
+      })
+
+      setShowLikeCelebration(nextLiked)
+      setSnackbar({
+        open: true,
+        message: nextLiked ? '🎉 Obrigado pelo carinho! Você adoçou nosso dia! 🍫✨' : '💛 Curtida removida. Quando quiser, é só favoritar de novo!',
+        severity: nextLiked ? 'success' : 'info',
+      })
+
+      return nextLiked
+    })
+  }
+
+  useEffect(() => {
+    if (!showLikeCelebration) return undefined
+
+    const timeoutId = window.setTimeout(() => {
+      setShowLikeCelebration(false)
+    }, 1400)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [showLikeCelebration])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -280,6 +371,7 @@ export function HomePage() {
           <ContactSection
             contactForm={contactForm}
             onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
+            onSubmit={handleContactSubmit}
             contactTipOpen={contactTipOpen}
             onToggleTip={() => setContactTipOpen((open) => !open)}
           />
@@ -288,7 +380,16 @@ export function HomePage() {
       </main>
 
       <Footer navItems={navItems} metrics={metrics} />
-      <FloatingActions totalItems={totalItems} showScrollTop={showScrollTop} onScrollTop={handleScrollTop} />
+      <FloatingActions
+        totalItems={totalItems}
+        showScrollTop={showScrollTop}
+        onScrollTop={handleScrollTop}
+        totalLikes={totalLikes}
+        hasLiked={hasLikedStore}
+        onToggleLike={handleToggleLike}
+        showLikeCelebration={showLikeCelebration}
+        onGoToOrderSection={handleGoToOrderSection}
+      />
 
       <Snackbar
         open={snackbar.open}
