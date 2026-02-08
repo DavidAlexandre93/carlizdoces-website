@@ -80,7 +80,7 @@ Deus abençoe! 🙌`
                   <span className="brand-candy brand-candy-lollipop" role="img" aria-label="Pirulito">🍭</span>
                   z
                 </span>
-                <span className="brand-word">
+                <span className="brand-word brand-word-doces">
                   D
                   <span className="brand-candy brand-candy-donut" role="img" aria-label="Rosquinha">🍩</span>
                   ces
