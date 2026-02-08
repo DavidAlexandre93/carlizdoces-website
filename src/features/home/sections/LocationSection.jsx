@@ -4,7 +4,7 @@ export function LocationSection({ orderPreferences, setOrderPreferences, setDeli
   return (
     <section id="onde-estamos" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
-        <Typography sx={{ mt: 1 }}>Atendimento em São Paulo - capital e região metropolitana.</Typography>
+        <Typography sx={{ mt: 1 }}>Estr. Louis Pasteur-Embu das Artes-São Paulo, 06835-700</Typography>
         <Typography>Entrega local: {orderPreferences.needsDelivery ? 'Sim' : 'Retirada'}</Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button sx={{ mt: 1 }} onClick={() => setOrderPreferences((c) => ({ ...c, needsDelivery: !c.needsDelivery }))}>Alternar entrega</Button>
