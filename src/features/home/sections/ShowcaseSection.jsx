@@ -81,6 +81,7 @@ export function ShowcaseSection({
           </div>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
           <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
+          {selectedShowcaseProduct.details ? <Typography variant="body2">{selectedShowcaseProduct.details}</Typography> : null}
           <Rating precision={0.1} value={selectedShowcaseProduct.rating} readOnly sx={{ mt: 1 }} />
           <Typography color="secondary" fontWeight={700}>{BRL.format(selectedShowcaseProduct.price)}</Typography>
           <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
