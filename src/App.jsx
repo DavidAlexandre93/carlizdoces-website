@@ -13,6 +13,7 @@ import {
   Badge,
   Box,
   Button,
+  ButtonGroup,
   Chip,
   Checkbox,
   ClickAwayListener,
@@ -618,6 +619,19 @@ export default function App() {
                     />
                     <Typography component="h1" variant="h3">{slide.title}</Typography>
                     <Typography component="span" variant="body1">{slide.description}</Typography>
+                    <ButtonGroup
+                      variant="contained"
+                      color="secondary"
+                      aria-label="Ações rápidas para navegação"
+                      className="hero-quick-actions"
+                    >
+                      <Button component="a" href="#realizar-pedido">
+                        Fazer pedido
+                      </Button>
+                      <Button component="a" href="#ovos-de-pascoa" color="inherit">
+                        Ver catálogo
+                      </Button>
+                    </ButtonGroup>
                   </div>
                 </article>
               </CarouselSlide>
@@ -1375,6 +1389,25 @@ export default function App() {
               </Link>
             </Typography>
           ) : null}
+          <ButtonGroup
+            variant="contained"
+            color="secondary"
+            size="small"
+            aria-label="Ações rápidas de contato"
+            className="contact-quick-actions"
+          >
+            <Button
+              component="a"
+              href={selectedContactTab === 'email' ? 'mailto:voce@email.com' : 'https://wa.me/5511992175496'}
+              target={selectedContactTab === 'email' ? undefined : '_blank'}
+              rel={selectedContactTab === 'email' ? undefined : 'noreferrer'}
+            >
+              {selectedContactTab === 'email' ? 'Enviar e-mail' : 'Chamar no WhatsApp'}
+            </Button>
+            <Button component="a" href={instagramProfileLink} target="_blank" rel="noreferrer" color="inherit">
+              Ver Instagram
+            </Button>
+          </ButtonGroup>
           <Box
             component="form"
             sx={{
