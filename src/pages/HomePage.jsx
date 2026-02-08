@@ -87,6 +87,41 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
+    const wrapperElement = wrapperRef.current
+    if (!wrapperElement) return undefined
+
+    let ticking = false
+
+    const updateScrollMotion = () => {
+      const scrollTop = window.scrollY || window.pageYOffset || 0
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0
+
+      wrapperElement.style.setProperty('--scroll-y', `${scrollTop.toFixed(1)}px`)
+      wrapperElement.style.setProperty('--scroll-progress', progress.toFixed(4))
+      wrapperElement.style.setProperty('--scroll-wave', Math.sin(progress * Math.PI * 2).toFixed(4))
+      wrapperElement.classList.toggle('is-scrolled', scrollTop > 32)
+
+      ticking = false
+    }
+
+    const handleScroll = () => {
+      if (ticking) return
+      ticking = true
+      window.requestAnimationFrame(updateScrollMotion)
+    }
+
+    updateScrollMotion()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [])
+
+  useEffect(() => {
     const revealableSelectors = [
       '.hero',
       '.content-block',
