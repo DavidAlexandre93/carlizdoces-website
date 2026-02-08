@@ -325,7 +325,8 @@ export function HomePage() {
             <Box component="img" src="/images/logo/logo-carlizdoces.jpg" alt="Logo da Carliz Doces" className="intro-logo" />
             <Box className="intro-clown-wrap">
               <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaços anunciando o espetáculo" className="intro-clown" />
-              <Box component="p" className="intro-message">Respeitável publico apresentamos Carliz Doces</Box>
+              <Box component="p" className="intro-message">Respeeeitável púúúúblico! 🎪✨
+              Com muita alegria, muito brilho e uma pitadinha de travessura, apresentaaamos… Carliz Doces! 🍭🍬🤡</Box>
             </Box>
           </Box>
         </Box>

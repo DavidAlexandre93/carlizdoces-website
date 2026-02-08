@@ -7,7 +7,8 @@ export function AboutSection() {
         <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço da Carliz Doces" className="about-clown-image" />
         <Box className="about-message-bubble">
           <Typography component="p" variant="body1" className="about-message-inline">
-            “Somos a Carliz doces e realizamos doces a pronta entrega para festas, casamentos, aniversários e ovos de páscoa.”
+            “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨
+            Nóóós somos a Carliz Doces e fazemos docinhos prontinhos pra entrega pra deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
           </Typography>
         </Box>
       </Box>
