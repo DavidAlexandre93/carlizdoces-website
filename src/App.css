@@ -735,13 +735,25 @@
 
 
 .about-message-inline {
-  margin: 0 auto;
+  margin: 0;
   max-width: 860px;
   font-size: clamp(20px, 3.9vw, 34px);
   color: #7b2050;
   font-weight: 700 !important;
   line-height: 1.35;
-  text-align: center;
+  text-align: left;
+}
+
+.about-clown-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.5vw, 26px);
+}
+
+.about-clown-image {
+  width: clamp(120px, 18vw, 220px);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
 }
 
 .photo-band {
@@ -2096,5 +2108,16 @@
   .testimonials-grid,
   .updates-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 800px) {
+  .about-clown-dialog {
+    flex-direction: column;
+  }
+
+  .about-message-inline {
+    text-align: center;
   }
 }
