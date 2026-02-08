@@ -364,6 +364,11 @@
   background: rgba(255, 255, 255, 0.72) !important;
 }
 
+.site-wrapper.dark-mode .theme-toggle-button {
+  border-color: #302f2f !important;
+  background: #302f2f !important;
+}
+
 .site-wrapper.dark-mode {
   color: inherit;
 }
