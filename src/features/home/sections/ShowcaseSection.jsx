@@ -94,7 +94,8 @@ export function ShowcaseSection({
               <ShareIcon />
             </IconButton>
             <IconButton
-              color={favoriteProductIds.includes(selectedShowcaseProduct.id) ? 'error' : 'secondary'}
+              className="favorite-heart-button"
+              color="inherit"
               onClick={() => onFavoriteProduct(selectedShowcaseProduct)}
               aria-label="Marcar como favorito"
             >
