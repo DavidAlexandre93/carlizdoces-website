@@ -42,4 +42,5 @@ export const metrics = [
 
 export const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito']
 export const instagramProfileLink = 'https://www.instagram.com/_carlizdoces/'
+export const whatsappNumber = '5511992175496'
 export const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })

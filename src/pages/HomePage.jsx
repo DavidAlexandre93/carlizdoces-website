@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from 'react'
 import { Alert, Box, Container, Snackbar } from '@mui/material'
-import { BRL, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides } from '../data/siteData'
+import { BRL, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
 import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
 import { Header } from '../components/layout/Header'
@@ -48,6 +48,7 @@ export function HomePage() {
     totalItems,
     totalPrice,
     BRL,
+    whatsappNumber,
   })
 
   const handleShareProduct = async (item) => {

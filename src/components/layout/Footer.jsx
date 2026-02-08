@@ -7,7 +7,7 @@ export function Footer({ navItems, metrics }) {
         <div className="brand">
           <img className="brand-logo" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" />
         </div>
-        <Typography component="small" variant="body2">©2024 Carliz Doces</Typography>
+        <Typography component="small" variant="body2">©{new Date().getFullYear()} Carliz Doces</Typography>
         <ul>
           {navItems.map((item) => (
             <li key={item.sectionId}>
