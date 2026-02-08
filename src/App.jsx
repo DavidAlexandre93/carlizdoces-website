@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ShareIcon from '@mui/icons-material/Share'
 import {
   Box,
@@ -10,11 +10,13 @@ import {
   Link,
   Paper,
   Popper,
+  MenuItem,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from '@mui/material'
 import { Carousel, CarouselSlide } from 'material-ui-carousel'
@@ -31,12 +33,54 @@ const navItems = [
 
 // Edite apenas este array para atualizar produtos conforme o estoque.
 const seasonalProducts = [
-  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', price: 59, image: '/images/brigadeiro.svg' },
-  { id: 'ninho-nutella', name: 'Ninho com Nutella', price: 68.5, image: '/images/ninho-nutella.svg' },
-  { id: 'prestigio', name: 'Prestígio Cremoso', price: 62, image: '/images/prestigio.svg' },
-  { id: 'ferrero', name: 'Ferrero Crocante', price: 72, image: '/images/ferrero.svg' },
-  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', price: 64, image: '/images/trufado-maracuja.svg' },
-  { id: 'ninho-uva', name: 'Ninho com Uva', price: 66, image: '/images/ninho-uva.svg' },
+  {
+    id: 'brigadeiro',
+    name: 'Brigadeiro Gourmet',
+    flavor: 'Brigadeiro belga',
+    weight: '350g',
+    price: 59,
+    image: '/images/brigadeiro.svg',
+  },
+  {
+    id: 'ninho-nutella',
+    name: 'Ninho com Nutella',
+    flavor: 'Leite ninho com creme de Nutella',
+    weight: '400g',
+    price: 68.5,
+    image: '/images/ninho-nutella.svg',
+  },
+  {
+    id: 'prestigio',
+    name: 'Prestígio Cremoso',
+    flavor: 'Coco cremoso com chocolate',
+    weight: '350g',
+    price: 62,
+    image: '/images/prestigio.svg',
+  },
+  {
+    id: 'ferrero',
+    name: 'Ferrero Crocante',
+    flavor: 'Chocolate com avelã crocante',
+    weight: '450g',
+    price: 72,
+    image: '/images/ferrero.svg',
+  },
+  {
+    id: 'trufado-maracuja',
+    name: 'Trufado de Maracujá',
+    flavor: 'Ganache trufada de maracujá',
+    weight: '380g',
+    price: 64,
+    image: '/images/trufado-maracuja.svg',
+  },
+  {
+    id: 'ninho-uva',
+    name: 'Ninho com Uva',
+    flavor: 'Leite ninho com uvas frescas',
+    weight: '400g',
+    price: 66,
+    image: '/images/ninho-uva.svg',
+  },
 ]
 
 const productHighlights = seasonalProducts.slice(0, 3)
@@ -84,6 +128,8 @@ const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 
 export default function App() {
   const [cart, setCart] = useState({})
+  const [customizations, setCustomizations] = useState({})
+  const [selectedCustomizationItemId, setSelectedCustomizationItemId] = useState(null)
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
@@ -121,20 +167,52 @@ export default function App() {
   const selectedHighlight =
     productHighlights.find((item) => item.id === selectedHighlightId) ?? productHighlights[0] ?? null
 
+  const customizationItem = selectedItems.find((item) => item.id === selectedCustomizationItemId) ?? selectedItems[0] ?? null
+
+  useEffect(() => {
+    if (!selectedItems.length) {
+      setSelectedCustomizationItemId(null)
+      return
+    }
+
+    setSelectedCustomizationItemId((current) => {
+      if (current && selectedItems.some((item) => item.id === current)) {
+        return current
+      }
+      return selectedItems[0].id
+    })
+  }, [selectedItems])
+
+  const updateCustomization = (itemId, field, value) => {
+    setCustomizations((current) => ({
+      ...current,
+      [itemId]: { ...current[itemId], [field]: value },
+    }))
+  }
+
   const whatsappLink = useMemo(() => {
     const orderList =
       selectedItems.length > 0
         ? selectedItems
-            .map((item) => `- ${item.name} x${item.quantity} (${BRL.format(item.subtotal)})`)
+            .map((item) => {
+              const details = customizations[item.id] ?? {}
+              return [
+                `- ${item.name} (${item.weight}, ${item.flavor}) x${item.quantity} — ${BRL.format(item.subtotal)}`,
+                `  • Escolha a casca de sua preferência: ${details.shell ?? 'não informado'}`,
+                `  • Sua escolha: ${details.choice ?? 'não informado'}`,
+                `  • Para ovo Embrulhado 150g: ${details.wrapped150g ?? 'não informado'}`,
+                `  • Forma de Pagamento: ${details.paymentMethod ?? 'não informado'}`,
+              ].join('\n')
+            })
             .join('\n')
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
-      `Olá! Tenho interesse em comprar ovos de páscoa da Carliz Doces.\n\nMeu pedido:\n${orderList}\n\nTotal de itens: ${totalItems}\nTotal estimado: ${BRL.format(totalPrice)}`,
+      `Olá! Tenho interesse em comprar ovos de páscoa da Carliz Doces.\n\nMeu pedido personalizado:\n${orderList}\n\nTotal de itens: ${totalItems}\nTotal estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar produção e entrega. Obrigado!`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
-  }, [selectedItems, totalItems, totalPrice])
+  }, [customizations, selectedItems, totalItems, totalPrice])
 
   const handleOrderTipToggle = (event) => {
     setOrderTipAnchor((current) => (current ? null : event.currentTarget))
@@ -266,6 +344,8 @@ export default function App() {
                   <img src={item.image} alt={item.name} />
                   <div>
                     <strong>{item.name}</strong>
+                    <span>{item.weight}</span>
+                    <span>{item.flavor}</span>
                     <span>{BRL.format(item.price)}</span>
                   </div>
                   <button type="button" onClick={() => setSelectedHighlightId(item.id)}>
@@ -329,6 +409,9 @@ export default function App() {
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
                     <h3>{item.name}</h3>
+                    <small>
+                      {item.weight} • {item.flavor}
+                    </small>
                     <span>{BRL.format(item.price)}</span>
                     <button
                       type="button"
@@ -385,11 +468,85 @@ export default function App() {
                 ) : (
                   selectedItems.map((item) => (
                     <li key={item.id}>
-                      {item.name} x{item.quantity} — {BRL.format(item.subtotal)}
+                      {item.name} ({item.weight}) x{item.quantity} — {BRL.format(item.subtotal)}
                     </li>
                   ))
                 )}
               </ul>
+
+              {customizationItem ? (
+                <div className="customization-panel">
+                  <h4>Personalização do ovo</h4>
+                  <p>Preencha as opções abaixo para {customizationItem.name}.</p>
+
+                  <Tabs
+                    value={customizationItem.id}
+                    onChange={(_event, newValue) => setSelectedCustomizationItemId(newValue)}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="Selecionar item para personalizar"
+                    className="customization-tabs"
+                  >
+                    {selectedItems.map((item) => (
+                      <Tab key={item.id} value={item.id} label={item.name} sx={{ textTransform: 'none' }} />
+                    ))}
+                  </Tabs>
+
+                  <div className="customization-fields">
+                    <TextField
+                      label="Escolha a casca de sua preferência"
+                      placeholder="Ex.: Chocolate ao leite"
+                      size="small"
+                      fullWidth
+                      value={customizations[customizationItem.id]?.shell ?? ''}
+                      onChange={(event) =>
+                        updateCustomization(customizationItem.id, 'shell', event.target.value)
+                      }
+                    />
+                    <TextField
+                      label="Sua escolha"
+                      placeholder="Ex.: Decorado com confeitos"
+                      size="small"
+                      fullWidth
+                      value={customizations[customizationItem.id]?.choice ?? ''}
+                      onChange={(event) =>
+                        updateCustomization(customizationItem.id, 'choice', event.target.value)
+                      }
+                    />
+                    <TextField
+                      select
+                      label="Para ovo Embrulhado 150g"
+                      size="small"
+                      fullWidth
+                      value={customizations[customizationItem.id]?.wrapped150g ?? ''}
+                      onChange={(event) =>
+                        updateCustomization(customizationItem.id, 'wrapped150g', event.target.value)
+                      }
+                    >
+                      <MenuItem value="">Selecione uma opção</MenuItem>
+                      <MenuItem value="Sim">Sim</MenuItem>
+                      <MenuItem value="Não">Não</MenuItem>
+                    </TextField>
+                    <TextField
+                      select
+                      label="Forma de Pagamento"
+                      size="small"
+                      fullWidth
+                      value={customizations[customizationItem.id]?.paymentMethod ?? ''}
+                      onChange={(event) =>
+                        updateCustomization(customizationItem.id, 'paymentMethod', event.target.value)
+                      }
+                    >
+                      <MenuItem value="">Selecione uma opção</MenuItem>
+                      <MenuItem value="Pix">Pix</MenuItem>
+                      <MenuItem value="Dinheiro">Dinheiro</MenuItem>
+                      <MenuItem value="Cartão de débito">Cartão de débito</MenuItem>
+                      <MenuItem value="Cartão de crédito">Cartão de crédito</MenuItem>
+                    </TextField>
+                  </div>
+                </div>
+              ) : null}
+
               <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
               <Link
                 className="finish-order"
