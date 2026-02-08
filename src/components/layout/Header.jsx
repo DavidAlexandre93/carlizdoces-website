@@ -111,7 +111,7 @@ Deus abençoe! 🙌`
             <Link href="#top" underline="none" color="inherit" className="topbar-brand" onClick={handleLogoClick}>
               <Box
                 component="img"
-                src="/images/banner-carliz.svg"
+                src="/images/logo-carlizdoces.jpg"
                 alt="Logo da Carliz Doces"
                 className={`brand-logo ${logoMotion.isFollowing ? 'is-following' : ''}`}
                 ref={logoRef}
