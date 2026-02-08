@@ -20,6 +20,7 @@ import './App.css'
 
 const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
+  { label: 'Instagram', sectionId: 'instagram' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
   { label: 'Realizar pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
@@ -43,6 +44,15 @@ const metrics = [
   ['Sabores disponíveis', '30'],
   ['Eventos atendidos', '450'],
 ]
+
+const instagramProfileLink = 'https://www.instagram.com/_carlizdoces/'
+
+const instagramPosts = [
+  { id: 'insta-1', imageUrl: '/images/ninho.svg', alt: 'Doces artesanais da Carliz Doces' },
+  { id: 'insta-2', imageUrl: '/images/ferrero.svg', alt: 'Ovo de colher da Carliz Doces' },
+  { id: 'insta-3', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros da Carliz Doces' },
+]
+
 
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
@@ -108,26 +118,6 @@ export default function App() {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
 
-  const handleShareProduct = async (item) => {
-    const shareUrl = window.location.href
-    const shareText = `${item.name} por ${BRL.format(item.price)} na Carliz Doces!`
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `Carliz Doces • ${item.name}`,
-          text: shareText,
-          url: shareUrl,
-        })
-        return
-      } catch (error) {
-        if (error?.name === 'AbortError') return
-      }
-    }
-
-    const message = encodeURIComponent(`${shareText} ${shareUrl}`)
-    window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer')
-  }
 
   return (
     <Box className="site-wrapper">
@@ -377,6 +367,25 @@ export default function App() {
             </ClickAwayListener>
           </Popper>
         </Box>
+      </section>
+
+      <section id="instagram" className="instagram-section">
+        <Container maxWidth="xl" className="page-container">
+          <header className="instagram-header">
+            <h2>Instagram</h2>
+            <p>Confira nosso perfil @_carlizdoces e acompanhe as novidades.</p>
+          </header>
+
+          <Box className="instagram-grid">
+            {instagramPosts.map((post) => (
+              <article key={post.id} className="instagram-card">
+                <a href={instagramProfileLink} target="_blank" rel="noreferrer" aria-label="Abrir Instagram da Carliz Doces">
+                  <img src={post.imageUrl} alt={post.alt} loading="lazy" />
+                </a>
+              </article>
+            ))}
+          </Box>
+        </Container>
       </section>
 
       <footer className="footer">
