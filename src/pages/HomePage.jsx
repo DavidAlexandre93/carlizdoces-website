@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Box, Container, Snackbar } from '@mui/material'
+import { motion } from 'motion/react'
 import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
 import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
@@ -88,6 +89,8 @@ export function HomePage() {
       setSnackbar({ open: true, message: `${item.name} adicionado aos favoritos!`, severity: 'success' })
       return [...currentFavorites, item.id]
     })
+  }
+
   const handleContactSubmit = (event) => {
     event.preventDefault()
 
@@ -256,47 +259,12 @@ export function HomePage() {
     }
   }, [])
 
-  useEffect(() => {
-    const revealableSelectors = [
-      '.hero',
-      '.content-block',
-      '.summary-band',
-      '.photo-band article',
-      '.photo-highlight',
-      '.order-item',
-      '.order-summary',
-      '.testimonials-grid > *',
-      '.instagram-card',
-      '.contact-panel',
-      '.footer-inner',
-    ]
-
-    const revealableElements = revealableSelectors
-      .flatMap((selector) => Array.from(document.querySelectorAll(selector)))
-      .filter((element, index, self) => self.indexOf(element) === index)
-
-    revealableElements.forEach((element) => {
-      element.classList.add('motion-reveal')
-    })
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.15 },
-    )
-
-    revealableElements.forEach((element) => observer.observe(element))
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+  const revealAnimation = {
+    initial: { opacity: 0, y: 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.2 },
+    transition: { duration: 0.55, ease: 'easeOut' },
+  }
 
   return (
     <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
@@ -310,59 +278,75 @@ export function HomePage() {
       />
 
       <main>
-        <HeroSection topShowcaseSlides={topShowcaseSlides} />
-        <AboutSection />
-        <SectionDivider label="Cardápio de Páscoa" />
+        <motion.div {...revealAnimation}>
+          <HeroSection topShowcaseSlides={topShowcaseSlides} />
+        </motion.div>
 
-        <ShowcaseSection
-          BRL={BRL}
-          seasonalProducts={seasonalProducts}
-          visibleShowcaseProducts={visibleShowcaseProducts}
-          selectedShowcaseProduct={selectedShowcaseProduct}
-          activeProductStep={activeProductStep}
-          setActiveProductStep={setActiveProductStep}
-          maxShowcasePrice={maxShowcasePrice}
-          setMaxShowcasePrice={setMaxShowcasePrice}
-          addItem={addItem}
-          removeItem={removeItem}
-          onShareProduct={handleShareProduct}
-          favoriteCounts={favoriteCounts}
-          favoriteProductIds={favoriteProductIds}
-          onFavoriteProduct={handleFavoriteProduct}
-        />
+        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.05 }}>
+          <AboutSection />
+        </motion.div>
+
+        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
+          <SectionDivider label="Cardápio de Páscoa" />
+        </motion.div>
+
+        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.15 }}>
+          <ShowcaseSection
+            BRL={BRL}
+            seasonalProducts={seasonalProducts}
+            visibleShowcaseProducts={visibleShowcaseProducts}
+            selectedShowcaseProduct={selectedShowcaseProduct}
+            activeProductStep={activeProductStep}
+            setActiveProductStep={setActiveProductStep}
+            maxShowcasePrice={maxShowcasePrice}
+            setMaxShowcasePrice={setMaxShowcasePrice}
+            addItem={addItem}
+            removeItem={removeItem}
+            onShareProduct={handleShareProduct}
+            favoriteCounts={favoriteCounts}
+            favoriteProductIds={favoriteProductIds}
+            onFavoriteProduct={handleFavoriteProduct}
+          />
+        </motion.div>
 
         <Container maxWidth="lg" className="page-container">
-          <OrderSection
-            BRL={BRL}
-            orderCustomer={orderCustomer}
-            setOrderCustomer={setOrderCustomer}
-            selectedItems={selectedItems}
-            customizations={customizations}
-            setCustomizations={setCustomizations}
-            paymentMethods={paymentMethods}
-            totalPrice={totalPrice}
-            totalItems={totalItems}
-            whatsappLink={whatsappLink}
-          />
+          <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
+            <OrderSection
+              BRL={BRL}
+              orderCustomer={orderCustomer}
+              setOrderCustomer={setOrderCustomer}
+              selectedItems={selectedItems}
+              customizations={customizations}
+              setCustomizations={setCustomizations}
+              paymentMethods={paymentMethods}
+              totalPrice={totalPrice}
+              totalItems={totalItems}
+              whatsappLink={whatsappLink}
+            />
+          </motion.div>
 
-          <LocationSection
-            orderPreferences={orderPreferences}
-            setOrderPreferences={setOrderPreferences}
-            setDeliveryMethod={setDeliveryMethod}
-          />
+          <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>
+            <LocationSection
+              orderPreferences={orderPreferences}
+              setOrderPreferences={setOrderPreferences}
+              setDeliveryMethod={setDeliveryMethod}
+            />
+          </motion.div>
         </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-          <TestimonialsSection testimonials={communityTestimonials} />
-          <UpdatesSection updates={updates} announcementChannels={announcementChannels} />
-          <ContactSection
-            contactForm={contactForm}
-            onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
-            onSubmit={handleContactSubmit}
-            contactTipOpen={contactTipOpen}
-            onToggleTip={() => setContactTipOpen((open) => !open)}
-          />
-          <InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} />
+          <motion.div {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></motion.div>
+          <motion.div {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></motion.div>
+          <motion.div {...revealAnimation}>
+            <ContactSection
+              contactForm={contactForm}
+              onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
+              onSubmit={handleContactSubmit}
+              contactTipOpen={contactTipOpen}
+              onToggleTip={() => setContactTipOpen((open) => !open)}
+            />
+          </motion.div>
+          <motion.div {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></motion.div>
         </Suspense>
       </main>
 
