@@ -4,10 +4,10 @@
  * ===============================================================
  *
  * Como usar:
- * 1) Para ADICIONAR um doce: copie um item de `productsCatalog` e altere os campos.
- * 2) Para REMOVER um doce: apague o objeto do doce.
- * 3) Para TROCAR imagem: altere o campo `image` com o caminho em /public/images/...
- * 4) Para atualizar os cards de novidades/divulgação: edite `updatesCatalog`.
+ * 1) Para adicionar IMAGENS dinâmicas: coloque os arquivos em `public/images/pedidos-de-doces`, `public/images/cardapio-de-pascoa` e `public/images/novidades`.
+ * 2) O site lê essas pastas automaticamente e cria cards/carrossel sem mexer nos componentes.
+ * 3) Use `productsCatalog` e `updatesCatalog` como OVERRIDES (texto, preço, descrição, etc.) para cada imagem.
+ * 4) Para remover um item da interface, basta remover a imagem correspondente da pasta.
  *
  * Regras simples:
  * - `id` deve ser único (sem espaços, use hífen).
