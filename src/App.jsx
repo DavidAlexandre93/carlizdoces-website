@@ -1,5 +1,18 @@
 import { useMemo, useState } from 'react'
-import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  ClickAwayListener,
+  Container,
+  ImageList,
+  ImageListItem,
+  Paper,
+  Popper,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Typography,
+} from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -90,6 +103,24 @@ export default function App() {
   const handleContactTipToggle = (event) => {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
+
+  const chatActions = [
+    {
+      name: 'Falar no WhatsApp',
+      icon: '💬',
+      onClick: () => window.open(whatsappLink, '_blank', 'noopener,noreferrer'),
+    },
+    {
+      name: 'Ver contato',
+      icon: '📞',
+      onClick: () => document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' }),
+    },
+    {
+      name: 'Dúvidas sobre pedido',
+      icon: '❓',
+      onClick: () => document.getElementById('realizar-pedido')?.scrollIntoView({ behavior: 'smooth' }),
+    },
+  ]
 
   return (
     <Box className="site-wrapper">
@@ -320,6 +351,19 @@ export default function App() {
           </div>
         </Container>
       </footer>
+
+      <Box sx={{ position: 'fixed', right: 24, bottom: 24, zIndex: (theme) => theme.zIndex.tooltip }}>
+        <SpeedDial ariaLabel="Chat para tirar dúvidas" icon={<SpeedDialIcon />} sx={{ position: 'static' }}>
+          {chatActions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={<span aria-hidden="true">{action.icon}</span>}
+              tooltipTitle={action.name}
+              onClick={action.onClick}
+            />
+          ))}
+        </SpeedDial>
+      </Box>
     </Box>
   )
 }
