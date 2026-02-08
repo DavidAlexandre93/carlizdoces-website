@@ -12,7 +12,7 @@ export function HeroSection({ topShowcaseSlides }) {
                 <img src={slide.imageUrl} alt={slide.alt} />
                 <div>
                   <Chip label={slide.tag} color="secondary" size="small" />
-                  <Typography component="h1">{slide.title}</Typography>
+                  <Typography component="h1" className="hero-lamp-title">{slide.title}</Typography>
                   <Typography component="span">{slide.description}</Typography>
                   <ButtonGroup variant="contained" color="secondary" className="hero-quick-actions">
                     <Button component="a" href="#realizar-pedido">Fazer pedido</Button>

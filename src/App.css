@@ -514,6 +514,19 @@
   font-size: clamp(30px, 6vw, 54px);
 }
 
+.hero-lamp-title {
+  font-family: 'Fredoka', 'Baloo 2', 'Comic Sans MS', 'Segoe UI', sans-serif;
+  font-size: clamp(36px, 7vw, 66px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 0 6px rgba(255, 239, 178, 0.95),
+    0 0 14px rgba(255, 226, 138, 0.9),
+    0 0 28px rgba(255, 170, 64, 0.78),
+    0 2px 0 rgba(73, 20, 6, 0.44);
+  animation: lamp-blink 1.15s steps(2, end) infinite;
+}
+
 .top-carousel-slide span {
   font-size: clamp(14px, 2.6vw, 19px);
 }
@@ -1301,6 +1314,28 @@
   justify-items: center;
 }
 
+@keyframes lamp-blink {
+  0%,
+  14%,
+  18%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+
+  15%,
+  17% {
+    opacity: 0.55;
+    filter: brightness(1.28);
+  }
+
+  54%,
+  56% {
+    opacity: 0.65;
+    filter: brightness(1.22);
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -1488,6 +1523,10 @@
   .top-carousel-slide h1 {
     font-size: 36px;
     text-align: center;
+  }
+
+  .hero-lamp-title {
+    font-size: clamp(32px, 9vw, 48px) !important;
   }
 
   .top-carousel-slide span {
