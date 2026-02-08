@@ -23,7 +23,6 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 export function HomePage() {
   const wrapperRef = useRef(null)
   const [introStage, setIntroStage] = useState('message')
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeProductStep, setActiveProductStep] = useState(0)
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
@@ -318,7 +317,7 @@ export function HomePage() {
   const MotionDiv = motion.div
 
   return (
-    <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
+    <Box id="top" ref={wrapperRef} className="site-wrapper">
       {introStage !== 'hidden' && (
         <Box className={`intro-curtain intro-curtain-${introStage}`}>
           <Box className="intro-curtain-panel intro-curtain-left" />
@@ -333,12 +332,10 @@ export function HomePage() {
         </Box>
       )}
 
-      <ParticlesBackground darkMode={isDarkMode} />
+      <ParticlesBackground />
 
       <Header
         navItems={navItems}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={setIsDarkMode}
         isMobileMenuOpen={isMobileMenuOpen}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
