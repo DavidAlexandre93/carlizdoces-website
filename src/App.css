@@ -406,6 +406,42 @@
   color: #ad1457;
 }
 
+.product-social-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.social-action {
+  width: fit-content;
+  border: 1px solid #ad1457;
+  background: #fff;
+  color: #ad1457;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.social-action-like {
+  min-width: 82px;
+  justify-content: center;
+}
+
+.social-action:hover,
+.social-action:focus-visible {
+  background: #ad1457;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 
 .showcase-stepper {
   margin-top: 14px;
@@ -489,29 +525,6 @@
 
 .order-item small {
   color: #6b1641;
-}
-
-.share-product {
-  width: fit-content;
-  border: 1px solid #ad1457;
-  background: #fff;
-  color: #ad1457;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
-}
-
-.share-product:hover,
-.share-product:focus-visible {
-  background: #ad1457;
-  color: #fff;
-  transform: translateY(-1px);
 }
 
 .qty-controls {
@@ -690,7 +703,7 @@
   padding: 24px;
 }
 
-.contact-hero div {
+.contact-panel {
   width: min(100%, 760px);
 }
 
