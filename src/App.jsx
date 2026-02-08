@@ -106,6 +106,11 @@ const instagramPosts = [
   { id: 'insta-3', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros da Carliz Doces' },
 ]
 
+const brandLogo = {
+  src: '/images/banner-carliz.svg',
+  alt: 'Logo da Carliz Doces',
+}
+
 const topShowcaseSlides = [
   {
     id: 'matilda',
@@ -658,7 +663,9 @@ export default function App() {
 
       <footer className="footer">
         <Container maxWidth="lg" className="page-container footer-inner">
-          <div className="brand">🧁</div>
+          <div className="brand">
+            <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} />
+          </div>
           <small>©2024 Carliz Doces</small>
           <ul>
             {navItems.map((item) => (

@@ -782,6 +782,10 @@
   font-size: 56px;
 }
 
+.footer .brand-logo {
+  width: clamp(130px, 16vw, 180px);
+}
+
 .footer ul {
   margin: 0;
   padding: 0;
