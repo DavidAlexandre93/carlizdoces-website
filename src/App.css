@@ -249,14 +249,43 @@
 }
 
 .brand-name {
-  font-family: 'Comic Sans MS', 'Marker Felt', 'Trebuchet MS', cursive;
+  font-family: 'Baloo 2', 'Comic Sans MS', 'Marker Felt', 'Trebuchet MS', cursive;
   font-size: clamp(30px, 4vw, 46px) !important;
-  font-weight: 800 !important;
+  font-weight: 900 !important;
   letter-spacing: 0.03em;
   color: #7b2050;
   text-shadow: 0 3px 10px rgba(173, 20, 87, 0.26);
   animation: brand-name-wiggle 2.2s ease-in-out infinite;
   transform-origin: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.brand-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.06em;
+}
+
+.brand-candy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.brand-candy-lollipop {
+  font-size: 0.93em;
+  margin-inline: 0.02em;
+  transform: rotate(-12deg) translateY(0.02em);
+}
+
+.brand-candy-donut {
+  font-size: 0.9em;
+  margin-inline: 0.015em;
+  transform: translateY(0.01em);
 }
 
 @keyframes brand-name-wiggle {

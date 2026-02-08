@@ -74,7 +74,18 @@ Deus abençoe! 🙌`
                 className={`brand-logo ${isLogoJumping ? 'is-jumping' : ''}`}
                 onAnimationEnd={() => setIsLogoJumping(false)}
               />
-              <Typography component="span" className="brand-name">Carliz Doces</Typography>
+              <Typography component="span" className="brand-name" aria-label="Carliz Doces">
+                <span className="brand-word">
+                  Carl
+                  <span className="brand-candy brand-candy-lollipop" role="img" aria-label="Pirulito">🍭</span>
+                  z
+                </span>
+                <span className="brand-word">
+                  D
+                  <span className="brand-candy brand-candy-donut" role="img" aria-label="Rosquinha">🍩</span>
+                  ces
+                </span>
+              </Typography>
             </Link>
 
             <Stack
