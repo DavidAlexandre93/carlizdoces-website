@@ -19,6 +19,7 @@ const ContactSection = lazy(() => import('../components/sections/ContactSection'
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
+const MotionDiv = motion.div
 
 export function HomePage() {
   const wrapperRef = useRef(null)
@@ -314,8 +315,6 @@ export function HomePage() {
     viewport: { once: true, amount: 0.2 },
     transition: { duration: 0.55, ease: 'easeOut' },
   }
-
-  const MotionDiv = motion.div
 
   return (
     <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
