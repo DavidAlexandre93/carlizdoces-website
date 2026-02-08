@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react'
 import FavoriteIcon from './mui-icons/Favorite'
 import FavoriteBorderIcon from './mui-icons/FavoriteBorder'
 import ShareIcon from './mui-icons/Share'
+import PersonIcon from './mui-icons/Person'
 import {
   Alert,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Avatar,
   AppBar,
   Box,
   Button,
@@ -359,6 +361,12 @@ export default function App() {
             </Box>
 
             <Box className="topbar-actions">
+              <Tooltip title="Usuário logado" arrow>
+                <Avatar aria-label="Usuário logado" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
+                  <PersonIcon sx={{ fontSize: 20 }} />
+                </Avatar>
+              </Tooltip>
+
               <IconButton
                 color="inherit"
                 aria-label={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'}
