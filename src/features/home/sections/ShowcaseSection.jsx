@@ -39,7 +39,6 @@ export function ShowcaseSection({
     <section id="ovos-de-pascoa" className="photo-band section-alt-pink animate__animated animate__fadeInUp" style={{ '--animate-duration': '750ms' }}>
       <Container maxWidth="xl" className="page-container">
         <header className="photo-band-head">
-          <Typography component="h2" variant="h4">Ovos de Páscoa</Typography>
           <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
             <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
             <Select

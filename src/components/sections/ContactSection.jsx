@@ -40,9 +40,6 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
             fontWeight: 600,
           }}
         />
-        <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
-          Contato
-        </Typography>
         <Typography variant="body1" sx={{ mb: 2.5, color: 'rgba(58, 23, 41, 0.86)' }}>
           Conte pra gente o que você está planejando. Em um clique, sua mensagem vai pronta para o WhatsApp.
         </Typography>
