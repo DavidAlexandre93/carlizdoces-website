@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
@@ -29,6 +29,15 @@ const metrics = [
   ['Eventos atendidos', '450'],
 ]
 
+const instagramProfileLink = 'https://www.instagram.com/_carlizdoces/'
+
+const instagramPosts = [
+  { id: 'insta-1', imageUrl: '/images/ninho.svg', alt: 'Doces artesanais da Carliz Doces' },
+  { id: 'insta-2', imageUrl: '/images/ferrero.svg', alt: 'Ovo de colher da Carliz Doces' },
+  { id: 'insta-3', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros da Carliz Doces' },
+]
+
+
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export default function App() {
@@ -36,8 +45,6 @@ export default function App() {
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
-  const [instagramPosts, setInstagramPosts] = useState([])
-  const [instagramStatus, setInstagramStatus] = useState('loading')
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -94,39 +101,6 @@ export default function App() {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
 
-  useEffect(() => {
-    let isMounted = true
-
-    const loadInstagram = async () => {
-      try {
-        const response = await fetch('/api/instagram-media')
-        if (!response.ok) {
-          throw new Error(`Falha ao buscar Instagram: ${response.status}`)
-        }
-
-        const data = await response.json()
-        if (!isMounted) {
-          return
-        }
-
-        setInstagramPosts(data.items ?? [])
-        setInstagramStatus('ready')
-      } catch {
-        if (!isMounted) {
-          return
-        }
-
-        setInstagramPosts([])
-        setInstagramStatus('error')
-      }
-    }
-
-    loadInstagram()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   return (
     <Box className="site-wrapper">
@@ -205,39 +179,6 @@ export default function App() {
                 </Button>
               </div>
             </aside>
-          ) : null}
-        </Container>
-      </section>
-
-      <section id="instagram" className="instagram-section">
-        <Container maxWidth="xl" className="page-container">
-          <header className="instagram-header">
-            <h2>Instagram</h2>
-            <p>As 3 publicações mais recentes do perfil @_carlizdoces.</p>
-          </header>
-
-          {instagramStatus === 'loading' ? <p>Carregando as últimas postagens...</p> : null}
-
-          {instagramStatus === 'ready' && instagramPosts.length > 0 ? (
-            <Box className="instagram-grid">
-              {instagramPosts.map((post) => (
-                <article key={post.id} className="instagram-card">
-                  <a href={post.permalink} target="_blank" rel="noreferrer">
-                    <img src={post.imageUrl} alt={post.caption || 'Postagem do Instagram'} loading="lazy" />
-                  </a>
-                  <p>{post.caption || 'Confira a postagem completa no Instagram.'}</p>
-                </article>
-              ))}
-            </Box>
-          ) : null}
-
-          {instagramStatus === 'error' ? (
-            <p>
-              Não foi possível carregar automaticamente as postagens agora. Veja no Instagram:{' '}
-              <a href="https://www.instagram.com/_carlizdoces/" target="_blank" rel="noreferrer">
-                @_carlizdoces
-              </a>
-            </p>
           ) : null}
         </Container>
       </section>
@@ -368,6 +309,25 @@ export default function App() {
             </ClickAwayListener>
           </Popper>
         </Box>
+      </section>
+
+      <section id="instagram" className="instagram-section">
+        <Container maxWidth="xl" className="page-container">
+          <header className="instagram-header">
+            <h2>Instagram</h2>
+            <p>Confira nosso perfil @_carlizdoces e acompanhe as novidades.</p>
+          </header>
+
+          <Box className="instagram-grid">
+            {instagramPosts.map((post) => (
+              <article key={post.id} className="instagram-card">
+                <a href={instagramProfileLink} target="_blank" rel="noreferrer" aria-label="Abrir Instagram da Carliz Doces">
+                  <img src={post.imageUrl} alt={post.alt} loading="lazy" />
+                </a>
+              </article>
+            ))}
+          </Box>
+        </Container>
       </section>
 
       <footer className="footer">
