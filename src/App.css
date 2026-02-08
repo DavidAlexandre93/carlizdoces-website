@@ -200,7 +200,7 @@
 }
 
 .brand-logo.is-jumping {
-  animation: logo-chaotic-wander 2800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: logo-chaotic-wander 5200ms cubic-bezier(0.22, 0.7, 0.2, 1);
 }
 
 .topbar-brand:hover .brand-logo,
@@ -1645,32 +1645,36 @@
     transform: translate3d(0, 0, 0) scale(1);
   }
 
-  10% {
-    transform: translate3d(-14vw, -18vh, 0) rotate(-16deg) scale(1.05);
+  8% {
+    transform: translate3d(-22vw, -24vh, 0) rotate(-18deg) scale(1.08);
   }
 
-  22% {
-    transform: translate3d(20vw, 12vh, 0) rotate(14deg) scale(1.12);
+  18% {
+    transform: translate3d(30vw, 18vh, 0) rotate(18deg) scale(1.18);
   }
 
-  34% {
-    transform: translate3d(-26vw, 18vh, 0) rotate(-22deg) scale(0.92);
+  30% {
+    transform: translate3d(-36vw, 24vh, 0) rotate(-24deg) scale(0.9);
   }
 
-  47% {
-    transform: translate3d(16vw, -22vh, 0) rotate(20deg) scale(1.16);
+  42% {
+    transform: translate3d(28vw, -30vh, 0) rotate(24deg) scale(1.22);
   }
 
-  61% {
-    transform: translate3d(-10vw, 14vh, 0) rotate(-12deg) scale(0.98);
+  54% {
+    transform: translate3d(-20vw, 26vh, 0) rotate(-16deg) scale(0.94);
   }
 
-  74% {
-    transform: translate3d(12vw, -8vh, 0) rotate(8deg) scale(1.06);
+  66% {
+    transform: translate3d(22vw, -16vh, 0) rotate(12deg) scale(1.12);
   }
 
-  88% {
-    transform: translate3d(-4vw, 4vh, 0) rotate(-4deg) scale(1.02);
+  78% {
+    transform: translate3d(-16vw, -12vh, 0) rotate(-10deg) scale(1.05);
+  }
+
+  90% {
+    transform: translate3d(10vw, 8vh, 0) rotate(7deg) scale(1.03);
   }
 
   100% {
