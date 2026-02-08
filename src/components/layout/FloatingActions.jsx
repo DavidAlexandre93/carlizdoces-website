@@ -16,6 +16,13 @@ export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalL
           <Icon>shopping_cart</Icon>
         </Badge>
       </Fab>
+      <Tooltip title="Ir para a seção de pedidos" placement="right" arrow>
+        <Fab color="primary" size="small" aria-label="Ir para realizar pedido" href="#realizar-pedido" onClick={onGoToOrderSection}>
+          <Badge color="secondary" badgeContent={totalItems} invisible={totalItems === 0}>
+            <Icon>shopping_cart</Icon>
+          </Badge>
+        </Fab>
+      </Tooltip>
 
       <Fab
         color={hasLiked ? 'secondary' : 'default'}

@@ -71,6 +71,35 @@ export function HomePage() {
     }
   }
 
+  const handleContactSubmit = (event) => {
+    event.preventDefault()
+
+    const name = contactForm.name.trim()
+    const email = contactForm.email.trim()
+    const message = contactForm.message.trim()
+
+    if (!name || !message) {
+      setSnackbar({ open: true, message: 'Preencha nome e mensagem para enviar no WhatsApp.', severity: 'warning' })
+      return
+    }
+
+    const formattedMessage = [
+      'Olá, Carliz Doces! Vim pelo site e gostaria de atendimento. 🍫',
+      '',
+      `*Nome:* ${name}`,
+      email ? `*Email:* ${email}` : null,
+      '*Mensagem:*',
+      message,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const whatsappContactLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(formattedMessage)}`
+
+    window.open(whatsappContactLink, '_blank', 'noopener,noreferrer')
+    setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
+  }
+
   useEffect(() => {
     const wrapperElement = wrapperRef.current
     if (!wrapperElement) return undefined
@@ -112,6 +141,15 @@ export function HomePage() {
 
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleGoToOrderSection = (event) => {
+    event.preventDefault()
+    const orderSection = document.getElementById('realizar-pedido')
+    if (orderSection) {
+      orderSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    window.history.replaceState(null, '', '#realizar-pedido')
   }
 
   useEffect(() => {
@@ -313,6 +351,7 @@ export function HomePage() {
           <ContactSection
             contactForm={contactForm}
             onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
+            onSubmit={handleContactSubmit}
             contactTipOpen={contactTipOpen}
             onToggleTip={() => setContactTipOpen((open) => !open)}
           />
@@ -329,6 +368,7 @@ export function HomePage() {
         hasLiked={hasLikedStore}
         onToggleLike={handleToggleLike}
         showLikeCelebration={showLikeCelebration}
+        onGoToOrderSection={handleGoToOrderSection}
       />
 
       <Snackbar
