@@ -5,7 +5,6 @@ export default function InstagramSection({ instagramPosts, instagramProfileLink 
     <section id="instagram" className="instagram-section section-alt-pink animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Container maxWidth="xl" className="page-container">
         <header className="instagram-header">
-          <Typography component="h2" variant="h4">Instagram</Typography>
           <Typography component="p" variant="body1">Confira nosso perfil @_carlizdoces e acompanhe as novidades.</Typography>
           <Button variant="contained" color="secondary" href={instagramProfileLink} target="_blank" rel="noreferrer" sx={{ mt: 1 }}>
             Seguir no Instagram

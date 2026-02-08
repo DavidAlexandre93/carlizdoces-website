@@ -329,6 +329,10 @@ export function HomePage() {
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.05 }}>
+          <SectionDivider label="Quem somos" />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.08 }}>
           <AboutSection />
         </MotionDiv>
 
@@ -357,6 +361,10 @@ export function HomePage() {
 
         <Container maxWidth="lg" className="page-container">
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
+            <SectionDivider label="Realizar pedido" />
+          </MotionDiv>
+
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.22 }}>
             <OrderSection
               BRL={BRL}
               orderCustomer={orderCustomer}
@@ -371,7 +379,11 @@ export function HomePage() {
             />
           </MotionDiv>
 
-          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.24 }}>
+            <SectionDivider label="Onde estamos" />
+          </MotionDiv>
+
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.26 }}>
             <LocationSection
               orderPreferences={orderPreferences}
               setOrderPreferences={setOrderPreferences}
@@ -381,8 +393,11 @@ export function HomePage() {
         </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
+          <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" /></MotionDiv>
           <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
+          <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" /></MotionDiv>
           <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
+          <MotionDiv {...revealAnimation}><SectionDivider label="Contato" /></MotionDiv>
           <MotionDiv {...revealAnimation}>
             <ContactSection
               contactForm={contactForm}
@@ -392,6 +407,7 @@ export function HomePage() {
               onToggleTip={() => setContactTipOpen((open) => !open)}
             />
           </MotionDiv>
+          <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" /></MotionDiv>
           <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
         </Suspense>
       </main>
