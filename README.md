@@ -266,6 +266,18 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
+### Aviso "New major version of npm available"
+
+Esse aviso é apenas informativo e não impede a execução do projeto.
+
+Se quiser ocultar a notificação localmente no repositório, mantemos `update-notifier=false` no arquivo `.npmrc`.
+
+Para atualizar o npm globalmente (opcional):
+
+```bash
+npm install -g npm@latest
+```
+
 ### Build falhando na Vercel
 
 Verifique se o output está apontando para `dist/` e se não há override conflitante no painel do projeto.
