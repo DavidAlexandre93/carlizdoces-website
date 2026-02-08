@@ -34,13 +34,25 @@ jobs:
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
+      - name: Check Vercel credentials
+        id: creds
+        shell: bash
+        run: |
+          if [[ -n "$VERCEL_TOKEN" && -n "$VERCEL_ORG_ID" && -n "$VERCEL_PROJECT_ID" ]]; then
+            echo "has_credentials=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_credentials=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy preview
         id: deploy
+        if: steps.creds.outputs.has_credentials == 'true'
         run: |
-          url=$(vercel --token="$VERCEL_TOKEN")
+          url=$(vercel deploy --yes --token="$VERCEL_TOKEN")
           echo "preview_url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Comment preview URL
+        if: steps.creds.outputs.has_credentials == 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -50,4 +62,16 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: `✅ Preview deploy: ${url}`,
+            });
+
+      - name: Comment skipped preview deploy
+        if: steps.creds.outputs.has_credentials != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `⚠️ Preview deploy skipped because Vercel secrets are not available for this pull request.`,
             });
