@@ -36,10 +36,26 @@ import './App.css'
 const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
   { label: 'Instagram', sectionId: 'instagram' },
+  { label: 'Depoimentos', sectionId: 'depoimentos' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
   { label: 'Realizar pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
   { label: 'Contato', sectionId: 'contato' },
+]
+
+const manualTestimonials = [
+  {
+    id: 'manual-1',
+    author: 'Carla M.',
+    channel: 'Instagram',
+    message: 'Pedi para o aniversário do meu filho e os brigadeiros fizeram o maior sucesso na festa toda.',
+  },
+  {
+    id: 'manual-2',
+    author: 'Juliana F.',
+    channel: 'WhatsApp',
+    message: 'Atendimento rápido, doces lindos e muito saborosos. Já virei cliente fiel da Carliz Doces.',
+  },
 ]
 
 // Edite apenas este array para atualizar produtos conforme o estoque.
@@ -148,6 +164,17 @@ export default function App() {
   const [activeProductStep, setActiveProductStep] = useState(0)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [communityTestimonials, setCommunityTestimonials] = useState([
+    {
+      id: 'community-1',
+      author: 'Cliente da loja',
+      message: 'Os ovos de colher chegaram perfeitos e com muito recheio. Recomendo demais!',
+    },
+  ])
+  const [testimonialForm, setTestimonialForm] = useState({
+    author: '',
+    message: '',
+  })
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -256,6 +283,32 @@ export default function App() {
 
   const handleBackProduct = () => {
     setActiveProductStep((current) => Math.max(current - 1, 0))
+  }
+
+  const handleTestimonialChange = (field, value) => {
+    setTestimonialForm((current) => ({
+      ...current,
+      [field]: value,
+    }))
+  }
+
+  const handleTestimonialSubmit = (event) => {
+    event.preventDefault()
+
+    if (!testimonialForm.message.trim()) {
+      return
+    }
+
+    setCommunityTestimonials((current) => [
+      {
+        id: `community-${Date.now()}`,
+        author: testimonialForm.author.trim() || 'Cliente da Carliz Doces',
+        message: testimonialForm.message.trim(),
+      },
+      ...current,
+    ])
+
+    setTestimonialForm({ author: '', message: '' })
   }
 
 
@@ -637,6 +690,71 @@ export default function App() {
               </AccordionDetails>
             </Accordion>
           </Box>
+        </Container>
+      </section>
+
+      <section id="depoimentos" className="testimonials-section">
+        <Container maxWidth="lg" className="page-container">
+          <header className="testimonials-header">
+            <h2>Depoimentos</h2>
+            <p>
+              Espaço para clientes contarem a experiência com os doces da Carliz e para registrar feedbacks
+              recebidos em outros canais.
+            </p>
+          </header>
+
+          <Box className="testimonials-grid">
+            <Paper component="form" onSubmit={handleTestimonialSubmit} elevation={0} className="testimonial-form-card">
+              <h3>Deixe sua opinião</h3>
+              <p>Seu comentário ajuda outras pessoas e também melhora nossos próximos pedidos.</p>
+              <TextField
+                label="Seu nome"
+                placeholder="Ex.: Maria"
+                value={testimonialForm.author}
+                onChange={(event) => handleTestimonialChange('author', event.target.value)}
+                fullWidth
+                size="small"
+              />
+              <TextField
+                label="Seu depoimento"
+                placeholder="Conte como foi sua experiência com nossos doces"
+                value={testimonialForm.message}
+                onChange={(event) => handleTestimonialChange('message', event.target.value)}
+                multiline
+                minRows={4}
+                fullWidth
+                required
+              />
+              <Button type="submit" variant="contained">
+                Enviar depoimento
+              </Button>
+            </Paper>
+
+            <Paper elevation={0} className="testimonials-list-card">
+              <h3>Clientes que já opinaram aqui</h3>
+              <ul>
+                {communityTestimonials.map((testimonial) => (
+                  <li key={testimonial.id}>
+                    <strong>{testimonial.author}</strong>
+                    <p>{testimonial.message}</p>
+                  </li>
+                ))}
+              </ul>
+            </Paper>
+          </Box>
+
+          <Paper elevation={0} className="manual-feedback-card">
+            <h3>Feedbacks recebidos por outros meios</h3>
+            <ul>
+              {manualTestimonials.map((testimonial) => (
+                <li key={testimonial.id}>
+                  <strong>{testimonial.author}</strong>
+                  <span>{testimonial.channel}</span>
+                  <p>{testimonial.message}</p>
+                </li>
+              ))}
+            </ul>
+          </Paper>
         </Container>
       </section>
 
