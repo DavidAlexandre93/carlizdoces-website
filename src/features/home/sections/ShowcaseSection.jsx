@@ -74,7 +74,9 @@ export function ShowcaseSection({
 
         {selectedShowcaseProduct ? (
           <Paper className="showcase-card" sx={{ p: 2.5 }}>
-            <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} style={{ width: '100%', maxHeight: 380, objectFit: 'contain' }} />
+            <div className="showcase-image-stage" key={selectedShowcaseProduct.id}>
+              <img className="showcase-image" src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
+            </div>
             <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
             <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
             <Rating precision={0.1} value={selectedShowcaseProduct.rating} readOnly sx={{ mt: 1 }} />
@@ -97,6 +99,7 @@ export function ShowcaseSection({
         )}
 
         <MobileStepper
+          className="showcase-stepper"
           variant="dots"
           steps={Math.max(visibleShowcaseProducts.length, 1)}
           position="static"
