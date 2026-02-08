@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Box, Container, Snackbar } from '@mui/material'
-import { BRL, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, whatsappNumber } from '../data/siteData'
+import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
 import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
 import { Header } from '../components/layout/Header'
@@ -16,6 +16,7 @@ import { LocationSection } from '../features/home/sections/LocationSection'
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
+const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 
 export function HomePage() {
   const wrapperRef = useRef(null)
@@ -253,6 +254,7 @@ export function HomePage() {
               ])
             }
           />
+          <UpdatesSection updates={updates} announcementChannels={announcementChannels} />
           <ContactSection
             contactForm={contactForm}
             onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}

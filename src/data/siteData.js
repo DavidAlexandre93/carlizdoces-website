@@ -1,5 +1,6 @@
 export const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
+  { label: 'Novidades', sectionId: 'novidades' },
   { label: 'Instagram', sectionId: 'instagram' },
   { label: 'Depoimentos', sectionId: 'depoimentos' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
@@ -15,6 +16,48 @@ export const seasonalProducts = [
   { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/ferrero.svg', rating: 5, reviewCount: 322 },
   { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/trufado-maracuja.svg', rating: 4.6, reviewCount: 186 },
   { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/ninho-uva.svg', rating: 4.8, reviewCount: 271 },
+]
+
+
+export const updates = [
+  {
+    id: 'update-1',
+    type: 'sorteio',
+    dateLabel: 'até 31/03',
+    title: 'Sorteio Páscoa Premiada',
+    description: 'A cada R$ 50 em pedidos de Páscoa você recebe um número para concorrer a um ovo de colher especial da casa.',
+    status: 'Resultado ao vivo no Instagram em 01/04 às 20h.',
+  },
+  {
+    id: 'update-2',
+    type: 'promocao',
+    dateLabel: 'válido nesta semana',
+    title: 'Combo em dobro para festas',
+    description: 'Na compra de 2 kits festa de brigadeiros, você ganha 10 mini doces personalizados para complementar sua mesa.',
+    status: 'Promoção limitada enquanto durar o estoque de sabores do dia.',
+  },
+  {
+    id: 'update-3',
+    type: 'ganhador',
+    dateLabel: 'último resultado',
+    title: 'Ganhadora confirmada: Juliana F.',
+    description: 'Parabéns para a Juliana F., contemplada no último sorteio mensal de caixa premium com trufas artesanais.',
+    status: 'Confira o vídeo completo e a validação no destaque “Ganhadores”.',
+  },
+  {
+    id: 'update-4',
+    type: 'divulgacao',
+    dateLabel: 'aviso geral',
+    title: 'Calendário de encomendas atualizado',
+    description: 'Agora divulgamos as datas de fechamento por campanha com antecedência para facilitar seu planejamento.',
+    status: 'Ative as notificações para acompanhar cada abertura de agenda.',
+  },
+]
+
+export const announcementChannels = [
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/_carlizdoces/', variant: 'contained', external: true },
+  { id: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/5511992175496?text=Oi%2C%20quero%20receber%20as%20novidades%20da%20Carliz%20Doces%21', variant: 'outlined', external: true },
+  { id: 'contato', label: 'Falar com a equipe', href: '#contato', variant: 'text', external: false },
 ]
 
 export const manualTestimonials = [
