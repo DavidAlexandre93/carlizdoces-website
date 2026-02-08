@@ -3,7 +3,16 @@ import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 export default function ContactSection({ contactForm, onChange, contactTipOpen, onToggleTip }) {
   return (
     <section id="contato" className="contact-hero">
-      <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 4, maxWidth: 1080, mx: 'auto' }}>
+      <Paper
+        sx={{
+          p: { xs: 2, md: 3 },
+          borderRadius: 4,
+          maxWidth: 1080,
+          mx: 'auto',
+          bgcolor: 'rgba(244, 236, 250, 0.92)',
+          border: '1px solid rgba(171, 120, 197, 0.3)',
+        }}
+      >
         <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
           Contato
         </Typography>
