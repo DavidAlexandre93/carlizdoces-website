@@ -637,6 +637,15 @@ export default function App() {
               </CarouselSlide>
             ))}
           </Carousel>
+
+          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mt: 2, justifyContent: { xs: 'center', md: 'flex-start' } }}>
+            <Button variant="contained" color="secondary" href="#realizar-pedido">
+              Fazer pedido agora
+            </Button>
+            <Button variant="outlined" color="secondary" href="#contato">
+              Falar com a equipe
+            </Button>
+          </Box>
         </Container>
       </section>
 
@@ -648,6 +657,9 @@ export default function App() {
               Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
               ovos de páscoa.
             </Typography>
+            <Button variant="text" color="secondary" href="#ovos-de-pascoa" sx={{ mt: 2 }}>
+              Ver cardápio de páscoa
+            </Button>
           </Paper>
         </Container>
       </section>
@@ -1364,14 +1376,23 @@ export default function App() {
           </Tabs>
 
           {selectedContactTab === 'whatsapp' ? (
-            <Typography component="p" variant="body1">
-              WhatsApp:{' '}
+            <Box>
+              <Typography component="p" variant="body1" sx={{ mb: 1 }}>
+                WhatsApp: +55 11 99217-5496
+              </Typography>
               <Tooltip title="Clique para abrir a conversa no WhatsApp" arrow>
-                <Link href="https://wa.me/5511992175496" target="_blank" rel="noreferrer" underline="hover">
-                  +55 11 99217-5496
-                </Link>
+                <Button
+                  variant="contained"
+                  color="success"
+                  href="https://wa.me/5511992175496"
+                  target="_blank"
+                  rel="noreferrer"
+                  size="small"
+                >
+                  Abrir conversa no WhatsApp
+                </Button>
               </Tooltip>
-            </Typography>
+            </Box>
           ) : null}
           {selectedContactTab === 'telefone' ? (
             <Typography component="p" variant="body1">
@@ -1468,6 +1489,16 @@ export default function App() {
           <header className="instagram-header">
             <Typography component="h2" variant="h4">Instagram</Typography>
             <Typography component="p" variant="body1">Confira nosso perfil @_carlizdoces e acompanhe as novidades.</Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              href={instagramProfileLink}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ mt: 1 }}
+            >
+              Seguir no Instagram
+            </Button>
           </header>
 
           <Box className="instagram-grid">
