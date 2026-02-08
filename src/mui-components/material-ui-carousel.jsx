@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export function Carousel({
   children,
@@ -7,9 +7,11 @@ export function Carousel({
   navButtonsAlwaysVisible = false,
   indicators = true,
   className = '',
+  swipeThreshold = 40,
 }) {
   const slides = useMemo(() => (Array.isArray(children) ? children : [children]).filter(Boolean), [children])
   const [activeIndex, setActiveIndex] = useState(0)
+  const touchStartX = useRef(null)
 
   useEffect(() => {
     if (!autoPlay || slides.length <= 1) {
@@ -26,13 +28,50 @@ export function Carousel({
   const goPrev = () => setActiveIndex((current) => (current - 1 + slides.length) % slides.length)
   const goNext = () => setActiveIndex((current) => (current + 1) % slides.length)
 
+  const onTouchStart = (event) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null
+  }
+
+  const onTouchEnd = (event) => {
+    const startX = touchStartX.current
+    const endX = event.changedTouches[0]?.clientX
+
+    touchStartX.current = null
+
+    if (startX == null || endX == null) {
+      return
+    }
+
+    const distance = endX - startX
+    if (Math.abs(distance) < swipeThreshold) {
+      return
+    }
+
+    if (distance > 0) {
+      goPrev()
+      return
+    }
+
+    goNext()
+  }
+
   if (slides.length === 0) {
     return null
   }
 
   return (
-    <div className={`mui-carousel ${className}`.trim()}>
-      <div className="mui-carousel-track">{slides[activeIndex]}</div>
+    <div className={`mui-carousel ${className}`.trim()} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className="mui-carousel-track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+        {slides.map((slide, index) => (
+          <div
+            key={`slide-${index}`}
+            className={`mui-carousel-stage ${index === activeIndex ? 'is-active' : ''}`}
+            aria-hidden={index !== activeIndex}
+          >
+            {slide}
+          </div>
+        ))}
+      </div>
 
       {slides.length > 1 && navButtonsAlwaysVisible ? (
         <>
