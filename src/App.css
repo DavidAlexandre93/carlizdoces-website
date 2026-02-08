@@ -218,6 +218,20 @@
   font-size: 19px;
 }
 
+.hero-quick-actions {
+  margin-top: 16px;
+}
+
+.hero-quick-actions .MuiButton-root,
+.contact-quick-actions .MuiButton-root {
+  font-weight: 700;
+  text-transform: none;
+}
+
+.contact-quick-actions {
+  margin-top: 14px;
+}
+
 .mui-carousel-nav {
   position: absolute;
   top: 50%;
@@ -691,6 +705,14 @@
   margin-top: 16px;
 }
 
+.order-switch-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+}
+
 .customization-panel {
   border: 1px solid #f1d7e3;
   border-radius: 12px;
@@ -1060,6 +1082,13 @@
 
 .manual-feedback-card {
   margin-top: 16px;
+}
+
+.manual-feedback-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .manual-feedback-card span {
