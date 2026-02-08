@@ -9,27 +9,17 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
         component="form"
         onSubmit={onSubmit}
         sx={{
-          p: { xs: 2, md: 3 },
-          borderRadius: 4,
-          maxWidth: 1080,
+          p: { xs: 2.5, md: 4 },
+          borderRadius: 5,
+          maxWidth: 860,
+          width: '100%',
           mx: 'auto',
-          bgcolor: 'rgba(244, 236, 250, 0.92)',
+          backdropFilter: 'blur(10px)',
+          background: 'linear-gradient(145deg, rgba(255,255,255,0.97), rgba(255,240,248,0.93))',
+          boxShadow: '0 20px 40px rgba(91, 23, 55, 0.22)',
           border: '1px solid rgba(171, 120, 197, 0.3)',
         }}
       >
-        <Box
-          sx={{
-            p: { xs: 2.5, md: 4 },
-            borderRadius: 5,
-            maxWidth: 860,
-            width: '100%',
-            mx: 'auto',
-            backdropFilter: 'blur(10px)',
-            background: 'linear-gradient(145deg, rgba(255,255,255,0.97), rgba(255,240,248,0.93))',
-            boxShadow: '0 20px 40px rgba(91, 23, 55, 0.22)',
-            border: '1px solid rgba(171, 120, 197, 0.3)',
-          }}
-        >
         <Chip
           label="Atendimento personalizado"
           size="small"
@@ -86,8 +76,7 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
           <Typography sx={{ mt: 1.5, color: 'rgba(58, 23, 41, 0.86)' }} variant="body2">
             Atendimento no WhatsApp com resposta média em até 20 minutos no horário comercial.
           </Typography>
-          ) : null}
-        </Box>
+        ) : null}
       </Paper>
     </section>
   )
