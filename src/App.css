@@ -1,6 +1,7 @@
 .site-wrapper {
   background: #e9e9e9;
   color: #111;
+  animation: fade-in 450ms ease-out;
 }
 
 .topbar {
@@ -10,6 +11,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px 36px;
+  animation: slide-down 500ms ease-out;
 }
 
 .brand,
@@ -28,6 +30,15 @@
   text-decoration: none;
   color: #111;
   font-weight: 600;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.topbar a:hover,
+.topbar a:focus-visible,
+.footer a:hover,
+.footer a:focus-visible {
+  color: #ad1457;
+  transform: translateY(-2px);
 }
 
 .hero {
@@ -42,6 +53,7 @@
   height: 600px;
   object-fit: cover;
   display: block;
+  animation: zoom-in 900ms ease-out both;
 }
 
 .hero h1 {
@@ -52,6 +64,7 @@
   margin: 0;
   color: #fff;
   font-size: 76px;
+  animation: pop-in 700ms ease-out 120ms both;
 }
 
 .content-block {
@@ -103,6 +116,12 @@
   position: relative;
   overflow: hidden;
   min-height: 310px;
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.photo-band article:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.15);
 }
 
 .photo-band img {
@@ -120,6 +139,14 @@
   background: rgba(255, 255, 255, 0.84);
   display: flex;
   justify-content: space-between;
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform 240ms ease, opacity 240ms ease;
+}
+
+.photo-band article:hover div {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .order-section {
@@ -160,6 +187,12 @@
   grid-template-columns: 100px 1fr auto;
   align-items: center;
   gap: 14px;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.order-list article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 24px rgba(173, 20, 87, 0.16);
 }
 
 .order-list img {
@@ -194,6 +227,13 @@
   border-radius: 50%;
   font-size: 22px;
   cursor: pointer;
+  transition: transform 140ms ease, filter 140ms ease;
+}
+
+.qty-controls button:hover,
+.qty-controls button:focus-visible {
+  transform: scale(1.08);
+  filter: brightness(1.08);
 }
 
 .order-summary {
@@ -235,6 +275,14 @@
   font-weight: 700;
   padding: 12px;
   border-radius: 10px;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.finish-order:hover,
+.finish-order:focus-visible {
+  background: #1daa53;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
 }
 
 .contact-hero {
@@ -268,6 +316,59 @@
   display: grid;
   gap: 10px;
   justify-items: center;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .footer .brand {
