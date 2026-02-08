@@ -262,8 +262,9 @@
   animation: brand-name-wiggle 2.2s ease-in-out infinite;
   transform-origin: center;
   display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 
 .brand-word {
@@ -273,8 +274,8 @@
 }
 
 .brand-word-doces {
-  margin-top: 0.78em;
-  margin-left: 0.2em;
+  margin-top: -0.14em;
+  margin-left: 1.12em;
 }
 
 .brand-candy {
