@@ -180,6 +180,7 @@ export default function App() {
     author: '',
     message: '',
   })
+  const [googleAccount, setGoogleAccount] = useState(null)
   const [likesByProduct, setLikesByProduct] = useState(() =>
     Object.fromEntries(seasonalProducts.map((item, index) => [item.id, 100 + index * 7])),
   )
@@ -313,6 +314,10 @@ export default function App() {
   const handleTestimonialSubmit = (event) => {
     event.preventDefault()
 
+    if (!googleAccount) {
+      return
+    }
+
     if (!testimonialForm.message.trim()) {
       return
     }
@@ -327,6 +332,46 @@ export default function App() {
     ])
 
     setTestimonialForm({ author: '', message: '' })
+  }
+
+  const handleGoogleLogin = () => {
+    const informedEmail = window.prompt('Digite o e-mail da sua conta Google para continuar:')
+
+    if (!informedEmail) {
+      return
+    }
+
+    const normalizedEmail = informedEmail.trim().toLowerCase()
+
+    if (!normalizedEmail.endsWith('@gmail.com')) {
+      window.alert('Use uma conta Google válida (@gmail.com) para enviar seu depoimento.')
+      return
+    }
+
+    const defaultName = normalizedEmail.split('@')[0]?.replace(/[._-]+/g, ' ') || 'Cliente Google'
+    const formattedName = defaultName
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ')
+
+    setGoogleAccount({
+      email: normalizedEmail,
+      name: formattedName,
+    })
+
+    setTestimonialForm((current) => ({
+      ...current,
+      author: current.author.trim() ? current.author : formattedName,
+    }))
+  }
+
+  const handleGoogleLogout = () => {
+    setGoogleAccount(null)
+    setTestimonialForm((current) => ({
+      ...current,
+      author: '',
+    }))
   }
 
 
@@ -800,6 +845,27 @@ export default function App() {
             <Paper component="form" onSubmit={handleTestimonialSubmit} elevation={0} className="testimonial-form-card">
               <Typography component="h3" variant="h5">Deixe sua opinião</Typography>
               <Typography component="p" variant="body2">Seu comentário ajuda outras pessoas e também melhora nossos próximos pedidos.</Typography>
+              <Box className="testimonial-google-access">
+                {googleAccount ? (
+                  <>
+                    <Alert severity="success">
+                      Conectado com Google: <strong>{googleAccount.email}</strong>
+                    </Alert>
+                    <Button type="button" variant="outlined" onClick={handleGoogleLogout}>
+                      Sair da conta Google
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Alert severity="info">
+                      Para publicar um depoimento é necessário entrar com uma conta Google.
+                    </Alert>
+                    <Button type="button" variant="contained" onClick={handleGoogleLogin}>
+                      Entrar com Google
+                    </Button>
+                  </>
+                )}
+              </Box>
               <TextField
                 label="Seu nome"
                 placeholder="Ex.: Maria"
@@ -807,6 +873,7 @@ export default function App() {
                 onChange={(event) => handleTestimonialChange('author', event.target.value)}
                 fullWidth
                 size="small"
+                disabled={!googleAccount}
               />
               <TextField
                 label="Seu depoimento"
@@ -817,8 +884,9 @@ export default function App() {
                 minRows={4}
                 fullWidth
                 required
+                disabled={!googleAccount}
               />
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" disabled={!googleAccount}>
                 Enviar depoimento
               </Button>
             </Paper>
