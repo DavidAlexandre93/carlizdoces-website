@@ -128,6 +128,21 @@
   color: #5a3851;
 }
 
+.section-tabs {
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid #edc2d7;
+}
+
+.section-tabs .MuiTab-root {
+  min-height: 46px;
+  color: #6f3552;
+}
+
+.section-tabs .Mui-selected {
+  color: #ad1457;
+}
+
 .photo-band-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -474,6 +489,21 @@
 
 .contact-hero div {
   width: min(100%, 760px);
+}
+
+.contact-tabs {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  display: inline-flex;
+}
+
+.contact-tabs .MuiTab-root {
+  min-height: 42px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.contact-tabs .Mui-selected {
+  color: #fff;
 }
 
 .contact-band h2 {
