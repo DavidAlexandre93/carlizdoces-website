@@ -1,4 +1,4 @@
-import { Badge, Box, Fab, Icon, Tooltip, Zoom } from '@mui/material'
+import { Badge, Box, Fab, Icon, IconButton, Tooltip, Zoom } from '@mui/material'
 import FavoriteIcon from '../../mui-icons/Favorite'
 import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
 
@@ -6,9 +6,15 @@ export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalL
   return (
     <Box component="aside" aria-label="Ações rápidas" sx={{ position: 'fixed', left: { xs: 12, md: 24 }, bottom: { xs: 16, md: 24 }, display: 'flex', flexDirection: 'column', gap: 1.2 }}>
       {showScrollTop ? (
-        <Fab color="default" size="small" aria-label="Voltar ao topo" onClick={onScrollTop}>
+        <IconButton
+          color="inherit"
+          size="small"
+          aria-label="Voltar ao topo"
+          onClick={onScrollTop}
+          sx={{ color: 'text.primary' }}
+        >
           <Icon>keyboard_arrow_up</Icon>
-        </Fab>
+        </IconButton>
       ) : null}
 
       <Tooltip title="Ir para a seção de pedidos" placement="right" arrow>
@@ -19,8 +25,8 @@ export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalL
         </Fab>
       </Tooltip>
 
-      <Fab
-        color={hasLiked ? 'secondary' : 'default'}
+      <IconButton
+        color={hasLiked ? 'secondary' : 'inherit'}
         size="small"
         aria-label="Curtir loja"
         onClick={onToggleLike}
@@ -28,6 +34,7 @@ export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalL
           transform: showLikeCelebration ? 'scale(1.12)' : 'scale(1)',
           transition: 'transform 220ms ease',
           overflow: 'visible',
+          color: hasLiked ? undefined : 'text.primary',
         }}
       >
         <Badge
@@ -60,7 +67,7 @@ export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalL
             }}
           />
         </Zoom>
-      </Fab>
+      </IconButton>
     </Box>
   )
 }
