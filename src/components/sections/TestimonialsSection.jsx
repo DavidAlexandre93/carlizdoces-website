@@ -27,7 +27,7 @@ export default function TestimonialsSection({ testimonials }) {
   }, [])
 
   return (
-    <section id="depoimentos" className="testimonials-section animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <section id="depoimentos" className="testimonials-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 4, maxWidth: 1080, mx: 'auto' }}>
         <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
           Depoimentos
