@@ -198,6 +198,29 @@ VITE_DISQUS_SHORTNAME=seu-shortname
 
 ---
 
+## ⭐ Avaliações por estrelas dos produtos
+
+A vitrine agora permite que cada usuário escolha seu próprio nível de estrelas para cada produto.
+
+- O voto do usuário fica salvo no navegador (localStorage), para manter o valor selecionado quando a página for aberta novamente;
+- A média exibida considera os votos agregados vindos da API em `/api/ratings`, quando disponível;
+- Sem API disponível, a interface mantém a avaliação local no dispositivo e mostra fallback da média base do catálogo.
+
+### Endpoint de avaliação
+
+O projeto já inclui um endpoint serverless em:
+
+```txt
+/api/ratings
+```
+
+Ele aceita:
+
+- `GET` → retorna as estatísticas agregadas por produto;
+- `POST` com `{ productId, rating }` → registra/atualiza voto (1 a 5).
+
+---
+
 ## 📦 Dependências
 
 ### Dependências de produção

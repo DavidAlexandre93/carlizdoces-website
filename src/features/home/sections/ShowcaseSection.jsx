@@ -33,7 +33,12 @@ export function ShowcaseSection({
   favoriteCounts,
   favoriteProductIds,
   onFavoriteProduct,
+  productRatings,
+  onRateProduct,
+  isGlobalRatingsActive,
 }) {
+  const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
+
   return (
     <Container id="ovos-de-pascoa" maxWidth="xl" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
       <header className="photo-band-head">
@@ -100,7 +105,23 @@ export function ShowcaseSection({
             <Typography variant="body2">Quantidades: {selectedShowcaseProduct.quantities.join(' / ')}</Typography>
           ) : null}
           {selectedShowcaseProduct.details ? <Typography variant="body2">{selectedShowcaseProduct.details}</Typography> : null}
-          <Rating precision={0.1} value={selectedShowcaseProduct.rating} readOnly sx={{ mt: 1 }} />
+          <Box sx={{ mt: 1 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700 }}>
+              Avalie este sabor
+            </Typography>
+            <Rating
+              precision={1}
+              value={ratingStats?.userRating ?? 0}
+              onChange={(_event, nextValue) => {
+                if (nextValue) {
+                  onRateProduct(selectedShowcaseProduct, nextValue)
+                }
+              }}
+            />
+            <Typography variant="caption" sx={{ display: 'block' }}>
+              Média {isGlobalRatingsActive ? 'global' : 'local'}: {(ratingStats?.average ?? selectedShowcaseProduct.rating).toFixed(1)} ★ ({ratingStats?.votes ?? selectedShowcaseProduct.reviewCount ?? 0} avaliações)
+            </Typography>
+          </Box>
           <Typography color="secondary" fontWeight={700}>{BRL.format(selectedShowcaseProduct.price)}</Typography>
           <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
             <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>Adicionar</Button>
