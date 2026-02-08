@@ -323,7 +323,7 @@ export function HomePage() {
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
       />
 
-      <main>
+      <main className="section-stack">
         <MotionDiv {...revealAnimation}>
           <HeroSection topShowcaseSlides={topShowcaseSlides} />
         </MotionDiv>
@@ -359,7 +359,7 @@ export function HomePage() {
           />
         </MotionDiv>
 
-        <Container maxWidth="lg" className="page-container">
+        <Container maxWidth="lg" className="page-container section-stack">
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
             <SectionDivider label="Realizar pedido" />
           </MotionDiv>
@@ -393,22 +393,24 @@ export function HomePage() {
         </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-          <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" /></MotionDiv>
-          <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
-          <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" /></MotionDiv>
-          <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
-          <MotionDiv {...revealAnimation}><SectionDivider label="Contato" /></MotionDiv>
-          <MotionDiv {...revealAnimation}>
-            <ContactSection
-              contactForm={contactForm}
-              onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
-              onSubmit={handleContactSubmit}
-              contactTipOpen={contactTipOpen}
-              onToggleTip={() => setContactTipOpen((open) => !open)}
-            />
-          </MotionDiv>
-          <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" /></MotionDiv>
-          <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
+          <Box className="section-stack">
+            <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Contato" /></MotionDiv>
+            <MotionDiv {...revealAnimation}>
+              <ContactSection
+                contactForm={contactForm}
+                onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
+                onSubmit={handleContactSubmit}
+                contactTipOpen={contactTipOpen}
+                onToggleTip={() => setContactTipOpen((open) => !open)}
+              />
+            </MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
+          </Box>
         </Suspense>
       </main>
 

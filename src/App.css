@@ -437,6 +437,11 @@
   transform: translateY(-2px);
 }
 
+.section-stack {
+  display: grid;
+  gap: clamp(14px, 2.2vw, 24px);
+}
+
 .hero {
   padding-bottom: 36px;
   position: relative;
