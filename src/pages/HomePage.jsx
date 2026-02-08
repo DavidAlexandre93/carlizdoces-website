@@ -33,6 +33,8 @@ export function HomePage() {
   const [communityTestimonials, setCommunityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [favoriteProductIds, setFavoriteProductIds] = useState([])
+  const [favoriteCounts, setFavoriteCounts] = useState({})
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
 
@@ -66,6 +68,23 @@ export function HomePage() {
     } catch {
       setSnackbar({ open: true, message: 'Não foi possível compartilhar agora.', severity: 'error' })
     }
+  }
+
+  const handleFavoriteProduct = (item) => {
+    setFavoriteProductIds((currentFavorites) => {
+      const alreadyFavorite = currentFavorites.includes(item.id)
+      if (alreadyFavorite) {
+        setSnackbar({ open: true, message: `${item.name} removido dos seus favoritos.`, severity: 'info' })
+        return currentFavorites.filter((id) => id !== item.id)
+      }
+
+      setFavoriteCounts((currentCounts) => ({
+        ...currentCounts,
+        [item.id]: (currentCounts[item.id] ?? 0) + 1,
+      }))
+      setSnackbar({ open: true, message: `${item.name} adicionado aos favoritos!`, severity: 'success' })
+      return [...currentFavorites, item.id]
+    })
   }
 
   useEffect(() => {
@@ -216,6 +235,9 @@ export function HomePage() {
           addItem={addItem}
           removeItem={removeItem}
           onShareProduct={handleShareProduct}
+          favoriteCounts={favoriteCounts}
+          favoriteProductIds={favoriteProductIds}
+          onFavoriteProduct={handleFavoriteProduct}
         />
 
         <Container maxWidth="lg" className="page-container">
