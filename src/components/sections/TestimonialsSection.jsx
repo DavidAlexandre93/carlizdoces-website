@@ -1,6 +1,31 @@
-import { Alert, Box, Button, Paper, Typography } from '@mui/material'
+import { useEffect } from 'react'
+import { Alert, Box, Link, Paper, Typography } from '@mui/material'
 
-export default function TestimonialsSection({ testimonials, onAddSample }) {
+const DISQUS_SHORTNAME = import.meta.env.VITE_DISQUS_SHORTNAME
+
+export default function TestimonialsSection({ testimonials }) {
+  useEffect(() => {
+    if (!DISQUS_SHORTNAME) return undefined
+
+    window.disqus_config = function disqusConfig() {
+      this.page.url = window.location.href
+      this.page.identifier = 'carliz-clientes-depoimentos'
+      this.page.title = 'Depoimentos de clientes - Carliz Doces'
+      this.language = 'pt_BR'
+    }
+
+    const script = document.createElement('script')
+    script.src = `https://${DISQUS_SHORTNAME}.disqus.com/embed.js`
+    script.setAttribute('data-timestamp', `${Date.now()}`)
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      const disqusScript = document.querySelector(`script[src="https://${DISQUS_SHORTNAME}.disqus.com/embed.js"]`)
+      disqusScript?.remove()
+    }
+  }, [])
+
   return (
     <section id="depoimentos" className="testimonials-section">
       <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 4, maxWidth: 1080, mx: 'auto' }}>
@@ -14,9 +39,30 @@ export default function TestimonialsSection({ testimonials, onAddSample }) {
             </Alert>
           ))}
         </Box>
-        <Button sx={{ mt: 2 }} onClick={onAddSample} variant="contained" color="secondary">
-          Adicionar depoimento exemplo
-        </Button>
+
+        <Box sx={{ mt: 3 }}>
+          <Typography component="h3" variant="h6" sx={{ mb: 1 }}>
+            Comentários da comunidade
+          </Typography>
+
+          {DISQUS_SHORTNAME ? (
+            <>
+              <Box id="disqus_thread" sx={{ minHeight: 140 }} />
+              <Typography variant="caption" sx={{ display: 'block', mt: 1.5 }}>
+                Comentários fornecidos por{' '}
+                <Link href="https://disqus.com" target="_blank" rel="noreferrer">
+                  Disqus
+                </Link>
+                .
+              </Typography>
+            </>
+          ) : (
+            <Alert severity="info" variant="outlined" sx={{ mt: 1 }}>
+              Para habilitar comentários via Disqus, configure a variável{' '}
+              <strong>VITE_DISQUS_SHORTNAME</strong> no ambiente de execução.
+            </Alert>
+          )}
+        </Box>
       </Paper>
     </section>
   )
