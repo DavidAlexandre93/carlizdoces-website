@@ -1,10 +1,10 @@
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 
 const typeStyles = {
-  sorteio: { label: 'Sorteio', color: 'secondary' },
-  promocao: { label: 'Promoção', color: 'success' },
-  ganhador: { label: 'Ganhador', color: 'info' },
-  divulgacao: { label: 'Divulgação', color: 'warning' },
+  microinteracoes: { label: 'Motion', color: 'secondary' },
+  scroll: { label: 'GSAP', color: 'success' },
+  ilustracoes: { label: 'Lottie', color: 'info' },
+  reveal: { label: 'AOS / animate.css', color: 'warning' },
 }
 
 export default function UpdatesSection({ updates, announcementChannels }) {
@@ -14,13 +14,13 @@ export default function UpdatesSection({ updates, announcementChannels }) {
         <header className="updates-header">
           <Typography component="h2" variant="h4">Central de novidades</Typography>
           <Typography component="p" variant="body1">
-            Um espaço único para acompanhar sorteios, promoções, lista de ganhadores e todos os avisos importantes da Carliz Doces.
+            Um resumo prático das bibliotecas de animação que mais funcionam no dia a dia, sem pesar o site.
           </Typography>
         </header>
 
         <Box className="updates-grid">
           {updates.map((item) => {
-            const type = typeStyles[item.type] ?? typeStyles.divulgacao
+            const type = typeStyles[item.type] ?? typeStyles.reveal
 
             return (
               <Paper key={item.id} component="article" elevation={3} className="updates-card">
