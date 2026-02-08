@@ -9,43 +9,77 @@
 }
 
 .topbar {
-  padding: 24px 0;
+  padding: 10px 0;
   animation: slide-down 500ms ease-out;
+  background: rgba(255, 248, 251, 0.94) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #efccdc;
 }
 
 .topbar-inner {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
+  min-height: 72px;
 }
 
-.brand,
+.topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e6bfd2;
+  box-shadow: 0 6px 14px rgba(173, 20, 87, 0.15);
+}
+
+.brand-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #7b2050;
+}
+
 .section-icon {
   font-size: 72px;
   line-height: 1;
 }
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-logo {
-  width: clamp(140px, 18vw, 220px);
-  height: auto;
-  border-radius: 18px;
-  box-shadow: 0 12px 32px rgba(173, 20, 87, 0.28);
-  border: 3px solid #fff;
-  background: #fff;
-}
-
-.topbar nav {
+.topbar-nav {
   display: flex;
-  gap: 36px;
+  gap: 30px;
 }
 
-.topbar a,
+.topbar-menu-button {
+  display: none !important;
+}
+
+.mobile-nav {
+  width: min(82vw, 320px);
+  padding: 12px;
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 14px;
+}
+
+.mobile-brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e6bfd2;
+}
+
+.topbar-nav a,
+.topbar-brand,
 .footer a {
   text-decoration: none;
   color: #111;
@@ -53,8 +87,10 @@
   transition: color 180ms ease, transform 180ms ease;
 }
 
-.topbar a:hover,
-.topbar a:focus-visible,
+.topbar-nav a:hover,
+.topbar-nav a:focus-visible,
+.topbar-brand:hover,
+.topbar-brand:focus-visible,
 .footer a:hover,
 .footer a:focus-visible {
   color: #ad1457;
@@ -786,9 +822,16 @@
 }
 
 @media (max-width: 960px) {
-  .topbar-inner {
-    flex-direction: column;
-    gap: 16px;
+  .topbar-nav {
+    display: none;
+  }
+
+  .topbar-menu-button {
+    display: inline-flex !important;
+  }
+
+  .brand-name {
+    font-size: 18px !important;
   }
 
   .top-carousel-slide img {

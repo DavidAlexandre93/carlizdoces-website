@@ -1,13 +1,19 @@
 import { useMemo, useState } from 'react'
 import ShareIcon from '@mui/icons-material/Share'
 import {
+  AppBar,
   Box,
   Button,
   ClickAwayListener,
   Container,
+  Drawer,
+  IconButton,
   ImageList,
   ImageListItem,
   Link,
+  List,
+  ListItemButton,
+  ListItemText,
   Paper,
   Popper,
   MenuItem,
@@ -17,6 +23,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Toolbar,
   Typography,
 } from '@mui/material'
 import { Carousel, CarouselSlide } from 'material-ui-carousel'
@@ -138,6 +145,7 @@ export default function App() {
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -243,27 +251,61 @@ export default function App() {
 
 
   return (
-    <Box className="site-wrapper">
-      <Box component="header" className="topbar">
-        <Container maxWidth="xl" className="page-container topbar-inner">
-          <Box className="brand" component="a" href="#" aria-label="Ir para o topo">
-            <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} />
-          </Box>
-          <Box component="nav">
-            {navItems.map((item) => (
-              <Link
-                key={item.sectionId}
-                href={`#${item.sectionId}`}
-                underline="hover"
-                color="inherit"
-                sx={{ fontWeight: 600 }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </Box>
+    <Box id="top" className="site-wrapper">
+      <AppBar position="sticky" color="transparent" elevation={0} className="topbar">
+        <Container maxWidth="xl" className="page-container">
+          <Toolbar disableGutters className="topbar-inner">
+            <Link href="#top" underline="none" color="inherit" className="topbar-brand">
+              <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
+              <Typography component="span" className="brand-name">
+                Carliz Doces
+              </Typography>
+            </Link>
+
+            <Box component="nav" className="topbar-nav">
+              {navItems.map((item) => (
+                <Link
+                  key={item.sectionId}
+                  href={`#${item.sectionId}`}
+                  underline="hover"
+                  color="inherit"
+                  sx={{ fontWeight: 600 }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </Box>
+
+            <IconButton
+              color="inherit"
+              aria-label="Abrir menu"
+              edge="end"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="topbar-menu-button"
+            >
+              <Box component="span" sx={{ fontSize: 26, lineHeight: 1 }}>☰</Box>
+            </IconButton>
+          </Toolbar>
         </Container>
-      </Box>
+      </AppBar>
+
+      <Drawer anchor="right" open={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+        <Box className="mobile-nav" role="presentation" onClick={() => setIsMobileMenuOpen(false)}>
+          <Box className="mobile-nav-header">
+            <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="mobile-brand-logo" />
+            <Typography variant="h6" color="primary" fontWeight={700}>
+              Carliz Doces
+            </Typography>
+          </Box>
+          <List>
+            {navItems.map((item) => (
+              <ListItemButton key={item.sectionId} component="a" href={`#${item.sectionId}`}>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
 
       <section className="hero">
         <Container maxWidth="xl" className="page-container hero-inner">
