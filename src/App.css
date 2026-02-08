@@ -95,6 +95,32 @@
   color: #f4ecf2;
 }
 
+.site-wrapper.dark-mode :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  small,
+  strong,
+  a,
+  li,
+  label,
+  button,
+  input,
+  textarea,
+  .MuiTypography-root,
+  .MuiTab-root,
+  .MuiButtonBase-root,
+  .MuiFormLabel-root,
+  .MuiInputBase-input
+) {
+  color: #fff !important;
+}
+
 .site-wrapper.dark-mode .topbar {
   background: rgba(23, 17, 22, 0.92) !important;
   border-bottom-color: #4f3344;
