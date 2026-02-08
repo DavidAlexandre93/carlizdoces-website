@@ -187,8 +187,8 @@
 }
 
 .brand-logo {
-  width: 68px;
-  height: 68px;
+  width: clamp(112px, 13vw, 144px);
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e6bfd2;
@@ -1553,7 +1553,6 @@
     gap: 8px;
   }
 
-  .brand-logo,
   .mobile-brand-logo {
     width: 52px;
     height: 52px;
