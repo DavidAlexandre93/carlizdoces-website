@@ -2,17 +2,23 @@ import { useMemo, useState } from 'react'
 import FavoriteIcon from './mui-icons/Favorite'
 import FavoriteBorderIcon from './mui-icons/FavoriteBorder'
 import ShareIcon from './mui-icons/Share'
+import PersonIcon from './mui-icons/Person'
 import {
   Alert,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Avatar,
   AppBar,
+  Badge,
   Box,
   Button,
+  Chip,
   ClickAwayListener,
   Container,
   Drawer,
+  Divider,
+  Icon,
   IconButton,
   ImageList,
   ImageListItem,
@@ -140,6 +146,7 @@ const topShowcaseSlides = [
     alt: 'Bolo da Matilda especial da Carliz Doces',
     title: 'Bolo da Matilda',
     description: 'Destaque da semana para os apaixonados por chocolate.',
+    tag: 'Mais pedido',
   },
   {
     id: 'ferrero',
@@ -147,6 +154,7 @@ const topShowcaseSlides = [
     alt: 'Campanha de sorteio com ovo Ferrero Rocher',
     title: 'Sorteio Ferrero Rocher',
     description: 'Promoção especial para quem encomenda ovos de colher.',
+    tag: 'Promoção',
   },
   {
     id: 'brigadeiro',
@@ -154,8 +162,11 @@ const topShowcaseSlides = [
     alt: 'Brigadeiros artesanais da Carliz Doces',
     title: 'Brigadeiros artesanais',
     description: 'Sabores para festas e lembranças com a cara da Carliz.',
+    tag: 'Clássico da casa',
   },
 ]
+
+const featuredProductIds = new Set(['brigadeiro', 'ferrero'])
 
 
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -286,12 +297,12 @@ export default function App() {
   const chatActions = [
     {
       name: 'WhatsApp',
-      icon: '💬',
+      icon: <Icon fontSize="small">chat</Icon>,
       onClick: () => window.open('https://wa.me/5511992175496', '_blank', 'noopener,noreferrer'),
     },
     {
       name: 'Instagram',
-      icon: '📸',
+      icon: <Icon fontSize="small">photo_camera</Icon>,
       onClick: () => window.open(instagramProfileLink, '_blank', 'noopener,noreferrer'),
     },
   ]
@@ -373,6 +384,15 @@ export default function App() {
       author: '',
     }))
   }
+  const renderSectionDivider = (label) => (
+    <Container maxWidth="lg" className="page-container section-divider-wrap" aria-hidden="true">
+      <Divider className="section-divider" textAlign="center">
+        <Typography component="span" variant="overline" className="section-divider-label">
+          {label}
+        </Typography>
+      </Divider>
+    </Container>
+  )
 
 
   return (
@@ -383,9 +403,11 @@ export default function App() {
             <Tooltip title="Voltar para o topo da página" arrow>
               <Link href="#top" underline="none" color="inherit" className="topbar-brand">
                 <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
-                <Typography component="span" className="brand-name">
-                  Carliz Doces
-                </Typography>
+                <Badge color="secondary" badgeContent="Top" sx={{ '& .MuiBadge-badge': { right: -24 } }}>
+                  <Typography component="span" className="brand-name">
+                    Carliz Doces
+                  </Typography>
+                </Badge>
               </Link>
             </Tooltip>
 
@@ -404,15 +426,19 @@ export default function App() {
             </Box>
 
             <Box className="topbar-actions">
+              <Tooltip title="Usuário logado" arrow>
+                <Avatar aria-label="Usuário logado" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
+                  <PersonIcon sx={{ fontSize: 20 }} />
+                </Avatar>
+              </Tooltip>
+
               <IconButton
                 color="inherit"
                 aria-label={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'}
                 onClick={() => setIsDarkMode((current) => !current)}
                 className="theme-toggle-button"
               >
-                <Box component="span" sx={{ fontSize: 22, lineHeight: 1.1 }}>
-                  {isDarkMode ? '☀️' : '🌙'}
-                </Box>
+                <Icon>{isDarkMode ? 'light_mode' : 'dark_mode'}</Icon>
               </IconButton>
 
               <IconButton
@@ -422,7 +448,7 @@ export default function App() {
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="topbar-menu-button"
               >
-                <Box component="span" sx={{ fontSize: 26, lineHeight: 1 }}>☰</Box>
+                <Icon>menu</Icon>
               </IconButton>
             </Box>
           </Toolbar>
@@ -462,6 +488,12 @@ export default function App() {
                   <img src={slide.imageUrl} alt={slide.alt} />
                   <div>
                     <Typography component="p" variant="overline">Destaque no topo</Typography>
+                    <Chip
+                      label={slide.tag}
+                      color="secondary"
+                      size="small"
+                      sx={{ mb: 1, fontWeight: 700 }}
+                    />
                     <Typography component="h1" variant="h3">{slide.title}</Typography>
                     <Typography component="span" variant="body1">{slide.description}</Typography>
                   </div>
@@ -484,6 +516,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Cardápio de Páscoa')}
+
       <section id="ovos-de-pascoa" className="photo-band">
         <Container maxWidth="xl" className="page-container">
           <header className="photo-band-head">
@@ -496,6 +530,19 @@ export default function App() {
               <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
                 <Typography component="p" variant="overline" className="highlight-tag">Catálogo de temporada</Typography>
+                <Badge
+                  color="primary"
+                  badgeContent={featuredProductIds.has(selectedShowcaseProduct.id) ? 'Mais pedido' : 'Novidade'}
+                  sx={{ '& .MuiBadge-badge': { right: -56, top: 12 } }}
+                >
+                  <Typography component="h3" variant="h5">{selectedShowcaseProduct.name}</Typography>
+                </Badge>
+                <Chip
+                  label="Edição limitada"
+                  color="warning"
+                  size="small"
+                  sx={{ mb: 1.2, fontWeight: 700 }}
+                />
                 <Typography component="h3" variant="h5">{selectedShowcaseProduct.name}</Typography>
                 <Typography component="p" variant="body1">
                   {selectedShowcaseProduct.weight} de pura cremosidade com sabor {selectedShowcaseProduct.flavor}.
@@ -545,12 +592,12 @@ export default function App() {
             className="showcase-stepper"
             nextButton={
               <Button size="small" onClick={handleNextProduct} disabled={activeProductStep === seasonalProducts.length - 1}>
-                Próximo →
+                Próximo <Icon fontSize="small">navigate_next</Icon>
               </Button>
             }
             backButton={
               <Button size="small" onClick={handleBackProduct} disabled={activeProductStep === 0}>
-                ← Anterior
+                <Icon fontSize="small">navigate_before</Icon> Anterior
               </Button>
             }
           />
@@ -581,6 +628,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Monte seu pedido')}
+
       <section id="realizar-pedido" className="order-section">
         <Container maxWidth="xl" className="page-container">
           <Typography component="h2" variant="h4">Realizar pedido</Typography>
@@ -604,7 +653,7 @@ export default function App() {
           <Box sx={{ mt: 2, mb: 3 }}>
             <Accordion defaultExpanded>
               <AccordionSummary
-                expandIcon={<span aria-hidden="true">⌄</span>}
+                expandIcon={<Icon aria-hidden="true">expand_more</Icon>}
                 aria-controls="pedido-passo-a-passo-content"
                 id="pedido-passo-a-passo-header"
               >
@@ -618,7 +667,7 @@ export default function App() {
               </AccordionDetails>
             </Accordion>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="pedido-pagamento-content" id="pedido-pagamento-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="pedido-pagamento-content" id="pedido-pagamento-header">
                 <Typography sx={{ fontWeight: 700 }}>Formas de pagamento aceitas</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -643,9 +692,10 @@ export default function App() {
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
                     <Typography component="h3" variant="h6">{item.name}</Typography>
-                    <Typography component="small" variant="body2">
-                      {item.weight} • {item.flavor}
-                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mt: 0.4 }}>
+                      <Chip label={item.weight} size="small" variant="outlined" color="primary" />
+                      <Chip label={item.flavor} size="small" variant="outlined" />
+                    </Box>
                     <Typography component="span" variant="subtitle1">{BRL.format(item.price)}</Typography>
                     <div className="product-social-actions" aria-label={`Interações de ${item.name}`}>
                       <Tooltip title="Curta para salvar esse sabor entre seus favoritos" arrow>
@@ -681,13 +731,13 @@ export default function App() {
                   <div className="qty-controls">
                     <Tooltip title="Diminuir quantidade" arrow>
                       <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
-                        -
+                        <Icon fontSize="inherit" aria-hidden="true">remove</Icon>
                       </button>
                     </Tooltip>
                     <Typography component="strong" variant="body1">{cart[item.id] ?? 0}</Typography>
                     <Tooltip title="Aumentar quantidade" arrow>
                       <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
-                        +
+                        <Icon fontSize="inherit" aria-hidden="true">add</Icon>
                       </button>
                     </Tooltip>
                   </div>
@@ -696,7 +746,9 @@ export default function App() {
             </ImageList>
 
             <Paper component="aside" elevation={3} className="order-summary">
-              <Typography component="h3" variant="h5">Resumo do pedido</Typography>
+              <Badge color="secondary" badgeContent={`${totalItems} item(ns)`}>
+                <Typography component="h3" variant="h5">Resumo do pedido</Typography>
+              </Badge>
               <Typography component="p" variant="body1">
                 <Typography component="strong" variant="h6">{totalItems}</Typography> item(ns) no carrinho
               </Typography>
@@ -796,6 +848,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Depoimentos de clientes')}
+
       <section id="onde-estamos" className="content-block centered">
         <Container maxWidth="md" className="page-container">
           <div className="section-icon">🧁</div>
@@ -806,7 +860,7 @@ export default function App() {
           <Typography component="p" variant="body1">Próximo à Praça Central e estação de metrô.</Typography>
           <Box sx={{ mt: 2, textAlign: 'left' }}>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="retirada-content" id="retirada-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="retirada-content" id="retirada-header">
                 <Typography sx={{ fontWeight: 700 }}>Retirada e entrega</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -817,7 +871,7 @@ export default function App() {
               </AccordionDetails>
             </Accordion>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="eventos-content" id="eventos-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="eventos-content" id="eventos-header">
                 <Typography sx={{ fontWeight: 700 }}>Atendimento para eventos</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -892,7 +946,9 @@ export default function App() {
             </Paper>
 
             <Paper elevation={0} className="testimonials-list-card">
-              <Typography component="h3" variant="h5">Clientes que já opinaram aqui</Typography>
+              <Badge color="primary" badgeContent={`${communityTestimonials.length} opiniões`}>
+                <Typography component="h3" variant="h5">Clientes que já opinaram aqui</Typography>
+              </Badge>
               <ul>
                 {communityTestimonials.map((testimonial) => (
                   <li key={testimonial.id}>
@@ -919,6 +975,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Fale com a Carliz')}
+
       <section id="contato" className="contact-hero">
         <Paper
           className="contact-panel"
@@ -934,6 +992,12 @@ export default function App() {
           }}
         >
           <Typography component="h2" variant="h4">Contato</Typography>
+          <Chip
+            label="Resposta média em até 20 minutos"
+            color="success"
+            size="small"
+            sx={{ mt: 1, mb: 1.2, fontWeight: 600 }}
+          />
           <Typography component="p" variant="body1">Fale com a nossa equipe para encomendas especiais e eventos.</Typography>
           <Tabs
             value={selectedContactTab}
@@ -991,6 +1055,8 @@ export default function App() {
         </Paper>
       </section>
 
+      {renderSectionDivider('Acompanhe no Instagram')}
+
       <section id="instagram" className="instagram-section">
         <Container maxWidth="xl" className="page-container">
           <header className="instagram-header">
@@ -1046,7 +1112,7 @@ export default function App() {
           {chatActions.map((action) => (
             <SpeedDialAction
               key={action.name}
-              icon={<span aria-hidden="true">{action.icon}</span>}
+              icon={action.icon}
               tooltipTitle={action.name}
               onClick={action.onClick}
             />
