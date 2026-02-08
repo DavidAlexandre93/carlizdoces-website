@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import ShareIcon from '@mui/icons-material/Share'
 import {
+  Alert,
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -148,6 +149,7 @@ export default function App() {
   const [activeProductStep, setActiveProductStep] = useState(0)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showOrderAlert, setShowOrderAlert] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -591,12 +593,18 @@ export default function App() {
               ) : null}
 
               <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
+              {showOrderAlert ? (
+                <Alert severity="success" sx={{ mb: 1.5 }} onClose={() => setShowOrderAlert(false)}>
+                  Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.
+                </Alert>
+              ) : null}
               <Link
                 className="finish-order"
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 underline="none"
+                onClick={() => setShowOrderAlert(true)}
               >
                 Finalizar pedido no WhatsApp
               </Link>
