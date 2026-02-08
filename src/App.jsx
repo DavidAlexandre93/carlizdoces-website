@@ -31,6 +31,7 @@ import {
   Tabs,
   TextField,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import { Carousel, CarouselSlide } from 'material-ui-carousel'
@@ -333,12 +334,14 @@ export default function App() {
       <AppBar position="sticky" color="transparent" elevation={0} className="topbar">
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
-            <Link href="#top" underline="none" color="inherit" className="topbar-brand">
-              <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
-              <Typography component="span" className="brand-name">
-                Carliz Doces
-              </Typography>
-            </Link>
+            <Tooltip title="Voltar para o topo da página" arrow>
+              <Link href="#top" underline="none" color="inherit" className="topbar-brand">
+                <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
+                <Typography component="span" className="brand-name">
+                  Carliz Doces
+                </Typography>
+              </Link>
+            </Tooltip>
 
             <Box component="nav" className="topbar-nav">
               {navItems.map((item) => (
@@ -466,9 +469,11 @@ export default function App() {
                     Compartilhar
                   </button>
                 </div>
-                <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>
-                  Adicionar ao pedido
-                </Button>
+                <Tooltip title="Adiciona esse sabor ao seu carrinho" arrow>
+                  <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>
+                    Adicionar ao pedido
+                  </Button>
+                </Tooltip>
               </div>
             </Paper>
           ) : null}
@@ -584,40 +589,48 @@ export default function App() {
                     </Typography>
                     <Typography component="span" variant="subtitle1">{BRL.format(item.price)}</Typography>
                     <div className="product-social-actions" aria-label={`Interações de ${item.name}`}>
-                      <button
-                        type="button"
-                        className="social-action social-action-like"
-                        onClick={() => handleLikeProduct(item.id)}
-                        aria-label={`Curtir ${item.name}`}
-                        title="Curtir"
-                      >
-                        {likedProducts[item.id] ? (
-                          <FavoriteIcon fontSize="small" aria-hidden="true" />
-                        ) : (
-                          <FavoriteBorderIcon fontSize="small" aria-hidden="true" />
-                        )}
-                        {likesByProduct[item.id] ?? 0}
-                      </button>
-                      <button
-                        type="button"
-                        className="social-action"
-                        onClick={() => handleShareProduct(item)}
-                        aria-label={`Compartilhar ${item.name}`}
-                        title="Compartilhar doce"
-                      >
-                        <ShareIcon fontSize="small" aria-hidden="true" />
-                        Compartilhar
-                      </button>
+                      <Tooltip title="Curta para salvar esse sabor entre seus favoritos" arrow>
+                        <button
+                          type="button"
+                          className="social-action social-action-like"
+                          onClick={() => handleLikeProduct(item.id)}
+                          aria-label={`Curtir ${item.name}`}
+                          title="Curtir"
+                        >
+                          {likedProducts[item.id] ? (
+                            <FavoriteIcon fontSize="small" aria-hidden="true" />
+                          ) : (
+                            <FavoriteBorderIcon fontSize="small" aria-hidden="true" />
+                          )}
+                          {likesByProduct[item.id] ?? 0}
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Compartilhe esse doce com alguém" arrow>
+                        <button
+                          type="button"
+                          className="social-action"
+                          onClick={() => handleShareProduct(item)}
+                          aria-label={`Compartilhar ${item.name}`}
+                          title="Compartilhar doce"
+                        >
+                          <ShareIcon fontSize="small" aria-hidden="true" />
+                          Compartilhar
+                        </button>
+                      </Tooltip>
                     </div>
                   </div>
                   <div className="qty-controls">
-                    <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
-                      -
-                    </button>
+                    <Tooltip title="Diminuir quantidade" arrow>
+                      <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
+                        -
+                      </button>
+                    </Tooltip>
                     <Typography component="strong" variant="body1">{cart[item.id] ?? 0}</Typography>
-                    <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
-                      +
-                    </button>
+                    <Tooltip title="Aumentar quantidade" arrow>
+                      <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
+                        +
+                      </button>
+                    </Tooltip>
                   </div>
                 </ImageListItem>
               ))}
@@ -855,9 +868,11 @@ export default function App() {
           {selectedContactTab === 'whatsapp' ? (
             <Typography component="p" variant="body1">
               WhatsApp:{' '}
-              <Link href="https://wa.me/5511992175496" target="_blank" rel="noreferrer" underline="hover">
-                +55 11 99217-5496
-              </Link>
+              <Tooltip title="Clique para abrir a conversa no WhatsApp" arrow>
+                <Link href="https://wa.me/5511992175496" target="_blank" rel="noreferrer" underline="hover">
+                  +55 11 99217-5496
+                </Link>
+              </Tooltip>
             </Typography>
           ) : null}
           {selectedContactTab === 'telefone' ? (
