@@ -30,6 +30,7 @@ import {
   Popper,
   MenuItem,
   MobileStepper,
+  Switch,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -197,6 +198,8 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [isWhatsAppConfirmationEnabled, setIsWhatsAppConfirmationEnabled] = useState(true)
+  const [showManualTestimonials, setShowManualTestimonials] = useState(true)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -426,6 +429,15 @@ export default function App() {
             </Box>
 
             <Box className="topbar-actions">
+              <Tooltip title={isDarkMode ? 'Modo escuro ativado' : 'Modo claro ativado'} arrow>
+                <Switch
+                  checked={isDarkMode}
+                  onChange={(_event, checked) => setIsDarkMode(checked)}
+                  color="secondary"
+                  inputProps={{ 'aria-label': isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro' }}
+                />
+              </Tooltip>
+
               <Tooltip title="Usuário logado" arrow>
                 <Avatar aria-label="Usuário logado" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
                   <PersonIcon sx={{ fontSize: 20 }} />
@@ -828,9 +840,20 @@ export default function App() {
               ) : null}
 
               <Typography component="p" variant="h6" className="summary-total">Total: {BRL.format(totalPrice)}</Typography>
+              <Box className="order-switch-line">
+                <Typography component="span" variant="body2">Receber confirmação automática no WhatsApp</Typography>
+                <Switch
+                  checked={isWhatsAppConfirmationEnabled}
+                  onChange={(_event, checked) => setIsWhatsAppConfirmationEnabled(checked)}
+                  color="secondary"
+                  inputProps={{ 'aria-label': 'Ativar confirmação automática no WhatsApp' }}
+                />
+              </Box>
               {showOrderAlert ? (
                 <Alert severity="success" sx={{ mb: 1.5 }} onClose={() => setShowOrderAlert(false)}>
-                  Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.
+                  {isWhatsAppConfirmationEnabled
+                    ? 'Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.'
+                    : 'Pedido enviado! Sua confirmação automática está desativada no momento.'}
                 </Alert>
               ) : null}
               <Link
@@ -961,16 +984,30 @@ export default function App() {
           </Box>
 
           <Paper elevation={0} className="manual-feedback-card">
-            <Typography component="h3" variant="h5">Feedbacks recebidos por outros meios</Typography>
-            <ul>
-              {manualTestimonials.map((testimonial) => (
-                <li key={testimonial.id}>
-                  <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
-                  <Typography component="span" variant="caption">{testimonial.channel}</Typography>
-                  <Typography component="p" variant="body2">{testimonial.message}</Typography>
-                </li>
-              ))}
-            </ul>
+            <Box className="manual-feedback-head">
+              <Typography component="h3" variant="h5">Feedbacks recebidos por outros meios</Typography>
+              <Switch
+                checked={showManualTestimonials}
+                onChange={(_event, checked) => setShowManualTestimonials(checked)}
+                color="secondary"
+                inputProps={{ 'aria-label': 'Mostrar feedbacks recebidos por outros meios' }}
+              />
+            </Box>
+            {showManualTestimonials ? (
+              <ul>
+                {manualTestimonials.map((testimonial) => (
+                  <li key={testimonial.id}>
+                    <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
+                    <Typography component="span" variant="caption">{testimonial.channel}</Typography>
+                    <Typography component="p" variant="body2">{testimonial.message}</Typography>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Typography component="p" variant="body2">
+                Feedbacks externos ocultos. Ative o switch para visualizar novamente.
+              </Typography>
+            )}
           </Paper>
         </Container>
       </section>
