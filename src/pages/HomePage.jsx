@@ -30,7 +30,7 @@ export function HomePage() {
   const [deliveryMethod, setDeliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactTipOpen, setContactTipOpen] = useState(false)
-  const [communityTestimonials, setCommunityTestimonials] = useState(manualTestimonials)
+  const [communityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
   const [showScrollTop, setShowScrollTop] = useState(false)
 
@@ -240,20 +240,7 @@ export function HomePage() {
         </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-          <TestimonialsSection
-            testimonials={communityTestimonials}
-            onAddSample={() =>
-              setCommunityTestimonials((current) => [
-                ...current,
-                {
-                  id: `community-${current.length + 1}`,
-                  author: 'Cliente',
-                  channel: 'WhatsApp',
-                  message: 'Adorei a experiência e a qualidade dos doces!',
-                },
-              ])
-            }
-          />
+          <TestimonialsSection testimonials={communityTestimonials} />
           <UpdatesSection updates={updates} announcementChannels={announcementChannels} />
           <ContactSection
             contactForm={contactForm}

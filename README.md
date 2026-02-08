@@ -158,6 +158,21 @@ http://localhost:3000
 
 ---
 
+## 💬 Configuração de comentários (Disqus)
+
+A seção **Depoimentos** pode exibir comentários reais de clientes com Disqus.
+
+1. Crie um site no Disqus e obtenha o seu `shortname`;
+2. Defina a variável abaixo no ambiente local/deploy:
+
+```bash
+VITE_DISQUS_SHORTNAME=seu-shortname
+```
+
+> Sem essa variável, a aplicação exibe uma mensagem orientando a configuração e não carrega o widget.
+
+---
+
 ## 📦 Dependências
 
 ### Dependências de produção
