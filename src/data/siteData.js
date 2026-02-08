@@ -10,12 +10,12 @@ export const navItems = [
 ]
 
 export const seasonalProducts = [
-  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', flavor: 'Brigadeiro belga', weight: '350g', price: 59, image: '/images/brigadeiro.png', rating: 4.9, reviewCount: 298 },
-  { id: 'ninho-nutella', name: 'Ninho com Nutella', flavor: 'Leite ninho com creme de Nutella', weight: '400g', price: 68.5, image: '/images/ninho-nutella.png', rating: 4.8, reviewCount: 244 },
-  { id: 'prestigio', name: 'Prestígio Cremoso', flavor: 'Coco cremoso com chocolate', weight: '350g', price: 62, image: '/images/prestigio.png', rating: 4.7, reviewCount: 208 },
-  { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/ferrero.png', rating: 5, reviewCount: 322 },
-  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/trufado-maracuja.png', rating: 4.6, reviewCount: 186 },
-  { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/ninho-uva.png', rating: 4.8, reviewCount: 271 },
+  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', flavor: 'Brigadeiro belga', weight: '350g', price: 59, image: '/images/pedidos-de-doces/brigadeiro.png', rating: 4.9, reviewCount: 298 },
+  { id: 'ninho-nutella', name: 'Ninho com Nutella', flavor: 'Leite ninho com creme de Nutella', weight: '400g', price: 68.5, image: '/images/pedidos-de-doces/ninho-nutella.png', rating: 4.8, reviewCount: 244 },
+  { id: 'prestigio', name: 'Prestígio Cremoso', flavor: 'Coco cremoso com chocolate', weight: '350g', price: 62, image: '/images/instagram/prestigio.png', rating: 4.7, reviewCount: 208 },
+  { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/cardapio-de-pascoa/ferrero.png', rating: 5, reviewCount: 322 },
+  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/instagram/trufado-maracuja.png', rating: 4.6, reviewCount: 186 },
+  { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/novidades/ninho-uva.png', rating: 4.8, reviewCount: 271 },
 ]
 
 
@@ -25,7 +25,7 @@ export const updates = [
     type: 'microinteracoes',
     dateLabel: 'React',
     title: 'Microinterações e transições: Motion',
-    imageUrl: '/images/divulgacao-brigadeiro.png',
+    imageUrl: '/images/novidades/ninho-uva.png',
     imageAlt: 'Arte de divulgação com brigadeiros da Carliz Doces',
     mediaDescription: 'Peça usada nas redes para anunciar combos especiais de brigadeiros para festas e lembrancinhas.',
     description: 'Para dar vida aos componentes sem comprometer a performance geral do projeto.',
@@ -36,7 +36,7 @@ export const updates = [
     type: 'scroll',
     dateLabel: 'Landing page',
     title: 'Scroll cinematográfico: GSAP + ScrollTrigger',
-    imageUrl: '/images/divulgacao-ovo-pascoa.png',
+    imageUrl: '/images/novidades/divulgacao-ovo-pascoa.png',
     imageAlt: 'Divulgação de ovos de Páscoa artesanais da Carliz Doces',
     mediaDescription: 'Criativo de campanha para destacar lançamentos de Páscoa com sabores sazonais e encomendas antecipadas.',
     description: 'Quando a proposta é contar uma história no scroll, com tempo, ritmo e transições mais marcantes.',
@@ -47,7 +47,7 @@ export const updates = [
     type: 'ilustracoes',
     dateLabel: 'Design',
     title: 'Ilustrações animadas: Lottie',
-    imageUrl: '/images/ferrero.png',
+    imageUrl: '/images/novidades/ninho-uva.png',
     imageAlt: 'Ovo de colher estilo Ferrero em imagem de divulgação',
     mediaDescription: 'Material visual para divulgar edição limitada de ovos premium com foco em presenteáveis.',
     description: 'Ideal quando o time de design já entrega animações vetoriais prontas para o front-end.',
@@ -58,7 +58,7 @@ export const updates = [
     type: 'reveal',
     dateLabel: 'Entrada simples',
     title: 'Reveal direto ao ponto: animate.css / AOS',
-    imageUrl: '/images/matilda.png',
+    imageUrl: '/images/novidades/divulgacao-ovo-pascoa.png',
     imageAlt: 'Bolo estilo Matilda em card de divulgação da Carliz Doces',
     mediaDescription: 'Post de divulgação pensado para campanhas-relâmpago de bolos temáticos com produção sob encomenda.',
     description: 'Para quando é só um efeito de entrada e não vale montar uma lógica de animação mais complexa.',
@@ -78,15 +78,15 @@ export const manualTestimonials = [
 ]
 
 export const instagramPosts = [
-  { id: 'insta-1', imageUrl: '/images/ninho.png', alt: 'Doces artesanais da Carliz Doces' },
-  { id: 'insta-2', imageUrl: '/images/ferrero.png', alt: 'Ovo de colher da Carliz Doces' },
-  { id: 'insta-3', imageUrl: '/images/brigadeiro.png', alt: 'Brigadeiros da Carliz Doces' },
+  { id: 'insta-1', imageUrl: '/images/instagram/divulgacao-brigadeiro.png', alt: 'Doces artesanais da Carliz Doces' },
+  { id: 'insta-2', imageUrl: '/images/instagram/prestigio.png', alt: 'Ovo de colher da Carliz Doces' },
+  { id: 'insta-3', imageUrl: '/images/instagram/trufado-maracuja.png', alt: 'Brigadeiros da Carliz Doces' },
 ]
 
 export const topShowcaseSlides = [
-  { id: 'matilda', imageUrl: '/images/matilda.png', alt: 'Bolo da Matilda especial da Carliz Doces', title: 'Bolo da Matilda', description: 'Destaque da semana para os apaixonados por chocolate.', tag: 'Mais pedido' },
-  { id: 'ferrero', imageUrl: '/images/ferrero.png', alt: 'Campanha de sorteio com ovo Ferrero Rocher', title: 'Sorteio Ferrero Rocher', description: 'Promoção especial para quem encomenda ovos de colher.', tag: 'Promoção' },
-  { id: 'brigadeiro', imageUrl: '/images/brigadeiro.png', alt: 'Brigadeiros artesanais da Carliz Doces', title: 'Brigadeiros artesanais', description: 'Sabores para festas e lembranças com a cara da Carliz.', tag: 'Clássico da casa' },
+  { id: 'matilda', imageUrl: '/images/carousel/matilda.png', alt: 'Bolo da Matilda especial da Carliz Doces', title: 'Bolo da Matilda', description: 'Destaque da semana para os apaixonados por chocolate.', tag: 'Mais pedido' },
+  { id: 'ferrero', imageUrl: '/images/carousel/ferrero.png', alt: 'Campanha de sorteio com ovo Ferrero Rocher', title: 'Sorteio Ferrero Rocher', description: 'Promoção especial para quem encomenda ovos de colher.', tag: 'Promoção' },
+  { id: 'brigadeiro', imageUrl: '/images/carousel/brigadeiro.png', alt: 'Brigadeiros artesanais da Carliz Doces', title: 'Brigadeiros artesanais', description: 'Sabores para festas e lembranças com a cara da Carliz.', tag: 'Clássico da casa' },
 ]
 
 export const metrics = [
