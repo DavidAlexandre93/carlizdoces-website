@@ -4,7 +4,7 @@ import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
 
 export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalLikes, hasLiked, onToggleLike, showLikeCelebration, onGoToOrderSection }) {
   return (
-    <Box component="aside" aria-label="Ações rápidas" sx={{ position: 'fixed', left: { xs: 12, md: 24 }, bottom: { xs: 16, md: 24 }, display: 'flex', flexDirection: 'column', gap: 1.2 }}>
+    <Box component="aside" aria-label="Ações rápidas" sx={{ position: 'fixed', left: { xs: 12, md: 24 }, bottom: { xs: 16, md: 24 }, display: 'flex', flexDirection: 'column', gap: 1.2, backgroundColor: '#f8f8f3' }}>
       {showScrollTop ? (
         <Fab color="default" size="small" aria-label="Voltar ao topo" onClick={onScrollTop}>
           <Icon>keyboard_arrow_up</Icon>
