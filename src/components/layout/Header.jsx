@@ -10,7 +10,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  Switch,
   Toolbar,
   Tooltip,
   Typography,
@@ -37,12 +36,14 @@ export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpe
 
             <Box className="topbar-actions">
               <Tooltip title={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'} arrow>
-                <Switch
-                  checked={isDarkMode}
-                  onChange={(_event, checked) => onToggleDarkMode(checked)}
-                  color="secondary"
-                  inputProps={{ 'aria-label': isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro' }}
-                />
+                <IconButton
+                  color="inherit"
+                  aria-label={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'}
+                  onClick={() => onToggleDarkMode(!isDarkMode)}
+                  className="theme-toggle-button"
+                >
+                  <Icon>{isDarkMode ? 'light_mode' : 'dark_mode'}</Icon>
+                </IconButton>
               </Tooltip>
 
               <Tooltip title="Usuário logado" arrow>
