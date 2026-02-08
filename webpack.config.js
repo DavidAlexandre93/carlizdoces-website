@@ -30,7 +30,8 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     alias: {
       '@mui/icons-material/Share': path.resolve(__dirname, 'src/mui-icons/Share.jsx'),
-      'material-ui-carousel': path.resolve(__dirname, 'src/mui-components/material-ui-carousel.jsx')
+      'material-ui-carousel': path.resolve(__dirname, 'src/mui-components/material-ui-carousel.jsx'),
+      'motion/react': path.resolve(__dirname, 'src/motion/react.js')
     }
   },
   plugins: [
