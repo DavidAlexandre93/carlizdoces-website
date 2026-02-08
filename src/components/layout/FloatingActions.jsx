@@ -15,6 +15,7 @@ export function FloatingActions({
 }) {
   const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3'
   const scrollTopBackground = '#ddb2c7'
+  const floatingGap = { xs: 14, md: 16 }
 
   const commonPositionSx = {
     position: 'fixed',
@@ -33,7 +34,10 @@ export function FloatingActions({
           onClick={onScrollTop}
           sx={{
             ...commonPositionSx,
-            bottom: { xs: 116, md: 128 },
+            bottom: {
+              xs: `calc(66px + 60px + ${floatingGap.xs}px)`,
+              md: `calc(76px + 66px + ${floatingGap.md}px)`,
+            },
             width: { xs: 46, md: 52 },
             height: { xs: 46, md: 52 },
             backgroundColor: scrollTopBackground,
