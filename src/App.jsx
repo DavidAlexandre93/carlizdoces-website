@@ -11,6 +11,7 @@ import {
   Paper,
   Popper,
   MenuItem,
+  MobileStepper,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -83,8 +84,6 @@ const seasonalProducts = [
   },
 ]
 
-const productHighlights = seasonalProducts.slice(0, 3)
-
 const metrics = [
   ['Pedidos por dia', '120+'],
   ['Sabores disponíveis', '30'],
@@ -131,7 +130,7 @@ export default function App() {
   const [customizations, setCustomizations] = useState({})
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
-  const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
+  const [activeProductStep, setActiveProductStep] = useState(0)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
@@ -163,8 +162,7 @@ export default function App() {
 
   const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.subtotal, 0)
-  const selectedHighlight =
-    productHighlights.find((item) => item.id === selectedHighlightId) ?? productHighlights[0] ?? null
+  const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
 
   const updateCustomization = (itemId, field, value) => {
     setCustomizations((current) => ({
@@ -236,6 +234,14 @@ export default function App() {
     },
   ]
 
+  const handleNextProduct = () => {
+    setActiveProductStep((current) => Math.min(current + 1, seasonalProducts.length - 1))
+  }
+
+  const handleBackProduct = () => {
+    setActiveProductStep((current) => Math.max(current - 1, 0))
+  }
+
 
   return (
     <Box className="site-wrapper">
@@ -297,68 +303,68 @@ export default function App() {
         <Container maxWidth="xl" className="page-container">
           <header className="photo-band-head">
             <h2>Ovos de Páscoa</h2>
-            <p>Explore os sabores mais pedidos da temporada e toque em um card para destacar o seu favorito.</p>
-            <Tabs
-              value={selectedHighlight?.id ?? false}
-              onChange={(_event, newValue) => setSelectedHighlightId(newValue)}
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="Seleção rápida de destaques"
-              className="section-tabs"
-              sx={{ mt: 2, maxWidth: 680, mx: 'auto' }}
-            >
-              {productHighlights.map((item) => (
-                <Tab
-                  key={item.id}
-                  value={item.id}
-                  label={item.name}
-                  sx={{ textTransform: 'none', fontWeight: 700 }}
-                />
-              ))}
-            </Tabs>
+            <p>Passe as imagens com os botões para navegar pelos sabores e apresentações disponíveis.</p>
           </header>
 
-          <Box className="photo-band-grid">
-            {productHighlights.map((item) => {
-              const isActive = item.id === selectedHighlight?.id
-              return (
-                <article
-                  key={item.id}
-                  className={isActive ? 'is-active' : ''}
-                  onMouseEnter={() => setSelectedHighlightId(item.id)}
-                >
-                  <img src={item.image} alt={item.name} />
-                  <div>
-                    <strong>{item.name}</strong>
-                    <span>{item.weight}</span>
-                    <span>{item.flavor}</span>
-                    <span>{BRL.format(item.price)}</span>
-                  </div>
-                  <button type="button" onClick={() => setSelectedHighlightId(item.id)}>
-                    {isActive ? 'Selecionado' : 'Ver destaque'}
-                  </button>
-                </article>
-              )
-            })}
-          </Box>
-
-          {selectedHighlight ? (
+          {selectedShowcaseProduct ? (
             <aside className="photo-highlight" aria-live="polite">
-              <img src={selectedHighlight.image} alt={selectedHighlight.name} />
+              <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
-                <p className="highlight-tag">Destaque da semana</p>
-                <h3>{selectedHighlight.name}</h3>
+                <p className="highlight-tag">Catálogo de temporada</p>
+                <h3>{selectedShowcaseProduct.name}</h3>
                 <p>
-                  Casca artesanal com recheio cremoso e finalização premium. Perfeito para presentear ou celebrar em
-                  família.
+                  {selectedShowcaseProduct.weight} de pura cremosidade com sabor {selectedShowcaseProduct.flavor}.
+                  Deslize pelo catálogo para comparar sabores antes de pedir.
                 </p>
-                <strong>{BRL.format(selectedHighlight.price)}</strong>
-                <Button variant="contained" onClick={() => addItem(selectedHighlight.id)}>
+                <strong>{BRL.format(selectedShowcaseProduct.price)}</strong>
+                <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>
                   Adicionar ao pedido
                 </Button>
               </div>
             </aside>
           ) : null}
+
+          <MobileStepper
+            variant="dots"
+            steps={seasonalProducts.length}
+            position="static"
+            activeStep={activeProductStep}
+            className="showcase-stepper"
+            nextButton={
+              <Button size="small" onClick={handleNextProduct} disabled={activeProductStep === seasonalProducts.length - 1}>
+                Próximo →
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={handleBackProduct} disabled={activeProductStep === 0}>
+                ← Anterior
+              </Button>
+            }
+          />
+
+          <Tabs
+            value={selectedShowcaseProduct?.id ?? false}
+            onChange={(_event, newValue) => {
+              const nextIndex = seasonalProducts.findIndex((item) => item.id === newValue)
+              if (nextIndex >= 0) {
+                setActiveProductStep(nextIndex)
+              }
+            }}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="Seleção rápida de sabores"
+            className="section-tabs"
+            sx={{ mt: 2, maxWidth: 900, mx: 'auto' }}
+          >
+            {seasonalProducts.map((item) => (
+              <Tab
+                key={item.id}
+                value={item.id}
+                label={item.name}
+                sx={{ textTransform: 'none', fontWeight: 700 }}
+              />
+            ))}
+          </Tabs>
         </Container>
       </section>
 
