@@ -147,6 +147,7 @@ export const seasonalProducts = dynamicProductsCatalog.map((product, index) => (
   image: product.image,
   rating: product.rating ?? 5,
   reviewCount: product.reviewCount ?? 0,
+  quantities: product.quantities ?? [],
 }))
 
 export const updates = dynamicUpdatesCatalog.map((item, index) => ({
