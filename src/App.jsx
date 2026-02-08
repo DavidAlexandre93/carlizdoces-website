@@ -13,6 +13,7 @@ import {
   ClickAwayListener,
   Container,
   Drawer,
+  Divider,
   Icon,
   IconButton,
   ImageList,
@@ -330,6 +331,16 @@ export default function App() {
     setTestimonialForm({ author: '', message: '' })
   }
 
+  const renderSectionDivider = (label) => (
+    <Container maxWidth="lg" className="page-container section-divider-wrap" aria-hidden="true">
+      <Divider className="section-divider" textAlign="center">
+        <Typography component="span" variant="overline" className="section-divider-label">
+          {label}
+        </Typography>
+      </Divider>
+    </Container>
+  )
+
 
   return (
     <Box id="top" className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
@@ -438,6 +449,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Cardápio de Páscoa')}
+
       <section id="ovos-de-pascoa" className="photo-band">
         <Container maxWidth="xl" className="page-container">
           <header className="photo-band-head">
@@ -534,6 +547,8 @@ export default function App() {
           </Tabs>
         </Container>
       </section>
+
+      {renderSectionDivider('Monte seu pedido')}
 
       <section id="realizar-pedido" className="order-section">
         <Container maxWidth="xl" className="page-container">
@@ -750,6 +765,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Depoimentos de clientes')}
+
       <section id="onde-estamos" className="content-block centered">
         <Container maxWidth="md" className="page-container">
           <div className="section-icon">🧁</div>
@@ -850,6 +867,8 @@ export default function App() {
         </Container>
       </section>
 
+      {renderSectionDivider('Fale com a Carliz')}
+
       <section id="contato" className="contact-hero">
         <Paper
           className="contact-panel"
@@ -921,6 +940,8 @@ export default function App() {
           </Popper>
         </Paper>
       </section>
+
+      {renderSectionDivider('Acompanhe no Instagram')}
 
       <section id="instagram" className="instagram-section">
         <Container maxWidth="xl" className="page-container">
