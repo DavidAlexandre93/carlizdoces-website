@@ -2,7 +2,7 @@ import { Box, Button, Container, Link, Paper, Typography } from '@mui/material'
 
 export default function InstagramSection({ instagramPosts, instagramProfileLink }) {
   return (
-    <section id="instagram" className="instagram-section animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <section id="instagram" className="instagram-section section-alt-pink animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Container maxWidth="xl" className="page-container">
         <header className="instagram-header">
           <Typography component="h2" variant="h4">Instagram</Typography>

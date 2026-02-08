@@ -3,7 +3,7 @@ import { Carousel, CarouselSlide } from 'material-ui-carousel'
 
 export function HeroSection({ topShowcaseSlides }) {
   return (
-    <section className="hero animate__animated animate__fadeIn" style={{ '--animate-duration': '900ms' }}>
+    <section className="hero section-alt-pink animate__animated animate__fadeIn" style={{ '--animate-duration': '900ms' }}>
       <Container maxWidth="xl" className="page-container hero-inner">
         <Carousel autoPlay interval={5000} indicators navButtonsAlwaysVisible className="top-carousel">
           {topShowcaseSlides.map((slide) => (

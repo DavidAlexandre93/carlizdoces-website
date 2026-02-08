@@ -2,7 +2,7 @@ import { Box, Button, Paper, Typography } from '@mui/material'
 
 export function LocationSection({ orderPreferences, setOrderPreferences, setDeliveryMethod }) {
   return (
-    <section id="onde-estamos" className="content-block centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <section id="onde-estamos" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
         <Typography variant="h4">Onde estamos</Typography>
         <Typography sx={{ mt: 1 }}>Atendimento em São Paulo - capital e região metropolitana.</Typography>
