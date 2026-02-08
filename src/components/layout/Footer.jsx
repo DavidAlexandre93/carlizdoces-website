@@ -5,7 +5,7 @@ export function Footer({ navItems, metrics }) {
     <footer className="footer">
       <Container maxWidth="lg" className="page-container footer-inner">
         <div className="brand">
-          <img className="brand-logo" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" />
+          <img className="brand-logo" src="/images/logo-carlizdoces.jpg" alt="Logo da Carliz Doces" />
         </div>
         <Typography component="small" variant="body2">©{new Date().getFullYear()} Carliz Doces</Typography>
         <ul>
