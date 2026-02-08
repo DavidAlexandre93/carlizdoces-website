@@ -1,4 +1,5 @@
 import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
+import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
 import {
   Alert,
@@ -30,6 +31,9 @@ export function ShowcaseSection({
   addItem,
   removeItem,
   onShareProduct,
+  favoriteCounts,
+  favoriteProductIds,
+  onFavoriteProduct,
 }) {
   return (
     <section id="ovos-de-pascoa" className="photo-band">
@@ -87,9 +91,13 @@ export function ShowcaseSection({
               <IconButton color="secondary" onClick={() => onShareProduct(selectedShowcaseProduct)}>
                 <ShareIcon />
               </IconButton>
-              <IconButton color="secondary">
-                <Badge color="secondary" badgeContent={0}>
-                  <FavoriteBorderIcon />
+              <IconButton
+                color={favoriteProductIds.includes(selectedShowcaseProduct.id) ? 'error' : 'secondary'}
+                onClick={() => onFavoriteProduct(selectedShowcaseProduct)}
+                aria-label="Marcar como favorito"
+              >
+                <Badge color="error" badgeContent={favoriteCounts[selectedShowcaseProduct.id] ?? 0}>
+                  {favoriteProductIds.includes(selectedShowcaseProduct.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                 </Badge>
               </IconButton>
             </Box>
