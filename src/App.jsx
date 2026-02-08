@@ -167,6 +167,7 @@ export default function App() {
   const [activeProductStep, setActiveProductStep] = useState(0)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const [communityTestimonials, setCommunityTestimonials] = useState([
     {
       id: 'community-1',
@@ -329,7 +330,7 @@ export default function App() {
 
 
   return (
-    <Box id="top" className="site-wrapper">
+    <Box id="top" className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
       <AppBar position="sticky" color="transparent" elevation={0} className="topbar">
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
@@ -354,15 +355,28 @@ export default function App() {
               ))}
             </Box>
 
-            <IconButton
-              color="inherit"
-              aria-label="Abrir menu"
-              edge="end"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="topbar-menu-button"
-            >
-              <Box component="span" sx={{ fontSize: 26, lineHeight: 1 }}>☰</Box>
-            </IconButton>
+            <Box className="topbar-actions">
+              <IconButton
+                color="inherit"
+                aria-label={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'}
+                onClick={() => setIsDarkMode((current) => !current)}
+                className="theme-toggle-button"
+              >
+                <Box component="span" sx={{ fontSize: 22, lineHeight: 1.1 }}>
+                  {isDarkMode ? '☀️' : '🌙'}
+                </Box>
+              </IconButton>
+
+              <IconButton
+                color="inherit"
+                aria-label="Abrir menu"
+                edge="end"
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="topbar-menu-button"
+              >
+                <Box component="span" sx={{ fontSize: 26, lineHeight: 1 }}>☰</Box>
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
