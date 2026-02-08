@@ -360,6 +360,29 @@ export function HomePage() {
           />
         </MotionDiv>
 
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.18 }}>
+          <SectionDivider label="Pedidos de Doces" />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.19 }}>
+          <ShowcaseSection
+            BRL={BRL}
+            seasonalProducts={seasonalProducts}
+            visibleShowcaseProducts={visibleShowcaseProducts}
+            selectedShowcaseProduct={selectedShowcaseProduct}
+            activeProductStep={activeProductStep}
+            setActiveProductStep={setActiveProductStep}
+            maxShowcasePrice={maxShowcasePrice}
+            setMaxShowcasePrice={setMaxShowcasePrice}
+            addItem={addItem}
+            removeItem={removeItem}
+            onShareProduct={handleShareProduct}
+            favoriteCounts={favoriteCounts}
+            favoriteProductIds={favoriteProductIds}
+            onFavoriteProduct={handleFavoriteProduct}
+          />
+        </MotionDiv>
+
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
             <SectionDivider label="Realizar pedido" />
           </MotionDiv>
