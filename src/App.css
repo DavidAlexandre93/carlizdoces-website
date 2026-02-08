@@ -1103,6 +1103,16 @@
   transform: scale(1.03);
   filter: saturate(1.08) contrast(1.04);
 }
+
+.favorite-heart-button {
+  color: #fff !important;
+}
+
+.favorite-heart-button:hover,
+.favorite-heart-button:focus-visible {
+  color: #d32f2f !important;
+}
+
 .showcase-stepper {
   margin-top: 14px;
   border: 1px solid #edc2d7;
