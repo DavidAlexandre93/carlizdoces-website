@@ -13,35 +13,44 @@ export function FloatingActions({
   onGoToOrderSection,
   isFooterVisible,
 }) {
+  const commonPositionSx = {
+    position: 'fixed',
+    left: { xs: 12, md: 24 },
+    transition: 'background-color 260ms ease',
+    backgroundColor: isFooterVisible ? '#e6bfd2' : '#f8f8f3',
+    zIndex: 1100,
+  }
+
   return (
-    <Box
-      component="aside"
-      aria-label="Ações rápidas"
-      sx={{
-        position: 'fixed',
-        left: { xs: 12, md: 24 },
-        bottom: { xs: 16, md: 24 },
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1.2,
-        backgroundColor: isFooterVisible ? '#e6bfd2' : '#f8f8f3',
-        transition: 'background-color 260ms ease',
-      }}
-    >
+    <>
       {showScrollTop ? (
         <IconButton
           color="inherit"
           size="small"
           aria-label="Voltar ao topo"
           onClick={onScrollTop}
-          sx={{ color: 'text.primary' }}
+          sx={{
+            ...commonPositionSx,
+            bottom: { xs: 116, md: 128 },
+            color: 'text.primary',
+          }}
         >
           <Icon>keyboard_arrow_up</Icon>
         </IconButton>
       ) : null}
 
       <Tooltip title="Ir para a seção de pedidos" placement="right" arrow>
-        <Fab color="primary" size="small" aria-label="Ir para realizar pedido" href="#realizar-pedido" onClick={onGoToOrderSection}>
+        <Fab
+          color="primary"
+          size="small"
+          aria-label="Ir para realizar pedido"
+          href="#realizar-pedido"
+          onClick={onGoToOrderSection}
+          sx={{
+            ...commonPositionSx,
+            bottom: { xs: 66, md: 76 },
+          }}
+        >
           <Badge color="secondary" badgeContent={totalItems} invisible={totalItems === 0}>
             <Icon>shopping_cart</Icon>
           </Badge>
@@ -54,6 +63,8 @@ export function FloatingActions({
         aria-label="Curtir loja"
         onClick={onToggleLike}
         sx={{
+          ...commonPositionSx,
+          bottom: { xs: 16, md: 24 },
           transform: showLikeCelebration ? 'scale(1.12)' : 'scale(1)',
           transition: 'transform 220ms ease',
           overflow: 'visible',
@@ -91,6 +102,6 @@ export function FloatingActions({
           />
         </Zoom>
       </IconButton>
-    </Box>
+    </>
   )
 }
