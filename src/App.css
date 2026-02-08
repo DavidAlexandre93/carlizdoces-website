@@ -242,8 +242,8 @@
   transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
-.brand-logo.is-jumping {
-  animation: logo-chaotic-wander 5200ms cubic-bezier(0.22, 0.7, 0.2, 1);
+.brand-logo.is-moving {
+  transform: translate3d(var(--logo-move-x, 0), var(--logo-move-y, 0), 0) rotate(var(--logo-rotate, 0deg)) scale(1.03);
 }
 
 .topbar-brand:hover .brand-logo,
@@ -1768,28 +1768,6 @@
   .manual-feedback-card {
     border-radius: 12px;
     padding: 12px;
-  }
-}
-
-@keyframes logo-chaotic-wander {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  35% {
-    transform: translate3d(100vw, 100vh, 0) rotate(18deg) scale(1.06);
-  }
-
-  52% {
-    transform: translate3d(100vw, -100vh, 0) rotate(-14deg) scale(1.08);
-  }
-
-  78% {
-    transform: translate3d(-100vw, 100vh, 0) rotate(-18deg) scale(1.06);
-  }
-
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

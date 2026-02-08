@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   AppBar,
   Avatar,
@@ -22,7 +22,9 @@ import {
 
 export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const [isLogoJumping, setIsLogoJumping] = useState(false)
+  const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, rotation: 0, isMoving: false })
+  const appBarRef = useRef(null)
+  const logoRef = useRef(null)
 
   const notificationMessage = `Pedidos páscoa 2026
 Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍
@@ -54,16 +56,44 @@ Queremos ver sua experiência!
 Deus abençoe! 🙌`
 
   const handleLogoClick = () => {
-    setIsLogoJumping(false)
+    if (!logoRef.current) {
+      return
+    }
 
-    requestAnimationFrame(() => {
-      setIsLogoJumping(true)
+    const logoRect = logoRef.current.getBoundingClientRect()
+    const appBarRect = appBarRef.current?.getBoundingClientRect()
+    const visualViewport = window.visualViewport
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const topInset = Math.max(0, visualViewport?.offsetTop ?? 0)
+    const bottomInset = Math.max(0, viewportHeight - ((visualViewport?.height ?? viewportHeight) + (visualViewport?.offsetTop ?? 0)))
+    const pageContainer = logoRef.current.closest('.page-container')
+    const pageContainerStyles = pageContainer ? window.getComputedStyle(pageContainer) : null
+    const paddingLeft = parseFloat(pageContainerStyles?.paddingLeft ?? '0') || 0
+    const paddingRight = parseFloat(pageContainerStyles?.paddingRight ?? '0') || 0
+    const headerHeight = appBarRect?.height ?? 0
+    const footerHeight = 0
+
+    const xMin = paddingLeft
+    const xMax = Math.max(xMin, viewportWidth - paddingRight - logoRect.width)
+    const yMin = topInset + headerHeight
+    const yMax = Math.max(yMin, viewportHeight - bottomInset - footerHeight - logoRect.height)
+
+    const targetX = xMin + Math.random() * Math.max(0, xMax - xMin)
+    const targetY = yMin + Math.random() * Math.max(0, yMax - yMin)
+    const rotation = (Math.random() * 22) - 11
+
+    setLogoMotion({
+      x: targetX - logoRect.left,
+      y: targetY - logoRect.top,
+      rotation,
+      isMoving: true,
     })
   }
 
   return (
     <>
-      <AppBar component="header" position="sticky" color="transparent" elevation={0} className="topbar">
+      <AppBar component="header" position="sticky" color="transparent" elevation={0} className="topbar" ref={appBarRef}>
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
             <Link href="#top" underline="none" color="inherit" className="topbar-brand" onClick={handleLogoClick}>
@@ -71,8 +101,13 @@ Deus abençoe! 🙌`
                 component="img"
                 src="/images/banner-carliz.svg"
                 alt="Logo da Carliz Doces"
-                className={`brand-logo ${isLogoJumping ? 'is-jumping' : ''}`}
-                onAnimationEnd={() => setIsLogoJumping(false)}
+                className={`brand-logo ${logoMotion.isMoving ? 'is-moving' : ''}`}
+                ref={logoRef}
+                style={{
+                  '--logo-move-x': `${logoMotion.x}px`,
+                  '--logo-move-y': `${logoMotion.y}px`,
+                  '--logo-rotate': `${logoMotion.rotation}deg`,
+                }}
               />
               <Typography component="span" className="brand-name" aria-label="Carliz Doces">
                 <span className="brand-word">
