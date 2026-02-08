@@ -406,6 +406,22 @@
   color: #ad1457;
 }
 
+
+.showcase-stepper {
+  margin-top: 14px;
+  border: 1px solid #edc2d7;
+  border-radius: 12px;
+  background: #fff7fb;
+}
+
+.showcase-stepper .MuiMobileStepper-dot {
+  background-color: #d89ab8;
+}
+
+.showcase-stepper .MuiMobileStepper-dotActive {
+  background-color: #ad1457;
+}
+
 .order-section {
   margin: 30px auto 90px;
 }
