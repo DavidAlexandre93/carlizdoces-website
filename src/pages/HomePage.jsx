@@ -31,6 +31,7 @@ export function HomePage() {
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials, setCommunityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
 
@@ -85,6 +86,29 @@ export function HomePage() {
       window.removeEventListener('pointermove', handlePointerMove)
     }
   }, [])
+
+
+  useEffect(() => {
+    const footerElement = document.querySelector('.footer')
+    if (!footerElement) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowScrollTop(entry.isIntersecting)
+      },
+      { threshold: 0.2 },
+    )
+
+    observer.observe(footerElement)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -240,7 +264,7 @@ export function HomePage() {
       </main>
 
       <Footer navItems={navItems} metrics={metrics} />
-      <FloatingActions totalItems={totalItems} />
+      <FloatingActions totalItems={totalItems} showScrollTop={showScrollTop} onScrollTop={handleScrollTop} />
 
       <Snackbar
         open={snackbar.open}
