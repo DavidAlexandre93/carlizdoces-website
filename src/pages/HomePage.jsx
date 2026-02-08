@@ -22,6 +22,7 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 
 export function HomePage() {
   const wrapperRef = useRef(null)
+  const [introStage, setIntroStage] = useState('message')
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeProductStep, setActiveProductStep] = useState(0)
@@ -120,6 +121,32 @@ export function HomePage() {
     window.open(whatsappContactLink, '_blank', 'noopener,noreferrer')
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
+
+  useEffect(() => {
+    const openingTimerId = window.setTimeout(() => {
+      setIntroStage('opening')
+    }, 2200)
+
+    const finishTimerId = window.setTimeout(() => {
+      setIntroStage('hidden')
+    }, 4200)
+
+    return () => {
+      window.clearTimeout(openingTimerId)
+      window.clearTimeout(finishTimerId)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (introStage === 'hidden') return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [introStage])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -267,8 +294,24 @@ export function HomePage() {
     transition: { duration: 0.55, ease: 'easeOut' },
   }
 
+  const MotionDiv = motion.div
+
   return (
     <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
+      {introStage !== 'hidden' && (
+        <Box className={`intro-curtain intro-curtain-${introStage}`}>
+          <Box className="intro-curtain-panel intro-curtain-left" />
+          <Box className="intro-curtain-panel intro-curtain-right" />
+          <Box className="intro-center-content">
+            <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="intro-logo" />
+            <Box className="intro-clown-wrap">
+              <Box component="img" src="/images/palhaco.svg" alt="Palhaço anunciando o espetáculo" className="intro-clown" />
+              <Box component="p" className="intro-message">Respeitável publico apresentamos Carliz Doces</Box>
+            </Box>
+          </Box>
+        </Box>
+      )}
+
       <ParticlesBackground darkMode={isDarkMode} />
 
       <Header
@@ -281,19 +324,19 @@ export function HomePage() {
       />
 
       <main>
-        <motion.div {...revealAnimation}>
+        <MotionDiv {...revealAnimation}>
           <HeroSection topShowcaseSlides={topShowcaseSlides} />
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.05 }}>
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.05 }}>
           <AboutSection />
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
           <SectionDivider label="Cardápio de Páscoa" />
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.15 }}>
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.15 }}>
           <ShowcaseSection
             BRL={BRL}
             seasonalProducts={seasonalProducts}
@@ -310,10 +353,10 @@ export function HomePage() {
             favoriteProductIds={favoriteProductIds}
             onFavoriteProduct={handleFavoriteProduct}
           />
-        </motion.div>
+        </MotionDiv>
 
         <Container maxWidth="lg" className="page-container">
-          <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
             <OrderSection
               BRL={BRL}
               orderCustomer={orderCustomer}
@@ -326,21 +369,21 @@ export function HomePage() {
               totalItems={totalItems}
               whatsappLink={whatsappLink}
             />
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>
             <LocationSection
               orderPreferences={orderPreferences}
               setOrderPreferences={setOrderPreferences}
               setDeliveryMethod={setDeliveryMethod}
             />
-          </motion.div>
+          </MotionDiv>
         </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-          <motion.div {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></motion.div>
-          <motion.div {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></motion.div>
-          <motion.div {...revealAnimation}>
+          <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
+          <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
+          <MotionDiv {...revealAnimation}>
             <ContactSection
               contactForm={contactForm}
               onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
@@ -348,8 +391,8 @@ export function HomePage() {
               contactTipOpen={contactTipOpen}
               onToggleTip={() => setContactTipOpen((open) => !open)}
             />
-          </motion.div>
-          <motion.div {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></motion.div>
+          </MotionDiv>
+          <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
         </Suspense>
       </main>
 

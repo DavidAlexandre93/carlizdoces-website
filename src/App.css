@@ -26,6 +26,135 @@
   overflow-x: clip;
 }
 
+.intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.intro-curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #8b0e40 0,
+      #8b0e40 20px,
+      #a6134f 20px,
+      #a6134f 36px
+    );
+  border: 2px solid #5d0c2d;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.35);
+  transition: transform 1.7s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.intro-curtain-left {
+  left: 0;
+  border-left: none;
+}
+
+.intro-curtain-right {
+  right: 0;
+  border-right: none;
+}
+
+.intro-center-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+}
+
+.intro-logo {
+  width: min(34vw, 220px);
+  background: #fff8fb;
+  border-radius: 50%;
+  border: 4px solid #ffd2e8;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.intro-clown-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.intro-clown {
+  width: min(20vw, 130px);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
+}
+
+.intro-message {
+  position: relative;
+  margin: 0;
+  max-width: 320px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #fff;
+  color: #7b2050;
+  font-weight: 700;
+  line-height: 1.35;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  animation: intro-pulse 900ms ease-in-out infinite alternate;
+}
+
+.intro-message::after {
+  content: '';
+  position: absolute;
+  margin-top: 12px;
+  margin-left: -18px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #fff transparent transparent;
+}
+
+.intro-curtain-opening .intro-curtain-left {
+  transform: translateX(-100%);
+}
+
+.intro-curtain-opening .intro-curtain-right {
+  transform: translateX(100%);
+}
+
+.intro-curtain-opening .intro-center-content {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+@keyframes intro-pulse {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 680px) {
+  .intro-logo {
+    width: min(54vw, 180px);
+  }
+
+  .intro-clown-wrap {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .intro-clown {
+    width: min(34vw, 104px);
+  }
+}
+
 .page-container.MuiContainer-root {
   width: min(100%, 1500px);
   padding-inline: clamp(14px, 2.6vw, 32px);
