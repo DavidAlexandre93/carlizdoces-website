@@ -82,7 +82,7 @@ export function ShowcaseSection({
               disabled={activeProductStep <= 0}
               aria-label="Produto anterior"
             >
-              ‹
+              <span className="showcase-arrow-icon showcase-arrow-icon-prev" aria-hidden="true" />
             </IconButton>
             <img className="showcase-image" src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
             <IconButton
@@ -91,7 +91,7 @@ export function ShowcaseSection({
               disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
               aria-label="Próximo produto"
             >
-              ›
+              <span className="showcase-arrow-icon showcase-arrow-icon-next" aria-hidden="true" />
             </IconButton>
           </div>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
