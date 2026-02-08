@@ -1,7 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const projectRoot = path.resolve(new URL('.', import.meta.url).pathname, '..')
+const scriptDir = path.dirname(fileURLToPath(import.meta.url))
+const projectRoot = path.resolve(scriptDir, '..')
 const imagesRoot = path.join(projectRoot, 'public', 'images')
 const outputFile = path.join(projectRoot, 'src', 'data', 'generatedImages.js')
 
