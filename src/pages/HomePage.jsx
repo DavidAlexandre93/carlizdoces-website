@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
 import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
+import { useProductRatings } from '../hooks/useProductRatings'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { FloatingActions } from '../components/layout/FloatingActions'
@@ -75,6 +76,7 @@ export function HomePage() {
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
+  const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
 
   const visibleShowcaseProducts = useMemo(
     () => seasonalProducts.filter((item) => item.price <= maxShowcasePrice),
@@ -128,6 +130,27 @@ export function HomePage() {
     }
 
     setSnackbar({ open: true, message: `${item.name} recebeu +1 coração (offline).`, severity: 'warning' })
+  }
+
+  const handleRateProduct = async (item, rating) => {
+    const result = await submitRating(item.id, rating)
+
+    if (!result.ok) {
+      setSnackbar({ open: true, message: 'Não foi possível registrar sua avaliação.', severity: 'error' })
+      return
+    }
+
+    if (result.unchanged) {
+      setSnackbar({ open: true, message: `Você manteve ${rating} estrela(s) para ${item.name}.`, severity: 'info' })
+      return
+    }
+
+    if (result.isRemote) {
+      setSnackbar({ open: true, message: `Avaliação enviada! Obrigado por avaliar ${item.name}.`, severity: 'success' })
+      return
+    }
+
+    setSnackbar({ open: true, message: `Avaliação salva neste dispositivo para ${item.name}.`, severity: 'info' })
   }
 
   const handleContactSubmit = (event) => {
@@ -442,6 +465,9 @@ export function HomePage() {
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
             onFavoriteProduct={handleFavoriteProduct}
+            productRatings={ratingsByProductId}
+            onRateProduct={handleRateProduct}
+            isGlobalRatingsActive={isGlobalRatingsActive}
           />
         </MotionDiv>
 
@@ -465,6 +491,9 @@ export function HomePage() {
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
             onFavoriteProduct={handleFavoriteProduct}
+            productRatings={ratingsByProductId}
+            onRateProduct={handleRateProduct}
+            isGlobalRatingsActive={isGlobalRatingsActive}
           />
         </MotionDiv>
 
