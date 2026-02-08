@@ -305,7 +305,7 @@ export function HomePage() {
           <Box className="intro-center-content">
             <Box component="img" src="/images/logo-carlizdoces.jpg" alt="Logo da Carliz Doces" className="intro-logo" />
             <Box className="intro-clown-wrap">
-              <Box component="img" src="/images/novo-palhaco.png" alt="Palhaços anunciando o espetáculo" className="intro-clown" />
+              <Box component="img" src="/images/palhaco.png" alt="Palhaços anunciando o espetáculo" className="intro-clown" />
               <Box component="p" className="intro-message">Respeitável publico apresentamos Carliz Doces</Box>
             </Box>
           </Box>
