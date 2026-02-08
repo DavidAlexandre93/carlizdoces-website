@@ -100,24 +100,37 @@
   position: relative;
   margin: 0;
   max-width: 320px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: #fff;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 2px solid #ffd0e4;
+  background: linear-gradient(180deg, #fff 0%, #fff4fa 100%);
   color: #7b2050;
   font-weight: 700;
   line-height: 1.35;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
   animation: intro-pulse 900ms ease-in-out infinite alternate;
 }
 
+.intro-message::before,
 .intro-message::after {
   content: '';
   position: absolute;
-  margin-top: 12px;
-  margin-left: -18px;
-  border-width: 10px;
+  top: 42%;
+  transform: translateY(-50%);
   border-style: solid;
-  border-color: transparent #fff transparent transparent;
+}
+
+.intro-message::before {
+  left: -22px;
+  border-width: 13px 22px 13px 0;
+  border-color: transparent #ffd0e4 transparent transparent;
+}
+
+.intro-message::after {
+  left: -18px;
+  border-width: 10px 18px 10px 0;
+  border-style: solid;
+  border-color: transparent #fff9fd transparent transparent;
 }
 
 .intro-curtain-opening .intro-curtain-left {
@@ -155,6 +168,24 @@
 
   .intro-clown {
     width: min(65vw, 250px);
+  }
+
+  .intro-message::before,
+  .intro-message::after {
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .intro-message::before {
+    border-width: 0 13px 18px;
+    border-color: transparent transparent #ffd0e4;
+  }
+
+  .intro-message::after {
+    top: -13px;
+    border-width: 0 11px 16px;
+    border-color: transparent transparent #fff9fd;
   }
 }
 
