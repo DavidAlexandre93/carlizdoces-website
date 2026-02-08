@@ -218,6 +218,20 @@
   font-size: 19px;
 }
 
+.hero-quick-actions {
+  margin-top: 16px;
+}
+
+.hero-quick-actions .MuiButton-root,
+.contact-quick-actions .MuiButton-root {
+  font-weight: 700;
+  text-transform: none;
+}
+
+.contact-quick-actions {
+  margin-top: 14px;
+}
+
 .mui-carousel-nav {
   position: absolute;
   top: 50%;
