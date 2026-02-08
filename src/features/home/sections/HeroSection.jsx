@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Chip, Container, Typography } from '@mui/material'
+import { Button, Chip, Container, Stack, Typography } from '@mui/material'
 import { Carousel, CarouselSlide } from 'material-ui-carousel'
 
 export function HeroSection({ topShowcaseSlides }) {
@@ -14,10 +14,14 @@ export function HeroSection({ topShowcaseSlides }) {
                   <Chip label={slide.tag} color="secondary" size="small" />
                   <Typography component="h1" className="hero-lamp-title">{slide.title}</Typography>
                   <Typography component="span">{slide.description}</Typography>
-                  <ButtonGroup variant="contained" color="secondary" className="hero-quick-actions">
-                    <Button component="a" href="#realizar-pedido">Fazer pedido</Button>
-                    <Button component="a" href="#ovos-de-pascoa" color="inherit">Ver catálogo</Button>
-                  </ButtonGroup>
+                  <Stack direction="row" spacing={1.5} className="hero-quick-actions">
+                    <Button variant="contained" color="secondary" component="a" href="#realizar-pedido">
+                      Fazer pedido
+                    </Button>
+                    <Button variant="contained" color="inherit" component="a" href="#ovos-de-pascoa">
+                      Ver catálogo
+                    </Button>
+                  </Stack>
                 </div>
               </article>
             </CarouselSlide>

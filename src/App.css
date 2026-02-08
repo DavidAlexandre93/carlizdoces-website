@@ -588,13 +588,21 @@
 }
 
 .hero-quick-actions {
-  margin-top: 16px;
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .hero-quick-actions .MuiButton-root,
 .contact-quick-actions .MuiButton-root {
   font-weight: 700;
   text-transform: none;
+}
+
+.hero-quick-actions .MuiButton-root {
+  border-radius: 999px;
+  padding-inline: 18px;
 }
 
 .contact-quick-actions {
