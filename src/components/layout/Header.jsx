@@ -20,7 +20,7 @@ import {
   Typography,
 } from '@mui/material'
 
-export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
+export function Header({ navItems, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
@@ -166,16 +166,6 @@ Deus abençoe! 🙌`
             </Stack>
 
             <Box className="topbar-actions">
-              <Tooltip title={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'} arrow>
-                <IconButton
-                  color="inherit"
-                  aria-label={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'}
-                  onClick={() => onToggleDarkMode(!isDarkMode)}
-                  className="theme-toggle-button"
-                >
-                  <Icon>{isDarkMode ? 'light_mode' : 'dark_mode'}</Icon>
-                </IconButton>
-              </Tooltip>
 
               <Tooltip title="Ver notificações" arrow>
                 <IconButton color="inherit" aria-label="Ver notificações" onClick={() => setIsNotificationOpen(true)}>
