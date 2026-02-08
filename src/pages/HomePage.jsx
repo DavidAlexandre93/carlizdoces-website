@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Box, Container, Snackbar } from '@mui/material'
 import { BRL, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
@@ -18,6 +18,7 @@ const TestimonialsSection = lazy(() => import('../components/sections/Testimonia
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
 
 export function HomePage() {
+  const wrapperRef = useRef(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeProductStep, setActiveProductStep] = useState(0)
@@ -65,8 +66,70 @@ export function HomePage() {
     }
   }
 
+  useEffect(() => {
+    const wrapperElement = wrapperRef.current
+    if (!wrapperElement) return undefined
+
+    const handlePointerMove = (event) => {
+      const { clientX, clientY } = event
+      const normalizedX = clientX / window.innerWidth
+      const normalizedY = clientY / window.innerHeight
+
+      wrapperElement.style.setProperty('--pointer-x', normalizedX.toFixed(3))
+      wrapperElement.style.setProperty('--pointer-y', normalizedY.toFixed(3))
+    }
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+    }
+  }, [])
+
+  useEffect(() => {
+    const revealableSelectors = [
+      '.hero',
+      '.content-block',
+      '.summary-band',
+      '.photo-band article',
+      '.photo-highlight',
+      '.order-item',
+      '.order-summary',
+      '.testimonials-grid > *',
+      '.instagram-card',
+      '.contact-panel',
+      '.footer-inner',
+    ]
+
+    const revealableElements = revealableSelectors
+      .flatMap((selector) => Array.from(document.querySelectorAll(selector)))
+      .filter((element, index, self) => self.indexOf(element) === index)
+
+    revealableElements.forEach((element) => {
+      element.classList.add('motion-reveal')
+    })
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.15 },
+    )
+
+    revealableElements.forEach((element) => observer.observe(element))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   return (
-    <Box id="top" className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
+    <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
       <Header
         navItems={navItems}
         isDarkMode={isDarkMode}
