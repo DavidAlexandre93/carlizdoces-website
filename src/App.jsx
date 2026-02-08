@@ -8,6 +8,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   AppBar,
+  Badge,
   Box,
   Button,
   Chip,
@@ -162,6 +163,8 @@ const topShowcaseSlides = [
     tag: 'Clássico da casa',
   },
 ]
+
+const featuredProductIds = new Set(['brigadeiro', 'ferrero'])
 
 
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -354,9 +357,11 @@ export default function App() {
             <Tooltip title="Voltar para o topo da página" arrow>
               <Link href="#top" underline="none" color="inherit" className="topbar-brand">
                 <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
-                <Typography component="span" className="brand-name">
-                  Carliz Doces
-                </Typography>
+                <Badge color="secondary" badgeContent="Top" sx={{ '& .MuiBadge-badge': { right: -24 } }}>
+                  <Typography component="span" className="brand-name">
+                    Carliz Doces
+                  </Typography>
+                </Badge>
               </Link>
             </Tooltip>
 
@@ -473,6 +478,13 @@ export default function App() {
               <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
                 <Typography component="p" variant="overline" className="highlight-tag">Catálogo de temporada</Typography>
+                <Badge
+                  color="primary"
+                  badgeContent={featuredProductIds.has(selectedShowcaseProduct.id) ? 'Mais pedido' : 'Novidade'}
+                  sx={{ '& .MuiBadge-badge': { right: -56, top: 12 } }}
+                >
+                  <Typography component="h3" variant="h5">{selectedShowcaseProduct.name}</Typography>
+                </Badge>
                 <Chip
                   label="Edição limitada"
                   color="warning"
@@ -682,7 +694,9 @@ export default function App() {
             </ImageList>
 
             <Paper component="aside" elevation={3} className="order-summary">
-              <Typography component="h3" variant="h5">Resumo do pedido</Typography>
+              <Badge color="secondary" badgeContent={`${totalItems} item(ns)`}>
+                <Typography component="h3" variant="h5">Resumo do pedido</Typography>
+              </Badge>
               <Typography component="p" variant="body1">
                 <Typography component="strong" variant="h6">{totalItems}</Typography> item(ns) no carrinho
               </Typography>
@@ -857,7 +871,9 @@ export default function App() {
             </Paper>
 
             <Paper elevation={0} className="testimonials-list-card">
-              <Typography component="h3" variant="h5">Clientes que já opinaram aqui</Typography>
+              <Badge color="primary" badgeContent={`${communityTestimonials.length} opiniões`}>
+                <Typography component="h3" variant="h5">Clientes que já opinaram aqui</Typography>
+              </Badge>
               <ul>
                 {communityTestimonials.map((testimonial) => (
                   <li key={testimonial.id}>
