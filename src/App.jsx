@@ -17,6 +17,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material'
+import { Carousel, CarouselSlide } from 'material-ui-carousel'
 import './App.css'
 
 const navItems = [
@@ -52,6 +53,30 @@ const instagramPosts = [
   { id: 'insta-1', imageUrl: '/images/ninho.svg', alt: 'Doces artesanais da Carliz Doces' },
   { id: 'insta-2', imageUrl: '/images/ferrero.svg', alt: 'Ovo de colher da Carliz Doces' },
   { id: 'insta-3', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros da Carliz Doces' },
+]
+
+const topShowcaseSlides = [
+  {
+    id: 'matilda',
+    imageUrl: '/images/matilda.svg',
+    alt: 'Bolo da Matilda especial da Carliz Doces',
+    title: 'Bolo da Matilda',
+    description: 'Destaque da semana para os apaixonados por chocolate.',
+  },
+  {
+    id: 'ferrero',
+    imageUrl: '/images/ferrero.svg',
+    alt: 'Campanha de sorteio com ovo Ferrero Rocher',
+    title: 'Sorteio Ferrero Rocher',
+    description: 'Promoção especial para quem encomenda ovos de colher.',
+  },
+  {
+    id: 'brigadeiro',
+    imageUrl: '/images/brigadeiro.svg',
+    alt: 'Brigadeiros artesanais da Carliz Doces',
+    title: 'Brigadeiros artesanais',
+    description: 'Sabores para festas e lembranças com a cara da Carliz.',
+  },
 ]
 
 
@@ -119,6 +144,34 @@ export default function App() {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
 
+  const handleShareProduct = async (item) => {
+    const shareData = {
+      title: 'Carliz Doces',
+      text: `${item.name} por ${BRL.format(item.price)}.`,
+      url: window.location.href,
+    }
+
+    if (navigator.share) {
+      await navigator.share(shareData)
+      return
+    }
+
+    await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`)
+  }
+
+  const chatActions = [
+    {
+      name: 'WhatsApp',
+      icon: '💬',
+      onClick: () => window.open('https://wa.me/5511992175496', '_blank', 'noopener,noreferrer'),
+    },
+    {
+      name: 'Instagram',
+      icon: '📸',
+      onClick: () => window.open(instagramProfileLink, '_blank', 'noopener,noreferrer'),
+    },
+  ]
+
 
   return (
     <Box className="site-wrapper">
@@ -143,8 +196,26 @@ export default function App() {
 
       <section className="hero">
         <Container maxWidth="xl" className="page-container hero-inner">
-          <img src="/images/banner-carliz.svg" alt="Cupcakes artesanais" />
-          <h1>Carliz Doces</h1>
+          <Carousel
+            autoPlay
+            interval={4000}
+            navButtonsAlwaysVisible
+            indicators={topShowcaseSlides.length > 1}
+            className="top-carousel"
+          >
+            {topShowcaseSlides.map((slide) => (
+              <CarouselSlide key={slide.id}>
+                <article className="top-carousel-slide">
+                  <img src={slide.imageUrl} alt={slide.alt} />
+                  <div>
+                    <p>Destaque no topo</p>
+                    <h1>{slide.title}</h1>
+                    <span>{slide.description}</span>
+                  </div>
+                </article>
+              </CarouselSlide>
+            ))}
+          </Carousel>
         </Container>
       </section>
 
