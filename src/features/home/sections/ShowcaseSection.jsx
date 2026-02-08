@@ -36,7 +36,7 @@ export function ShowcaseSection({
   onFavoriteProduct,
 }) {
   return (
-    <section id="ovos-de-pascoa" className="photo-band">
+    <section id="ovos-de-pascoa" className="photo-band animate__animated animate__fadeInUp" style={{ '--animate-duration': '750ms' }}>
       <Container maxWidth="xl" className="page-container">
         <header className="photo-band-head">
           <Typography component="h2" variant="h4">Ovos de Páscoa</Typography>

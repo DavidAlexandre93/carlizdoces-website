@@ -9,7 +9,7 @@ const typeStyles = {
 
 export default function UpdatesSection({ updates, announcementChannels }) {
   return (
-    <section id="novidades" className="updates-section">
+    <section id="novidades" className="updates-section animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Container maxWidth="xl" className="page-container">
         <header className="updates-header">
           <Typography component="h2" variant="h4">Central de novidades</Typography>

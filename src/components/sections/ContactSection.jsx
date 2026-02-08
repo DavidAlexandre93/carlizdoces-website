@@ -4,11 +4,31 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
-    <section id="contato" className="contact-hero">
+    <section id="contato" className="contact-hero animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper
         component="form"
         onSubmit={onSubmit}
         sx={{
+          p: { xs: 2, md: 3 },
+          borderRadius: 4,
+          maxWidth: 1080,
+          mx: 'auto',
+          bgcolor: 'rgba(244, 236, 250, 0.92)',
+          border: '1px solid rgba(171, 120, 197, 0.3)',
+        }}
+      >
+        <Box
+          sx={{
+            p: { xs: 2.5, md: 4 },
+            borderRadius: 5,
+            maxWidth: 860,
+            width: '100%',
+            mx: 'auto',
+            backdropFilter: 'blur(10px)',
+            background: 'linear-gradient(145deg, rgba(255,255,255,0.97), rgba(255,240,248,0.93))',
+            boxShadow: '0 20px 40px rgba(91, 23, 55, 0.22)',
+          }}
+        >
           p: { xs: 2.5, md: 4 },
           borderRadius: 5,
           maxWidth: 860,
@@ -75,11 +95,12 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
             {contactTipOpen ? 'Ocultar horários' : 'Horários de atendimento'}
           </Button>
         </Box>
-        {contactTipOpen ? (
+          {contactTipOpen ? (
           <Typography sx={{ mt: 1.5, color: 'rgba(58, 23, 41, 0.86)' }} variant="body2">
             Atendimento no WhatsApp com resposta média em até 20 minutos no horário comercial.
           </Typography>
-        ) : null}
+          ) : null}
+        </Box>
       </Paper>
     </section>
   )
