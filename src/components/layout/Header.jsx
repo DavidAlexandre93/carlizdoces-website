@@ -102,8 +102,8 @@ Deus abençoe! 🙌`
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="Usuário logado" arrow>
-                <Avatar aria-label="Usuário logado" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
+              <Tooltip title="Bem vindo" arrow>
+                <Avatar aria-label="Bem vindo" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
                   <Icon sx={{ fontSize: 20 }}>person</Icon>
                 </Avatar>
               </Tooltip>
