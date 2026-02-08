@@ -20,6 +20,38 @@ const TestimonialsSection = lazy(() => import('../components/sections/Testimonia
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
+const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
+const COUNT_API_NAMESPACE = 'carlizdoces-website'
+
+const getCounterValue = async (key) => {
+  try {
+    const response = await fetch(`${COUNT_API_BASE_URL}/get/${COUNT_API_NAMESPACE}/${key}`)
+    if (!response.ok) {
+      return 0
+    }
+
+    const data = await response.json()
+    const value = Number(data?.value ?? 0)
+    return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0
+  } catch {
+    return 0
+  }
+}
+
+const incrementCounterValue = async (key, amount = 1) => {
+  try {
+    const response = await fetch(`${COUNT_API_BASE_URL}/hit/${COUNT_API_NAMESPACE}/${key}?amount=${amount}`)
+    if (!response.ok) {
+      return null
+    }
+
+    const data = await response.json()
+    const value = Number(data?.value ?? 0)
+    return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0
+  } catch {
+    return null
+  }
+}
 
 export function HomePage() {
   const wrapperRef = useRef(null)
@@ -76,21 +108,26 @@ export function HomePage() {
     }
   }
 
-  const handleFavoriteProduct = (item) => {
-    setFavoriteProductIds((currentFavorites) => {
-      const alreadyFavorite = currentFavorites.includes(item.id)
-      if (alreadyFavorite) {
-        setSnackbar({ open: true, message: `${item.name} removido dos seus favoritos.`, severity: 'info' })
-        return currentFavorites.filter((id) => id !== item.id)
-      }
+  const handleFavoriteProduct = async (item) => {
+    const counterKey = `product-${item.id}`
 
+    setFavoriteProductIds((currentFavorites) => (currentFavorites.includes(item.id) ? currentFavorites : [...currentFavorites, item.id]))
+    setFavoriteCounts((currentCounts) => ({
+      ...currentCounts,
+      [item.id]: (currentCounts[item.id] ?? 0) + 1,
+    }))
+
+    const updatedValue = await incrementCounterValue(counterKey)
+    if (updatedValue !== null) {
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
-        [item.id]: (currentCounts[item.id] ?? 0) + 1,
+        [item.id]: updatedValue,
       }))
-      setSnackbar({ open: true, message: `${item.name} adicionado aos favoritos!`, severity: 'success' })
-      return [...currentFavorites, item.id]
-    })
+      setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
+      return
+    }
+
+    setSnackbar({ open: true, message: `${item.name} recebeu +1 coração (offline).`, severity: 'warning' })
   }
 
   const handleContactSubmit = (event) => {
@@ -201,42 +238,65 @@ export function HomePage() {
   }
 
   useEffect(() => {
-    try {
-      const savedLikes = Number(window.localStorage.getItem('carliz-store-likes') ?? '0')
-      const normalizedLikes = Number.isFinite(savedLikes) ? Math.max(0, Math.floor(savedLikes)) : 0
-      setTotalLikes(normalizedLikes)
-      setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
-    } catch {
-      setTotalLikes(0)
-      setHasLikedStore(false)
+    let isMounted = true
+
+    const loadGlobalHearts = async () => {
+      const [storeLikes, ...productLikes] = await Promise.all([
+        getCounterValue('store-likes'),
+        ...seasonalProducts.map((product) => getCounterValue(`product-${product.id}`)),
+      ])
+
+      if (!isMounted) return
+
+      setTotalLikes(storeLikes)
+
+      setFavoriteCounts(() =>
+        seasonalProducts.reduce((counts, product, index) => ({
+          ...counts,
+          [product.id]: productLikes[index] ?? 0,
+        }), {}),
+      )
+
+      try {
+        setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
+      } catch {
+        setHasLikedStore(false)
+      }
+    }
+
+    loadGlobalHearts()
+
+    return () => {
+      isMounted = false
     }
   }, [])
 
-  const handleToggleLike = () => {
-    setHasLikedStore((currentLiked) => {
-      const nextLiked = !currentLiked
+  const handleToggleLike = async () => {
+    setHasLikedStore(true)
+    setShowLikeCelebration(true)
+    setTotalLikes((currentLikes) => currentLikes + 1)
 
-      setTotalLikes((currentLikes) => {
-        const nextLikes = nextLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1)
+    try {
+      window.localStorage.setItem('carliz-store-liked', 'true')
+    } catch {
+      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+    }
 
-        try {
-          window.localStorage.setItem('carliz-store-likes', String(nextLikes))
-          window.localStorage.setItem('carliz-store-liked', String(nextLiked))
-        } catch {
-          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-        }
-
-        return nextLikes
-      })
-
-      setShowLikeCelebration(nextLiked)
+    const updatedValue = await incrementCounterValue('store-likes')
+    if (updatedValue !== null) {
+      setTotalLikes(updatedValue)
       setSnackbar({
         open: true,
-        message: nextLiked ? '🎉 Obrigado pelo carinho! Você adoçou nosso dia! 🍫✨' : '💛 Curtida removida. Quando quiser, é só favoritar de novo!',
-        severity: nextLiked ? 'success' : 'info',
+        message: '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨',
+        severity: 'success',
       })
+      return
+    }
 
-      return nextLiked
+    setSnackbar({
+      open: true,
+      message: '💛 +1 coração registrado localmente. Sem conexão para sincronizar agora.',
+      severity: 'warning',
     })
   }
 
