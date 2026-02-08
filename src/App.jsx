@@ -8,6 +8,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Avatar,
   AppBar,
   Badge,
@@ -194,6 +195,7 @@ const topShowcaseSlides = [
 ]
 
 const featuredProductIds = new Set(['brigadeiro', 'ferrero'])
+const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito']
 
 
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -225,6 +227,7 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [quickOrderSelection, setQuickOrderSelection] = useState(null)
   const [orderPreferences, setOrderPreferences] = useState({
     needsDelivery: false,
     receiveOffers: true,
@@ -291,6 +294,10 @@ export default function App() {
     setActiveProductStep((current) => Math.min(current, Math.max(visibleShowcaseProducts.length - 1, 0)))
   }, [visibleShowcaseProducts.length])
   const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
+  const flavorSuggestions = useMemo(
+    () => [...new Set(seasonalProducts.map((product) => product.flavor))],
+    [],
+  )
   const productsForOrder = useMemo(() => {
     if (!showTopRatedFirst) {
       return seasonalProducts
@@ -418,6 +425,22 @@ export default function App() {
 
   const handleBackProduct = () => {
     setActiveProductStep((current) => Math.max(current - 1, 0))
+  }
+
+  const handleQuickOrderSelection = (_event, selectedProduct) => {
+    setQuickOrderSelection(selectedProduct)
+
+    if (!selectedProduct) {
+      return
+    }
+
+    const nextIndex = seasonalProducts.findIndex((item) => item.id === selectedProduct.id)
+    if (nextIndex >= 0) {
+      setActiveProductStep(nextIndex)
+    }
+
+    document.getElementById('realizar-pedido')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    addItem(selectedProduct.id)
   }
 
   const handleTestimonialChange = (field, value) => {
@@ -554,6 +577,18 @@ export default function App() {
                   <PersonIcon sx={{ fontSize: 20 }} />
                 </Avatar>
               </Tooltip>
+
+              <Autocomplete
+                options={seasonalProducts}
+                value={quickOrderSelection}
+                onChange={handleQuickOrderSelection}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                sx={{ minWidth: 220, display: { xs: 'none', md: 'flex' } }}
+                renderInput={(params) => (
+                  <TextField {...params} size="small" label="Pedido rápido" placeholder="Escolha um doce" />
+                )}
+              />
 
               <IconButton
                 color="inherit"
@@ -1108,13 +1143,41 @@ export default function App() {
                         />
                       </Box>
                       <div className="customization-fields">
-                        <TextField
-                          label="Qual sabor?"
-                          placeholder="Ex.: Brigadeiro belga"
-                          size="small"
-                          fullWidth
+                        <Autocomplete
+                          freeSolo
+                          options={flavorSuggestions}
                           value={customizations[item.id]?.flavor ?? item.flavor}
-                          onChange={(event) => updateCustomization(item.id, 'flavor', event.target.value)}
+                          onInputChange={(_event, newInputValue) =>
+                            updateCustomization(item.id, 'flavor', newInputValue)
+                          }
+                          onChange={(_event, newValue) =>
+                            updateCustomization(item.id, 'flavor', newValue ?? '')
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Qual sabor?"
+                              placeholder="Ex.: Brigadeiro belga"
+                              size="small"
+                              fullWidth
+                            />
+                          )}
+                        />
+                        <Autocomplete
+                          options={paymentMethods}
+                          value={customizations[item.id]?.paymentMethod ?? null}
+                          onChange={(_event, newValue) =>
+                            updateCustomization(item.id, 'paymentMethod', newValue ?? '')
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Forma de pagamento"
+                              size="small"
+                              fullWidth
+                              placeholder="Selecione uma opção"
+                            />
+                          )}
                         />
                         <FormControl component="fieldset" sx={{ width: '100%' }}>
                           <FormLabel component="legend" sx={{ fontSize: 14 }}>
