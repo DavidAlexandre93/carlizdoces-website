@@ -166,7 +166,7 @@
 .topbar {
   padding: 10px 0;
   animation: slide-down 500ms ease-out;
-  background: rgba(255, 248, 251, 0.94) !important;
+  background: #e6bfd2 !important;
   backdrop-filter: blur(8px);
   border-bottom: 1px solid #efccdc;
   transition: background 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
