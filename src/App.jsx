@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Button, ClickAwayListener, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -31,6 +32,11 @@ const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 
 export default function App() {
   const [cart, setCart] = useState({})
+  const [orderTipAnchor, setOrderTipAnchor] = useState(null)
+  const [contactTipAnchor, setContactTipAnchor] = useState(null)
+
+  const isOrderTipOpen = Boolean(orderTipAnchor)
+  const isContactTipOpen = Boolean(contactTipAnchor)
 
   const addItem = (itemId) => {
     setCart((current) => ({ ...current, [itemId]: (current[itemId] ?? 0) + 1 }))
@@ -74,6 +80,14 @@ export default function App() {
     return `https://wa.me/5511992175496?text=${message}`
   }, [selectedItems, totalItems, totalPrice])
 
+  const handleOrderTipToggle = (event) => {
+    setOrderTipAnchor((current) => (current ? null : event.currentTarget))
+  }
+
+  const handleContactTipToggle = (event) => {
+    setContactTipAnchor((current) => (current ? null : event.currentTarget))
+  }
+
   return (
     <div className="site-wrapper">
       <header className="topbar">
@@ -115,6 +129,21 @@ export default function App() {
       <section id="realizar-pedido" className="order-section">
         <h2>Realizar pedido</h2>
         <p>Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</p>
+        <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
+          Dica rápida para o pedido
+        </Button>
+        <Popper open={isOrderTipOpen} anchorEl={orderTipAnchor} placement="bottom-start" sx={{ zIndex: 10 }}>
+          <ClickAwayListener onClickAway={() => setOrderTipAnchor(null)}>
+            <Paper sx={{ p: 2, maxWidth: 300, mt: 1 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Monte seu carrinho mais rápido
+              </Typography>
+              <Typography variant="body2">
+                Comece pelos sabores favoritos, ajuste quantidades e confira o total antes de enviar para o WhatsApp.
+              </Typography>
+            </Paper>
+          </ClickAwayListener>
+        </Popper>
 
         <div className="order-grid">
           <div className="order-list">
@@ -177,6 +206,21 @@ export default function App() {
           <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
           <p>Email: voce@email.com</p>
           <p>Telefone: +55 11 99217-5496</p>
+          <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
+            Horários de atendimento
+          </Button>
+          <Popper open={isContactTipOpen} anchorEl={contactTipAnchor} placement="top-start" sx={{ zIndex: 10 }}>
+            <ClickAwayListener onClickAway={() => setContactTipAnchor(null)}>
+              <Paper sx={{ p: 2, maxWidth: 280, mb: 1 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Atendimento no WhatsApp
+                </Typography>
+                <Typography variant="body2">
+                  Resposta média em até 20 minutos durante o horário comercial.
+                </Typography>
+              </Paper>
+            </ClickAwayListener>
+          </Popper>
         </div>
       </section>
 
