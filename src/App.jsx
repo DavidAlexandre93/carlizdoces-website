@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import FavoriteIcon from './mui-icons/Favorite'
 import FavoriteBorderIcon from './mui-icons/FavoriteBorder'
 import ShareIcon from './mui-icons/Share'
@@ -32,6 +32,7 @@ import {
   Rating,
   MenuItem,
   MobileStepper,
+  Slider,
   Switch,
   SpeedDial,
   SpeedDialAction,
@@ -212,6 +213,9 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [maxShowcasePrice, setMaxShowcasePrice] = useState(() =>
+    Math.max(...seasonalProducts.map((item) => item.price)),
+  )
   const [isWhatsAppConfirmationEnabled, setIsWhatsAppConfirmationEnabled] = useState(true)
   const [showManualTestimonials, setShowManualTestimonials] = useState(true)
   const [orderCustomer, setOrderCustomer] = useState({
@@ -244,6 +248,10 @@ export default function App() {
     })
   }
 
+  const setItemQuantity = (itemId, nextQuantity) => {
+    setCart((current) => ({ ...current, [itemId]: Math.max(1, Math.round(nextQuantity)) }))
+  }
+
   const selectedItems = useMemo(
     () =>
       seasonalProducts
@@ -254,6 +262,15 @@ export default function App() {
 
   const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.subtotal, 0)
+  const visibleShowcaseProducts = useMemo(
+    () => seasonalProducts.filter((item) => item.price <= maxShowcasePrice),
+    [maxShowcasePrice],
+  )
+  const selectedShowcaseProduct = visibleShowcaseProducts[activeProductStep] ?? visibleShowcaseProducts[0] ?? null
+
+  useEffect(() => {
+    setActiveProductStep((current) => Math.min(current, Math.max(visibleShowcaseProducts.length - 1, 0)))
+  }, [visibleShowcaseProducts.length])
   const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
   const productsForOrder = useMemo(() => {
     if (!showTopRatedFirst) {
@@ -580,6 +597,22 @@ export default function App() {
           <header className="photo-band-head">
             <Typography component="h2" variant="h4">Ovos de Páscoa</Typography>
             <Typography component="p" variant="body1">Passe as imagens com os botões para navegar pelos sabores e apresentações disponíveis.</Typography>
+            <Box sx={{ mt: 2.5, maxWidth: 560 }}>
+              <Typography component="p" variant="body2" sx={{ mb: 0.75, fontWeight: 700 }}>
+                Filtrar vitrine por preço máximo: {BRL.format(maxShowcasePrice)}
+              </Typography>
+              <Slider
+                value={maxShowcasePrice}
+                min={Math.min(...seasonalProducts.map((item) => item.price))}
+                max={Math.max(...seasonalProducts.map((item) => item.price))}
+                step={0.5}
+                marks
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) => BRL.format(value)}
+                onChange={(_event, value) => setMaxShowcasePrice(Array.isArray(value) ? value[0] : value)}
+                aria-label="Filtro de preço dos ovos de páscoa"
+              />
+            </Box>
           </header>
 
           {selectedShowcaseProduct ? (
@@ -639,16 +672,20 @@ export default function App() {
                 </Tooltip>
               </div>
             </Paper>
-          ) : null}
+          ) : (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Nenhum produto está disponível com esse limite de preço.
+            </Alert>
+          )}
 
           <MobileStepper
             variant="dots"
-            steps={seasonalProducts.length}
+            steps={visibleShowcaseProducts.length || 1}
             position="static"
             activeStep={activeProductStep}
             className="showcase-stepper"
             nextButton={
-              <Button size="small" onClick={handleNextProduct} disabled={activeProductStep === seasonalProducts.length - 1}>
+              <Button size="small" onClick={handleNextProduct} disabled={activeProductStep >= visibleShowcaseProducts.length - 1}>
                 Próximo <Icon fontSize="small">navigate_next</Icon>
               </Button>
             }
@@ -662,7 +699,7 @@ export default function App() {
           <Tabs
             value={selectedShowcaseProduct?.id ?? false}
             onChange={(_event, newValue) => {
-              const nextIndex = seasonalProducts.findIndex((item) => item.id === newValue)
+              const nextIndex = visibleShowcaseProducts.findIndex((item) => item.id === newValue)
               if (nextIndex >= 0) {
                 setActiveProductStep(nextIndex)
               }
@@ -673,7 +710,7 @@ export default function App() {
             className="section-tabs"
             sx={{ mt: 2, maxWidth: 900, mx: 'auto' }}
           >
-            {seasonalProducts.map((item) => (
+            {visibleShowcaseProducts.map((item) => (
               <Tab
                 key={item.id}
                 value={item.id}
@@ -906,6 +943,21 @@ export default function App() {
                       <Typography component="span" variant="body2">
                         Preço: {BRL.format(item.price)} (subtotal {BRL.format(item.subtotal)})
                       </Typography>
+                      <Box sx={{ px: 0.5 }}>
+                        <Typography component="p" variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
+                          Quantidade pelo slider: {item.quantity}
+                        </Typography>
+                        <Slider
+                          min={1}
+                          max={12}
+                          step={1}
+                          marks
+                          value={item.quantity}
+                          onChange={(_event, value) => setItemQuantity(item.id, Array.isArray(value) ? value[0] : value)}
+                          valueLabelDisplay="auto"
+                          aria-label={`Quantidade de ${item.name}`}
+                        />
+                      </Box>
                       <div className="customization-fields">
                         <TextField
                           label="Qual sabor?"
