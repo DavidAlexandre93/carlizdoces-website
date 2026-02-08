@@ -3,6 +3,7 @@ import FavoriteIcon from './mui-icons/Favorite'
 import FavoriteBorderIcon from './mui-icons/FavoriteBorder'
 import ShareIcon from './mui-icons/Share'
 import {
+  Alert,
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -154,6 +155,7 @@ export default function App() {
     Object.fromEntries(seasonalProducts.map((item, index) => [item.id, 100 + index * 7])),
   )
   const [likedProducts, setLikedProducts] = useState({})
+  const [showOrderAlert, setShowOrderAlert] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -357,11 +359,13 @@ export default function App() {
 
       <section id="quem-somos" className="summary-band centered">
         <Container maxWidth="lg" className="page-container">
-          <h2>QUEM SOMOS</h2>
-          <p>
-            Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
-            ovos de páscoa.
-          </p>
+          <Paper elevation={4} sx={{ px: { xs: 2.5, md: 5 }, py: { xs: 4, md: 5.5 }, borderRadius: 4 }}>
+            <h2>QUEM SOMOS</h2>
+            <p>
+              Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
+              ovos de páscoa.
+            </p>
+          </Paper>
         </Container>
       </section>
 
@@ -373,7 +377,7 @@ export default function App() {
           </header>
 
           {selectedShowcaseProduct ? (
-            <aside className="photo-highlight" aria-live="polite">
+            <Paper component="aside" elevation={3} className="photo-highlight" aria-live="polite">
               <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
                 <p className="highlight-tag">Catálogo de temporada</p>
@@ -413,7 +417,7 @@ export default function App() {
                   Adicionar ao pedido
                 </Button>
               </div>
-            </aside>
+            </Paper>
           ) : null}
 
           <MobileStepper
@@ -566,7 +570,7 @@ export default function App() {
               ))}
             </ImageList>
 
-            <aside className="order-summary">
+            <Paper component="aside" elevation={3} className="order-summary">
               <h3>Resumo do pedido</h3>
               <p>
                 <strong>{totalItems}</strong> item(ns) no carrinho
@@ -647,16 +651,22 @@ export default function App() {
               ) : null}
 
               <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
+              {showOrderAlert ? (
+                <Alert severity="success" sx={{ mb: 1.5 }} onClose={() => setShowOrderAlert(false)}>
+                  Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.
+                </Alert>
+              ) : null}
               <Link
                 className="finish-order"
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
                 underline="none"
+                onClick={() => setShowOrderAlert(true)}
               >
                 Finalizar pedido no WhatsApp
               </Link>
-            </aside>
+            </Paper>
           </Box>
         </Container>
       </section>
@@ -697,7 +707,19 @@ export default function App() {
       </section>
 
       <section id="contato" className="contact-hero">
-        <Box>
+        <Paper
+          className="contact-panel"
+          elevation={6}
+          sx={{
+            width: 'min(100%, 760px)',
+            p: { xs: 2.5, md: 4 },
+            borderRadius: 4,
+            background: 'rgba(59, 23, 43, 0.55)',
+            backdropFilter: 'blur(2px)',
+            border: '1px solid rgba(255, 255, 255, 0.24)',
+            color: 'inherit',
+          }}
+        >
           <h2>Contato</h2>
           <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
           <Tabs
@@ -751,7 +773,7 @@ export default function App() {
               </Paper>
             </ClickAwayListener>
           </Popper>
-        </Box>
+        </Paper>
       </section>
 
       <section id="instagram" className="instagram-section">
@@ -763,7 +785,7 @@ export default function App() {
 
           <Box className="instagram-grid">
             {instagramPosts.map((post) => (
-              <article key={post.id} className="instagram-card">
+              <Paper key={post.id} component="article" elevation={3} className="instagram-card">
                 <Link
                   href={instagramProfileLink}
                   target="_blank"
@@ -773,7 +795,7 @@ export default function App() {
                 >
                   <img src={post.imageUrl} alt={post.alt} loading="lazy" />
                 </Link>
-              </article>
+              </Paper>
             ))}
           </Box>
         </Container>
