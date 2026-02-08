@@ -1,10 +1,10 @@
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 
 const typeStyles = {
-  microinteracoes: { label: 'Motion', color: 'secondary' },
-  scroll: { label: 'GSAP', color: 'success' },
-  ilustracoes: { label: 'Lottie', color: 'info' },
-  reveal: { label: 'AOS / animate.css', color: 'warning' },
+  microinteracoes: { label: 'Promoções', color: 'secondary' },
+  scroll: { label: 'Sorteios', color: 'success' },
+  ilustracoes: { label: 'Recados', color: 'info' },
+  reveal: { label: 'Recados', color: 'warning' },
 }
 
 export default function UpdatesSection({ updates, announcementChannels }) {
