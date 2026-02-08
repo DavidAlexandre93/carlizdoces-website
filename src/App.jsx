@@ -9,25 +9,8 @@ const navItems = [
   { label: 'Contato', sectionId: 'contato' },
 ]
 
-const productHighlights = [
-  {
-    name: 'Ovo Brigadeiro Gourmet',
-    price: 'R$ 59,00',
-    image: '/images/brigadeiro.svg',
-  },
-  {
-    name: 'Ovo Ninho com Nutella',
-    price: 'R$ 68,50',
-    image: '/images/ninho-nutella.svg',
-  },
-  {
-    name: 'Ovo Prestígio Cremoso',
-    price: 'R$ 62,00',
-    image: '/images/prestigio.svg',
-  },
-]
-
-const orderOptions = [
+// Edite apenas este array para atualizar produtos conforme o estoque.
+const seasonalProducts = [
   { id: 'brigadeiro', name: 'Brigadeiro Gourmet', price: 59, image: '/images/brigadeiro.svg' },
   { id: 'ninho-nutella', name: 'Ninho com Nutella', price: 68.5, image: '/images/ninho-nutella.svg' },
   { id: 'prestigio', name: 'Prestígio Cremoso', price: 62, image: '/images/prestigio.svg' },
@@ -35,6 +18,8 @@ const orderOptions = [
   { id: 'trufado-maracuja', name: 'Trufado de Maracujá', price: 64, image: '/images/trufado-maracuja.svg' },
   { id: 'ninho-uva', name: 'Ninho com Uva', price: 66, image: '/images/ninho-uva.svg' },
 ]
+
+const productHighlights = seasonalProducts.slice(0, 3)
 
 const metrics = [
   ['Pedidos por dia', '120+'],
@@ -65,7 +50,7 @@ export default function App() {
 
   const selectedItems = useMemo(
     () =>
-      orderOptions
+      seasonalProducts
         .filter((item) => cart[item.id])
         .map((item) => ({ ...item, quantity: cart[item.id], subtotal: cart[item.id] * item.price })),
     [cart],
@@ -83,7 +68,7 @@ export default function App() {
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
-      `Olá! Tenho interesse em comprar doces da Carliz Doces.\n\nMeu pedido:\n${orderList}\n\nTotal de itens: ${totalItems}\nTotal estimado: ${BRL.format(totalPrice)}`,
+      `Olá! Tenho interesse em comprar ovos de páscoa da Carliz Doces.\n\nMeu pedido:\n${orderList}\n\nTotal de itens: ${totalItems}\nTotal estimado: ${BRL.format(totalPrice)}`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
@@ -117,11 +102,11 @@ export default function App() {
 
       <section id="ovos-de-pascoa" className="photo-band">
         {productHighlights.map((item) => (
-          <article key={item.name}>
+          <article key={item.id}>
             <img src={item.image} alt={item.name} />
             <div>
               <strong>{item.name}</strong>
-              <span>{item.price}</span>
+              <span>{BRL.format(item.price)}</span>
             </div>
           </article>
         ))}
@@ -129,11 +114,11 @@ export default function App() {
 
       <section id="realizar-pedido" className="order-section">
         <h2>Realizar pedido</h2>
-        <p>Escolha os doces disponíveis, monte seu carrinho e finalize direto no WhatsApp.</p>
+        <p>Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</p>
 
         <div className="order-grid">
           <div className="order-list">
-            {orderOptions.map((item) => (
+            {seasonalProducts.map((item) => (
               <article key={item.id}>
                 <img src={item.image} alt={item.name} />
                 <div>
@@ -171,7 +156,7 @@ export default function App() {
             </ul>
             <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
             <a className="finish-order" href={whatsappLink} target="_blank" rel="noreferrer">
-              Finalizar pedido
+              Finalizar pedido no WhatsApp
             </a>
           </aside>
         </div>
