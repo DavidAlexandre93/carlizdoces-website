@@ -145,6 +145,29 @@
   position: relative;
 }
 
+.section-divider-wrap {
+  padding: 14px 24px;
+}
+
+.section-divider {
+  border-color: rgba(173, 20, 87, 0.24) !important;
+}
+
+.section-divider-label {
+  color: #8f3b64;
+  font-size: 12px !important;
+  letter-spacing: 0.12em !important;
+  font-weight: 700 !important;
+}
+
+.site-wrapper.dark-mode .section-divider {
+  border-color: rgba(255, 190, 225, 0.28) !important;
+}
+
+.site-wrapper.dark-mode .section-divider-label {
+  color: #ffc4e6;
+}
+
 .top-carousel {
   position: relative;
 }
