@@ -14,6 +14,7 @@ import {
   Container,
   Drawer,
   Divider,
+  Icon,
   IconButton,
   ImageList,
   ImageListItem,
@@ -286,12 +287,12 @@ export default function App() {
   const chatActions = [
     {
       name: 'WhatsApp',
-      icon: '💬',
+      icon: <Icon fontSize="small">chat</Icon>,
       onClick: () => window.open('https://wa.me/5511992175496', '_blank', 'noopener,noreferrer'),
     },
     {
       name: 'Instagram',
-      icon: '📸',
+      icon: <Icon fontSize="small">photo_camera</Icon>,
       onClick: () => window.open(instagramProfileLink, '_blank', 'noopener,noreferrer'),
     },
   ]
@@ -376,9 +377,7 @@ export default function App() {
                 onClick={() => setIsDarkMode((current) => !current)}
                 className="theme-toggle-button"
               >
-                <Box component="span" sx={{ fontSize: 22, lineHeight: 1.1 }}>
-                  {isDarkMode ? '☀️' : '🌙'}
-                </Box>
+                <Icon>{isDarkMode ? 'light_mode' : 'dark_mode'}</Icon>
               </IconButton>
 
               <IconButton
@@ -388,7 +387,7 @@ export default function App() {
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="topbar-menu-button"
               >
-                <Box component="span" sx={{ fontSize: 26, lineHeight: 1 }}>☰</Box>
+                <Icon>menu</Icon>
               </IconButton>
             </Box>
           </Toolbar>
@@ -513,12 +512,12 @@ export default function App() {
             className="showcase-stepper"
             nextButton={
               <Button size="small" onClick={handleNextProduct} disabled={activeProductStep === seasonalProducts.length - 1}>
-                Próximo →
+                Próximo <Icon fontSize="small">navigate_next</Icon>
               </Button>
             }
             backButton={
               <Button size="small" onClick={handleBackProduct} disabled={activeProductStep === 0}>
-                ← Anterior
+                <Icon fontSize="small">navigate_before</Icon> Anterior
               </Button>
             }
           />
@@ -574,7 +573,7 @@ export default function App() {
           <Box sx={{ mt: 2, mb: 3 }}>
             <Accordion defaultExpanded>
               <AccordionSummary
-                expandIcon={<span aria-hidden="true">⌄</span>}
+                expandIcon={<Icon aria-hidden="true">expand_more</Icon>}
                 aria-controls="pedido-passo-a-passo-content"
                 id="pedido-passo-a-passo-header"
               >
@@ -588,7 +587,7 @@ export default function App() {
               </AccordionDetails>
             </Accordion>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="pedido-pagamento-content" id="pedido-pagamento-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="pedido-pagamento-content" id="pedido-pagamento-header">
                 <Typography sx={{ fontWeight: 700 }}>Formas de pagamento aceitas</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -651,13 +650,13 @@ export default function App() {
                   <div className="qty-controls">
                     <Tooltip title="Diminuir quantidade" arrow>
                       <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
-                        -
+                        <Icon fontSize="inherit" aria-hidden="true">remove</Icon>
                       </button>
                     </Tooltip>
                     <Typography component="strong" variant="body1">{cart[item.id] ?? 0}</Typography>
                     <Tooltip title="Aumentar quantidade" arrow>
                       <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
-                        +
+                        <Icon fontSize="inherit" aria-hidden="true">add</Icon>
                       </button>
                     </Tooltip>
                   </div>
@@ -778,7 +777,7 @@ export default function App() {
           <Typography component="p" variant="body1">Próximo à Praça Central e estação de metrô.</Typography>
           <Box sx={{ mt: 2, textAlign: 'left' }}>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="retirada-content" id="retirada-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="retirada-content" id="retirada-header">
                 <Typography sx={{ fontWeight: 700 }}>Retirada e entrega</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -789,7 +788,7 @@ export default function App() {
               </AccordionDetails>
             </Accordion>
             <Accordion>
-              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="eventos-content" id="eventos-header">
+              <AccordionSummary expandIcon={<Icon aria-hidden="true">expand_more</Icon>} aria-controls="eventos-content" id="eventos-header">
                 <Typography sx={{ fontWeight: 700 }}>Atendimento para eventos</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -999,7 +998,7 @@ export default function App() {
           {chatActions.map((action) => (
             <SpeedDialAction
               key={action.name}
-              icon={<span aria-hidden="true">{action.icon}</span>}
+              icon={action.icon}
               tooltipTitle={action.name}
               onClick={action.onClick}
             />
