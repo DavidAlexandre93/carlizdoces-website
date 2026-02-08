@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import ShareIcon from '@mui/icons-material/Share'
 import {
   Box,
@@ -129,7 +129,6 @@ const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 export default function App() {
   const [cart, setCart] = useState({})
   const [customizations, setCustomizations] = useState({})
-  const [selectedCustomizationItemId, setSelectedCustomizationItemId] = useState(null)
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
@@ -167,22 +166,6 @@ export default function App() {
   const selectedHighlight =
     productHighlights.find((item) => item.id === selectedHighlightId) ?? productHighlights[0] ?? null
 
-  const customizationItem = selectedItems.find((item) => item.id === selectedCustomizationItemId) ?? selectedItems[0] ?? null
-
-  useEffect(() => {
-    if (!selectedItems.length) {
-      setSelectedCustomizationItemId(null)
-      return
-    }
-
-    setSelectedCustomizationItemId((current) => {
-      if (current && selectedItems.some((item) => item.id === current)) {
-        return current
-      }
-      return selectedItems[0].id
-    })
-  }, [selectedItems])
-
   const updateCustomization = (itemId, field, value) => {
     setCustomizations((current) => ({
       ...current,
@@ -196,19 +179,22 @@ export default function App() {
         ? selectedItems
             .map((item) => {
               const details = customizations[item.id] ?? {}
+              const selectedFlavor = details.flavor?.trim() || item.flavor
+              const selectedPayment = details.paymentMethod?.trim() || 'não informado'
               return [
-                `- ${item.name} (${item.weight}, ${item.flavor}) x${item.quantity} — ${BRL.format(item.subtotal)}`,
-                `  • Escolha a casca de sua preferência: ${details.shell ?? 'não informado'}`,
-                `  • Sua escolha: ${details.choice ?? 'não informado'}`,
-                `  • Para ovo Embrulhado 150g: ${details.wrapped150g ?? 'não informado'}`,
-                `  • Forma de Pagamento: ${details.paymentMethod ?? 'não informado'}`,
+                `🍬 ${item.name}`,
+                `• Quantidade: ${item.quantity}`,
+                `• Sabor escolhido: ${selectedFlavor}`,
+                `• Preço unitário: ${BRL.format(item.price)}`,
+                `• Subtotal: ${BRL.format(item.subtotal)}`,
+                `• Forma de pagamento: ${selectedPayment}`,
               ].join('\n')
             })
-            .join('\n')
+            .join('\n\n')
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
-      `Olá! Tenho interesse em comprar ovos de páscoa da Carliz Doces.\n\nMeu pedido personalizado:\n${orderList}\n\nTotal de itens: ${totalItems}\nTotal estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar produção e entrega. Obrigado!`,
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
@@ -474,76 +460,46 @@ export default function App() {
                 )}
               </ul>
 
-              {customizationItem ? (
+              {selectedItems.length ? (
                 <div className="customization-panel">
-                  <h4>Personalização do ovo</h4>
-                  <p>Preencha as opções abaixo para {customizationItem.name}.</p>
+                  <h4>Detalhes por doce</h4>
+                  <p>Informe os dados de cada item para enviar um pedido completo no WhatsApp.</p>
 
-                  <Tabs
-                    value={customizationItem.id}
-                    onChange={(_event, newValue) => setSelectedCustomizationItemId(newValue)}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    aria-label="Selecionar item para personalizar"
-                    className="customization-tabs"
-                  >
-                    {selectedItems.map((item) => (
-                      <Tab key={item.id} value={item.id} label={item.name} sx={{ textTransform: 'none' }} />
-                    ))}
-                  </Tabs>
-
-                  <div className="customization-fields">
-                    <TextField
-                      label="Escolha a casca de sua preferência"
-                      placeholder="Ex.: Chocolate ao leite"
-                      size="small"
-                      fullWidth
-                      value={customizations[customizationItem.id]?.shell ?? ''}
-                      onChange={(event) =>
-                        updateCustomization(customizationItem.id, 'shell', event.target.value)
-                      }
-                    />
-                    <TextField
-                      label="Sua escolha"
-                      placeholder="Ex.: Decorado com confeitos"
-                      size="small"
-                      fullWidth
-                      value={customizations[customizationItem.id]?.choice ?? ''}
-                      onChange={(event) =>
-                        updateCustomization(customizationItem.id, 'choice', event.target.value)
-                      }
-                    />
-                    <TextField
-                      select
-                      label="Para ovo Embrulhado 150g"
-                      size="small"
-                      fullWidth
-                      value={customizations[customizationItem.id]?.wrapped150g ?? ''}
-                      onChange={(event) =>
-                        updateCustomization(customizationItem.id, 'wrapped150g', event.target.value)
-                      }
-                    >
-                      <MenuItem value="">Selecione uma opção</MenuItem>
-                      <MenuItem value="Sim">Sim</MenuItem>
-                      <MenuItem value="Não">Não</MenuItem>
-                    </TextField>
-                    <TextField
-                      select
-                      label="Forma de Pagamento"
-                      size="small"
-                      fullWidth
-                      value={customizations[customizationItem.id]?.paymentMethod ?? ''}
-                      onChange={(event) =>
-                        updateCustomization(customizationItem.id, 'paymentMethod', event.target.value)
-                      }
-                    >
-                      <MenuItem value="">Selecione uma opção</MenuItem>
-                      <MenuItem value="Pix">Pix</MenuItem>
-                      <MenuItem value="Dinheiro">Dinheiro</MenuItem>
-                      <MenuItem value="Cartão de débito">Cartão de débito</MenuItem>
-                      <MenuItem value="Cartão de crédito">Cartão de crédito</MenuItem>
-                    </TextField>
-                  </div>
+                  {selectedItems.map((item) => (
+                    <div key={item.id} className="order-detail-card">
+                      <strong>{item.name}</strong>
+                      <span>Quantidade: {item.quantity}</span>
+                      <span>
+                        Preço: {BRL.format(item.price)} (subtotal {BRL.format(item.subtotal)})
+                      </span>
+                      <div className="customization-fields">
+                        <TextField
+                          label="Qual sabor?"
+                          placeholder="Ex.: Brigadeiro belga"
+                          size="small"
+                          fullWidth
+                          value={customizations[item.id]?.flavor ?? item.flavor}
+                          onChange={(event) => updateCustomization(item.id, 'flavor', event.target.value)}
+                        />
+                        <TextField
+                          select
+                          label="Forma de pagamento"
+                          size="small"
+                          fullWidth
+                          value={customizations[item.id]?.paymentMethod ?? ''}
+                          onChange={(event) =>
+                            updateCustomization(item.id, 'paymentMethod', event.target.value)
+                          }
+                        >
+                          <MenuItem value="">Selecione uma opção</MenuItem>
+                          <MenuItem value="Pix">Pix</MenuItem>
+                          <MenuItem value="Dinheiro">Dinheiro</MenuItem>
+                          <MenuItem value="Cartão de débito">Cartão de débito</MenuItem>
+                          <MenuItem value="Cartão de crédito">Cartão de crédito</MenuItem>
+                        </TextField>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : null}
 
