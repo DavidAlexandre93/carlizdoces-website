@@ -14,6 +14,7 @@ export function FloatingActions({
   isFooterVisible,
 }) {
   const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3'
+  const scrollTopBackground = '#ddb2c7'
 
   const commonPositionSx = {
     position: 'fixed',
@@ -35,11 +36,22 @@ export function FloatingActions({
             bottom: { xs: 116, md: 128 },
             width: { xs: 46, md: 52 },
             height: { xs: 46, md: 52 },
-            backgroundColor: neutralBackground,
+            backgroundColor: scrollTopBackground,
             '&:hover': {
-              backgroundColor: isFooterVisible ? '#ddb2c7' : '#ecece6',
+              backgroundColor: '#d4a9bd',
             },
-            color: 'text.primary',
+            color: '#4d2b3a',
+            animation: 'scrollTopPulse 1.6s ease-in-out infinite',
+            '@keyframes scrollTopPulse': {
+              '0%, 100%': {
+                transform: 'scale(1)',
+                boxShadow: '0 0 0 0 rgba(221, 178, 199, 0.58)',
+              },
+              '50%': {
+                transform: 'scale(1.08)',
+                boxShadow: '0 0 0 10px rgba(221, 178, 199, 0)',
+              },
+            },
           }}
         >
           <Icon>keyboard_arrow_up</Icon>
