@@ -4,14 +4,19 @@
   animation: fade-in 450ms ease-out;
 }
 
+.page-container.MuiContainer-root {
+  width: min(100%, 1500px);
+}
+
 .topbar {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
+  padding: 24px 0;
+  animation: slide-down 500ms ease-out;
+}
+
+.topbar-inner {
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 36px;
-  animation: slide-down 500ms ease-out;
 }
 
 .brand,
@@ -42,9 +47,10 @@
 }
 
 .hero {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 36px 36px;
+  padding-bottom: 36px;
+}
+
+.hero-inner {
   position: relative;
 }
 
@@ -68,9 +74,7 @@
 }
 
 .content-block {
-  max-width: 900px;
   margin: 90px auto;
-  padding: 0 24px;
 }
 
 .centered {
@@ -99,15 +103,16 @@
 }
 
 .summary-band p {
-  max-width: 1100px;
   margin: 0 auto;
   font-size: 34px;
 }
 
 .photo-band {
-  max-width: 1500px;
   margin: 36px auto 60px;
-  display: grid;
+}
+
+.photo-band-grid {
+  display: grid !important;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
 }
@@ -150,9 +155,7 @@
 }
 
 .order-section {
-  max-width: 1400px;
   margin: 30px auto 90px;
-  padding: 0 24px;
 }
 
 .order-section h2 {
@@ -343,7 +346,7 @@
 }
 
 .contact-hero div {
-  max-width: 760px;
+  width: min(100%, 760px);
 }
 
 .contact-band h2 {
@@ -358,8 +361,11 @@
 
 .footer {
   background: #e6bfd2;
-  padding: 28px 36px 36px;
-  display: grid;
+  padding: 28px 0 36px;
+}
+
+.footer-inner {
+  display: grid !important;
   gap: 10px;
   justify-items: center;
 }
@@ -448,13 +454,7 @@
 }
 
 @media (max-width: 960px) {
-  .topbar,
-  .hero {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .topbar {
+  .topbar-inner {
     flex-direction: column;
     gap: 16px;
   }
@@ -486,7 +486,7 @@
     font-size: 26px;
   }
 
-  .photo-band {
+  .photo-band-grid {
     grid-template-columns: 1fr;
   }
 
