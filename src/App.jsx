@@ -14,10 +14,12 @@ import {
   Box,
   Button,
   Chip,
+  Checkbox,
   ClickAwayListener,
   Container,
   Drawer,
   Divider,
+  FormControlLabel,
   Fab,
   FormControl,
   FormControlLabel,
@@ -222,6 +224,11 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [orderPreferences, setOrderPreferences] = useState({
+    needsDelivery: false,
+    receiveOffers: true,
+  })
+  const [testimonialConsent, setTestimonialConsent] = useState(false)
   const [deliveryOption, setDeliveryOption] = useState('retirada')
   const [deliveryMethod, setDeliveryMethod] = useState('Retirada na loja')
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(() =>
@@ -325,6 +332,17 @@ export default function App() {
             .join('\n\n')
         : '- Ainda estou escolhendo os doces.'
 
+    const preferenceLines = [
+      `🚚 Entrega local: ${orderPreferences.needsDelivery ? 'Sim' : 'Não, prefiro retirada'}`,
+      `📣 Receber ofertas no WhatsApp: ${orderPreferences.receiveOffers ? 'Sim' : 'Não'}`,
+    ].join('\n')
+
+    const message = encodeURIComponent(
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n${preferenceLines}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+    )
+
+    return `https://wa.me/5511992175496?text=${message}`
+  }, [customizations, orderPreferences.needsDelivery, orderPreferences.receiveOffers, selectedItems, totalItems, totalPrice])
     const deliveryLabel =
       deliveryOption === 'retirada'
         ? 'Retirada na loja'
@@ -415,7 +433,7 @@ export default function App() {
       return
     }
 
-    if (!testimonialForm.message.trim()) {
+    if (!testimonialForm.message.trim() || !testimonialConsent) {
       return
     }
 
@@ -428,6 +446,8 @@ export default function App() {
       ...current,
     ])
 
+    setTestimonialForm({ author: '', message: '' })
+    setTestimonialConsent(false)
     setTestimonialForm({ author: '', channel: '', message: '' })
   }
 
@@ -948,6 +968,32 @@ export default function App() {
               <Typography component="p" variant="body1">
                 <Typography component="strong" variant="h6">{totalItems}</Typography> item(ns) no carrinho
               </Typography>
+              <Box sx={{ mt: 0.8, mb: 1.2, display: 'grid' }}>
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      checked={orderPreferences.needsDelivery}
+                      onChange={(event) =>
+                        setOrderPreferences((current) => ({ ...current, needsDelivery: event.target.checked }))
+                      }
+                      color="secondary"
+                    />
+                  )}
+                  label="Preciso de entrega local"
+                />
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      checked={orderPreferences.receiveOffers}
+                      onChange={(event) =>
+                        setOrderPreferences((current) => ({ ...current, receiveOffers: event.target.checked }))
+                      }
+                      color="secondary"
+                    />
+                  )}
+                  label="Quero receber novidades e promoções pelo WhatsApp"
+                />
+              </Box>
               <FormControl fullWidth size="small" sx={{ mb: 2 }}>
                 <InputLabel id="delivery-method-select-label">Recebimento</InputLabel>
                 <Select
@@ -1207,7 +1253,18 @@ export default function App() {
                 required
                 disabled={!googleAccount}
               />
-              <Button type="submit" variant="contained" disabled={!googleAccount}>
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={testimonialConsent}
+                    onChange={(event) => setTestimonialConsent(event.target.checked)}
+                    disabled={!googleAccount}
+                    required
+                  />
+                )}
+                label="Autorizo a exibição pública deste depoimento no site"
+              />
+              <Button type="submit" variant="contained" disabled={!googleAccount || !testimonialConsent}>
                 Enviar depoimento
               </Button>
             </Paper>
