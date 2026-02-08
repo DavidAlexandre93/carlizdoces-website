@@ -11,12 +11,6 @@ export default function UpdatesSection({ updates, announcementChannels }) {
   return (
     <section id="novidades" className="updates-section section-alt-pink animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Container maxWidth="xl" className="page-container">
-        <header className="updates-header">
-          <Typography component="p" variant="body1">
-            Um resumo prático das bibliotecas de animação que mais funcionam no dia a dia, sem pesar o site.
-          </Typography>
-        </header>
-
         <Box className="updates-grid">
           {updates.map((item) => {
             const type = typeStyles[item.type] ?? typeStyles.reveal
