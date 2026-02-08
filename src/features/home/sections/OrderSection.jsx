@@ -1,6 +1,8 @@
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 
 export function OrderSection({ BRL, orderCustomer, setOrderCustomer, selectedItems, customizations, setCustomizations, paymentMethods, totalPrice, totalItems, whatsappLink }) {
+  const canShowConfirmButton = orderCustomer.name.trim() && orderCustomer.phone.trim() && totalItems > 0
+
   return (
     <Container id="realizar-pedido" maxWidth="lg" className="order-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
@@ -30,9 +32,11 @@ export function OrderSection({ BRL, orderCustomer, setOrderCustomer, selectedIte
         ))}
 
         <Typography sx={{ mt: 2 }}><strong>Total:</strong> {BRL.format(totalPrice)} ({totalItems} itens)</Typography>
-        <Button sx={{ mt: 2 }} variant="contained" color="secondary" href={whatsappLink} target="_blank" rel="noreferrer">
-          Confirmar no WhatsApp
-        </Button>
+        {canShowConfirmButton ? (
+          <Button sx={{ mt: 2 }} variant="contained" color="secondary" href={whatsappLink} target="_blank" rel="noreferrer">
+            Confirmar no WhatsApp
+          </Button>
+        ) : null}
       </Paper>
     </Container>
   )
