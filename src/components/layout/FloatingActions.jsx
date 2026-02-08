@@ -13,11 +13,12 @@ export function FloatingActions({
   onGoToOrderSection,
   isFooterVisible,
 }) {
+  const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3'
+
   const commonPositionSx = {
     position: 'fixed',
     left: { xs: 12, md: 24 },
-    transition: 'background-color 260ms ease',
-    backgroundColor: isFooterVisible ? '#e6bfd2' : '#f8f8f3',
+    transition: 'background-color 220ms ease, transform 220ms ease',
     zIndex: 1100,
   }
 
@@ -32,6 +33,12 @@ export function FloatingActions({
           sx={{
             ...commonPositionSx,
             bottom: { xs: 116, md: 128 },
+            width: { xs: 46, md: 52 },
+            height: { xs: 46, md: 52 },
+            backgroundColor: neutralBackground,
+            '&:hover': {
+              backgroundColor: isFooterVisible ? '#ddb2c7' : '#ecece6',
+            },
             color: 'text.primary',
           }}
         >
@@ -49,6 +56,16 @@ export function FloatingActions({
           sx={{
             ...commonPositionSx,
             bottom: { xs: 66, md: 76 },
+            width: { xs: 60, md: 66 },
+            height: { xs: 60, md: 66 },
+            backgroundColor: '#8d0d4d',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#a0175d',
+            },
+            '& .MuiBadge-badge': {
+              fontWeight: 700,
+            },
           }}
         >
           <Badge color="secondary" badgeContent={totalItems} invisible={totalItems === 0}>
@@ -65,8 +82,13 @@ export function FloatingActions({
         sx={{
           ...commonPositionSx,
           bottom: { xs: 16, md: 24 },
+          width: { xs: 46, md: 52 },
+          height: { xs: 46, md: 52 },
+          backgroundColor: neutralBackground,
+          '&:hover': {
+            backgroundColor: isFooterVisible ? '#ddb2c7' : '#ecece6',
+          },
           transform: showLikeCelebration ? 'scale(1.12)' : 'scale(1)',
-          transition: 'transform 220ms ease',
           overflow: 'visible',
           color: hasLiked ? undefined : 'text.primary',
         }}
