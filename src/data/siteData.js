@@ -10,12 +10,12 @@ export const navItems = [
 ]
 
 export const seasonalProducts = [
-  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', flavor: 'Brigadeiro belga', weight: '350g', price: 59, image: '/images/brigadeiro.svg', rating: 4.9, reviewCount: 298 },
-  { id: 'ninho-nutella', name: 'Ninho com Nutella', flavor: 'Leite ninho com creme de Nutella', weight: '400g', price: 68.5, image: '/images/ninho-nutella.svg', rating: 4.8, reviewCount: 244 },
-  { id: 'prestigio', name: 'Prestígio Cremoso', flavor: 'Coco cremoso com chocolate', weight: '350g', price: 62, image: '/images/prestigio.svg', rating: 4.7, reviewCount: 208 },
-  { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/ferrero.svg', rating: 5, reviewCount: 322 },
-  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/trufado-maracuja.svg', rating: 4.6, reviewCount: 186 },
-  { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/ninho-uva.svg', rating: 4.8, reviewCount: 271 },
+  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', flavor: 'Brigadeiro belga', weight: '350g', price: 59, image: '/images/brigadeiro.png', rating: 4.9, reviewCount: 298 },
+  { id: 'ninho-nutella', name: 'Ninho com Nutella', flavor: 'Leite ninho com creme de Nutella', weight: '400g', price: 68.5, image: '/images/ninho-nutella.png', rating: 4.8, reviewCount: 244 },
+  { id: 'prestigio', name: 'Prestígio Cremoso', flavor: 'Coco cremoso com chocolate', weight: '350g', price: 62, image: '/images/prestigio.png', rating: 4.7, reviewCount: 208 },
+  { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/ferrero.png', rating: 5, reviewCount: 322 },
+  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/trufado-maracuja.png', rating: 4.6, reviewCount: 186 },
+  { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/ninho-uva.png', rating: 4.8, reviewCount: 271 },
 ]
 
 
@@ -66,15 +66,15 @@ export const manualTestimonials = [
 ]
 
 export const instagramPosts = [
-  { id: 'insta-1', imageUrl: '/images/ninho.svg', alt: 'Doces artesanais da Carliz Doces' },
-  { id: 'insta-2', imageUrl: '/images/ferrero.svg', alt: 'Ovo de colher da Carliz Doces' },
-  { id: 'insta-3', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros da Carliz Doces' },
+  { id: 'insta-1', imageUrl: '/images/ninho.png', alt: 'Doces artesanais da Carliz Doces' },
+  { id: 'insta-2', imageUrl: '/images/ferrero.png', alt: 'Ovo de colher da Carliz Doces' },
+  { id: 'insta-3', imageUrl: '/images/brigadeiro.png', alt: 'Brigadeiros da Carliz Doces' },
 ]
 
 export const topShowcaseSlides = [
-  { id: 'matilda', imageUrl: '/images/matilda.svg', alt: 'Bolo da Matilda especial da Carliz Doces', title: 'Bolo da Matilda', description: 'Destaque da semana para os apaixonados por chocolate.', tag: 'Mais pedido' },
-  { id: 'ferrero', imageUrl: '/images/ferrero.svg', alt: 'Campanha de sorteio com ovo Ferrero Rocher', title: 'Sorteio Ferrero Rocher', description: 'Promoção especial para quem encomenda ovos de colher.', tag: 'Promoção' },
-  { id: 'brigadeiro', imageUrl: '/images/brigadeiro.svg', alt: 'Brigadeiros artesanais da Carliz Doces', title: 'Brigadeiros artesanais', description: 'Sabores para festas e lembranças com a cara da Carliz.', tag: 'Clássico da casa' },
+  { id: 'matilda', imageUrl: '/images/matilda.png', alt: 'Bolo da Matilda especial da Carliz Doces', title: 'Bolo da Matilda', description: 'Destaque da semana para os apaixonados por chocolate.', tag: 'Mais pedido' },
+  { id: 'ferrero', imageUrl: '/images/ferrero.png', alt: 'Campanha de sorteio com ovo Ferrero Rocher', title: 'Sorteio Ferrero Rocher', description: 'Promoção especial para quem encomenda ovos de colher.', tag: 'Promoção' },
+  { id: 'brigadeiro', imageUrl: '/images/brigadeiro.png', alt: 'Brigadeiros artesanais da Carliz Doces', title: 'Brigadeiros artesanais', description: 'Sabores para festas e lembranças com a cara da Carliz.', tag: 'Clássico da casa' },
 ]
 
 export const metrics = [
