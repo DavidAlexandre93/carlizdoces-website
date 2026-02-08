@@ -24,7 +24,6 @@ import {
   FormControlLabel,
   Fab,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Icon,
   IconButton,
@@ -42,7 +41,6 @@ import {
   RadioGroup,
   Rating,
   MenuItem,
-  MobileStepper,
   Slider,
   Switch,
   SpeedDial,
@@ -293,7 +291,6 @@ export default function App() {
   useEffect(() => {
     setActiveProductStep((current) => Math.min(current, Math.max(visibleShowcaseProducts.length - 1, 0)))
   }, [visibleShowcaseProducts.length])
-  const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
   const flavorSuggestions = useMemo(
     () => [...new Set(seasonalProducts.map((product) => product.flavor))],
     [],
@@ -343,37 +340,25 @@ export default function App() {
     const preferenceLines = [
       `🚚 Entrega local: ${orderPreferences.needsDelivery ? 'Sim' : 'Não, prefiro retirada'}`,
       `📣 Receber ofertas no WhatsApp: ${orderPreferences.receiveOffers ? 'Sim' : 'Não'}`,
+      `🚛 Forma de recebimento: ${deliveryMethod}`,
     ].join('\n')
 
     const message = encodeURIComponent(
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n${preferenceLines}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n👤 Nome: ${customerName}\n📱 WhatsApp para retorno: ${customerPhone}\n\n${orderList}\n\n${preferenceLines}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, orderPreferences.needsDelivery, orderPreferences.receiveOffers, selectedItems, totalItems, totalPrice])
-    const deliveryLabel =
-      deliveryOption === 'retirada'
-        ? 'Retirada na loja'
-        : deliveryOption === 'entrega'
-          ? 'Entrega local'
-          : 'Encomenda para evento'
-
-    const message = encodeURIComponent(
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n🚚 Preferência de recebimento: ${deliveryLabel}\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
-    )
-
-    return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, deliveryOption, selectedItems, totalItems, totalPrice])
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n🚚 Forma de recebimento: ${deliveryMethod}\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
-    )
-
-    return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, deliveryMethod, selectedItems, totalItems, totalPrice])
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n👤 Nome: ${customerName}\n📱 WhatsApp para retorno: ${customerPhone}\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
-    )
-
-    return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, orderCustomer.name, orderCustomer.phone, selectedItems, totalItems, totalPrice])
+  }, [
+    customizations,
+    deliveryMethod,
+    orderCustomer.name,
+    orderCustomer.phone,
+    orderPreferences.needsDelivery,
+    orderPreferences.receiveOffers,
+    selectedItems,
+    totalItems,
+    totalPrice,
+  ])
 
   const handleOrderTipToggle = (event) => {
     setOrderTipAnchor((current) => (current ? null : event.currentTarget))
