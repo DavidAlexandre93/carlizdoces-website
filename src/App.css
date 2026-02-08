@@ -26,8 +26,9 @@
   overflow-x: clip;
 }
 
-.site-wrapper > main {
+.site-wrapper > :is(main, aside) {
   background-color: #f8f8f3;
+  transition: background-color 320ms ease, color 320ms ease;
 }
 
 .section-alt-pink {
@@ -367,6 +368,11 @@
 }
 
 .site-wrapper.dark-mode main {
+  background: #151218;
+  color: #f4ecf2;
+}
+
+.site-wrapper.dark-mode aside {
   background: #151218;
   color: #f4ecf2;
 }
