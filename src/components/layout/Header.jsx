@@ -14,6 +14,7 @@ import {
   ListItemText,
   Modal,
   Paper,
+  Stack,
   Toolbar,
   Tooltip,
   Typography,
@@ -76,13 +77,36 @@ Deus abençoe! 🙌`
               <Typography component="span" className="brand-name">Carliz Doces</Typography>
             </Link>
 
-            <Box component="nav" className="topbar-nav">
+            <Stack
+              component="nav"
+              direction="row"
+              className="topbar-nav"
+              spacing={1.25}
+              useFlexGap
+              sx={{ flexWrap: 'nowrap' }}
+            >
               {navItems.map((item) => (
-                <Link key={item.sectionId} href={`#${item.sectionId}`} underline="hover" color="inherit" sx={{ fontWeight: 600 }}>
+                <Button
+                  key={item.sectionId}
+                  component={Link}
+                  href={`#${item.sectionId}`}
+                  color="inherit"
+                  variant="text"
+                  disableElevation
+                  sx={{
+                    px: 1.5,
+                    py: 0.75,
+                    minWidth: 'max-content',
+                    whiteSpace: 'nowrap',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    borderRadius: 999,
+                  }}
+                >
                   {item.label}
-                </Link>
+                </Button>
               ))}
-            </Box>
+            </Stack>
 
             <Box className="topbar-actions">
               <Tooltip title={isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro'} arrow>
