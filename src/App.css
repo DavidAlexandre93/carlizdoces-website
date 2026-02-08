@@ -75,11 +75,14 @@
 }
 
 .intro-logo {
-  width: min(34vw, 220px);
+  width: min(50vw, 320px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
   background: #fff8fb;
   border-radius: 50%;
-  border: 4px solid #ffd2e8;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  border: 6px solid #ffd2e8;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
 }
 
 .intro-clown-wrap {
@@ -89,7 +92,7 @@
 }
 
 .intro-clown {
-  width: min(20vw, 130px);
+  width: min(45vw, 280px);
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
 }
 
@@ -142,7 +145,7 @@
 
 @media (max-width: 680px) {
   .intro-logo {
-    width: min(54vw, 180px);
+    width: min(74vw, 260px);
   }
 
   .intro-clown-wrap {
@@ -151,7 +154,7 @@
   }
 
   .intro-clown {
-    width: min(34vw, 104px);
+    width: min(65vw, 250px);
   }
 }
 
