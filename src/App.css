@@ -1133,10 +1133,23 @@
   border: 3px solid rgba(255, 255, 255, 0.85) !important;
   background: rgba(173, 20, 87, 0.74) !important;
   color: #fff !important;
-  font-size: clamp(38px, 6vw, 58px) !important;
-  font-weight: 900 !important;
-  line-height: 1;
   box-shadow: 0 10px 24px rgba(81, 12, 45, 0.35);
+}
+
+.showcase-arrow-icon {
+  display: block;
+  width: clamp(14px, 2.3vw, 20px);
+  height: clamp(14px, 2.3vw, 20px);
+  border-top: 5px solid currentColor;
+  border-right: 5px solid currentColor;
+}
+
+.showcase-arrow-icon-prev {
+  transform: rotate(-135deg) translate(-1px, 1px);
+}
+
+.showcase-arrow-icon-next {
+  transform: rotate(45deg) translate(-1px, 1px);
 }
 
 .showcase-arrow:hover,
