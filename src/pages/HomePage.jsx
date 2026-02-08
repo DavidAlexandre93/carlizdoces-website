@@ -256,32 +256,53 @@ export function HomePage() {
     const wrapperElement = wrapperRef.current
     if (!wrapperElement) return undefined
 
-    let ticking = false
+    let animationFrameId = 0
+    let targetScrollTop = 0
+    let currentScrollTop = 0
+
+    const speed = 0.12
 
     const updateScrollMotion = () => {
-      const scrollTop = window.scrollY || window.pageYOffset || 0
+      const distance = targetScrollTop - currentScrollTop
+      currentScrollTop += distance * speed
+
+      if (Math.abs(distance) < 0.35) {
+        currentScrollTop = targetScrollTop
+      }
+
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0
+      const progress = scrollHeight > 0 ? currentScrollTop / scrollHeight : 0
 
-      wrapperElement.style.setProperty('--scroll-y', `${scrollTop.toFixed(1)}px`)
+      wrapperElement.style.setProperty('--scroll-y', `${currentScrollTop.toFixed(1)}px`)
       wrapperElement.style.setProperty('--scroll-progress', progress.toFixed(4))
-      wrapperElement.style.setProperty('--scroll-wave', Math.sin(progress * Math.PI * 2).toFixed(4))
-      wrapperElement.classList.toggle('is-scrolled', scrollTop > 32)
+      wrapperElement.style.setProperty('--scroll-wave', Math.sin(progress * Math.PI * 1.2).toFixed(4))
+      wrapperElement.classList.toggle('is-scrolled', currentScrollTop > 32)
 
-      ticking = false
+      if (Math.abs(targetScrollTop - currentScrollTop) >= 0.35) {
+        animationFrameId = window.requestAnimationFrame(updateScrollMotion)
+      } else {
+        animationFrameId = 0
+      }
     }
 
     const handleScroll = () => {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(updateScrollMotion)
+      targetScrollTop = window.scrollY || window.pageYOffset || 0
+
+      if (!animationFrameId) {
+        animationFrameId = window.requestAnimationFrame(updateScrollMotion)
+      }
     }
 
+    targetScrollTop = window.scrollY || window.pageYOffset || 0
+    currentScrollTop = targetScrollTop
     updateScrollMotion()
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleScroll)
 
     return () => {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId)
+      }
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleScroll)
     }
