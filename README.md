@@ -208,6 +208,36 @@ O projeto está preparado para deploy na **Vercel** com saída estática em `dis
 
 ---
 
+## 🔁 CI/CD (GitHub Actions + Vercel)
+
+Foram adicionados pipelines completos para elevar a qualidade das entregas:
+
+- **CI - Quality Gate** (`.github/workflows/ci.yml`)
+  - roda em **Node 20 e 22** (matrix);
+  - executa `npm ci`, lint com **zero warnings** e build de produção;
+  - publica artefato `dist` para inspeção;
+  - inclui **Dependency Review** (falha para vulnerabilidades de severidade alta+ em PRs);
+  - inclui **CodeQL** para análise de segurança de código.
+
+- **CD - Vercel Preview** (`.github/workflows/cd-vercel-preview.yml`)
+  - dispara em PRs e gera deploy de preview na Vercel;
+  - comenta automaticamente a URL do preview no próprio PR.
+
+- **CD - Vercel Production** (`.github/workflows/cd-vercel.yml`)
+  - dispara após CI verde em `main` (via `workflow_run`);
+  - também pode ser executado manualmente (`workflow_dispatch`);
+  - faz deploy de produção na Vercel.
+
+### 🔐 Secrets obrigatórios no GitHub
+
+Configure os seguintes segredos no repositório (Settings → Secrets and variables → Actions):
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Sem eles, os jobs de deploy irão falhar por segurança.
+
 ## 🧪 Qualidade e boas práticas
 
 - Lint com ESLint para padronização e prevenção de erros comuns;
