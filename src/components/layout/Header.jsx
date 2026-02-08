@@ -21,6 +21,7 @@ import {
 
 export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [isLogoJumping, setIsLogoJumping] = useState(false)
 
   const notificationMessage = `Pedidos páscoa 2026
 Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍
@@ -51,13 +52,27 @@ Queremos ver sua experiência!
 
 Deus abençoe! 🙌`
 
+  const handleLogoClick = () => {
+    setIsLogoJumping(false)
+
+    requestAnimationFrame(() => {
+      setIsLogoJumping(true)
+    })
+  }
+
   return (
     <>
       <AppBar component="header" position="sticky" color="transparent" elevation={0} className="topbar">
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
-            <Link href="#top" underline="none" color="inherit" className="topbar-brand">
-              <Box component="img" src="/images/banner-carliz.svg" alt="Logo da Carliz Doces" className="brand-logo" />
+            <Link href="#top" underline="none" color="inherit" className="topbar-brand" onClick={handleLogoClick}>
+              <Box
+                component="img"
+                src="/images/banner-carliz.svg"
+                alt="Logo da Carliz Doces"
+                className={`brand-logo ${isLogoJumping ? 'is-jumping' : ''}`}
+                onAnimationEnd={() => setIsLogoJumping(false)}
+              />
               <Typography component="span" className="brand-name">Carliz Doces</Typography>
             </Link>
 
