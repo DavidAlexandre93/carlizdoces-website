@@ -1927,6 +1927,28 @@
   color: #4d3240;
 }
 
+.updates-media {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fde9f3;
+  border: 1px solid #edc7d9;
+}
+
+.updates-media img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.updates-media-text {
+  display: block;
+  padding: 10px 12px;
+  color: #6a4760;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .updates-status {
   color: #6f2549;
 }
@@ -1957,7 +1979,8 @@
 .site-wrapper.dark-mode .updates-header p,
 .site-wrapper.dark-mode .updates-description,
 .site-wrapper.dark-mode .updates-cta p,
-.site-wrapper.dark-mode .updates-date {
+.site-wrapper.dark-mode .updates-date,
+.site-wrapper.dark-mode .updates-media-text {
   color: #dfc6d8;
 }
 
@@ -1969,6 +1992,11 @@
 .site-wrapper.dark-mode .updates-cta {
   background: #302f2f;
   border-color: #8f5a79;
+}
+
+.site-wrapper.dark-mode .updates-media {
+  background: #3b3237;
+  border-color: #705464;
 }
 
 .instagram-section {

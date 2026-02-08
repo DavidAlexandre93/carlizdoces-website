@@ -22,6 +22,18 @@ export default function UpdatesSection({ updates, announcementChannels }) {
               </Stack>
 
               <Typography component="h3" variant="h6" sx={{ fontWeight: 700 }}>{item.title}</Typography>
+
+              {item.imageUrl ? (
+                <Box className="updates-media">
+                  <img src={item.imageUrl} alt={item.imageAlt || item.title} loading="lazy" />
+                  {item.mediaDescription ? (
+                    <Typography component="p" variant="caption" className="updates-media-text">
+                      {item.mediaDescription}
+                    </Typography>
+                  ) : null}
+                </Box>
+              ) : null}
+
               <Typography component="p" variant="body2" className="updates-description">{item.description}</Typography>
 
               <Typography component="p" variant="subtitle2" className="updates-status">{item.status}</Typography>
