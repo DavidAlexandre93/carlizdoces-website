@@ -1,6 +1,5 @@
 import { Badge, Box, Fab, Icon, IconButton, Tooltip, Zoom } from '@mui/material'
 import FavoriteIcon from '../../mui-icons/Favorite'
-import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
 
 export function FloatingActions({
   totalItems,
@@ -127,7 +126,11 @@ export function FloatingActions({
             },
           }}
         >
-          {hasLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          <FavoriteIcon
+            sx={{
+              opacity: hasLiked ? 1 : 0.65,
+            }}
+          />
         </Badge>
 
         <Zoom in={showLikeCelebration} timeout={220} unmountOnExit>
