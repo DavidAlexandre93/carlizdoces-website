@@ -20,6 +20,7 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
+  FormLabel,
   Icon,
   IconButton,
   ImageList,
@@ -31,6 +32,9 @@ import {
   ListItemText,
   Paper,
   Popper,
+  MobileStepper,
+  Radio,
+  RadioGroup,
   Rating,
   MenuItem,
   MobileStepper,
@@ -217,6 +221,7 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [deliveryOption, setDeliveryOption] = useState('retirada')
   const [deliveryMethod, setDeliveryMethod] = useState('Retirada na loja')
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(() =>
     Math.max(...seasonalProducts.map((item) => item.price)),
@@ -319,7 +324,19 @@ export default function App() {
             .join('\n\n')
         : '- Ainda estou escolhendo os doces.'
 
+    const deliveryLabel =
+      deliveryOption === 'retirada'
+        ? 'Retirada na loja'
+        : deliveryOption === 'entrega'
+          ? 'Entrega local'
+          : 'Encomenda para evento'
+
     const message = encodeURIComponent(
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n🚚 Preferência de recebimento: ${deliveryLabel}\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+    )
+
+    return `https://wa.me/5511992175496?text=${message}`
+  }, [customizations, deliveryOption, selectedItems, totalItems, totalPrice])
       `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n🚚 Forma de recebimento: ${deliveryMethod}\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
@@ -964,6 +981,20 @@ export default function App() {
                   ))}
                 </Box>
               </div>
+              <FormControl component="fieldset" sx={{ mt: 1, mb: 1.5 }}>
+                <FormLabel component="legend">Como prefere receber o pedido?</FormLabel>
+                <RadioGroup
+                  row
+                  value={deliveryOption}
+                  onChange={(event) => setDeliveryOption(event.target.value)}
+                  aria-label="Preferência de recebimento"
+                  name="delivery-option"
+                >
+                  <FormControlLabel value="retirada" control={<Radio size="small" />} label="Retirada" />
+                  <FormControlLabel value="entrega" control={<Radio size="small" />} label="Entrega" />
+                  <FormControlLabel value="evento" control={<Radio size="small" />} label="Evento" />
+                </RadioGroup>
+              </FormControl>
               <ul>
                 {selectedItems.length === 0 ? (
                   <li>Seu carrinho está vazio.</li>
@@ -1012,22 +1043,23 @@ export default function App() {
                           value={customizations[item.id]?.flavor ?? item.flavor}
                           onChange={(event) => updateCustomization(item.id, 'flavor', event.target.value)}
                         />
-                        <TextField
-                          select
-                          label="Forma de pagamento"
-                          size="small"
-                          fullWidth
-                          value={customizations[item.id]?.paymentMethod ?? ''}
-                          onChange={(event) =>
-                            updateCustomization(item.id, 'paymentMethod', event.target.value)
-                          }
-                        >
-                          <MenuItem value="">Selecione uma opção</MenuItem>
-                          <MenuItem value="Pix">Pix</MenuItem>
-                          <MenuItem value="Dinheiro">Dinheiro</MenuItem>
-                          <MenuItem value="Cartão de débito">Cartão de débito</MenuItem>
-                          <MenuItem value="Cartão de crédito">Cartão de crédito</MenuItem>
-                        </TextField>
+                        <FormControl component="fieldset" sx={{ width: '100%' }}>
+                          <FormLabel component="legend" sx={{ fontSize: 14 }}>
+                            Forma de pagamento
+                          </FormLabel>
+                          <RadioGroup
+                            row
+                            value={customizations[item.id]?.paymentMethod ?? 'Pix'}
+                            onChange={(event) => updateCustomization(item.id, 'paymentMethod', event.target.value)}
+                            aria-label={`Forma de pagamento para ${item.name}`}
+                            name={`payment-method-${item.id}`}
+                          >
+                            <FormControlLabel value="Pix" control={<Radio size="small" />} label="Pix" />
+                            <FormControlLabel value="Dinheiro" control={<Radio size="small" />} label="Dinheiro" />
+                            <FormControlLabel value="Cartão de débito" control={<Radio size="small" />} label="Débito" />
+                            <FormControlLabel value="Cartão de crédito" control={<Radio size="small" />} label="Crédito" />
+                          </RadioGroup>
+                        </FormControl>
                       </div>
                     </div>
                   ))}
