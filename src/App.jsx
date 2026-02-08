@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import ShareIcon from '@mui/icons-material/Share'
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   AppBar,
   Box,
   Button,
@@ -437,6 +440,35 @@ export default function App() {
             </ClickAwayListener>
           </Popper>
 
+          <Box sx={{ mt: 2, mb: 3 }}>
+            <Accordion defaultExpanded>
+              <AccordionSummary
+                expandIcon={<span aria-hidden="true">⌄</span>}
+                aria-controls="pedido-passo-a-passo-content"
+                id="pedido-passo-a-passo-header"
+              >
+                <Typography sx={{ fontWeight: 700 }}>Passo a passo do pedido</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2">
+                  Escolha os produtos, ajuste sabores e formas de pagamento, revise o resumo do carrinho e finalize no
+                  WhatsApp para confirmar disponibilidade e entrega.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="pedido-pagamento-content" id="pedido-pagamento-header">
+                <Typography sx={{ fontWeight: 700 }}>Formas de pagamento aceitas</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2">
+                  Aceitamos Pix, dinheiro, cartão de débito e cartão de crédito. Você pode escolher a opção para cada
+                  doce no formulário de personalização.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Box>
+
           <Box className="order-grid">
             <ImageList
               className="order-list-masonry"
@@ -581,6 +613,30 @@ export default function App() {
           <p>Atendemos retirada e entregas locais com agendamento.</p>
           <p>Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</p>
           <p>Próximo à Praça Central e estação de metrô.</p>
+          <Box sx={{ mt: 2, textAlign: 'left' }}>
+            <Accordion>
+              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="retirada-content" id="retirada-header">
+                <Typography sx={{ fontWeight: 700 }}>Retirada e entrega</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2">
+                  Faça sua encomenda com antecedência para retirada na loja ou solicite entrega local com agendamento,
+                  sujeita à disponibilidade da rota.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="eventos-content" id="eventos-header">
+                <Typography sx={{ fontWeight: 700 }}>Atendimento para eventos</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="body2">
+                  Atendemos festas, casamentos e aniversários com volumes maiores. Entre em contato para montar um
+                  cardápio personalizado para o seu evento.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Box>
         </Container>
       </section>
 
