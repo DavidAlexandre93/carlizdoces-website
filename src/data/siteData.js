@@ -1,4 +1,5 @@
 import { imageCollections } from './generatedImages'
+import { productsCatalog, updatesCatalog } from './editableContent'
 
 const toTitleFromSlug = (value) =>
   value
@@ -17,62 +18,30 @@ export const navItems = [
   { label: 'Contato', sectionId: 'contato' },
 ]
 
-export const seasonalProducts = [
-  { id: 'brigadeiro', name: 'Brigadeiro Gourmet', flavor: 'Brigadeiro belga', weight: '350g', price: 59, image: '/images/pedidos-de-doces/brigadeiro.png', rating: 4.9, reviewCount: 298 },
-  { id: 'ninho-nutella', name: 'Ninho com Nutella', flavor: 'Leite ninho com creme de Nutella', weight: '400g', price: 68.5, image: '/images/pedidos-de-doces/ninho-nutella.png', rating: 4.8, reviewCount: 244 },
-  { id: 'prestigio', name: 'Prestígio Cremoso', flavor: 'Coco cremoso com chocolate', weight: '350g', price: 62, image: '/images/instagram/prestigio.png', rating: 4.7, reviewCount: 208 },
-  { id: 'ferrero', name: 'Ferrero Crocante', flavor: 'Chocolate com avelã crocante', weight: '450g', price: 72, image: '/images/cardapio-de-pascoa/ferrero.png', rating: 5, reviewCount: 322 },
-  { id: 'trufado-maracuja', name: 'Trufado de Maracujá', flavor: 'Ganache trufada de maracujá', weight: '380g', price: 64, image: '/images/instagram/trufado-maracuja.png', rating: 4.6, reviewCount: 186 },
-  { id: 'ninho-uva', name: 'Ninho com Uva', flavor: 'Leite ninho com uvas frescas', weight: '400g', price: 66, image: '/images/novidades/ninho-uva.png', rating: 4.8, reviewCount: 271 },
-]
+export const seasonalProducts = productsCatalog.map((product, index) => ({
+  id: product.id || `produto-${index + 1}`,
+  name: product.name,
+  flavor: product.shortDescription,
+  details: product.details,
+  weight: product.weight,
+  price: product.price,
+  image: product.image,
+  rating: product.rating ?? 5,
+  reviewCount: product.reviewCount ?? 0,
+}))
 
+export const updates = updatesCatalog.map((item, index) => ({
+  id: item.id || `novidade-${index + 1}`,
+  type: item.category,
+  dateLabel: item.dateLabel,
+  title: item.title,
+  imageUrl: item.imageUrl,
+  imageAlt: item.imageAlt,
+  mediaDescription: item.mediaDescription,
+  description: item.description,
+  status: item.status,
+}))
 
-export const updates = [
-  {
-    id: 'update-1',
-    type: 'microinteracoes',
-    dateLabel: 'React',
-    title: 'Microinterações e transições: Motion',
-    imageUrl: '/images/novidades/ninho-uva.png',
-    imageAlt: 'Arte de divulgação com brigadeiros da Carliz Doces',
-    mediaDescription: 'Peça usada nas redes para anunciar combos especiais de brigadeiros para festas e lembrancinhas.',
-    description: 'Para dar vida aos componentes sem comprometer a performance geral do projeto.',
-    status: 'Ótimo para hover, feedbacks de clique, entrada de cards e pequenos estados animados.',
-  },
-  {
-    id: 'update-2',
-    type: 'scroll',
-    dateLabel: 'Landing page',
-    title: 'Scroll cinematográfico: GSAP + ScrollTrigger',
-    imageUrl: '/images/novidades/divulgacao-ovo-pascoa.png',
-    imageAlt: 'Divulgação de ovos de Páscoa artesanais da Carliz Doces',
-    mediaDescription: 'Criativo de campanha para destacar lançamentos de Páscoa com sabores sazonais e encomendas antecipadas.',
-    description: 'Quando a proposta é contar uma história no scroll, com tempo, ritmo e transições mais marcantes.',
-    status: 'Use com parcimônia e otimize assets para manter a experiência fluida.',
-  },
-  {
-    id: 'update-3',
-    type: 'ilustracoes',
-    dateLabel: 'Design',
-    title: 'Ilustrações animadas: Lottie',
-    imageUrl: '/images/novidades/ninho-uva.png',
-    imageAlt: 'Ovo de colher estilo Ferrero em imagem de divulgação',
-    mediaDescription: 'Material visual para divulgar edição limitada de ovos premium com foco em presenteáveis.',
-    description: 'Ideal quando o time de design já entrega animações vetoriais prontas para o front-end.',
-    status: 'Leve, escalável e fácil de integrar em seções de destaque e onboarding.',
-  },
-  {
-    id: 'update-4',
-    type: 'reveal',
-    dateLabel: 'Entrada simples',
-    title: 'Reveal direto ao ponto: animate.css / AOS',
-    imageUrl: '/images/novidades/divulgacao-ovo-pascoa.png',
-    imageAlt: 'Bolo estilo Matilda em card de divulgação da Carliz Doces',
-    mediaDescription: 'Post de divulgação pensado para campanhas-relâmpago de bolos temáticos com produção sob encomenda.',
-    description: 'Para quando é só um efeito de entrada e não vale montar uma lógica de animação mais complexa.',
-    status: 'Resolve rápido, com implementação enxuta e impacto visual imediato.',
-  },
-]
 
 export const announcementChannels = [
   { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/_carlizdoces/', variant: 'contained', external: true },

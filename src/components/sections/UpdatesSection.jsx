@@ -1,10 +1,10 @@
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 
 const typeStyles = {
-  microinteracoes: { label: 'Promoções', color: 'secondary' },
-  scroll: { label: 'Sorteios', color: 'success' },
-  ilustracoes: { label: 'Recados', color: 'info' },
-  reveal: { label: 'Recados', color: 'warning' },
+  promocao: { label: 'Promoção', color: 'secondary' },
+  lancamento: { label: 'Lançamento', color: 'success' },
+  comunicado: { label: 'Comunicado', color: 'info' },
+  geral: { label: 'Aviso', color: 'warning' },
 }
 
 export default function UpdatesSection({ updates, announcementChannels }) {
@@ -12,7 +12,7 @@ export default function UpdatesSection({ updates, announcementChannels }) {
     <Container id="novidades" maxWidth="xl" className="updates-section section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '700ms' }}>
       <Box className="updates-grid">
         {updates.map((item) => {
-          const type = typeStyles[item.type] ?? typeStyles.reveal
+          const type = typeStyles[item.type] ?? typeStyles.geral
 
           return (
             <Paper key={item.id} component="article" elevation={3} className="updates-card">

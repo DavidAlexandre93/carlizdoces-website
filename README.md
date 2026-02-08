@@ -150,6 +150,31 @@ http://localhost:3000
 
 ---
 
+
+## ✍️ Alteração manual rápida de produtos, imagens e descrições
+
+Agora existe um arquivo único para edição de conteúdo:
+
+- `src/data/editableContent.js`
+
+Nele você consegue, de forma simples:
+
+- adicionar/remover produtos (`productsCatalog`);
+- trocar imagens dos produtos (`image`);
+- editar descrição curta e informações do doce (`shortDescription` e `details`);
+- adicionar/remover cards de novidades (`updatesCatalog`), incluindo imagem, título e texto.
+
+### Passo a passo
+
+1. Coloque sua imagem em `public/images/...`;
+2. Abra `src/data/editableContent.js`;
+3. Edite (ou apague) o objeto desejado;
+4. Salve e rode `npm start` para validar no navegador.
+
+> Dica: mantenha o campo `id` único em cada item para evitar conflitos na interface.
+
+---
+
 ## 📜 Scripts disponíveis
 
 - `npm start` → inicia ambiente de desenvolvimento com hot reload;
