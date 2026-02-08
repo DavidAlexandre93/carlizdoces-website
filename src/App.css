@@ -1171,8 +1171,7 @@
 }
 
 .contact-hero {
-  background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
-    url('../public/images/banner-carliz.svg') center/cover no-repeat;
+  background: #ad1457;
   min-height: clamp(360px, 56vw, 540px);
   display: flex;
   align-items: center;
