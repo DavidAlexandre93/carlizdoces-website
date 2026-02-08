@@ -2,7 +2,7 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Paper, Select, TextFiel
 
 export function OrderSection({ BRL, orderCustomer, setOrderCustomer, selectedItems, customizations, setCustomizations, paymentMethods, totalPrice, totalItems, whatsappLink }) {
   return (
-    <section id="realizar-pedido" className="order-section">
+    <section id="realizar-pedido" className="order-section animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
         <Typography variant="h4">Realizar pedido</Typography>
         <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>

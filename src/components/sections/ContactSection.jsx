@@ -4,17 +4,8 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
-    <section id="contato" className="contact-hero">
+    <section id="contato" className="contact-hero animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper
-        sx={{
-          p: { xs: 2, md: 3 },
-          borderRadius: 4,
-          maxWidth: 1080,
-          mx: 'auto',
-          bgcolor: 'rgba(244, 236, 250, 0.92)',
-          border: '1px solid rgba(171, 120, 197, 0.3)',
-        }}
-      >
         component="form"
         onSubmit={onSubmit}
         sx={{
@@ -26,6 +17,7 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
           backdropFilter: 'blur(10px)',
           background: 'linear-gradient(145deg, rgba(255,255,255,0.97), rgba(255,240,248,0.93))',
           boxShadow: '0 20px 40px rgba(91, 23, 55, 0.22)',
+          border: '1px solid rgba(171, 120, 197, 0.3)',
         }}
       >
         <Chip
