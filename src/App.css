@@ -249,8 +249,24 @@
 }
 
 .topbar-nav {
-  display: flex;
-  gap: 30px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.topbar-nav .MuiButton-root {
+  color: #111;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: color 180ms ease, transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.topbar-nav .MuiButton-root:hover,
+.topbar-nav .MuiButton-root:focus-visible {
+  color: #ad1457;
+  transform: translateY(-2px);
+  background: rgba(173, 20, 87, 0.08);
+  border-color: rgba(173, 20, 87, 0.2);
 }
 
 .topbar-menu-button {
@@ -305,10 +321,16 @@
   border-bottom-color: #4f3344;
 }
 
-.site-wrapper.dark-mode .topbar-nav a,
+.site-wrapper.dark-mode .topbar-nav .MuiButton-root,
 .site-wrapper.dark-mode .topbar-brand,
 .site-wrapper.dark-mode .footer a {
   color: #f4ecf2;
+}
+
+.site-wrapper.dark-mode .topbar-nav .MuiButton-root:hover,
+.site-wrapper.dark-mode .topbar-nav .MuiButton-root:focus-visible {
+  background: rgba(255, 209, 232, 0.14);
+  border-color: rgba(255, 209, 232, 0.3);
 }
 
 .site-wrapper.dark-mode .brand-name {
@@ -343,7 +365,6 @@
   border: 2px solid #e6bfd2;
 }
 
-.topbar-nav a,
 .topbar-brand,
 .footer a {
   text-decoration: none;
@@ -352,8 +373,6 @@
   transition: color 180ms ease, transform 180ms ease;
 }
 
-.topbar-nav a:hover,
-.topbar-nav a:focus-visible,
 .topbar-brand:hover,
 .topbar-brand:focus-visible,
 .footer a:hover,
