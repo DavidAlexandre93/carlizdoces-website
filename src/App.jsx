@@ -34,6 +34,7 @@ export default function App() {
   const [cart, setCart] = useState({})
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
+  const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -64,6 +65,8 @@ export default function App() {
 
   const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.subtotal, 0)
+  const selectedHighlight =
+    productHighlights.find((item) => item.id === selectedHighlightId) ?? productHighlights[0] ?? null
 
   const whatsappLink = useMemo(() => {
     const orderList =
@@ -121,16 +124,51 @@ export default function App() {
       </section>
 
       <section id="ovos-de-pascoa" className="photo-band">
-        <Container maxWidth="xl" className="page-container photo-band-grid">
-          {productHighlights.map((item) => (
-            <article key={item.id}>
-              <img src={item.image} alt={item.name} />
+        <Container maxWidth="xl" className="page-container">
+          <header className="photo-band-head">
+            <h2>Ovos de Páscoa</h2>
+            <p>Explore os sabores mais pedidos da temporada e toque em um card para destacar o seu favorito.</p>
+          </header>
+
+          <div className="photo-band-grid">
+            {productHighlights.map((item) => {
+              const isActive = item.id === selectedHighlight?.id
+              return (
+                <article
+                  key={item.id}
+                  className={isActive ? 'is-active' : ''}
+                  onMouseEnter={() => setSelectedHighlightId(item.id)}
+                >
+                  <img src={item.image} alt={item.name} />
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{BRL.format(item.price)}</span>
+                  </div>
+                  <button type="button" onClick={() => setSelectedHighlightId(item.id)}>
+                    {isActive ? 'Selecionado' : 'Ver destaque'}
+                  </button>
+                </article>
+              )
+            })}
+          </div>
+
+          {selectedHighlight ? (
+            <aside className="photo-highlight" aria-live="polite">
+              <img src={selectedHighlight.image} alt={selectedHighlight.name} />
               <div>
-                <strong>{item.name}</strong>
-                <span>{BRL.format(item.price)}</span>
+                <p className="highlight-tag">Destaque da semana</p>
+                <h3>{selectedHighlight.name}</h3>
+                <p>
+                  Casca artesanal com recheio cremoso e finalização premium. Perfeito para presentear ou celebrar em
+                  família.
+                </p>
+                <strong>{BRL.format(selectedHighlight.price)}</strong>
+                <Button variant="contained" onClick={() => addItem(selectedHighlight.id)}>
+                  Adicionar ao pedido
+                </Button>
               </div>
-            </article>
-          ))}
+            </aside>
+          ) : null}
         </Container>
       </section>
 
