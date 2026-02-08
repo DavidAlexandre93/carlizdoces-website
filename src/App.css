@@ -751,6 +751,41 @@
   gap: clamp(14px, 2.5vw, 26px);
 }
 
+.about-message-bubble {
+  position: relative;
+  background: #fff7fc;
+  border: 3px solid #d44c8d;
+  border-radius: 26px;
+  box-shadow: 0 10px 22px rgba(123, 32, 80, 0.18);
+  padding: clamp(14px, 2.4vw, 26px) clamp(18px, 3vw, 30px);
+}
+
+.about-message-bubble::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  border-right: 22px solid #d44c8d;
+}
+
+.about-message-bubble::after {
+  content: '';
+  position: absolute;
+  left: -17px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  border-right: 18px solid #fff7fc;
+}
+
 .about-clown-image {
   width: clamp(120px, 18vw, 220px);
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
@@ -2115,6 +2150,28 @@
 @media (max-width: 800px) {
   .about-clown-dialog {
     flex-direction: column;
+  }
+
+  .about-message-bubble::before,
+  .about-message-bubble::after {
+    left: 50%;
+    top: -22px;
+    transform: translateX(-50%);
+  }
+
+  .about-message-bubble::before {
+    border-top: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 22px solid #d44c8d;
+  }
+
+  .about-message-bubble::after {
+    top: -18px;
+    border-top: 0;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-bottom: 18px solid #fff7fc;
   }
 
   .about-message-inline {
