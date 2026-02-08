@@ -7,6 +7,7 @@ import {
   Container,
   ImageList,
   ImageListItem,
+  Link,
   Paper,
   Popper,
   SpeedDial,
@@ -126,9 +127,15 @@ export default function App() {
           <Box className="brand">🧁</Box>
           <Box component="nav">
             {navItems.map((item) => (
-              <a key={item.sectionId} href={`#${item.sectionId}`}>
+              <Link
+                key={item.sectionId}
+                href={`#${item.sectionId}`}
+                underline="hover"
+                color="inherit"
+                sx={{ fontWeight: 600 }}
+              >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </Box>
         </Container>
@@ -313,9 +320,15 @@ export default function App() {
                 )}
               </ul>
               <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
-              <a className="finish-order" href={whatsappLink} target="_blank" rel="noreferrer">
+              <Link
+                className="finish-order"
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                underline="none"
+              >
                 Finalizar pedido no WhatsApp
-              </a>
+              </Link>
             </aside>
           </Box>
         </Container>
@@ -348,9 +361,30 @@ export default function App() {
             <Tab value="email" label="E-mail" sx={{ textTransform: 'none', fontWeight: 700 }} />
           </Tabs>
 
-          {selectedContactTab === 'whatsapp' ? <p>WhatsApp: +55 11 99217-5496</p> : null}
-          {selectedContactTab === 'telefone' ? <p>Telefone: +55 11 99217-5496</p> : null}
-          {selectedContactTab === 'email' ? <p>Email: voce@email.com</p> : null}
+          {selectedContactTab === 'whatsapp' ? (
+            <p>
+              WhatsApp:{' '}
+              <Link href="https://wa.me/5511992175496" target="_blank" rel="noreferrer" underline="hover">
+                +55 11 99217-5496
+              </Link>
+            </p>
+          ) : null}
+          {selectedContactTab === 'telefone' ? (
+            <p>
+              Telefone:{' '}
+              <Link href="tel:+5511992175496" underline="hover">
+                +55 11 99217-5496
+              </Link>
+            </p>
+          ) : null}
+          {selectedContactTab === 'email' ? (
+            <p>
+              Email:{' '}
+              <Link href="mailto:voce@email.com" underline="hover">
+                voce@email.com
+              </Link>
+            </p>
+          ) : null}
           <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
             Horários de atendimento
           </Button>
@@ -379,9 +413,15 @@ export default function App() {
           <Box className="instagram-grid">
             {instagramPosts.map((post) => (
               <article key={post.id} className="instagram-card">
-                <a href={instagramProfileLink} target="_blank" rel="noreferrer" aria-label="Abrir Instagram da Carliz Doces">
+                <Link
+                  href={instagramProfileLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Abrir Instagram da Carliz Doces"
+                  underline="none"
+                >
                   <img src={post.imageUrl} alt={post.alt} loading="lazy" />
-                </a>
+                </Link>
               </article>
             ))}
           </Box>
@@ -395,7 +435,9 @@ export default function App() {
           <ul>
             {navItems.map((item) => (
               <li key={item.sectionId}>
-                <a href={`#${item.sectionId}`}>{item.label}</a>
+                <Link href={`#${item.sectionId}`} underline="hover" color="inherit">
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>
