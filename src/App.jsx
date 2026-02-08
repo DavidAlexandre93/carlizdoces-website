@@ -18,6 +18,7 @@ import {
   Container,
   Drawer,
   Divider,
+  FormControlLabel,
   Icon,
   IconButton,
   ImageList,
@@ -28,9 +29,11 @@ import {
   ListItemText,
   Paper,
   Popper,
+  Rating,
   MenuItem,
   MobileStepper,
   Slider,
+  Switch,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -78,6 +81,8 @@ const seasonalProducts = [
     weight: '350g',
     price: 59,
     image: '/images/brigadeiro.svg',
+    rating: 4.9,
+    reviewCount: 298,
   },
   {
     id: 'ninho-nutella',
@@ -86,6 +91,8 @@ const seasonalProducts = [
     weight: '400g',
     price: 68.5,
     image: '/images/ninho-nutella.svg',
+    rating: 4.8,
+    reviewCount: 244,
   },
   {
     id: 'prestigio',
@@ -94,6 +101,8 @@ const seasonalProducts = [
     weight: '350g',
     price: 62,
     image: '/images/prestigio.svg',
+    rating: 4.7,
+    reviewCount: 208,
   },
   {
     id: 'ferrero',
@@ -102,6 +111,8 @@ const seasonalProducts = [
     weight: '450g',
     price: 72,
     image: '/images/ferrero.svg',
+    rating: 5,
+    reviewCount: 322,
   },
   {
     id: 'trufado-maracuja',
@@ -110,6 +121,8 @@ const seasonalProducts = [
     weight: '380g',
     price: 64,
     image: '/images/trufado-maracuja.svg',
+    rating: 4.6,
+    reviewCount: 186,
   },
   {
     id: 'ninho-uva',
@@ -118,6 +131,8 @@ const seasonalProducts = [
     weight: '400g',
     price: 66,
     image: '/images/ninho-uva.svg',
+    rating: 4.8,
+    reviewCount: 271,
   },
 ]
 
@@ -201,6 +216,18 @@ export default function App() {
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(() =>
     Math.max(...seasonalProducts.map((item) => item.price)),
   )
+  const [isWhatsAppConfirmationEnabled, setIsWhatsAppConfirmationEnabled] = useState(true)
+  const [showManualTestimonials, setShowManualTestimonials] = useState(true)
+  const [orderCustomer, setOrderCustomer] = useState({
+    name: '',
+    phone: '',
+  })
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+  const [showTopRatedFirst, setShowTopRatedFirst] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -244,6 +271,19 @@ export default function App() {
   useEffect(() => {
     setActiveProductStep((current) => Math.min(current, Math.max(visibleShowcaseProducts.length - 1, 0)))
   }, [visibleShowcaseProducts.length])
+  const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
+  const productsForOrder = useMemo(() => {
+    if (!showTopRatedFirst) {
+      return seasonalProducts
+    }
+
+    return [...seasonalProducts].sort((a, b) => {
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating
+      }
+      return b.reviewCount - a.reviewCount
+    })
+  }, [showTopRatedFirst])
 
   const updateCustomization = (itemId, field, value) => {
     setCustomizations((current) => ({
@@ -253,6 +293,8 @@ export default function App() {
   }
 
   const whatsappLink = useMemo(() => {
+    const customerName = orderCustomer.name.trim() || 'Cliente não informado'
+    const customerPhone = orderCustomer.phone.trim() || 'não informado'
     const orderList =
       selectedItems.length > 0
         ? selectedItems
@@ -273,11 +315,11 @@ export default function App() {
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n👤 Nome: ${customerName}\n📱 WhatsApp para retorno: ${customerPhone}\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, selectedItems, totalItems, totalPrice])
+  }, [customizations, orderCustomer.name, orderCustomer.phone, selectedItems, totalItems, totalPrice])
 
   const handleOrderTipToggle = (event) => {
     setOrderTipAnchor((current) => (current ? null : event.currentTarget))
@@ -400,6 +442,13 @@ export default function App() {
       author: '',
     }))
   }
+
+  const handleContactFormChange = (field, value) => {
+    setContactForm((current) => ({
+      ...current,
+      [field]: value,
+    }))
+  }
   const renderSectionDivider = (label) => (
     <Container maxWidth="lg" className="page-container section-divider-wrap" aria-hidden="true">
       <Divider className="section-divider" textAlign="center">
@@ -442,6 +491,15 @@ export default function App() {
             </Box>
 
             <Box className="topbar-actions">
+              <Tooltip title={isDarkMode ? 'Modo escuro ativado' : 'Modo claro ativado'} arrow>
+                <Switch
+                  checked={isDarkMode}
+                  onChange={(_event, checked) => setIsDarkMode(checked)}
+                  color="secondary"
+                  inputProps={{ 'aria-label': isDarkMode ? 'Ativar modo claro' : 'Ativar modo escuro' }}
+                />
+              </Tooltip>
+
               <Tooltip title="Usuário logado" arrow>
                 <Avatar aria-label="Usuário logado" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
                   <PersonIcon sx={{ fontSize: 20 }} />
@@ -670,6 +728,36 @@ export default function App() {
         <Container maxWidth="xl" className="page-container">
           <Typography component="h2" variant="h4">Realizar pedido</Typography>
           <Typography component="p" variant="body1">Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</Typography>
+          <Box
+            sx={{
+              mt: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+              maxWidth: 780,
+            }}
+          >
+            <TextField
+              label="Nome para identificação"
+              placeholder="Ex.: Maria Silva"
+              size="small"
+              fullWidth
+              value={orderCustomer.name}
+              onChange={(event) =>
+                setOrderCustomer((current) => ({ ...current, name: event.target.value }))
+              }
+            />
+            <TextField
+              label="WhatsApp para retorno"
+              placeholder="(11) 99999-9999"
+              size="small"
+              fullWidth
+              value={orderCustomer.phone}
+              onChange={(event) =>
+                setOrderCustomer((current) => ({ ...current, phone: event.target.value }))
+              }
+            />
+          </Box>
           <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
             Dica rápida para o pedido
           </Button>
@@ -687,6 +775,17 @@ export default function App() {
           </Popper>
 
           <Box sx={{ mt: 2, mb: 3 }}>
+            <FormControlLabel
+              control={(
+                <Switch
+                  checked={showTopRatedFirst}
+                  onChange={(event) => setShowTopRatedFirst(event.target.checked)}
+                  color="secondary"
+                />
+              )}
+              label="Filtro rápido: mostrar preferidos dos clientes primeiro"
+              sx={{ mb: 1.2 }}
+            />
             <Accordion defaultExpanded>
               <AccordionSummary
                 expandIcon={<Icon aria-hidden="true">expand_more</Icon>}
@@ -723,11 +822,23 @@ export default function App() {
               gap={16}
               sx={{ columnCount: { xs: 1, sm: 2 } }}
             >
-              {seasonalProducts.map((item) => (
+              {productsForOrder.map((item) => (
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
                     <Typography component="h3" variant="h6">{item.name}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, mt: 0.6 }}>
+                      <Rating
+                        value={item.rating}
+                        precision={0.1}
+                        readOnly
+                        size="small"
+                        aria-label={`Avaliação média de ${item.rating} estrelas para ${item.name}`}
+                      />
+                      <Typography component="span" variant="caption" sx={{ fontWeight: 600 }}>
+                        {item.rating.toFixed(1)} ({item.reviewCount} avaliações)
+                      </Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mt: 0.4 }}>
                       <Chip label={item.weight} size="small" variant="outlined" color="primary" />
                       <Chip label={item.flavor} size="small" variant="outlined" />
@@ -879,9 +990,20 @@ export default function App() {
               ) : null}
 
               <Typography component="p" variant="h6" className="summary-total">Total: {BRL.format(totalPrice)}</Typography>
+              <Box className="order-switch-line">
+                <Typography component="span" variant="body2">Receber confirmação automática no WhatsApp</Typography>
+                <Switch
+                  checked={isWhatsAppConfirmationEnabled}
+                  onChange={(_event, checked) => setIsWhatsAppConfirmationEnabled(checked)}
+                  color="secondary"
+                  inputProps={{ 'aria-label': 'Ativar confirmação automática no WhatsApp' }}
+                />
+              </Box>
               {showOrderAlert ? (
                 <Alert severity="success" sx={{ mb: 1.5 }} onClose={() => setShowOrderAlert(false)}>
-                  Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.
+                  {isWhatsAppConfirmationEnabled
+                    ? 'Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.'
+                    : 'Pedido enviado! Sua confirmação automática está desativada no momento.'}
                 </Alert>
               ) : null}
               <Link
@@ -1012,16 +1134,30 @@ export default function App() {
           </Box>
 
           <Paper elevation={0} className="manual-feedback-card">
-            <Typography component="h3" variant="h5">Feedbacks recebidos por outros meios</Typography>
-            <ul>
-              {manualTestimonials.map((testimonial) => (
-                <li key={testimonial.id}>
-                  <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
-                  <Typography component="span" variant="caption">{testimonial.channel}</Typography>
-                  <Typography component="p" variant="body2">{testimonial.message}</Typography>
-                </li>
-              ))}
-            </ul>
+            <Box className="manual-feedback-head">
+              <Typography component="h3" variant="h5">Feedbacks recebidos por outros meios</Typography>
+              <Switch
+                checked={showManualTestimonials}
+                onChange={(_event, checked) => setShowManualTestimonials(checked)}
+                color="secondary"
+                inputProps={{ 'aria-label': 'Mostrar feedbacks recebidos por outros meios' }}
+              />
+            </Box>
+            {showManualTestimonials ? (
+              <ul>
+                {manualTestimonials.map((testimonial) => (
+                  <li key={testimonial.id}>
+                    <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
+                    <Typography component="span" variant="caption">{testimonial.channel}</Typography>
+                    <Typography component="p" variant="body2">{testimonial.message}</Typography>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Typography component="p" variant="body2">
+                Feedbacks externos ocultos. Ative o switch para visualizar novamente.
+              </Typography>
+            )}
           </Paper>
         </Container>
       </section>
@@ -1088,6 +1224,41 @@ export default function App() {
               </Link>
             </Typography>
           ) : null}
+          <Box
+            component="form"
+            sx={{
+              mt: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' },
+            }}
+          >
+            <TextField
+              label="Seu nome"
+              size="small"
+              fullWidth
+              value={contactForm.name}
+              onChange={(event) => handleContactFormChange('name', event.target.value)}
+            />
+            <TextField
+              label="E-mail para retorno"
+              size="small"
+              fullWidth
+              type="email"
+              value={contactForm.email}
+              onChange={(event) => handleContactFormChange('email', event.target.value)}
+            />
+            <TextField
+              label="Mensagem rápida"
+              placeholder="Conte como podemos ajudar com sua encomenda"
+              multiline
+              minRows={3}
+              fullWidth
+              sx={{ gridColumn: { xs: '1 / -1', sm: '1 / -1' } }}
+              value={contactForm.message}
+              onChange={(event) => handleContactFormChange('message', event.target.value)}
+            />
+          </Box>
           <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
             Horários de atendimento
           </Button>
