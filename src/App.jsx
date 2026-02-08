@@ -92,19 +92,19 @@ export default function App() {
   }
 
   return (
-    <div className="site-wrapper">
-      <header className="topbar">
+    <Box className="site-wrapper">
+      <Box component="header" className="topbar">
         <Container maxWidth="xl" className="page-container topbar-inner">
-          <div className="brand">🧁</div>
-          <nav>
+          <Box className="brand">🧁</Box>
+          <Box component="nav">
             {navItems.map((item) => (
               <a key={item.sectionId} href={`#${item.sectionId}`}>
                 {item.label}
               </a>
             ))}
-          </nav>
+          </Box>
         </Container>
-      </header>
+      </Box>
 
       <section className="hero">
         <Container maxWidth="xl" className="page-container hero-inner">
@@ -130,7 +130,7 @@ export default function App() {
             <p>Explore os sabores mais pedidos da temporada e toque em um card para destacar o seu favorito.</p>
           </header>
 
-          <div className="photo-band-grid">
+          <Box className="photo-band-grid">
             {productHighlights.map((item) => {
               const isActive = item.id === selectedHighlight?.id
               return (
@@ -150,7 +150,7 @@ export default function App() {
                 </article>
               )
             })}
-          </div>
+          </Box>
 
           {selectedHighlight ? (
             <aside className="photo-highlight" aria-live="polite">
@@ -192,7 +192,7 @@ export default function App() {
             </ClickAwayListener>
           </Popper>
 
-          <div className="order-grid">
+          <Box className="order-grid">
             <ImageList
               className="order-list-masonry"
               variant="masonry"
@@ -261,7 +261,7 @@ export default function App() {
                 Finalizar pedido no WhatsApp
               </a>
             </aside>
-          </div>
+          </Box>
         </Container>
       </section>
 
@@ -277,7 +277,7 @@ export default function App() {
       </section>
 
       <section id="contato" className="contact-hero">
-        <div>
+        <Box>
           <h2>Contato</h2>
           <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
           <p>Email: voce@email.com</p>
@@ -297,7 +297,7 @@ export default function App() {
               </Paper>
             </ClickAwayListener>
           </Popper>
-        </div>
+        </Box>
       </section>
 
       <footer className="footer">
@@ -320,6 +320,6 @@ export default function App() {
           </div>
         </Container>
       </footer>
-    </div>
+    </Box>
   )
 }
