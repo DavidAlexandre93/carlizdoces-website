@@ -262,6 +262,13 @@ export function HomePage() {
       } catch {
         setHasLikedStore(false)
       }
+    try {
+      const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
+      setHasLikedStore(savedLiked)
+      setTotalLikes(savedLiked ? 1 : 0)
+    } catch {
+      setTotalLikes(0)
+      setHasLikedStore(false)
     }
 
     loadGlobalHearts()
