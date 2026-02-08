@@ -18,11 +18,13 @@ import {
   Container,
   Drawer,
   Divider,
+  FormControl,
   FormControlLabel,
   Icon,
   IconButton,
   ImageList,
   ImageListItem,
+  InputLabel,
   Link,
   List,
   ListItemButton,
@@ -37,6 +39,7 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
+  Select,
   Tab,
   Tabs,
   TextField,
@@ -205,6 +208,7 @@ export default function App() {
   ])
   const [testimonialForm, setTestimonialForm] = useState({
     author: '',
+    channel: '',
     message: '',
   })
   const [googleAccount, setGoogleAccount] = useState(null)
@@ -213,6 +217,7 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [deliveryMethod, setDeliveryMethod] = useState('Retirada na loja')
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(() =>
     Math.max(...seasonalProducts.map((item) => item.price)),
   )
@@ -315,6 +320,11 @@ export default function App() {
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n🚚 Forma de recebimento: ${deliveryMethod}\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+    )
+
+    return `https://wa.me/5511992175496?text=${message}`
+  }, [customizations, deliveryMethod, selectedItems, totalItems, totalPrice])
       `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n👤 Nome: ${customerName}\n📱 WhatsApp para retorno: ${customerPhone}\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
@@ -400,7 +410,7 @@ export default function App() {
       ...current,
     ])
 
-    setTestimonialForm({ author: '', message: '' })
+    setTestimonialForm({ author: '', channel: '', message: '' })
   }
 
   const handleGoogleLogin = () => {
@@ -597,6 +607,27 @@ export default function App() {
           <header className="photo-band-head">
             <Typography component="h2" variant="h4">Ovos de Páscoa</Typography>
             <Typography component="p" variant="body1">Passe as imagens com os botões para navegar pelos sabores e apresentações disponíveis.</Typography>
+            <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
+              <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
+              <Select
+                labelId="showcase-select-label"
+                id="showcase-select"
+                value={selectedShowcaseProduct?.id ?? ''}
+                label="Selecionar sabor"
+                onChange={(event) => {
+                  const nextIndex = seasonalProducts.findIndex((item) => item.id === event.target.value)
+                  if (nextIndex >= 0) {
+                    setActiveProductStep(nextIndex)
+                  }
+                }}
+              >
+                {seasonalProducts.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Box sx={{ mt: 2.5, maxWidth: 560 }}>
               <Typography component="p" variant="body2" sx={{ mb: 0.75, fontWeight: 700 }}>
                 Filtrar vitrine por preço máximo: {BRL.format(maxShowcasePrice)}
@@ -899,6 +930,20 @@ export default function App() {
               <Typography component="p" variant="body1">
                 <Typography component="strong" variant="h6">{totalItems}</Typography> item(ns) no carrinho
               </Typography>
+              <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <InputLabel id="delivery-method-select-label">Recebimento</InputLabel>
+                <Select
+                  labelId="delivery-method-select-label"
+                  id="delivery-method-select"
+                  value={deliveryMethod}
+                  label="Recebimento"
+                  onChange={(event) => setDeliveryMethod(event.target.value)}
+                >
+                  <MenuItem value="Retirada na loja">Retirada na loja</MenuItem>
+                  <MenuItem value="Entrega local">Entrega local</MenuItem>
+                  <MenuItem value="A combinar no atendimento">A combinar no atendimento</MenuItem>
+                </Select>
+              </FormControl>
               <div className="order-timeline" aria-label="Etapas do pedido">
                 <Box component="ol" sx={{ m: 0, py: 1.25, pr: 1.25, pl: 1.75, listStyle: 'none' }}>
                   {[
@@ -1102,6 +1147,22 @@ export default function App() {
                 size="small"
                 disabled={!googleAccount}
               />
+              <FormControl fullWidth size="small" disabled={!googleAccount}>
+                <InputLabel id="testimonial-channel-select-label">Canal</InputLabel>
+                <Select
+                  labelId="testimonial-channel-select-label"
+                  id="testimonial-channel-select"
+                  label="Canal"
+                  value={testimonialForm.channel}
+                  onChange={(event) => handleTestimonialChange('channel', event.target.value)}
+                >
+                  <MenuItem value="">Selecione</MenuItem>
+                  <MenuItem value="Instagram">Instagram</MenuItem>
+                  <MenuItem value="WhatsApp">WhatsApp</MenuItem>
+                  <MenuItem value="Loja física">Loja física</MenuItem>
+                  <MenuItem value="Indicação">Indicação</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 label="Seu depoimento"
                 placeholder="Conte como foi sua experiência com nossos doces"
