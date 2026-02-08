@@ -29,8 +29,8 @@ export function HomePage() {
   const [maxShowcasePrice, setMaxShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
   const [customizations, setCustomizations] = useState({})
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
-  const [orderPreferences, setOrderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
-  const [deliveryMethod, setDeliveryMethod] = useState('Retirada na loja')
+  const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
+  const [deliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials] = useState(manualTestimonials)
@@ -384,11 +384,7 @@ export function HomePage() {
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.26 }}>
-            <LocationSection
-              orderPreferences={orderPreferences}
-              setOrderPreferences={setOrderPreferences}
-              setDeliveryMethod={setDeliveryMethod}
-            />
+            <LocationSection />
           </MotionDiv>
         </Container>
 
