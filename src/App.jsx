@@ -212,6 +212,15 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [orderCustomer, setOrderCustomer] = useState({
+    name: '',
+    phone: '',
+  })
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
   const [showTopRatedFirst, setShowTopRatedFirst] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
@@ -265,6 +274,8 @@ export default function App() {
   }
 
   const whatsappLink = useMemo(() => {
+    const customerName = orderCustomer.name.trim() || 'Cliente não informado'
+    const customerPhone = orderCustomer.phone.trim() || 'não informado'
     const orderList =
       selectedItems.length > 0
         ? selectedItems
@@ -285,11 +296,11 @@ export default function App() {
         : '- Ainda estou escolhendo os doces.'
 
     const message = encodeURIComponent(
-      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
+      `Olá, Carliz Doces! ✨\n\nGostaria de realizar um pedido de outros doces. Seguem os detalhes:\n\n👤 Nome: ${customerName}\n📱 WhatsApp para retorno: ${customerPhone}\n\n${orderList}\n\n📦 Total de itens: ${totalItems}\n💰 Valor total estimado: ${BRL.format(totalPrice)}\n\nFico no aguardo para confirmar disponibilidade, produção e entrega. Muito obrigado(a)!`,
     )
 
     return `https://wa.me/5511992175496?text=${message}`
-  }, [customizations, selectedItems, totalItems, totalPrice])
+  }, [customizations, orderCustomer.name, orderCustomer.phone, selectedItems, totalItems, totalPrice])
 
   const handleOrderTipToggle = (event) => {
     setOrderTipAnchor((current) => (current ? null : event.currentTarget))
@@ -410,6 +421,13 @@ export default function App() {
     setTestimonialForm((current) => ({
       ...current,
       author: '',
+    }))
+  }
+
+  const handleContactFormChange = (field, value) => {
+    setContactForm((current) => ({
+      ...current,
+      [field]: value,
     }))
   }
   const renderSectionDivider = (label) => (
@@ -662,6 +680,36 @@ export default function App() {
         <Container maxWidth="xl" className="page-container">
           <Typography component="h2" variant="h4">Realizar pedido</Typography>
           <Typography component="p" variant="body1">Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</Typography>
+          <Box
+            sx={{
+              mt: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+              maxWidth: 780,
+            }}
+          >
+            <TextField
+              label="Nome para identificação"
+              placeholder="Ex.: Maria Silva"
+              size="small"
+              fullWidth
+              value={orderCustomer.name}
+              onChange={(event) =>
+                setOrderCustomer((current) => ({ ...current, name: event.target.value }))
+              }
+            />
+            <TextField
+              label="WhatsApp para retorno"
+              placeholder="(11) 99999-9999"
+              size="small"
+              fullWidth
+              value={orderCustomer.phone}
+              onChange={(event) =>
+                setOrderCustomer((current) => ({ ...current, phone: event.target.value }))
+              }
+            />
+          </Box>
           <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
             Dica rápida para o pedido
           </Button>
@@ -1088,6 +1136,41 @@ export default function App() {
               </Link>
             </Typography>
           ) : null}
+          <Box
+            component="form"
+            sx={{
+              mt: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' },
+            }}
+          >
+            <TextField
+              label="Seu nome"
+              size="small"
+              fullWidth
+              value={contactForm.name}
+              onChange={(event) => handleContactFormChange('name', event.target.value)}
+            />
+            <TextField
+              label="E-mail para retorno"
+              size="small"
+              fullWidth
+              type="email"
+              value={contactForm.email}
+              onChange={(event) => handleContactFormChange('email', event.target.value)}
+            />
+            <TextField
+              label="Mensagem rápida"
+              placeholder="Conte como podemos ajudar com sua encomenda"
+              multiline
+              minRows={3}
+              fullWidth
+              sx={{ gridColumn: { xs: '1 / -1', sm: '1 / -1' } }}
+              value={contactForm.message}
+              onChange={(event) => handleContactFormChange('message', event.target.value)}
+            />
+          </Box>
           <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
             Horários de atendimento
           </Button>
