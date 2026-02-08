@@ -16,6 +16,8 @@ export function FloatingActions({
   const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3'
   const scrollTopBackground = '#ddb2c7'
   const floatingGap = { xs: 14, md: 16 }
+  const actionSize = { xs: 60, md: 66 }
+  const actionBottom = { xs: 16, md: 24 }
 
   const commonPositionSx = {
     position: 'fixed',
@@ -35,11 +37,11 @@ export function FloatingActions({
           sx={{
             ...commonPositionSx,
             bottom: {
-              xs: `calc(66px + 60px + ${floatingGap.xs}px)`,
-              md: `calc(76px + 66px + ${floatingGap.md}px)`,
+              xs: `calc(${actionBottom.xs}px + (${actionSize.xs}px * 2) + (${floatingGap.xs}px * 2))`,
+              md: `calc(${actionBottom.md}px + (${actionSize.md}px * 2) + (${floatingGap.md}px * 2))`,
             },
-            width: { xs: 46, md: 52 },
-            height: { xs: 46, md: 52 },
+            width: actionSize,
+            height: actionSize,
             backgroundColor: scrollTopBackground,
             '&:hover': {
               backgroundColor: '#d4a9bd',
@@ -71,9 +73,12 @@ export function FloatingActions({
           onClick={onGoToOrderSection}
           sx={{
             ...commonPositionSx,
-            bottom: { xs: 66, md: 76 },
-            width: { xs: 60, md: 66 },
-            height: { xs: 60, md: 66 },
+            bottom: {
+              xs: `calc(${actionBottom.xs}px + ${actionSize.xs}px + ${floatingGap.xs}px)`,
+              md: `calc(${actionBottom.md}px + ${actionSize.md}px + ${floatingGap.md}px)`,
+            },
+            width: actionSize,
+            height: actionSize,
             backgroundColor: '#8d0d4d',
             color: '#fff',
             '&:hover': {
@@ -97,9 +102,9 @@ export function FloatingActions({
         onClick={onToggleLike}
         sx={{
           ...commonPositionSx,
-          bottom: { xs: 16, md: 24 },
-          width: { xs: 46, md: 52 },
-          height: { xs: 46, md: 52 },
+          bottom: actionBottom,
+          width: actionSize,
+          height: actionSize,
           backgroundColor: neutralBackground,
           '&:hover': {
             backgroundColor: isFooterVisible ? '#ddb2c7' : '#ecece6',
