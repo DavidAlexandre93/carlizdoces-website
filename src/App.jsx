@@ -10,6 +10,7 @@ import {
   AppBar,
   Box,
   Button,
+  Chip,
   ClickAwayListener,
   Container,
   Drawer,
@@ -142,6 +143,7 @@ const topShowcaseSlides = [
     alt: 'Bolo da Matilda especial da Carliz Doces',
     title: 'Bolo da Matilda',
     description: 'Destaque da semana para os apaixonados por chocolate.',
+    tag: 'Mais pedido',
   },
   {
     id: 'ferrero',
@@ -149,6 +151,7 @@ const topShowcaseSlides = [
     alt: 'Campanha de sorteio com ovo Ferrero Rocher',
     title: 'Sorteio Ferrero Rocher',
     description: 'Promoção especial para quem encomenda ovos de colher.',
+    tag: 'Promoção',
   },
   {
     id: 'brigadeiro',
@@ -156,6 +159,7 @@ const topShowcaseSlides = [
     alt: 'Brigadeiros artesanais da Carliz Doces',
     title: 'Brigadeiros artesanais',
     description: 'Sabores para festas e lembranças com a cara da Carliz.',
+    tag: 'Clássico da casa',
   },
 ]
 
@@ -427,6 +431,12 @@ export default function App() {
                   <img src={slide.imageUrl} alt={slide.alt} />
                   <div>
                     <Typography component="p" variant="overline">Destaque no topo</Typography>
+                    <Chip
+                      label={slide.tag}
+                      color="secondary"
+                      size="small"
+                      sx={{ mb: 1, fontWeight: 700 }}
+                    />
                     <Typography component="h1" variant="h3">{slide.title}</Typography>
                     <Typography component="span" variant="body1">{slide.description}</Typography>
                   </div>
@@ -463,6 +473,12 @@ export default function App() {
               <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
                 <Typography component="p" variant="overline" className="highlight-tag">Catálogo de temporada</Typography>
+                <Chip
+                  label="Edição limitada"
+                  color="warning"
+                  size="small"
+                  sx={{ mb: 1.2, fontWeight: 700 }}
+                />
                 <Typography component="h3" variant="h5">{selectedShowcaseProduct.name}</Typography>
                 <Typography component="p" variant="body1">
                   {selectedShowcaseProduct.weight} de pura cremosidade com sabor {selectedShowcaseProduct.flavor}.
@@ -612,9 +628,10 @@ export default function App() {
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
                     <Typography component="h3" variant="h6">{item.name}</Typography>
-                    <Typography component="small" variant="body2">
-                      {item.weight} • {item.flavor}
-                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mt: 0.4 }}>
+                      <Chip label={item.weight} size="small" variant="outlined" color="primary" />
+                      <Chip label={item.flavor} size="small" variant="outlined" />
+                    </Box>
                     <Typography component="span" variant="subtitle1">{BRL.format(item.price)}</Typography>
                     <div className="product-social-actions" aria-label={`Interações de ${item.name}`}>
                       <Tooltip title="Curta para salvar esse sabor entre seus favoritos" arrow>
@@ -884,6 +901,12 @@ export default function App() {
           }}
         >
           <Typography component="h2" variant="h4">Contato</Typography>
+          <Chip
+            label="Resposta média em até 20 minutos"
+            color="success"
+            size="small"
+            sx={{ mt: 1, mb: 1.2, fontWeight: 600 }}
+          />
           <Typography component="p" variant="body1">Fale com a nossa equipe para encomendas especiais e eventos.</Typography>
           <Tabs
             value={selectedContactTab}
