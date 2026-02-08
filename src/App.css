@@ -1363,6 +1363,96 @@
   font-weight: 700;
 }
 
+
+.updates-section {
+  margin: 24px auto 60px;
+}
+
+.updates-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.updates-header h2 {
+  margin: 0;
+  font-size: 52px;
+}
+
+.updates-header p {
+  margin: 10px auto 0;
+  max-width: 920px;
+  color: #5a3851;
+  font-size: 21px;
+}
+
+.updates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.updates-card {
+  border: 1px solid #e6bfd2;
+  border-radius: 16px;
+  background: #fff;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.updates-date {
+  color: #88506f;
+  font-weight: 700;
+}
+
+.updates-description {
+  color: #4d3240;
+}
+
+.updates-status {
+  color: #6f2549;
+}
+
+.updates-cta {
+  margin-top: 16px;
+  border: 1px dashed #c17397;
+  border-radius: 16px;
+  padding: 16px;
+  background: #fff5fa;
+}
+
+.updates-cta h3 {
+  margin: 0;
+  color: #6f2549;
+}
+
+.updates-cta p {
+  margin: 8px 0 0;
+  color: #4d3240;
+}
+
+.site-wrapper.dark-mode .updates-card {
+  background: #201725;
+  border-color: #5f4154;
+}
+
+.site-wrapper.dark-mode .updates-header p,
+.site-wrapper.dark-mode .updates-description,
+.site-wrapper.dark-mode .updates-cta p,
+.site-wrapper.dark-mode .updates-date {
+  color: #dfc6d8;
+}
+
+.site-wrapper.dark-mode .updates-status,
+.site-wrapper.dark-mode .updates-cta h3 {
+  color: #ffd3ea;
+}
+
+.site-wrapper.dark-mode .updates-cta {
+  background: #2b1c2b;
+  border-color: #8f5a79;
+}
+
 .instagram-section {
   margin: 24px auto 70px;
 }
@@ -1433,17 +1523,20 @@
 
 @media (max-width: 960px) {
   .instagram-header h2,
-  .testimonials-header h2 {
+  .testimonials-header h2,
+  .updates-header h2 {
     font-size: 44px;
   }
 
   .instagram-header p,
-  .testimonials-header p {
+  .testimonials-header p,
+  .updates-header p {
     font-size: 20px;
   }
 
   .instagram-grid,
-  .testimonials-grid {
+  .testimonials-grid,
+  .updates-grid {
     grid-template-columns: 1fr;
   }
 }
