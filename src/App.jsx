@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import ShareIcon from '@mui/icons-material/Share'
 import {
   Box,
   Button,
@@ -107,23 +108,26 @@ export default function App() {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
 
-  const chatActions = [
-    {
-      name: 'Falar no WhatsApp',
-      icon: '💬',
-      onClick: () => window.open(whatsappLink, '_blank', 'noopener,noreferrer'),
-    },
-    {
-      name: 'Ver contato',
-      icon: '📞',
-      onClick: () => document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' }),
-    },
-    {
-      name: 'Dúvidas sobre pedido',
-      icon: '❓',
-      onClick: () => document.getElementById('realizar-pedido')?.scrollIntoView({ behavior: 'smooth' }),
-    },
-  ]
+  const handleShareProduct = async (item) => {
+    const shareUrl = window.location.href
+    const shareText = `${item.name} por ${BRL.format(item.price)} na Carliz Doces!`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Carliz Doces • ${item.name}`,
+          text: shareText,
+          url: shareUrl,
+        })
+        return
+      } catch (error) {
+        if (error?.name === 'AbortError') return
+      }
+    }
+
+    const message = encodeURIComponent(`${shareText} ${shareUrl}`)
+    window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <Box className="site-wrapper">
@@ -255,9 +259,19 @@ export default function App() {
               {seasonalProducts.map((item) => (
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
-                  <div>
+                  <div className="order-item-content">
                     <h3>{item.name}</h3>
                     <span>{BRL.format(item.price)}</span>
+                    <button
+                      type="button"
+                      className="share-product"
+                      onClick={() => handleShareProduct(item)}
+                      aria-label={`Compartilhar ${item.name}`}
+                      title="Compartilhar doce"
+                    >
+                      <ShareIcon fontSize="small" aria-hidden="true" />
+                      Compartilhar
+                    </button>
                   </div>
                   <div className="qty-controls">
                     <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
