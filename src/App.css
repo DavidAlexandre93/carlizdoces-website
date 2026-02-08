@@ -1154,7 +1154,11 @@
 }
 
 .footer .brand-logo {
-  width: clamp(130px, 16vw, 180px);
+  width: clamp(112px, 13vw, 144px);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 18%);
 }
 
 .footer ul {
