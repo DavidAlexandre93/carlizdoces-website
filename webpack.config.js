@@ -27,7 +27,10 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '@mui/icons-material/Share': path.resolve(__dirname, 'src/mui-icons/Share.jsx')
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({

@@ -128,6 +128,21 @@
   color: #5a3851;
 }
 
+.section-tabs {
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid #edc2d7;
+}
+
+.section-tabs .MuiTab-root {
+  min-height: 46px;
+  color: #6f3552;
+}
+
+.section-tabs .Mui-selected {
+  color: #ad1457;
+}
+
 .photo-band-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -306,9 +321,38 @@
   font-size: 20px;
 }
 
+.order-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .order-item span {
   color: #ad1457;
   font-weight: 700;
+}
+
+.share-product {
+  width: fit-content;
+  border: 1px solid #ad1457;
+  background: #fff;
+  color: #ad1457;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.share-product:hover,
+.share-product:focus-visible {
+  background: #ad1457;
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .qty-controls {
@@ -445,6 +489,21 @@
 
 .contact-hero div {
   width: min(100%, 760px);
+}
+
+.contact-tabs {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  display: inline-flex;
+}
+
+.contact-tabs .MuiTab-root {
+  min-height: 42px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.contact-tabs .Mui-selected {
+  color: #fff;
 }
 
 .contact-band h2 {

@@ -1,5 +1,21 @@
 import { useMemo, useState } from 'react'
-import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
+import ShareIcon from '@mui/icons-material/Share'
+import {
+  Box,
+  Button,
+  ClickAwayListener,
+  Container,
+  ImageList,
+  ImageListItem,
+  Paper,
+  Popper,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -45,6 +61,7 @@ export default function App() {
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
+  const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -139,6 +156,24 @@ export default function App() {
           <header className="photo-band-head">
             <h2>Ovos de Páscoa</h2>
             <p>Explore os sabores mais pedidos da temporada e toque em um card para destacar o seu favorito.</p>
+            <Tabs
+              value={selectedHighlight?.id ?? false}
+              onChange={(_event, newValue) => setSelectedHighlightId(newValue)}
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="Seleção rápida de destaques"
+              className="section-tabs"
+              sx={{ mt: 2, maxWidth: 680, mx: 'auto' }}
+            >
+              {productHighlights.map((item) => (
+                <Tab
+                  key={item.id}
+                  value={item.id}
+                  label={item.name}
+                  sx={{ textTransform: 'none', fontWeight: 700 }}
+                />
+              ))}
+            </Tabs>
           </header>
 
           <Box className="photo-band-grid">
@@ -214,9 +249,19 @@ export default function App() {
               {seasonalProducts.map((item) => (
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
-                  <div>
+                  <div className="order-item-content">
                     <h3>{item.name}</h3>
                     <span>{BRL.format(item.price)}</span>
+                    <button
+                      type="button"
+                      className="share-product"
+                      onClick={() => handleShareProduct(item)}
+                      aria-label={`Compartilhar ${item.name}`}
+                      title="Compartilhar doce"
+                    >
+                      <ShareIcon fontSize="small" aria-hidden="true" />
+                      Compartilhar
+                    </button>
                   </div>
                   <div className="qty-controls">
                     <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
@@ -291,8 +336,21 @@ export default function App() {
         <Box>
           <h2>Contato</h2>
           <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
-          <p>Email: voce@email.com</p>
-          <p>Telefone: +55 11 99217-5496</p>
+          <Tabs
+            value={selectedContactTab}
+            onChange={(_event, newValue) => setSelectedContactTab(newValue)}
+            aria-label="Canais de atendimento"
+            className="contact-tabs"
+            sx={{ mb: 1.5 }}
+          >
+            <Tab value="whatsapp" label="WhatsApp" sx={{ textTransform: 'none', fontWeight: 700 }} />
+            <Tab value="telefone" label="Telefone" sx={{ textTransform: 'none', fontWeight: 700 }} />
+            <Tab value="email" label="E-mail" sx={{ textTransform: 'none', fontWeight: 700 }} />
+          </Tabs>
+
+          {selectedContactTab === 'whatsapp' ? <p>WhatsApp: +55 11 99217-5496</p> : null}
+          {selectedContactTab === 'telefone' ? <p>Telefone: +55 11 99217-5496</p> : null}
+          {selectedContactTab === 'email' ? <p>Email: voce@email.com</p> : null}
           <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
             Horários de atendimento
           </Button>
@@ -350,6 +408,19 @@ export default function App() {
           </div>
         </Container>
       </footer>
+
+      <Box sx={{ position: 'fixed', right: 24, bottom: 24, zIndex: (theme) => theme.zIndex.tooltip }}>
+        <SpeedDial ariaLabel="Chat para tirar dúvidas" icon={<SpeedDialIcon />} sx={{ position: 'static' }}>
+          {chatActions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={<span aria-hidden="true">{action.icon}</span>}
+              tooltipTitle={action.name}
+              onClick={action.onClick}
+            />
+          ))}
+        </SpeedDial>
+      </Box>
     </Box>
   )
 }
