@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
+import ShareIcon from '@mui/icons-material/Share'
 import './App.css'
 
 const navItems = [
@@ -89,6 +90,27 @@ export default function App() {
 
   const handleContactTipToggle = (event) => {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
+  }
+
+  const handleShareProduct = async (item) => {
+    const shareUrl = window.location.href
+    const shareText = `${item.name} por ${BRL.format(item.price)} na Carliz Doces!`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Carliz Doces • ${item.name}`,
+          text: shareText,
+          url: shareUrl,
+        })
+        return
+      } catch (error) {
+        if (error?.name === 'AbortError') return
+      }
+    }
+
+    const message = encodeURIComponent(`${shareText} ${shareUrl}`)
+    window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -203,9 +225,19 @@ export default function App() {
               {seasonalProducts.map((item) => (
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
-                  <div>
+                  <div className="order-item-content">
                     <h3>{item.name}</h3>
                     <span>{BRL.format(item.price)}</span>
+                    <button
+                      type="button"
+                      className="share-product"
+                      onClick={() => handleShareProduct(item)}
+                      aria-label={`Compartilhar ${item.name}`}
+                      title="Compartilhar doce"
+                    >
+                      <ShareIcon fontSize="small" aria-hidden="true" />
+                      Compartilhar
+                    </button>
                   </div>
                   <div className="qty-controls">
                     <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
