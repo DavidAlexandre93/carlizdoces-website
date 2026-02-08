@@ -1,13 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
-<defs>
-<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd4e5"/><stop offset="1" stop-color="#f36aa0"/></linearGradient>
-</defs>
-<rect width="100%" height="100%" fill="url(#g)" rx="24"/>
-<ellipse cx="150.0" cy="235.20000000000002" rx="60.0" ry="96.60000000000001" fill="#fff4db"/>
-<ellipse cx="450.0" cy="235.20000000000002" rx="60.0" ry="96.60000000000001" fill="#fef3cf"/>
-<circle cx="300.0" cy="176.4" r="58.800000000000004" fill="#5e3015"/>
-<circle cx="282.0" cy="159.6" r="16.8" fill="#8e4a23"/>
-<circle cx="318.0" cy="159.6" r="16.8" fill="#8e4a23"/>
-<rect x="264.0" y="197.39999999999998" width="72.0" height="42.0" rx="18" fill="#ffc7de"/>
-<text x="50%" y="369.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" fill="#5f2238" font-weight="700">Ferrero</text>
+<svg width="900" height="1200" viewBox="0 0 900 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Ovo de Páscoa Ferrero</title>
+  <desc id="desc">Ilustração de um ovo de colher com cobertura de chocolate, bombons e colher.</desc>
+  <defs>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#caa97d"/>
+      <stop offset="1" stop-color="#b3875d"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a2e1f"/>
+      <stop offset="1" stop-color="#3c1d13"/>
+    </linearGradient>
+    <linearGradient id="cream" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6f3b29"/>
+      <stop offset="1" stop-color="#412217"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="1200" fill="#835637"/>
+  <rect x="80" y="120" width="740" height="980" rx="22" fill="url(#box)"/>
+
+  <ellipse cx="450" cy="630" rx="215" ry="390" fill="url(#shell)"/>
+  <ellipse cx="450" cy="630" rx="180" ry="355" fill="#2f170f"/>
+
+  <g fill="url(#cream)">
+    <rect x="305" y="330" width="290" height="28" rx="14"/>
+    <rect x="300" y="390" width="300" height="28" rx="14"/>
+    <rect x="310" y="450" width="280" height="28" rx="14"/>
+    <rect x="300" y="510" width="300" height="28" rx="14"/>
+    <rect x="310" y="570" width="280" height="28" rx="14"/>
+    <rect x="300" y="630" width="300" height="28" rx="14"/>
+    <rect x="310" y="690" width="280" height="28" rx="14"/>
+    <rect x="300" y="750" width="300" height="28" rx="14"/>
+    <rect x="310" y="810" width="280" height="28" rx="14"/>
+  </g>
+
+  <g>
+    <circle cx="455" cy="600" r="48" fill="#d8b04d"/>
+    <circle cx="445" cy="405" r="44" fill="#7b4b36"/>
+    <circle cx="470" cy="815" r="46" fill="#7b4b36"/>
+    <circle cx="445" cy="405" r="26" fill="#4a2618"/>
+    <circle cx="470" cy="815" r="28" fill="#4a2618"/>
+  </g>
+
+  <g fill="#d9c08d" opacity="0.9">
+    <circle cx="375" cy="350" r="5"/><circle cx="510" cy="360" r="4"/><circle cx="350" cy="420" r="4"/>
+    <circle cx="560" cy="450" r="5"/><circle cx="360" cy="520" r="4"/><circle cx="540" cy="560" r="5"/>
+    <circle cx="360" cy="620" r="5"/><circle cx="560" cy="640" r="4"/><circle cx="350" cy="730" r="5"/>
+    <circle cx="550" cy="760" r="4"/><circle cx="400" cy="860" r="5"/><circle cx="520" cy="880" r="4"/>
+  </g>
+
+  <rect x="650" y="285" width="54" height="615" rx="20" fill="#a8adb3"/>
+  <ellipse cx="677" cy="250" rx="44" ry="52" fill="#c6cbd1"/>
 </svg>
