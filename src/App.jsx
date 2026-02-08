@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
 const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
+  { label: 'Instagram', sectionId: 'instagram' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
   { label: 'Realizar pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
@@ -35,6 +36,8 @@ export default function App() {
   const [orderTipAnchor, setOrderTipAnchor] = useState(null)
   const [contactTipAnchor, setContactTipAnchor] = useState(null)
   const [selectedHighlightId, setSelectedHighlightId] = useState(productHighlights[0]?.id ?? null)
+  const [instagramPosts, setInstagramPosts] = useState([])
+  const [instagramStatus, setInstagramStatus] = useState('loading')
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -90,6 +93,40 @@ export default function App() {
   const handleContactTipToggle = (event) => {
     setContactTipAnchor((current) => (current ? null : event.currentTarget))
   }
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadInstagram = async () => {
+      try {
+        const response = await fetch('/api/instagram-media')
+        if (!response.ok) {
+          throw new Error(`Falha ao buscar Instagram: ${response.status}`)
+        }
+
+        const data = await response.json()
+        if (!isMounted) {
+          return
+        }
+
+        setInstagramPosts(data.items ?? [])
+        setInstagramStatus('ready')
+      } catch {
+        if (!isMounted) {
+          return
+        }
+
+        setInstagramPosts([])
+        setInstagramStatus('error')
+      }
+    }
+
+    loadInstagram()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <Box className="site-wrapper">
@@ -168,6 +205,39 @@ export default function App() {
                 </Button>
               </div>
             </aside>
+          ) : null}
+        </Container>
+      </section>
+
+      <section id="instagram" className="instagram-section">
+        <Container maxWidth="xl" className="page-container">
+          <header className="instagram-header">
+            <h2>Instagram</h2>
+            <p>As 3 publicações mais recentes do perfil @_carlizdoces.</p>
+          </header>
+
+          {instagramStatus === 'loading' ? <p>Carregando as últimas postagens...</p> : null}
+
+          {instagramStatus === 'ready' && instagramPosts.length > 0 ? (
+            <Box className="instagram-grid">
+              {instagramPosts.map((post) => (
+                <article key={post.id} className="instagram-card">
+                  <a href={post.permalink} target="_blank" rel="noreferrer">
+                    <img src={post.imageUrl} alt={post.caption || 'Postagem do Instagram'} loading="lazy" />
+                  </a>
+                  <p>{post.caption || 'Confira a postagem completa no Instagram.'}</p>
+                </article>
+              ))}
+            </Box>
+          ) : null}
+
+          {instagramStatus === 'error' ? (
+            <p>
+              Não foi possível carregar automaticamente as postagens agora. Veja no Instagram:{' '}
+              <a href="https://www.instagram.com/_carlizdoces/" target="_blank" rel="noreferrer">
+                @_carlizdoces
+              </a>
+            </p>
           ) : null}
         </Container>
       </section>
