@@ -202,10 +202,9 @@ export function HomePage() {
 
   useEffect(() => {
     try {
-      const savedLikes = Number(window.localStorage.getItem('carliz-store-likes') ?? '0')
-      const normalizedLikes = Number.isFinite(savedLikes) ? Math.max(0, Math.floor(savedLikes)) : 0
-      setTotalLikes(normalizedLikes)
-      setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
+      const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
+      setHasLikedStore(savedLiked)
+      setTotalLikes(savedLiked ? 1 : 0)
     } catch {
       setTotalLikes(0)
       setHasLikedStore(false)
@@ -215,19 +214,16 @@ export function HomePage() {
   const handleToggleLike = () => {
     setHasLikedStore((currentLiked) => {
       const nextLiked = !currentLiked
+      const nextLikes = nextLiked ? 1 : 0
 
-      setTotalLikes((currentLikes) => {
-        const nextLikes = nextLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1)
+      setTotalLikes(nextLikes)
 
-        try {
-          window.localStorage.setItem('carliz-store-likes', String(nextLikes))
-          window.localStorage.setItem('carliz-store-liked', String(nextLiked))
-        } catch {
-          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-        }
-
-        return nextLikes
-      })
+      try {
+        window.localStorage.setItem('carliz-store-liked', String(nextLiked))
+        window.localStorage.setItem('carliz-store-likes', String(nextLikes))
+      } catch {
+        // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+      }
 
       setShowLikeCelebration(nextLiked)
       setSnackbar({
