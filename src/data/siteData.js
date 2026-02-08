@@ -1,3 +1,11 @@
+import { imageCollections } from './generatedImages'
+
+const toTitleFromSlug = (value) =>
+  value
+    .replace(/[-_]+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase())
+
 export const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
   { label: 'Novidades', sectionId: 'novidades' },
@@ -77,17 +85,24 @@ export const manualTestimonials = [
   { id: 'manual-2', author: 'Juliana F.', channel: 'WhatsApp', message: 'Atendimento rápido, doces lindos e muito saborosos. Já virei cliente fiel da Carliz Doces.' },
 ]
 
-export const instagramPosts = [
-  { id: 'insta-1', imageUrl: '/images/instagram/divulgacao-brigadeiro.png', alt: 'Doces artesanais da Carliz Doces' },
-  { id: 'insta-2', imageUrl: '/images/instagram/prestigio.png', alt: 'Ovo de colher da Carliz Doces' },
-  { id: 'insta-3', imageUrl: '/images/instagram/trufado-maracuja.png', alt: 'Brigadeiros da Carliz Doces' },
-]
+export const instagramPosts = (imageCollections.instagram ?? []).map((image, index) => ({
+  id: image.id || `insta-${index + 1}`,
+  imageUrl: image.imageUrl,
+  alt: `${image.label} da Carliz Doces`,
+}))
 
-export const topShowcaseSlides = [
-  { id: 'matilda', imageUrl: '/images/carousel/matilda.png', alt: 'Bolo da Matilda especial da Carliz Doces', title: 'Bolo da Matilda', description: 'Destaque da semana para os apaixonados por chocolate.', tag: 'Mais pedido' },
-  { id: 'ferrero', imageUrl: '/images/carousel/ferrero.png', alt: 'Campanha de sorteio com ovo Ferrero Rocher', title: 'Sorteio Ferrero Rocher', description: 'Promoção especial para quem encomenda ovos de colher.', tag: 'Promoção' },
-  { id: 'brigadeiro', imageUrl: '/images/carousel/brigadeiro.png', alt: 'Brigadeiros artesanais da Carliz Doces', title: 'Brigadeiros artesanais', description: 'Sabores para festas e lembranças com a cara da Carliz.', tag: 'Clássico da casa' },
-]
+export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, index) => {
+  const title = toTitleFromSlug(image.slug || image.label)
+
+  return {
+    id: image.id || `carousel-${index + 1}`,
+    imageUrl: image.imageUrl,
+    alt: `${title} da Carliz Doces`,
+    title,
+    description: `Destaque especial: ${title}.`,
+    tag: index === 0 ? 'Mais pedido' : 'Novidade',
+  }
+})
 
 export const metrics = [
   ['Pedidos por dia', '120+'],

@@ -5,7 +5,10 @@
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate:image-data": "node scripts/generate-image-data.mjs",
+    "prestart": "npm run generate:image-data",
+    "prebuild": "npm run generate:image-data"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
