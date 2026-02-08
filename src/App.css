@@ -1105,12 +1105,22 @@
 }
 
 .favorite-heart-button {
-  color: #fff !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 50% !important;
+  background-color: #eeeeee !important;
+  color: #d54a7f !important;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.favorite-heart-button .MuiSvgIcon-root {
+  color: inherit;
 }
 
 .favorite-heart-button:hover,
 .favorite-heart-button:focus-visible {
-  color: #d32f2f !important;
+  background-color: #e3e3e3 !important;
+  color: #ad1457 !important;
 }
 
 .showcase-stepper {
