@@ -323,7 +323,8 @@ export function HomePage() {
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
       />
 
-      <main className="section-stack">
+      <main>
+        <Container maxWidth="lg" className="page-container section-stack">
         <MotionDiv {...revealAnimation}>
           <HeroSection topShowcaseSlides={topShowcaseSlides} />
         </MotionDiv>
@@ -359,7 +360,6 @@ export function HomePage() {
           />
         </MotionDiv>
 
-        <Container maxWidth="lg" className="page-container section-stack">
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
             <SectionDivider label="Realizar pedido" />
           </MotionDiv>
@@ -386,10 +386,9 @@ export function HomePage() {
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.26 }}>
             <LocationSection />
           </MotionDiv>
-        </Container>
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-          <Box className="section-stack">
+          <Container disableGutters className="section-stack">
             <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" /></MotionDiv>
             <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
             <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" /></MotionDiv>
@@ -406,8 +405,9 @@ export function HomePage() {
             </MotionDiv>
             <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" /></MotionDiv>
             <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
-          </Box>
+          </Container>
         </Suspense>
+        </Container>
       </main>
 
       <Footer navItems={navItems} metrics={metrics} />
