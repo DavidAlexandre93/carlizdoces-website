@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Button, ClickAwayListener, Paper, Popper, Typography } from '@mui/material'
+import { Button, ClickAwayListener, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -146,9 +146,15 @@ export default function App() {
         </Popper>
 
         <div className="order-grid">
-          <div className="order-list">
+          <ImageList
+            className="order-list-masonry"
+            variant="masonry"
+            cols={2}
+            gap={16}
+            sx={{ columnCount: { xs: 1, sm: 2 } }}
+          >
             {seasonalProducts.map((item) => (
-              <article key={item.id}>
+              <ImageListItem key={item.id} className="order-item">
                 <img src={item.image} alt={item.name} />
                 <div>
                   <h3>{item.name}</h3>
@@ -163,9 +169,9 @@ export default function App() {
                     +
                   </button>
                 </div>
-              </article>
+              </ImageListItem>
             ))}
-          </div>
+          </ImageList>
 
           <aside className="order-summary">
             <h3>Resumo do pedido</h3>
