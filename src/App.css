@@ -25,6 +25,21 @@
   line-height: 1;
 }
 
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo {
+  width: clamp(140px, 18vw, 220px);
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(173, 20, 87, 0.28);
+  border: 3px solid #fff;
+  background: #fff;
+}
+
 .topbar nav {
   display: flex;
   gap: 36px;
@@ -729,6 +744,10 @@
 
 .footer .brand {
   font-size: 56px;
+}
+
+.footer .brand-logo {
+  width: clamp(130px, 16vw, 180px);
 }
 
 .footer ul {
