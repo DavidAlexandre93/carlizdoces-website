@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Box, Button, ClickAwayListener, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
+import { Box, Button, ClickAwayListener, Container, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -91,139 +91,151 @@ export default function App() {
   return (
     <div className="site-wrapper">
       <header className="topbar">
-        <div className="brand">🧁</div>
-        <nav>
-          {navItems.map((item) => (
-            <a key={item.sectionId} href={`#${item.sectionId}`}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <Container maxWidth="xl" className="page-container topbar-inner">
+          <div className="brand">🧁</div>
+          <nav>
+            {navItems.map((item) => (
+              <a key={item.sectionId} href={`#${item.sectionId}`}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </Container>
       </header>
 
       <section className="hero">
-        <img src="/images/banner-carliz.svg" alt="Cupcakes artesanais" />
-        <h1>Carliz Doces</h1>
+        <Container maxWidth="xl" className="page-container hero-inner">
+          <img src="/images/banner-carliz.svg" alt="Cupcakes artesanais" />
+          <h1>Carliz Doces</h1>
+        </Container>
       </section>
 
       <section id="quem-somos" className="summary-band centered">
-        <h2>QUEM SOMOS</h2>
-        <p>
-          Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
-          ovos de páscoa.
-        </p>
+        <Container maxWidth="lg" className="page-container">
+          <h2>QUEM SOMOS</h2>
+          <p>
+            Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
+            ovos de páscoa.
+          </p>
+        </Container>
       </section>
 
       <section id="ovos-de-pascoa" className="photo-band">
-        {productHighlights.map((item) => (
-          <article key={item.id}>
-            <img src={item.image} alt={item.name} />
-            <div>
-              <strong>{item.name}</strong>
-              <span>{BRL.format(item.price)}</span>
-            </div>
-          </article>
-        ))}
+        <Container maxWidth="xl" className="page-container photo-band-grid">
+          {productHighlights.map((item) => (
+            <article key={item.id}>
+              <img src={item.image} alt={item.name} />
+              <div>
+                <strong>{item.name}</strong>
+                <span>{BRL.format(item.price)}</span>
+              </div>
+            </article>
+          ))}
+        </Container>
       </section>
 
       <section id="realizar-pedido" className="order-section">
-        <h2>Realizar pedido</h2>
-        <p>Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</p>
-        <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
-          Dica rápida para o pedido
-        </Button>
-        <Popper open={isOrderTipOpen} anchorEl={orderTipAnchor} placement="bottom-start" sx={{ zIndex: 10 }}>
-          <ClickAwayListener onClickAway={() => setOrderTipAnchor(null)}>
-            <Paper sx={{ p: 2, maxWidth: 300, mt: 1 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                Monte seu carrinho mais rápido
-              </Typography>
-              <Typography variant="body2">
-                Comece pelos sabores favoritos, ajuste quantidades e confira o total antes de enviar para o WhatsApp.
-              </Typography>
-            </Paper>
-          </ClickAwayListener>
-        </Popper>
+        <Container maxWidth="xl" className="page-container">
+          <h2>Realizar pedido</h2>
+          <p>Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</p>
+          <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
+            Dica rápida para o pedido
+          </Button>
+          <Popper open={isOrderTipOpen} anchorEl={orderTipAnchor} placement="bottom-start" sx={{ zIndex: 10 }}>
+            <ClickAwayListener onClickAway={() => setOrderTipAnchor(null)}>
+              <Paper sx={{ p: 2, maxWidth: 300, mt: 1 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Monte seu carrinho mais rápido
+                </Typography>
+                <Typography variant="body2">
+                  Comece pelos sabores favoritos, ajuste quantidades e confira o total antes de enviar para o WhatsApp.
+                </Typography>
+              </Paper>
+            </ClickAwayListener>
+          </Popper>
 
-        <div className="order-grid">
-          <ImageList
-            className="order-list-masonry"
-            variant="masonry"
-            cols={2}
-            gap={16}
-            sx={{ columnCount: { xs: 1, sm: 2 } }}
-          >
-            {seasonalProducts.map((item) => (
-              <ImageListItem key={item.id} className="order-item">
-                <img src={item.image} alt={item.name} />
-                <div>
-                  <h3>{item.name}</h3>
-                  <span>{BRL.format(item.price)}</span>
-                </div>
-                <div className="qty-controls">
-                  <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
-                    -
-                  </button>
-                  <strong>{cart[item.id] ?? 0}</strong>
-                  <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
-                    +
-                  </button>
-                </div>
-              </ImageListItem>
-            ))}
-          </ImageList>
+          <div className="order-grid">
+            <ImageList
+              className="order-list-masonry"
+              variant="masonry"
+              cols={2}
+              gap={16}
+              sx={{ columnCount: { xs: 1, sm: 2 } }}
+            >
+              {seasonalProducts.map((item) => (
+                <ImageListItem key={item.id} className="order-item">
+                  <img src={item.image} alt={item.name} />
+                  <div>
+                    <h3>{item.name}</h3>
+                    <span>{BRL.format(item.price)}</span>
+                  </div>
+                  <div className="qty-controls">
+                    <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
+                      -
+                    </button>
+                    <strong>{cart[item.id] ?? 0}</strong>
+                    <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
+                      +
+                    </button>
+                  </div>
+                </ImageListItem>
+              ))}
+            </ImageList>
 
-          <aside className="order-summary">
-            <h3>Resumo do pedido</h3>
-            <p>
-              <strong>{totalItems}</strong> item(ns) no carrinho
-            </p>
-            <div className="order-timeline" aria-label="Etapas do pedido">
-              <Box component="ol" sx={{ m: 0, py: 1.25, pr: 1.25, pl: 1.75, listStyle: 'none' }}>
-                {[
-                  { label: 'Escolha os sabores', active: totalItems > 0 },
-                  { label: 'Revise o resumo', active: selectedItems.length > 0 },
-                  { label: 'Finalize no WhatsApp', active: true, success: true },
-                ].map((step, index, array) => (
-                  <Box key={step.label} component="li" className="timeline-step">
-                    <span
-                      className={`timeline-dot${step.active ? ' is-active' : ''}${step.success ? ' is-success' : ''}`}
-                      aria-hidden="true"
-                    />
-                    {index < array.length - 1 ? <span className="timeline-connector" aria-hidden="true" /> : null}
-                    <Typography component="span" variant="body2">
-                      {step.label}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            </div>
-            <ul>
-              {selectedItems.length === 0 ? (
-                <li>Seu carrinho está vazio.</li>
-              ) : (
-                selectedItems.map((item) => (
-                  <li key={item.id}>
-                    {item.name} x{item.quantity} — {BRL.format(item.subtotal)}
-                  </li>
-                ))
-              )}
-            </ul>
-            <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
-            <a className="finish-order" href={whatsappLink} target="_blank" rel="noreferrer">
-              Finalizar pedido no WhatsApp
-            </a>
-          </aside>
-        </div>
+            <aside className="order-summary">
+              <h3>Resumo do pedido</h3>
+              <p>
+                <strong>{totalItems}</strong> item(ns) no carrinho
+              </p>
+              <div className="order-timeline" aria-label="Etapas do pedido">
+                <Box component="ol" sx={{ m: 0, py: 1.25, pr: 1.25, pl: 1.75, listStyle: 'none' }}>
+                  {[
+                    { label: 'Escolha os sabores', active: totalItems > 0 },
+                    { label: 'Revise o resumo', active: selectedItems.length > 0 },
+                    { label: 'Finalize no WhatsApp', active: true, success: true },
+                  ].map((step, index, array) => (
+                    <Box key={step.label} component="li" className="timeline-step">
+                      <span
+                        className={`timeline-dot${step.active ? ' is-active' : ''}${step.success ? ' is-success' : ''}`}
+                        aria-hidden="true"
+                      />
+                      {index < array.length - 1 ? <span className="timeline-connector" aria-hidden="true" /> : null}
+                      <Typography component="span" variant="body2">
+                        {step.label}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </div>
+              <ul>
+                {selectedItems.length === 0 ? (
+                  <li>Seu carrinho está vazio.</li>
+                ) : (
+                  selectedItems.map((item) => (
+                    <li key={item.id}>
+                      {item.name} x{item.quantity} — {BRL.format(item.subtotal)}
+                    </li>
+                  ))
+                )}
+              </ul>
+              <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
+              <a className="finish-order" href={whatsappLink} target="_blank" rel="noreferrer">
+                Finalizar pedido no WhatsApp
+              </a>
+            </aside>
+          </div>
+        </Container>
       </section>
 
       <section id="onde-estamos" className="content-block centered">
-        <div className="section-icon">🧁</div>
-        <h2>ONDE ESTAMOS</h2>
-        <p>Visite nossa loja para retirada e encomendas presenciais.</p>
-        <p>Atendemos retirada e entregas locais com agendamento.</p>
-        <p>Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</p>
-        <p>Próximo à Praça Central e estação de metrô.</p>
+        <Container maxWidth="md" className="page-container">
+          <div className="section-icon">🧁</div>
+          <h2>ONDE ESTAMOS</h2>
+          <p>Visite nossa loja para retirada e encomendas presenciais.</p>
+          <p>Atendemos retirada e entregas locais com agendamento.</p>
+          <p>Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</p>
+          <p>Próximo à Praça Central e estação de metrô.</p>
+        </Container>
       </section>
 
       <section id="contato" className="contact-hero">
@@ -251,22 +263,24 @@ export default function App() {
       </section>
 
       <footer className="footer">
-        <div className="brand">🧁</div>
-        <small>©2024 Carliz Doces</small>
-        <ul>
-          {navItems.map((item) => (
-            <li key={item.sectionId}>
-              <a href={`#${item.sectionId}`}>{item.label}</a>
-            </li>
-          ))}
-        </ul>
-        <div className="metrics">
-          {metrics.map(([label, value]) => (
-            <span key={label}>
-              {label}: {value}
-            </span>
-          ))}
-        </div>
+        <Container maxWidth="lg" className="page-container footer-inner">
+          <div className="brand">🧁</div>
+          <small>©2024 Carliz Doces</small>
+          <ul>
+            {navItems.map((item) => (
+              <li key={item.sectionId}>
+                <a href={`#${item.sectionId}`}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+          <div className="metrics">
+            {metrics.map(([label, value]) => (
+              <span key={label}>
+                {label}: {value}
+              </span>
+            ))}
+          </div>
+        </Container>
       </footer>
     </div>
   )
