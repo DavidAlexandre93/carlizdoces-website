@@ -76,68 +76,70 @@ export function HomePage() {
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
       />
 
-      <HeroSection topShowcaseSlides={topShowcaseSlides} />
-      <AboutSection />
-      <SectionDivider label="Cardápio de Páscoa" />
+      <main>
+        <HeroSection topShowcaseSlides={topShowcaseSlides} />
+        <AboutSection />
+        <SectionDivider label="Cardápio de Páscoa" />
 
-      <ShowcaseSection
-        BRL={BRL}
-        seasonalProducts={seasonalProducts}
-        visibleShowcaseProducts={visibleShowcaseProducts}
-        selectedShowcaseProduct={selectedShowcaseProduct}
-        activeProductStep={activeProductStep}
-        setActiveProductStep={setActiveProductStep}
-        maxShowcasePrice={maxShowcasePrice}
-        setMaxShowcasePrice={setMaxShowcasePrice}
-        addItem={addItem}
-        removeItem={removeItem}
-        onShareProduct={handleShareProduct}
-      />
-
-      <Container maxWidth="lg" className="page-container">
-        <OrderSection
+        <ShowcaseSection
           BRL={BRL}
-          orderCustomer={orderCustomer}
-          setOrderCustomer={setOrderCustomer}
-          selectedItems={selectedItems}
-          customizations={customizations}
-          setCustomizations={setCustomizations}
-          paymentMethods={paymentMethods}
-          totalPrice={totalPrice}
-          totalItems={totalItems}
-          whatsappLink={whatsappLink}
+          seasonalProducts={seasonalProducts}
+          visibleShowcaseProducts={visibleShowcaseProducts}
+          selectedShowcaseProduct={selectedShowcaseProduct}
+          activeProductStep={activeProductStep}
+          setActiveProductStep={setActiveProductStep}
+          maxShowcasePrice={maxShowcasePrice}
+          setMaxShowcasePrice={setMaxShowcasePrice}
+          addItem={addItem}
+          removeItem={removeItem}
+          onShareProduct={handleShareProduct}
         />
 
-        <LocationSection
-          orderPreferences={orderPreferences}
-          setOrderPreferences={setOrderPreferences}
-          setDeliveryMethod={setDeliveryMethod}
-        />
-      </Container>
+        <Container maxWidth="lg" className="page-container">
+          <OrderSection
+            BRL={BRL}
+            orderCustomer={orderCustomer}
+            setOrderCustomer={setOrderCustomer}
+            selectedItems={selectedItems}
+            customizations={customizations}
+            setCustomizations={setCustomizations}
+            paymentMethods={paymentMethods}
+            totalPrice={totalPrice}
+            totalItems={totalItems}
+            whatsappLink={whatsappLink}
+          />
 
-      <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
-        <TestimonialsSection
-          testimonials={communityTestimonials}
-          onAddSample={() =>
-            setCommunityTestimonials((current) => [
-              ...current,
-              {
-                id: `community-${current.length + 1}`,
-                author: 'Cliente',
-                channel: 'WhatsApp',
-                message: 'Adorei a experiência e a qualidade dos doces!',
-              },
-            ])
-          }
-        />
-        <ContactSection
-          contactForm={contactForm}
-          onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
-          contactTipOpen={contactTipOpen}
-          onToggleTip={() => setContactTipOpen((open) => !open)}
-        />
-        <InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} />
-      </Suspense>
+          <LocationSection
+            orderPreferences={orderPreferences}
+            setOrderPreferences={setOrderPreferences}
+            setDeliveryMethod={setDeliveryMethod}
+          />
+        </Container>
+
+        <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
+          <TestimonialsSection
+            testimonials={communityTestimonials}
+            onAddSample={() =>
+              setCommunityTestimonials((current) => [
+                ...current,
+                {
+                  id: `community-${current.length + 1}`,
+                  author: 'Cliente',
+                  channel: 'WhatsApp',
+                  message: 'Adorei a experiência e a qualidade dos doces!',
+                },
+              ])
+            }
+          />
+          <ContactSection
+            contactForm={contactForm}
+            onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
+            contactTipOpen={contactTipOpen}
+            onToggleTip={() => setContactTipOpen((open) => !open)}
+          />
+          <InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} />
+        </Suspense>
+      </main>
 
       <Footer navItems={navItems} metrics={metrics} />
       <FloatingActions totalItems={totalItems} />
