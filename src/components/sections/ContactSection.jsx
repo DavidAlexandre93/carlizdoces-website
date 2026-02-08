@@ -1,10 +1,10 @@
-import { Box, Button, Chip, Paper, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, Container, Paper, TextField, Typography } from '@mui/material'
 
 export default function ContactSection({ contactForm, onChange, onSubmit, contactTipOpen, onToggleTip }) {
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
-    <section id="contato" className="contact-hero section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <Container id="contato" maxWidth="lg" className="contact-hero section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper
         component="form"
         onSubmit={onSubmit}
@@ -72,12 +72,12 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
             {contactTipOpen ? 'Ocultar horários' : 'Horários de atendimento'}
           </Button>
         </Box>
-          {contactTipOpen ? (
+        {contactTipOpen ? (
           <Typography sx={{ mt: 1.5, color: 'rgba(58, 23, 41, 0.86)' }} variant="body2">
             Atendimento no WhatsApp com resposta média em até 20 minutos no horário comercial.
           </Typography>
         ) : null}
       </Paper>
-    </section>
+    </Container>
   )
 }
