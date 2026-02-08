@@ -33,6 +33,9 @@ export function HomePage() {
   const [communityTestimonials, setCommunityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [totalLikes, setTotalLikes] = useState(0)
+  const [hasLikedStore, setHasLikedStore] = useState(false)
+  const [showLikeCelebration, setShowLikeCelebration] = useState(false)
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
 
@@ -148,6 +151,58 @@ export function HomePage() {
     }
     window.history.replaceState(null, '', '#realizar-pedido')
   }
+
+  useEffect(() => {
+    try {
+      const savedLikes = Number(window.localStorage.getItem('carliz-store-likes') ?? '0')
+      const normalizedLikes = Number.isFinite(savedLikes) ? Math.max(0, Math.floor(savedLikes)) : 0
+      setTotalLikes(normalizedLikes)
+      setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
+    } catch {
+      setTotalLikes(0)
+      setHasLikedStore(false)
+    }
+  }, [])
+
+  const handleToggleLike = () => {
+    setHasLikedStore((currentLiked) => {
+      const nextLiked = !currentLiked
+
+      setTotalLikes((currentLikes) => {
+        const nextLikes = nextLiked ? currentLikes + 1 : Math.max(0, currentLikes - 1)
+
+        try {
+          window.localStorage.setItem('carliz-store-likes', String(nextLikes))
+          window.localStorage.setItem('carliz-store-liked', String(nextLiked))
+        } catch {
+          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+        }
+
+        return nextLikes
+      })
+
+      setShowLikeCelebration(nextLiked)
+      setSnackbar({
+        open: true,
+        message: nextLiked ? '🎉 Obrigado pelo carinho! Você adoçou nosso dia! 🍫✨' : '💛 Curtida removida. Quando quiser, é só favoritar de novo!',
+        severity: nextLiked ? 'success' : 'info',
+      })
+
+      return nextLiked
+    })
+  }
+
+  useEffect(() => {
+    if (!showLikeCelebration) return undefined
+
+    const timeoutId = window.setTimeout(() => {
+      setShowLikeCelebration(false)
+    }, 1400)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [showLikeCelebration])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -309,6 +364,10 @@ export function HomePage() {
         totalItems={totalItems}
         showScrollTop={showScrollTop}
         onScrollTop={handleScrollTop}
+        totalLikes={totalLikes}
+        hasLiked={hasLikedStore}
+        onToggleLike={handleToggleLike}
+        showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}
       />
 
