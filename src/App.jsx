@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
-import ShareIcon from '@mui/icons-material/Share'
+import FavoriteIcon from './mui-icons/Favorite'
+import FavoriteBorderIcon from './mui-icons/FavoriteBorder'
+import ShareIcon from './mui-icons/Share'
 import {
   Alert,
   Accordion,
@@ -149,6 +151,10 @@ export default function App() {
   const [activeProductStep, setActiveProductStep] = useState(0)
   const [selectedContactTab, setSelectedContactTab] = useState('whatsapp')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [likesByProduct, setLikesByProduct] = useState(() =>
+    Object.fromEntries(seasonalProducts.map((item, index) => [item.id, 100 + index * 7])),
+  )
+  const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
@@ -237,6 +243,14 @@ export default function App() {
     }
 
     await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`)
+  }
+
+  const handleLikeProduct = (itemId) => {
+    setLikesByProduct((current) => ({
+      ...current,
+      [itemId]: (current[itemId] ?? 0) + 1,
+    }))
+    setLikedProducts((current) => ({ ...current, [itemId]: true }))
   }
 
   const chatActions = [
@@ -373,6 +387,32 @@ export default function App() {
                   Deslize pelo catálogo para comparar sabores antes de pedir.
                 </p>
                 <strong>{BRL.format(selectedShowcaseProduct.price)}</strong>
+                <div className="product-social-actions" aria-label={`Interações de ${selectedShowcaseProduct.name}`}>
+                  <button
+                    type="button"
+                    className="social-action social-action-like"
+                    onClick={() => handleLikeProduct(selectedShowcaseProduct.id)}
+                    aria-label={`Curtir ${selectedShowcaseProduct.name}`}
+                    title="Curtir"
+                  >
+                    {likedProducts[selectedShowcaseProduct.id] ? (
+                      <FavoriteIcon fontSize="small" aria-hidden="true" />
+                    ) : (
+                      <FavoriteBorderIcon fontSize="small" aria-hidden="true" />
+                    )}
+                    {likesByProduct[selectedShowcaseProduct.id] ?? 0}
+                  </button>
+                  <button
+                    type="button"
+                    className="social-action"
+                    onClick={() => handleShareProduct(selectedShowcaseProduct)}
+                    aria-label={`Compartilhar ${selectedShowcaseProduct.name}`}
+                    title="Compartilhar doce"
+                  >
+                    <ShareIcon fontSize="small" aria-hidden="true" />
+                    Compartilhar
+                  </button>
+                </div>
                 <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>
                   Adicionar ao pedido
                 </Button>
@@ -490,16 +530,32 @@ export default function App() {
                       {item.weight} • {item.flavor}
                     </small>
                     <span>{BRL.format(item.price)}</span>
-                    <button
-                      type="button"
-                      className="share-product"
-                      onClick={() => handleShareProduct(item)}
-                      aria-label={`Compartilhar ${item.name}`}
-                      title="Compartilhar doce"
-                    >
-                      <ShareIcon fontSize="small" aria-hidden="true" />
-                      Compartilhar
-                    </button>
+                    <div className="product-social-actions" aria-label={`Interações de ${item.name}`}>
+                      <button
+                        type="button"
+                        className="social-action social-action-like"
+                        onClick={() => handleLikeProduct(item.id)}
+                        aria-label={`Curtir ${item.name}`}
+                        title="Curtir"
+                      >
+                        {likedProducts[item.id] ? (
+                          <FavoriteIcon fontSize="small" aria-hidden="true" />
+                        ) : (
+                          <FavoriteBorderIcon fontSize="small" aria-hidden="true" />
+                        )}
+                        {likesByProduct[item.id] ?? 0}
+                      </button>
+                      <button
+                        type="button"
+                        className="social-action"
+                        onClick={() => handleShareProduct(item)}
+                        aria-label={`Compartilhar ${item.name}`}
+                        title="Compartilhar doce"
+                      >
+                        <ShareIcon fontSize="small" aria-hidden="true" />
+                        Compartilhar
+                      </button>
+                    </div>
                   </div>
                   <div className="qty-controls">
                     <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
