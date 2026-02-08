@@ -13,6 +13,7 @@ import { AboutSection } from '../features/home/sections/AboutSection'
 import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
+import { ParticlesBackground } from '../components/ui/ParticlesBackground'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -268,6 +269,8 @@ export function HomePage() {
 
   return (
     <Box id="top" ref={wrapperRef} className={`site-wrapper${isDarkMode ? ' dark-mode' : ''}`}>
+      <ParticlesBackground darkMode={isDarkMode} />
+
       <Header
         navItems={navItems}
         isDarkMode={isDarkMode}
