@@ -8,6 +8,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Avatar,
   AppBar,
   Badge,
@@ -28,7 +29,6 @@ import {
   ListItemText,
   Paper,
   Popper,
-  MenuItem,
   MobileStepper,
   SpeedDial,
   SpeedDialAction,
@@ -167,6 +167,7 @@ const topShowcaseSlides = [
 ]
 
 const featuredProductIds = new Set(['brigadeiro', 'ferrero'])
+const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito']
 
 
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -197,6 +198,7 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [quickOrderSelection, setQuickOrderSelection] = useState(null)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -228,6 +230,10 @@ export default function App() {
   const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.subtotal, 0)
   const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
+  const flavorSuggestions = useMemo(
+    () => [...new Set(seasonalProducts.map((product) => product.flavor))],
+    [],
+  )
 
   const updateCustomization = (itemId, field, value) => {
     setCustomizations((current) => ({
@@ -313,6 +319,22 @@ export default function App() {
 
   const handleBackProduct = () => {
     setActiveProductStep((current) => Math.max(current - 1, 0))
+  }
+
+  const handleQuickOrderSelection = (_event, selectedProduct) => {
+    setQuickOrderSelection(selectedProduct)
+
+    if (!selectedProduct) {
+      return
+    }
+
+    const nextIndex = seasonalProducts.findIndex((item) => item.id === selectedProduct.id)
+    if (nextIndex >= 0) {
+      setActiveProductStep(nextIndex)
+    }
+
+    document.getElementById('realizar-pedido')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    addItem(selectedProduct.id)
   }
 
   const handleTestimonialChange = (field, value) => {
@@ -431,6 +453,18 @@ export default function App() {
                   <PersonIcon sx={{ fontSize: 20 }} />
                 </Avatar>
               </Tooltip>
+
+              <Autocomplete
+                options={seasonalProducts}
+                value={quickOrderSelection}
+                onChange={handleQuickOrderSelection}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                sx={{ minWidth: 220, display: { xs: 'none', md: 'flex' } }}
+                renderInput={(params) => (
+                  <TextField {...params} size="small" label="Pedido rápido" placeholder="Escolha um doce" />
+                )}
+              />
 
               <IconButton
                 color="inherit"
@@ -797,30 +831,42 @@ export default function App() {
                         Preço: {BRL.format(item.price)} (subtotal {BRL.format(item.subtotal)})
                       </Typography>
                       <div className="customization-fields">
-                        <TextField
-                          label="Qual sabor?"
-                          placeholder="Ex.: Brigadeiro belga"
-                          size="small"
-                          fullWidth
+                        <Autocomplete
+                          freeSolo
+                          options={flavorSuggestions}
                           value={customizations[item.id]?.flavor ?? item.flavor}
-                          onChange={(event) => updateCustomization(item.id, 'flavor', event.target.value)}
-                        />
-                        <TextField
-                          select
-                          label="Forma de pagamento"
-                          size="small"
-                          fullWidth
-                          value={customizations[item.id]?.paymentMethod ?? ''}
-                          onChange={(event) =>
-                            updateCustomization(item.id, 'paymentMethod', event.target.value)
+                          onInputChange={(_event, newInputValue) =>
+                            updateCustomization(item.id, 'flavor', newInputValue)
                           }
-                        >
-                          <MenuItem value="">Selecione uma opção</MenuItem>
-                          <MenuItem value="Pix">Pix</MenuItem>
-                          <MenuItem value="Dinheiro">Dinheiro</MenuItem>
-                          <MenuItem value="Cartão de débito">Cartão de débito</MenuItem>
-                          <MenuItem value="Cartão de crédito">Cartão de crédito</MenuItem>
-                        </TextField>
+                          onChange={(_event, newValue) =>
+                            updateCustomization(item.id, 'flavor', newValue ?? '')
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Qual sabor?"
+                              placeholder="Ex.: Brigadeiro belga"
+                              size="small"
+                              fullWidth
+                            />
+                          )}
+                        />
+                        <Autocomplete
+                          options={paymentMethods}
+                          value={customizations[item.id]?.paymentMethod ?? null}
+                          onChange={(_event, newValue) =>
+                            updateCustomization(item.id, 'paymentMethod', newValue ?? '')
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Forma de pagamento"
+                              size="small"
+                              fullWidth
+                              placeholder="Selecione uma opção"
+                            />
+                          )}
+                        />
                       </div>
                     </div>
                   ))}
