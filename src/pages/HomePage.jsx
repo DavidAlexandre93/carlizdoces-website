@@ -111,6 +111,15 @@ export function HomePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const handleGoToOrderSection = (event) => {
+    event.preventDefault()
+    const orderSection = document.getElementById('realizar-pedido')
+    if (orderSection) {
+      orderSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    window.history.replaceState(null, '', '#realizar-pedido')
+  }
+
   useEffect(() => {
     const wrapperElement = wrapperRef.current
     if (!wrapperElement) return undefined
@@ -266,7 +275,12 @@ export function HomePage() {
       </main>
 
       <Footer navItems={navItems} metrics={metrics} />
-      <FloatingActions totalItems={totalItems} showScrollTop={showScrollTop} onScrollTop={handleScrollTop} />
+      <FloatingActions
+        totalItems={totalItems}
+        showScrollTop={showScrollTop}
+        onScrollTop={handleScrollTop}
+        onGoToOrderSection={handleGoToOrderSection}
+      />
 
       <Snackbar
         open={snackbar.open}
