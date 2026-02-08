@@ -1123,19 +1123,58 @@
   color: #ad1457 !important;
 }
 
-.showcase-stepper {
+.showcase-arrow {
+  position: absolute !important;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: clamp(52px, 8vw, 76px);
+  height: clamp(52px, 8vw, 76px);
+  border: 3px solid rgba(255, 255, 255, 0.85) !important;
+  background: rgba(173, 20, 87, 0.74) !important;
+  color: #fff !important;
+  font-size: clamp(38px, 6vw, 58px) !important;
+  font-weight: 900 !important;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(81, 12, 45, 0.35);
+}
+
+.showcase-arrow:hover,
+.showcase-arrow:focus-visible {
+  background: rgba(173, 20, 87, 0.9) !important;
+  transform: translateY(-50%) scale(1.05);
+}
+
+.showcase-arrow:disabled {
+  opacity: 0.42;
+}
+
+.showcase-arrow-prev {
+  left: 12px;
+}
+
+.showcase-arrow-next {
+  right: 12px;
+}
+
+.showcase-dots {
   margin-top: 14px;
-  border: 1px solid #edc2d7;
-  border-radius: 12px;
-  background: #fff7fb;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 
-.showcase-stepper .MuiMobileStepper-dot {
-  background-color: #d89ab8;
+.showcase-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #d89ab8;
+  cursor: pointer;
 }
 
-.showcase-stepper .MuiMobileStepper-dotActive {
-  background-color: #ad1457;
+.showcase-dots button.is-active {
+  background: #ad1457;
 }
 
 .order-section {
