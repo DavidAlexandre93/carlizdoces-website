@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   AppBar,
   Avatar,
@@ -22,7 +22,8 @@ import {
 
 export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, rotation: 0, isMoving: false })
+  const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
+  const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
 
@@ -55,40 +56,51 @@ Queremos ver sua experiência!
 
 Deus abençoe! 🙌`
 
-  const handleLogoClick = () => {
+  useEffect(() => {
+    if (!logoMotion.isFollowing) {
+      return undefined
+    }
+
+    const handlePointerMove = (event) => {
+      const { left, top, width, height } = logoOriginRef.current
+      const moveX = event.clientX - (left + (width / 2))
+      const moveY = event.clientY - (top + (height / 2))
+
+      setLogoMotion((prevState) => ({
+        ...prevState,
+        x: moveX,
+        y: moveY,
+      }))
+    }
+
+    window.addEventListener('pointermove', handlePointerMove)
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+    }
+  }, [logoMotion.isFollowing])
+
+  const handleLogoClick = (event) => {
+    event.preventDefault()
+
     if (!logoRef.current) {
       return
     }
 
+    if (logoMotion.isFollowing) {
+      setLogoMotion({ x: 0, y: 0, isFollowing: false })
+      return
+    }
+
     const logoRect = logoRef.current.getBoundingClientRect()
-    const appBarRect = appBarRef.current?.getBoundingClientRect()
-    const visualViewport = window.visualViewport
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
-    const topInset = Math.max(0, visualViewport?.offsetTop ?? 0)
-    const bottomInset = Math.max(0, viewportHeight - ((visualViewport?.height ?? viewportHeight) + (visualViewport?.offsetTop ?? 0)))
-    const pageContainer = logoRef.current.closest('.page-container')
-    const pageContainerStyles = pageContainer ? window.getComputedStyle(pageContainer) : null
-    const paddingLeft = parseFloat(pageContainerStyles?.paddingLeft ?? '0') || 0
-    const paddingRight = parseFloat(pageContainerStyles?.paddingRight ?? '0') || 0
-    const headerHeight = appBarRect?.height ?? 0
-    const footerHeight = 0
+    logoOriginRef.current = {
+      left: logoRect.left,
+      top: logoRect.top,
+      width: logoRect.width,
+      height: logoRect.height,
+    }
 
-    const xMin = paddingLeft
-    const xMax = Math.max(xMin, viewportWidth - paddingRight - logoRect.width)
-    const yMin = topInset + headerHeight
-    const yMax = Math.max(yMin, viewportHeight - bottomInset - footerHeight - logoRect.height)
-
-    const targetX = xMin + Math.random() * Math.max(0, xMax - xMin)
-    const targetY = yMin + Math.random() * Math.max(0, yMax - yMin)
-    const rotation = (Math.random() * 22) - 11
-
-    setLogoMotion({
-      x: targetX - logoRect.left,
-      y: targetY - logoRect.top,
-      rotation,
-      isMoving: true,
-    })
+    setLogoMotion({ x: 0, y: 0, isFollowing: true })
   }
 
   return (
@@ -101,12 +113,11 @@ Deus abençoe! 🙌`
                 component="img"
                 src="/images/banner-carliz.svg"
                 alt="Logo da Carliz Doces"
-                className={`brand-logo ${logoMotion.isMoving ? 'is-moving' : ''}`}
+                className={`brand-logo ${logoMotion.isFollowing ? 'is-following' : ''}`}
                 ref={logoRef}
                 style={{
-                  '--logo-move-x': `${logoMotion.x}px`,
-                  '--logo-move-y': `${logoMotion.y}px`,
-                  '--logo-rotate': `${logoMotion.rotation}deg`,
+                  '--logo-follow-x': `${logoMotion.x}px`,
+                  '--logo-follow-y': `${logoMotion.y}px`,
                 }}
               />
               <Typography component="span" className="brand-name" aria-label="Carliz Doces">

@@ -243,12 +243,12 @@
   transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
-.brand-logo.is-moving {
-  transform: translate3d(var(--logo-move-x, 0), var(--logo-move-y, 0), 0) rotate(var(--logo-rotate, 0deg)) scale(1.03);
+.brand-logo.is-following {
+  transform: translate3d(var(--logo-follow-x, 0), var(--logo-follow-y, 0), 0) scale(1.03);
 }
 
-.topbar-brand:hover .brand-logo,
-.topbar-brand:focus-visible .brand-logo {
+.topbar-brand:hover .brand-logo:not(.is-following),
+.topbar-brand:focus-visible .brand-logo:not(.is-following) {
   transform: rotate(-4deg) scale(1.05);
   box-shadow: 0 10px 20px rgba(173, 20, 87, 0.25);
 }
