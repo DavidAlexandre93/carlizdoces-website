@@ -568,15 +568,28 @@
   font-size: 14px;
 }
 
-.customization-tabs {
-  background: #fff;
-  border: 1px solid #edc2d7;
-  border-radius: 10px;
-}
 
 .customization-fields {
   display: grid;
   gap: 10px;
+}
+
+.order-detail-card {
+  border: 1px solid #edc2d7;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.order-detail-card strong {
+  color: #6b1641;
+}
+
+.order-detail-card span {
+  font-size: 14px;
+  color: #5a2640;
 }
 
 .finish-order {
