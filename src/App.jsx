@@ -18,6 +18,7 @@ import {
   Container,
   Drawer,
   Divider,
+  FormControlLabel,
   Icon,
   IconButton,
   ImageList,
@@ -28,8 +29,10 @@ import {
   ListItemText,
   Paper,
   Popper,
+  Rating,
   MenuItem,
   MobileStepper,
+  Switch,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -77,6 +80,8 @@ const seasonalProducts = [
     weight: '350g',
     price: 59,
     image: '/images/brigadeiro.svg',
+    rating: 4.9,
+    reviewCount: 298,
   },
   {
     id: 'ninho-nutella',
@@ -85,6 +90,8 @@ const seasonalProducts = [
     weight: '400g',
     price: 68.5,
     image: '/images/ninho-nutella.svg',
+    rating: 4.8,
+    reviewCount: 244,
   },
   {
     id: 'prestigio',
@@ -93,6 +100,8 @@ const seasonalProducts = [
     weight: '350g',
     price: 62,
     image: '/images/prestigio.svg',
+    rating: 4.7,
+    reviewCount: 208,
   },
   {
     id: 'ferrero',
@@ -101,6 +110,8 @@ const seasonalProducts = [
     weight: '450g',
     price: 72,
     image: '/images/ferrero.svg',
+    rating: 5,
+    reviewCount: 322,
   },
   {
     id: 'trufado-maracuja',
@@ -109,6 +120,8 @@ const seasonalProducts = [
     weight: '380g',
     price: 64,
     image: '/images/trufado-maracuja.svg',
+    rating: 4.6,
+    reviewCount: 186,
   },
   {
     id: 'ninho-uva',
@@ -117,6 +130,8 @@ const seasonalProducts = [
     weight: '400g',
     price: 66,
     image: '/images/ninho-uva.svg',
+    rating: 4.8,
+    reviewCount: 271,
   },
 ]
 
@@ -197,6 +212,7 @@ export default function App() {
   )
   const [likedProducts, setLikedProducts] = useState({})
   const [showOrderAlert, setShowOrderAlert] = useState(false)
+  const [showTopRatedFirst, setShowTopRatedFirst] = useState(false)
 
   const isOrderTipOpen = Boolean(orderTipAnchor)
   const isContactTipOpen = Boolean(contactTipAnchor)
@@ -228,6 +244,18 @@ export default function App() {
   const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.subtotal, 0)
   const selectedShowcaseProduct = seasonalProducts[activeProductStep] ?? seasonalProducts[0] ?? null
+  const productsForOrder = useMemo(() => {
+    if (!showTopRatedFirst) {
+      return seasonalProducts
+    }
+
+    return [...seasonalProducts].sort((a, b) => {
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating
+      }
+      return b.reviewCount - a.reviewCount
+    })
+  }, [showTopRatedFirst])
 
   const updateCustomization = (itemId, field, value) => {
     setCustomizations((current) => ({
@@ -651,6 +679,17 @@ export default function App() {
           </Popper>
 
           <Box sx={{ mt: 2, mb: 3 }}>
+            <FormControlLabel
+              control={(
+                <Switch
+                  checked={showTopRatedFirst}
+                  onChange={(event) => setShowTopRatedFirst(event.target.checked)}
+                  color="secondary"
+                />
+              )}
+              label="Filtro rápido: mostrar preferidos dos clientes primeiro"
+              sx={{ mb: 1.2 }}
+            />
             <Accordion defaultExpanded>
               <AccordionSummary
                 expandIcon={<Icon aria-hidden="true">expand_more</Icon>}
@@ -687,11 +726,23 @@ export default function App() {
               gap={16}
               sx={{ columnCount: { xs: 1, sm: 2 } }}
             >
-              {seasonalProducts.map((item) => (
+              {productsForOrder.map((item) => (
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
                     <Typography component="h3" variant="h6">{item.name}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, mt: 0.6 }}>
+                      <Rating
+                        value={item.rating}
+                        precision={0.1}
+                        readOnly
+                        size="small"
+                        aria-label={`Avaliação média de ${item.rating} estrelas para ${item.name}`}
+                      />
+                      <Typography component="span" variant="caption" sx={{ fontWeight: 600 }}>
+                        {item.rating.toFixed(1)} ({item.reviewCount} avaliações)
+                      </Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mt: 0.4 }}>
                       <Chip label={item.weight} size="small" variant="outlined" color="primary" />
                       <Chip label={item.flavor} size="small" variant="outlined" />
