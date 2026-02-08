@@ -11,7 +11,6 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  MobileStepper,
   Paper,
   Rating,
   Select,
@@ -77,7 +76,23 @@ export function ShowcaseSection({
       {selectedShowcaseProduct ? (
         <Paper className="showcase-card" sx={{ p: 2.5 }}>
           <div className="showcase-image-stage" key={selectedShowcaseProduct.id}>
+            <IconButton
+              className="showcase-arrow showcase-arrow-prev"
+              onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
+              disabled={activeProductStep <= 0}
+              aria-label="Produto anterior"
+            >
+              ‹
+            </IconButton>
             <img className="showcase-image" src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
+            <IconButton
+              className="showcase-arrow showcase-arrow-next"
+              onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
+              disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
+              aria-label="Próximo produto"
+            >
+              ›
+            </IconButton>
           </div>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
           <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
@@ -109,15 +124,17 @@ export function ShowcaseSection({
         <Alert severity="info" sx={{ mt: 2 }}>Nenhum produto para o filtro atual.</Alert>
       )}
 
-      <MobileStepper
-        className="showcase-stepper"
-        variant="dots"
-        steps={Math.max(visibleShowcaseProducts.length, 1)}
-        position="static"
-        activeStep={Math.min(activeProductStep, Math.max(visibleShowcaseProducts.length - 1, 0))}
-        nextButton={<Button size="small" onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}>Próximo</Button>}
-        backButton={<Button size="small" onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}>Anterior</Button>}
-      />
+      <Box className="showcase-dots" aria-label="Indicadores da vitrine">
+        {Array.from({ length: Math.max(visibleShowcaseProducts.length, 1) }).map((_, index) => (
+          <button
+            key={`showcase-dot-${index}`}
+            type="button"
+            className={index === Math.min(activeProductStep, Math.max(visibleShowcaseProducts.length - 1, 0)) ? 'is-active' : ''}
+            onClick={() => setActiveProductStep(index)}
+            aria-label={`Ir para produto ${index + 1}`}
+          />
+        ))}
+      </Box>
     </Container>
   )
 }
