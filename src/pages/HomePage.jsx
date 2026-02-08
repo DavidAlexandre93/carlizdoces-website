@@ -460,6 +460,7 @@ export function HomePage() {
         onToggleLike={handleToggleLike}
         showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}
+        isFooterVisible={showScrollTop}
       />
 
       <Snackbar

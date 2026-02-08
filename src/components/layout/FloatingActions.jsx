@@ -2,9 +2,32 @@ import { Badge, Box, Fab, Icon, IconButton, Tooltip, Zoom } from '@mui/material'
 import FavoriteIcon from '../../mui-icons/Favorite'
 import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
 
-export function FloatingActions({ totalItems, showScrollTop, onScrollTop, totalLikes, hasLiked, onToggleLike, showLikeCelebration, onGoToOrderSection }) {
+export function FloatingActions({
+  totalItems,
+  showScrollTop,
+  onScrollTop,
+  totalLikes,
+  hasLiked,
+  onToggleLike,
+  showLikeCelebration,
+  onGoToOrderSection,
+  isFooterVisible,
+}) {
   return (
-    <Box component="aside" aria-label="Ações rápidas" sx={{ position: 'fixed', left: { xs: 12, md: 24 }, bottom: { xs: 16, md: 24 }, display: 'flex', flexDirection: 'column', gap: 1.2 }}>
+    <Box
+      component="aside"
+      aria-label="Ações rápidas"
+      sx={{
+        position: 'fixed',
+        left: { xs: 12, md: 24 },
+        bottom: { xs: 16, md: 24 },
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1.2,
+        backgroundColor: isFooterVisible ? '#e6bfd2' : '#f8f8f3',
+        transition: 'background-color 260ms ease',
+      }}
+    >
       {showScrollTop ? (
         <IconButton
           color="inherit"
