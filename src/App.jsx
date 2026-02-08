@@ -399,9 +399,9 @@ export default function App() {
                 <article className="top-carousel-slide">
                   <img src={slide.imageUrl} alt={slide.alt} />
                   <div>
-                    <p>Destaque no topo</p>
-                    <h1>{slide.title}</h1>
-                    <span>{slide.description}</span>
+                    <Typography component="p" variant="overline">Destaque no topo</Typography>
+                    <Typography component="h1" variant="h3">{slide.title}</Typography>
+                    <Typography component="span" variant="body1">{slide.description}</Typography>
                   </div>
                 </article>
               </CarouselSlide>
@@ -413,11 +413,11 @@ export default function App() {
       <section id="quem-somos" className="summary-band centered">
         <Container maxWidth="lg" className="page-container">
           <Paper elevation={4} sx={{ px: { xs: 2.5, md: 5 }, py: { xs: 4, md: 5.5 }, borderRadius: 4 }}>
-            <h2>QUEM SOMOS</h2>
-            <p>
+            <Typography component="h2" variant="h4">QUEM SOMOS</Typography>
+            <Typography component="p" variant="body1">
               Somos a Carliz doces realizamos doces a pronta entrega para festas, casamentos, aniversários e
               ovos de páscoa.
-            </p>
+            </Typography>
           </Paper>
         </Container>
       </section>
@@ -425,21 +425,21 @@ export default function App() {
       <section id="ovos-de-pascoa" className="photo-band">
         <Container maxWidth="xl" className="page-container">
           <header className="photo-band-head">
-            <h2>Ovos de Páscoa</h2>
-            <p>Passe as imagens com os botões para navegar pelos sabores e apresentações disponíveis.</p>
+            <Typography component="h2" variant="h4">Ovos de Páscoa</Typography>
+            <Typography component="p" variant="body1">Passe as imagens com os botões para navegar pelos sabores e apresentações disponíveis.</Typography>
           </header>
 
           {selectedShowcaseProduct ? (
             <Paper component="aside" elevation={3} className="photo-highlight" aria-live="polite">
               <img src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
               <div>
-                <p className="highlight-tag">Catálogo de temporada</p>
-                <h3>{selectedShowcaseProduct.name}</h3>
-                <p>
+                <Typography component="p" variant="overline" className="highlight-tag">Catálogo de temporada</Typography>
+                <Typography component="h3" variant="h5">{selectedShowcaseProduct.name}</Typography>
+                <Typography component="p" variant="body1">
                   {selectedShowcaseProduct.weight} de pura cremosidade com sabor {selectedShowcaseProduct.flavor}.
                   Deslize pelo catálogo para comparar sabores antes de pedir.
-                </p>
-                <strong>{BRL.format(selectedShowcaseProduct.price)}</strong>
+                </Typography>
+                <Typography component="strong" variant="h6">{BRL.format(selectedShowcaseProduct.price)}</Typography>
                 <div className="product-social-actions" aria-label={`Interações de ${selectedShowcaseProduct.name}`}>
                   <button
                     type="button"
@@ -519,8 +519,8 @@ export default function App() {
 
       <section id="realizar-pedido" className="order-section">
         <Container maxWidth="xl" className="page-container">
-          <h2>Realizar pedido</h2>
-          <p>Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</p>
+          <Typography component="h2" variant="h4">Realizar pedido</Typography>
+          <Typography component="p" variant="body1">Use os produtos acima como base e ajuste nomes/imagens no estoque para atualizar automaticamente.</Typography>
           <Button variant="outlined" color="secondary" onClick={handleOrderTipToggle}>
             Dica rápida para o pedido
           </Button>
@@ -578,11 +578,11 @@ export default function App() {
                 <ImageListItem key={item.id} className="order-item">
                   <img src={item.image} alt={item.name} />
                   <div className="order-item-content">
-                    <h3>{item.name}</h3>
-                    <small>
+                    <Typography component="h3" variant="h6">{item.name}</Typography>
+                    <Typography component="small" variant="body2">
                       {item.weight} • {item.flavor}
-                    </small>
-                    <span>{BRL.format(item.price)}</span>
+                    </Typography>
+                    <Typography component="span" variant="subtitle1">{BRL.format(item.price)}</Typography>
                     <div className="product-social-actions" aria-label={`Interações de ${item.name}`}>
                       <button
                         type="button"
@@ -614,7 +614,7 @@ export default function App() {
                     <button type="button" onClick={() => removeItem(item.id)} aria-label={`Remover ${item.name}`}>
                       -
                     </button>
-                    <strong>{cart[item.id] ?? 0}</strong>
+                    <Typography component="strong" variant="body1">{cart[item.id] ?? 0}</Typography>
                     <button type="button" onClick={() => addItem(item.id)} aria-label={`Adicionar ${item.name}`}>
                       +
                     </button>
@@ -624,10 +624,10 @@ export default function App() {
             </ImageList>
 
             <Paper component="aside" elevation={3} className="order-summary">
-              <h3>Resumo do pedido</h3>
-              <p>
-                <strong>{totalItems}</strong> item(ns) no carrinho
-              </p>
+              <Typography component="h3" variant="h5">Resumo do pedido</Typography>
+              <Typography component="p" variant="body1">
+                <Typography component="strong" variant="h6">{totalItems}</Typography> item(ns) no carrinho
+              </Typography>
               <div className="order-timeline" aria-label="Etapas do pedido">
                 <Box component="ol" sx={{ m: 0, py: 1.25, pr: 1.25, pl: 1.75, listStyle: 'none' }}>
                   {[
@@ -662,16 +662,16 @@ export default function App() {
 
               {selectedItems.length ? (
                 <div className="customization-panel">
-                  <h4>Detalhes por doce</h4>
-                  <p>Informe os dados de cada item para enviar um pedido completo no WhatsApp.</p>
+                  <Typography component="h4" variant="h6">Detalhes por doce</Typography>
+                  <Typography component="p" variant="body2">Informe os dados de cada item para enviar um pedido completo no WhatsApp.</Typography>
 
                   {selectedItems.map((item) => (
                     <div key={item.id} className="order-detail-card">
-                      <strong>{item.name}</strong>
-                      <span>Quantidade: {item.quantity}</span>
-                      <span>
+                      <Typography component="strong" variant="subtitle1">{item.name}</Typography>
+                      <Typography component="span" variant="body2">Quantidade: {item.quantity}</Typography>
+                      <Typography component="span" variant="body2">
                         Preço: {BRL.format(item.price)} (subtotal {BRL.format(item.subtotal)})
-                      </span>
+                      </Typography>
                       <div className="customization-fields">
                         <TextField
                           label="Qual sabor?"
@@ -703,7 +703,7 @@ export default function App() {
                 </div>
               ) : null}
 
-              <p className="summary-total">Total: {BRL.format(totalPrice)}</p>
+              <Typography component="p" variant="h6" className="summary-total">Total: {BRL.format(totalPrice)}</Typography>
               {showOrderAlert ? (
                 <Alert severity="success" sx={{ mb: 1.5 }} onClose={() => setShowOrderAlert(false)}>
                   Pedido enviado! Você será atendido(a) pelo WhatsApp para confirmar os detalhes.
@@ -727,11 +727,11 @@ export default function App() {
       <section id="onde-estamos" className="content-block centered">
         <Container maxWidth="md" className="page-container">
           <div className="section-icon">🧁</div>
-          <h2>ONDE ESTAMOS</h2>
-          <p>Visite nossa loja para retirada e encomendas presenciais.</p>
-          <p>Atendemos retirada e entregas locais com agendamento.</p>
-          <p>Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</p>
-          <p>Próximo à Praça Central e estação de metrô.</p>
+          <Typography component="h2" variant="h4">ONDE ESTAMOS</Typography>
+          <Typography component="p" variant="body1">Visite nossa loja para retirada e encomendas presenciais.</Typography>
+          <Typography component="p" variant="body1">Atendemos retirada e entregas locais com agendamento.</Typography>
+          <Typography component="p" variant="body1">Segunda a Sábado • 09h às 19h | Domingo • 10h às 15h</Typography>
+          <Typography component="p" variant="body1">Próximo à Praça Central e estação de metrô.</Typography>
           <Box sx={{ mt: 2, textAlign: 'left' }}>
             <Accordion>
               <AccordionSummary expandIcon={<span aria-hidden="true">⌄</span>} aria-controls="retirada-content" id="retirada-header">
@@ -762,17 +762,17 @@ export default function App() {
       <section id="depoimentos" className="testimonials-section">
         <Container maxWidth="lg" className="page-container">
           <header className="testimonials-header">
-            <h2>Depoimentos</h2>
-            <p>
+            <Typography component="h2" variant="h4">Depoimentos</Typography>
+            <Typography component="p" variant="body1">
               Espaço para clientes contarem a experiência com os doces da Carliz e para registrar feedbacks
               recebidos em outros canais.
-            </p>
+            </Typography>
           </header>
 
           <Box className="testimonials-grid">
             <Paper component="form" onSubmit={handleTestimonialSubmit} elevation={0} className="testimonial-form-card">
-              <h3>Deixe sua opinião</h3>
-              <p>Seu comentário ajuda outras pessoas e também melhora nossos próximos pedidos.</p>
+              <Typography component="h3" variant="h5">Deixe sua opinião</Typography>
+              <Typography component="p" variant="body2">Seu comentário ajuda outras pessoas e também melhora nossos próximos pedidos.</Typography>
               <TextField
                 label="Seu nome"
                 placeholder="Ex.: Maria"
@@ -797,12 +797,12 @@ export default function App() {
             </Paper>
 
             <Paper elevation={0} className="testimonials-list-card">
-              <h3>Clientes que já opinaram aqui</h3>
+              <Typography component="h3" variant="h5">Clientes que já opinaram aqui</Typography>
               <ul>
                 {communityTestimonials.map((testimonial) => (
                   <li key={testimonial.id}>
-                    <strong>{testimonial.author}</strong>
-                    <p>{testimonial.message}</p>
+                    <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
+                    <Typography component="p" variant="body2">{testimonial.message}</Typography>
                   </li>
                 ))}
               </ul>
@@ -810,13 +810,13 @@ export default function App() {
           </Box>
 
           <Paper elevation={0} className="manual-feedback-card">
-            <h3>Feedbacks recebidos por outros meios</h3>
+            <Typography component="h3" variant="h5">Feedbacks recebidos por outros meios</Typography>
             <ul>
               {manualTestimonials.map((testimonial) => (
                 <li key={testimonial.id}>
-                  <strong>{testimonial.author}</strong>
-                  <span>{testimonial.channel}</span>
-                  <p>{testimonial.message}</p>
+                  <Typography component="strong" variant="subtitle1">{testimonial.author}</Typography>
+                  <Typography component="span" variant="caption">{testimonial.channel}</Typography>
+                  <Typography component="p" variant="body2">{testimonial.message}</Typography>
                 </li>
               ))}
             </ul>
@@ -838,8 +838,8 @@ export default function App() {
             color: 'inherit',
           }}
         >
-          <h2>Contato</h2>
-          <p>Fale com a nossa equipe para encomendas especiais e eventos.</p>
+          <Typography component="h2" variant="h4">Contato</Typography>
+          <Typography component="p" variant="body1">Fale com a nossa equipe para encomendas especiais e eventos.</Typography>
           <Tabs
             value={selectedContactTab}
             onChange={(_event, newValue) => setSelectedContactTab(newValue)}
@@ -853,28 +853,28 @@ export default function App() {
           </Tabs>
 
           {selectedContactTab === 'whatsapp' ? (
-            <p>
+            <Typography component="p" variant="body1">
               WhatsApp:{' '}
               <Link href="https://wa.me/5511992175496" target="_blank" rel="noreferrer" underline="hover">
                 +55 11 99217-5496
               </Link>
-            </p>
+            </Typography>
           ) : null}
           {selectedContactTab === 'telefone' ? (
-            <p>
+            <Typography component="p" variant="body1">
               Telefone:{' '}
               <Link href="tel:+5511992175496" underline="hover">
                 +55 11 99217-5496
               </Link>
-            </p>
+            </Typography>
           ) : null}
           {selectedContactTab === 'email' ? (
-            <p>
+            <Typography component="p" variant="body1">
               Email:{' '}
               <Link href="mailto:voce@email.com" underline="hover">
                 voce@email.com
               </Link>
-            </p>
+            </Typography>
           ) : null}
           <Button variant="contained" size="small" onClick={handleContactTipToggle} sx={{ mt: 1 }}>
             Horários de atendimento
@@ -897,8 +897,8 @@ export default function App() {
       <section id="instagram" className="instagram-section">
         <Container maxWidth="xl" className="page-container">
           <header className="instagram-header">
-            <h2>Instagram</h2>
-            <p>Confira nosso perfil @_carlizdoces e acompanhe as novidades.</p>
+            <Typography component="h2" variant="h4">Instagram</Typography>
+            <Typography component="p" variant="body1">Confira nosso perfil @_carlizdoces e acompanhe as novidades.</Typography>
           </header>
 
           <Box className="instagram-grid">
@@ -924,7 +924,7 @@ export default function App() {
           <div className="brand">
             <img className="brand-logo" src={brandLogo.src} alt={brandLogo.alt} />
           </div>
-          <small>©2024 Carliz Doces</small>
+          <Typography component="small" variant="body2">©2024 Carliz Doces</Typography>
           <ul>
             {navItems.map((item) => (
               <li key={item.sectionId}>
@@ -936,9 +936,9 @@ export default function App() {
           </ul>
           <div className="metrics">
             {metrics.map(([label, value]) => (
-              <span key={label}>
+              <Typography key={label} component="span" variant="body2">
                 {label}: {value}
-              </span>
+              </Typography>
             ))}
           </div>
         </Container>
