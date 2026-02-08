@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Button, ClickAwayListener, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
+import { Box, Button, ClickAwayListener, ImageList, ImageListItem, Paper, Popper, Typography } from '@mui/material'
 import './App.css'
 
 const navItems = [
@@ -178,6 +178,26 @@ export default function App() {
             <p>
               <strong>{totalItems}</strong> item(ns) no carrinho
             </p>
+            <div className="order-timeline" aria-label="Etapas do pedido">
+              <Box component="ol" sx={{ m: 0, py: 1.25, pr: 1.25, pl: 1.75, listStyle: 'none' }}>
+                {[
+                  { label: 'Escolha os sabores', active: totalItems > 0 },
+                  { label: 'Revise o resumo', active: selectedItems.length > 0 },
+                  { label: 'Finalize no WhatsApp', active: true, success: true },
+                ].map((step, index, array) => (
+                  <Box key={step.label} component="li" className="timeline-step">
+                    <span
+                      className={`timeline-dot${step.active ? ' is-active' : ''}${step.success ? ' is-success' : ''}`}
+                      aria-hidden="true"
+                    />
+                    {index < array.length - 1 ? <span className="timeline-connector" aria-hidden="true" /> : null}
+                    <Typography component="span" variant="body2">
+                      {step.label}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </div>
             <ul>
               {selectedItems.length === 0 ? (
                 <li>Seu carrinho está vazio.</li>
