@@ -19,7 +19,7 @@ import {
 export function Header({ navItems, isDarkMode, onToggleDarkMode, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
   return (
     <>
-      <AppBar position="sticky" color="transparent" elevation={0} className="topbar">
+      <AppBar component="header" position="sticky" color="transparent" elevation={0} className="topbar">
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
             <Link href="#top" underline="none" color="inherit" className="topbar-brand">
