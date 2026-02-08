@@ -8,10 +8,12 @@
   color: #111;
   animation: fade-in 450ms ease-out;
   transition: background 320ms ease, color 320ms ease;
+  overflow-x: clip;
 }
 
 .page-container.MuiContainer-root {
   width: min(100%, 1500px);
+  padding-inline: clamp(14px, 2.6vw, 32px);
 }
 
 .topbar {
@@ -208,7 +210,7 @@
 
 .top-carousel-slide img {
   width: 100%;
-  height: 620px;
+  height: clamp(340px, 62vw, 620px);
   object-fit: cover;
   display: block;
   animation: zoom-in 900ms ease-out both;
@@ -251,11 +253,11 @@
 .top-carousel-slide h1 {
   margin: 8px 0 6px;
   color: #fff;
-  font-size: 54px;
+  font-size: clamp(30px, 6vw, 54px);
 }
 
 .top-carousel-slide span {
-  font-size: 19px;
+  font-size: clamp(14px, 2.6vw, 19px);
 }
 
 .hero-quick-actions {
@@ -351,12 +353,12 @@
 }
 
 .content-block h2 {
-  font-size: 58px;
+  font-size: clamp(34px, 5.8vw, 58px);
   margin: 8px 0 20px;
 }
 
 .content-block p {
-  font-size: 34px;
+  font-size: clamp(20px, 3.9vw, 34px);
   margin: 10px 0;
 }
 
@@ -377,13 +379,13 @@
 }
 
 .summary-band h2 {
-  font-size: 58px;
+  font-size: clamp(34px, 5.8vw, 58px);
   margin: 0 0 18px;
 }
 
 .summary-band p {
   margin: 0 auto;
-  font-size: 34px;
+  font-size: clamp(20px, 3.9vw, 34px);
 }
 
 .photo-band {
@@ -397,12 +399,12 @@
 
 .photo-band-head h2 {
   margin: 0;
-  font-size: 52px;
+  font-size: clamp(32px, 5.2vw, 52px);
 }
 
 .photo-band-head p {
   margin: 10px auto 0;
-  font-size: 22px;
+  font-size: clamp(17px, 2.6vw, 22px);
   max-width: 840px;
   color: #5a3851;
 }
@@ -440,7 +442,7 @@
 
 .photo-band-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -539,7 +541,7 @@
   border-radius: 18px;
   padding: 18px;
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: minmax(180px, 220px) 1fr;
   gap: 18px;
   align-items: center;
   animation: highlight-enter 320ms ease-out;
@@ -552,8 +554,8 @@
 }
 
 .photo-highlight img {
-  width: 220px;
-  height: 220px;
+  width: min(100%, 220px);
+  height: clamp(180px, 22vw, 220px);
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 10px 24px rgba(173, 20, 87, 0.2);
@@ -718,12 +720,12 @@
 }
 
 .order-section h2 {
-  font-size: 54px;
+  font-size: clamp(34px, 5.4vw, 54px);
   margin: 0 0 12px;
 }
 
 .order-section p {
-  font-size: 22px;
+  font-size: clamp(17px, 2.6vw, 22px);
   margin: 0 0 20px;
 }
 
@@ -972,7 +974,7 @@
 .contact-hero {
   background: linear-gradient(rgba(173, 20, 87, 0.25), rgba(173, 20, 87, 0.25)),
     url('../public/images/banner-carliz.svg') center/cover no-repeat;
-  min-height: 540px;
+  min-height: clamp(360px, 56vw, 540px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1010,12 +1012,12 @@
 }
 
 .contact-band h2 {
-  font-size: 58px;
+  font-size: clamp(34px, 5.8vw, 58px);
   margin: 0 0 20px;
 }
 
 .contact-band p {
-  font-size: 34px;
+  font-size: clamp(20px, 3.9vw, 34px);
   margin: 10px 0;
 }
 
@@ -1148,7 +1150,7 @@
 }
 
 .footer .brand {
-  font-size: 56px;
+  font-size: clamp(34px, 5.6vw, 56px);
 }
 
 .footer .brand-logo {
@@ -1172,6 +1174,11 @@
 }
 
 @media (max-width: 1100px) {
+  .top-carousel-slide > div {
+    width: min(94%, 820px);
+    bottom: 20px;
+  }
+
   .photo-highlight {
     grid-template-columns: 1fr;
     text-align: center;
@@ -1214,10 +1221,6 @@
     font-size: 18px !important;
   }
 
-  .top-carousel-slide img {
-    height: 420px;
-  }
-
   .top-carousel-slide h1 {
     font-size: 36px;
     text-align: center;
@@ -1248,7 +1251,7 @@
   }
 
   .photo-band-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .order-item {
@@ -1262,6 +1265,146 @@
 
   .contact-hero h2 {
     font-size: 46px;
+  }
+
+  .footer ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-divider-wrap {
+    padding-inline: 10px;
+  }
+
+  .topbar-inner {
+    min-height: 64px;
+  }
+
+  .top-carousel-slide > div {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .mui-carousel-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+
+  .mui-carousel-prev {
+    left: 8px;
+  }
+
+  .mui-carousel-next {
+    right: 8px;
+  }
+
+  .content-block {
+    margin: 64px auto;
+  }
+
+  .summary-band {
+    margin: 24px 0 46px;
+    padding: 42px 16px;
+  }
+
+  .photo-band-grid,
+  .instagram-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-item {
+    grid-template-columns: 68px 1fr;
+    gap: 10px;
+  }
+
+  .qty-controls {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .order-summary {
+    padding: 16px;
+  }
+
+  .order-switch-line {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .contact-tabs {
+    width: 100%;
+    display: flex;
+  }
+
+  .contact-tabs .MuiTab-root {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar-brand {
+    gap: 8px;
+  }
+
+  .brand-logo,
+  .mobile-brand-logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .brand-name {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .top-carousel-slide > div {
+    padding: 12px;
+  }
+
+  .top-carousel-slide p {
+    font-size: 11px;
+  }
+
+  .showcase-card {
+    border-radius: 14px !important;
+  }
+
+  .photo-band article {
+    min-height: 250px;
+  }
+
+  .photo-highlight {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .highlight-title {
+    font-size: clamp(26px, 8vw, 34px);
+  }
+
+  .contact-hero {
+    padding: 16px;
+  }
+
+  .contact-band p {
+    margin: 8px 0;
+  }
+
+  .updates-cta,
+  .updates-card,
+  .instagram-card,
+  .testimonial-form-card,
+  .testimonials-list-card,
+  .manual-feedback-card {
+    border-radius: 12px;
+    padding: 12px;
   }
 }
 
