@@ -18,6 +18,7 @@ import {
   Container,
   Drawer,
   Divider,
+  Fab,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -1433,6 +1434,42 @@ export default function App() {
             />
           ))}
         </SpeedDial>
+      </Box>
+
+      <Box
+        sx={{
+          position: 'fixed',
+          left: { xs: 12, md: 24 },
+          bottom: { xs: 16, md: 24 },
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1.2,
+          zIndex: (theme) => theme.zIndex.tooltip,
+        }}
+      >
+        <Tooltip title="Ir para a seção de pedidos" placement="right" arrow>
+          <Fab
+            color="primary"
+            size="small"
+            aria-label="Ir para realizar pedido"
+            href="#realizar-pedido"
+          >
+            <Badge color="secondary" badgeContent={totalItems} invisible={totalItems === 0}>
+              <Icon>shopping_cart</Icon>
+            </Badge>
+          </Fab>
+        </Tooltip>
+
+        <Tooltip title="Ir para contato rápido" placement="right" arrow>
+          <Fab
+            color="secondary"
+            size="small"
+            aria-label="Ir para contato"
+            href="#contato"
+          >
+            <Icon>support_agent</Icon>
+          </Fab>
+        </Tooltip>
       </Box>
     </Box>
   )
