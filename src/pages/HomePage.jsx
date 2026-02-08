@@ -88,6 +88,8 @@ export function HomePage() {
       setSnackbar({ open: true, message: `${item.name} adicionado aos favoritos!`, severity: 'success' })
       return [...currentFavorites, item.id]
     })
+  }
+
   const handleContactSubmit = (event) => {
     event.preventDefault()
 
