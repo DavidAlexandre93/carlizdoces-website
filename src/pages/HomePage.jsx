@@ -178,6 +178,7 @@ export function HomePage() {
   const handleFavoriteProduct = async (item) => {
     if (!authenticatedUserId) {
       setSnackbar({ open: true, message: 'Faça login com Google para registrar corações.', severity: 'info' })
+      handleGoogleLogin()
       return
     }
 
@@ -334,9 +335,14 @@ export function HomePage() {
       const wasDismissed = notification.isDismissedMoment && notification.isDismissedMoment()
 
       if (wasNotDisplayed || wasSkipped || wasDismissed) {
+        setSnackbar({ open: true, message: 'Não foi possível abrir o login Google agora. Tente novamente.', severity: 'warning' })
         setIsGoogleLoginLoading(false)
       }
     })
+
+    window.setTimeout(() => {
+      setIsGoogleLoginLoading(false)
+    }, 4500)
   }
 
 
@@ -504,6 +510,7 @@ export function HomePage() {
         message: 'Faça login com Google para registrar seu coração.',
         severity: 'info',
       })
+      handleGoogleLogin()
       return
     }
 
