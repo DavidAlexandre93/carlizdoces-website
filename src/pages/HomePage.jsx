@@ -190,6 +190,15 @@ export function HomePage() {
   }
 
   useEffect(() => {
+    const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
+
+    imageUrls.forEach((url) => {
+      const image = new window.Image()
+      image.src = url
+    })
+  }, [])
+
+  useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
       setIntroStage('opening')
     }, 2200)
