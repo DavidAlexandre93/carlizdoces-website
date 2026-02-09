@@ -23,6 +23,9 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const LIKES_API_BASE_URL = '/api/likes'
 const AUTH_USER_STORAGE_KEY = 'carliz-auth-user-id'
+const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
+const COUNT_API_NAMESPACE = 'carlizdoces-website'
+const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 const getAuthenticatedUserId = () => {
   try {
@@ -99,6 +102,7 @@ export function HomePage() {
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
+  const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
@@ -145,8 +149,13 @@ export function HomePage() {
       setSnackbar({ open: true, message: `Você já curtiu ${item.name}.`, severity: 'info' })
       return
     }
+      setSnackbar({ open: true, message: `Você já curtiu ${item.name} neste dispositivo.`, severity: 'info' })
+      return
+    }
 
-    setFavoriteProductIds((currentFavorites) => (currentFavorites.includes(item.id) ? currentFavorites : [...currentFavorites, item.id]))
+    const counterKey = `product-${item.id}`
+
+    setFavoriteProductIds((currentFavorites) => [...currentFavorites, item.id])
     setFavoriteCounts((currentCounts) => ({
       ...currentCounts,
       [item.id]: (currentCounts[item.id] ?? 0) + 1,
@@ -233,6 +242,21 @@ export function HomePage() {
       image.src = url
     })
   }, [])
+
+  useEffect(() => {
+    try {
+      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY)
+      if (!storedFavoriteProductIds) return
+
+      const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)
+      if (!Array.isArray(parsedFavoriteProductIds)) return
+
+      const sanitizedFavoriteProductIds = parsedFavoriteProductIds.filter((productId) => validSeasonalProductIds.has(productId))
+      setFavoriteProductIds(sanitizedFavoriteProductIds)
+    } catch {
+      setFavoriteProductIds([])
+    }
+  }, [validSeasonalProductIds])
 
   useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
@@ -353,6 +377,23 @@ export function HomePage() {
       )
 
       setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+      try {
+        setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
+      } catch {
+        setHasLikedStore(false)
+      }
+    }
+
+    try {
+      const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
+      const savedFavoriteProductIds = JSON.parse(window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY) ?? '[]')
+
+      setHasLikedStore(savedLiked)
+      setFavoriteProductIds(Array.isArray(savedFavoriteProductIds) ? savedFavoriteProductIds : [])
+      setTotalLikes((currentLikes) => Math.max(currentLikes, savedLiked ? 1 : 0))
+    } catch {
+      setHasLikedStore(false)
+      setFavoriteProductIds([])
     }
 
     loadGlobalHearts().catch(() => {
@@ -364,6 +405,14 @@ export function HomePage() {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(FAVORITE_PRODUCTS_STORAGE_KEY, JSON.stringify(favoriteProductIds))
+    } catch {
+      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+    }
+  }, [favoriteProductIds])
 
   const handleToggleLike = async () => {
     if (hasLikedStore) {
@@ -638,6 +687,7 @@ export function HomePage() {
         onScrollTop={handleScrollTop}
         totalLikes={totalLikes}
         hasLiked={hasLikedStore}
+        disabled={hasLikedStore}
         onToggleLike={handleToggleLike}
         showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}

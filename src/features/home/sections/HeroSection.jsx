@@ -1,20 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
-import { Box, Button, Chip, Container, IconButton, MobileStepper, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Chip, Container, IconButton, Stack, Typography, useTheme } from '@mui/material'
 
 export function HeroSection({ topShowcaseSlides }) {
   const theme = useTheme()
   const [activeStep, setActiveStep] = useState(0)
   const maxSteps = topShowcaseSlides.length
 
+  useEffect(() => {
+    if (maxSteps <= 1) {
+      return undefined
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps)
+    }, 7000)
+
+    return () => window.clearInterval(timer)
+  }, [maxSteps])
+
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => Math.min(prevActiveStep + 1, maxSteps - 1))
+    setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps)
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => Math.max(prevActiveStep - 1, 0))
+    setActiveStep((prevActiveStep) => (prevActiveStep - 1 + maxSteps) % maxSteps)
   }
 
   return (
@@ -48,22 +60,16 @@ export function HeroSection({ topShowcaseSlides }) {
           ))}
         </SwipeableViews>
 
-        <MobileStepper
-          steps={maxSteps}
-          position="static"
-          className="mui-swipe-stepper"
-          activeStep={activeStep}
-          nextButton={
-            <IconButton size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} aria-label="Próximo banner">
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </IconButton>
-          }
-          backButton={
-            <IconButton size="small" onClick={handleBack} disabled={activeStep === 0} aria-label="Banner anterior">
+        {maxSteps > 1 ? (
+          <>
+            <IconButton className="hero-carousel-arrow hero-carousel-arrow-prev" size="large" onClick={handleBack} aria-label="Banner anterior">
               {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             </IconButton>
-          }
-        />
+            <IconButton className="hero-carousel-arrow hero-carousel-arrow-next" size="large" onClick={handleNext} aria-label="Próximo banner">
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </IconButton>
+          </>
+        ) : null}
       </Box>
     </Container>
   )
