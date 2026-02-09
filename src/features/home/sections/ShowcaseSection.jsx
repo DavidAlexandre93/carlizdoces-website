@@ -2,8 +2,6 @@ import SwipeableViews from 'react-swipeable-views'
 import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
 import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
-import KeyboardArrowLeft from '../../../mui-icons/KeyboardArrowLeft'
-import KeyboardArrowRight from '../../../mui-icons/KeyboardArrowRight'
 import {
   Alert,
   Badge,
@@ -14,7 +12,6 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  MobileStepper,
   Paper,
   Rating,
   Select,
@@ -123,34 +120,6 @@ export function ShowcaseSection({
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
             </IconButton>
 
-            <MobileStepper
-              steps={visibleShowcaseProducts.length}
-              position="static"
-              className="mui-swipe-stepper"
-              activeStep={activeProductStep}
-              nextButton={
-                <IconButton
-                  className="carousel-nav-button"
-                  size="small"
-                  onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
-                  disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
-                  aria-label="Próximo produto"
-                >
-                  {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                </IconButton>
-              }
-              backButton={
-                <IconButton
-                  className="carousel-nav-button"
-                  size="small"
-                  onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
-                  disabled={activeProductStep <= 0}
-                  aria-label="Produto anterior"
-                >
-                  {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                </IconButton>
-              }
-            />
           </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
           <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
