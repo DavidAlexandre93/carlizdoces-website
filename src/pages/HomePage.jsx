@@ -23,6 +23,7 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
 const COUNT_API_NAMESPACE = 'carlizdoces-website'
+const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 const getCounterValue = async (key) => {
   try {
@@ -118,9 +119,14 @@ export function HomePage() {
   }
 
   const handleFavoriteProduct = async (item) => {
+    if (favoriteProductIds.includes(item.id)) {
+      setSnackbar({ open: true, message: `Você já curtiu ${item.name} neste dispositivo.`, severity: 'info' })
+      return
+    }
+
     const counterKey = `product-${item.id}`
 
-    setFavoriteProductIds((currentFavorites) => (currentFavorites.includes(item.id) ? currentFavorites : [...currentFavorites, item.id]))
+    setFavoriteProductIds((currentFavorites) => [...currentFavorites, item.id])
     setFavoriteCounts((currentCounts) => ({
       ...currentCounts,
       [item.id]: (currentCounts[item.id] ?? 0) + 1,
@@ -305,10 +311,14 @@ export function HomePage() {
 
     try {
       const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
+      const savedFavoriteProductIds = JSON.parse(window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY) ?? '[]')
+
       setHasLikedStore(savedLiked)
+      setFavoriteProductIds(Array.isArray(savedFavoriteProductIds) ? savedFavoriteProductIds : [])
       setTotalLikes((currentLikes) => Math.max(currentLikes, savedLiked ? 1 : 0))
     } catch {
       setHasLikedStore(false)
+      setFavoriteProductIds([])
     }
 
     loadGlobalHearts()
@@ -317,6 +327,14 @@ export function HomePage() {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(FAVORITE_PRODUCTS_STORAGE_KEY, JSON.stringify(favoriteProductIds))
+    } catch {
+      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+    }
+  }, [favoriteProductIds])
 
   const handleToggleLike = async () => {
     if (hasLikedStore) {
@@ -580,6 +598,7 @@ export function HomePage() {
         onScrollTop={handleScrollTop}
         totalLikes={totalLikes}
         hasLiked={hasLikedStore}
+        disabled={hasLikedStore}
         onToggleLike={handleToggleLike}
         showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}
