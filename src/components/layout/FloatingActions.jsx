@@ -7,6 +7,7 @@ export function FloatingActions({
   onScrollTop,
   totalLikes,
   hasLiked,
+  disabled,
   onToggleLike,
   showLikeCelebration,
   onGoToOrderSection,
@@ -99,6 +100,7 @@ export function FloatingActions({
         size="small"
         aria-label="Curtir loja"
         onClick={onToggleLike}
+        disabled={disabled}
         sx={{
           ...commonPositionSx,
           bottom: actionBottom,
