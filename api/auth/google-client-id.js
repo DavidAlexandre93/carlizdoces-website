@@ -1,16 +1,6 @@
-/* global module, process */
+/* global module, require */
 
-const getGoogleClientId = () => {
-  if (typeof process.env.GOOGLE_CLIENT_ID === 'string' && process.env.GOOGLE_CLIENT_ID.trim()) {
-    return process.env.GOOGLE_CLIENT_ID.trim()
-  }
-
-  if (typeof process.env.VITE_GOOGLE_CLIENT_ID === 'string' && process.env.VITE_GOOGLE_CLIENT_ID.trim()) {
-    return process.env.VITE_GOOGLE_CLIENT_ID.trim()
-  }
-
-  return ''
-}
+const { getGoogleClientId } = require('./googleClientId')
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
