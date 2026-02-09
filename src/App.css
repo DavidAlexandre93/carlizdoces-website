@@ -512,10 +512,18 @@
   border-radius: 20px;
 }
 
-.mui-carousel-track {
+.swipeable-views-root {
+  overflow: hidden;
+}
+
+.swipeable-views-track {
   display: flex;
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+}
+
+.swipeable-views-slide {
+  flex: 0 0 100%;
 }
 
 .mui-carousel-stage {
@@ -530,6 +538,10 @@
 .mui-carousel-stage.is-active {
   opacity: 1;
   transform: scale(1);
+}
+
+.mui-swipe-stepper {
+  background: rgba(255, 255, 255, 0.82) !important;
 }
 
 .top-carousel-slide img {
@@ -619,65 +631,6 @@
   margin-top: 14px;
 }
 
-.mui-carousel-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.46);
-  color: #fff;
-  font-size: 30px;
-  line-height: 1;
-  cursor: pointer;
-  transition: transform 180ms ease, background 180ms ease;
-}
-
-.mui-carousel-nav:hover,
-.mui-carousel-nav:focus-visible {
-  transform: translateY(-50%) scale(1.08);
-  background: rgba(173, 20, 87, 0.72);
-}
-
-.mui-carousel-prev {
-  left: 16px;
-}
-
-.mui-carousel-next {
-  right: 16px;
-}
-
-.mui-carousel-indicators {
-  position: absolute;
-  left: 50%;
-  bottom: 8px;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-
-.mui-carousel-indicators button {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: transform 160ms ease, background 160ms ease;
-}
-
-.mui-carousel-indicators button:hover,
-.mui-carousel-indicators button:focus-visible {
-  transform: scale(1.15);
-}
-
-.mui-carousel-indicators button.is-active {
-  background: #fff;
-}
 
 .content-block {
   margin: 90px auto;
