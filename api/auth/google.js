@@ -1,18 +1,9 @@
-/* global module, process */
+/* global module, require */
+
+const { getGoogleClientId } = require('./googleClientId')
 
 const GOOGLE_TOKENINFO_URL = 'https://oauth2.googleapis.com/tokeninfo'
 
-const getGoogleClientId = () => {
-  if (typeof process.env.GOOGLE_CLIENT_ID === 'string' && process.env.GOOGLE_CLIENT_ID.trim()) {
-    return process.env.GOOGLE_CLIENT_ID.trim()
-  }
-
-  if (typeof process.env.VITE_GOOGLE_CLIENT_ID === 'string' && process.env.VITE_GOOGLE_CLIENT_ID.trim()) {
-    return process.env.VITE_GOOGLE_CLIENT_ID.trim()
-  }
-
-  return ''
-}
 
 const verifyGoogleIdToken = async (idToken, audience) => {
   const response = await fetch(`${GOOGLE_TOKENINFO_URL}?id_token=${encodeURIComponent(idToken)}`)
