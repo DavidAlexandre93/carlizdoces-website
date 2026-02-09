@@ -30,7 +30,10 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     alias: {
       '@mui/icons-material/Share': path.resolve(__dirname, 'src/mui-icons/Share.jsx'),
+      '@mui/icons-material/KeyboardArrowLeft': path.resolve(__dirname, 'src/mui-icons/KeyboardArrowLeft.jsx'),
+      '@mui/icons-material/KeyboardArrowRight': path.resolve(__dirname, 'src/mui-icons/KeyboardArrowRight.jsx'),
       'material-ui-carousel': path.resolve(__dirname, 'src/mui-components/material-ui-carousel.jsx'),
+      'react-swipeable-views': path.resolve(__dirname, 'src/mui-components/react-swipeable-views.jsx'),
       'motion/react': path.resolve(__dirname, 'src/motion/react.js')
     }
   },

@@ -1,3 +1,6 @@
+import SwipeableViews from 'react-swipeable-views'
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
 import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
@@ -11,11 +14,13 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  MobileStepper,
   Paper,
   Rating,
   Select,
   Slider,
   Typography,
+  useTheme,
 } from '@mui/material'
 
 export function ShowcaseSection({
@@ -37,6 +42,7 @@ export function ShowcaseSection({
   onRateProduct,
   isGlobalRatingsActive,
 }) {
+  const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
 
   return (
@@ -80,31 +86,52 @@ export function ShowcaseSection({
 
       {selectedShowcaseProduct ? (
         <Paper className="showcase-card" sx={{ p: 2.5 }}>
-          <div className="showcase-image-stage">
-            <IconButton
-              className="showcase-arrow showcase-arrow-prev"
-              onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
-              disabled={activeProductStep <= 0}
-              aria-label="Produto anterior"
+          <Box className="showcase-image-stage">
+            <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={activeProductStep}
+              onChangeIndex={setActiveProductStep}
+              enableMouseEvents
             >
-              <span className="showcase-arrow-icon showcase-arrow-icon-prev" aria-hidden="true" />
-            </IconButton>
-            <img
-              className="showcase-image"
-              src={selectedShowcaseProduct.image}
-              alt={selectedShowcaseProduct.name}
-              loading="eager"
-              decoding="async"
+              {visibleShowcaseProducts.map((product) => (
+                <img
+                  key={product.id}
+                  className="showcase-image"
+                  src={product.image}
+                  alt={product.name}
+                  loading="eager"
+                  decoding="async"
+                />
+              ))}
+            </SwipeableViews>
+
+            <MobileStepper
+              steps={visibleShowcaseProducts.length}
+              position="static"
+              className="mui-swipe-stepper"
+              activeStep={activeProductStep}
+              nextButton={
+                <IconButton
+                  size="small"
+                  onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
+                  disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
+                  aria-label="Próximo produto"
+                >
+                  {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                </IconButton>
+              }
+              backButton={
+                <IconButton
+                  size="small"
+                  onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
+                  disabled={activeProductStep <= 0}
+                  aria-label="Produto anterior"
+                >
+                  {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                </IconButton>
+              }
             />
-            <IconButton
-              className="showcase-arrow showcase-arrow-next"
-              onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
-              disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
-              aria-label="Próximo produto"
-            >
-              <span className="showcase-arrow-icon showcase-arrow-icon-next" aria-hidden="true" />
-            </IconButton>
-          </div>
+          </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
           <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
           {selectedShowcaseProduct.quantities?.length ? (
@@ -151,17 +178,6 @@ export function ShowcaseSection({
         <Alert severity="info" sx={{ mt: 2 }}>Nenhum produto para o filtro atual.</Alert>
       )}
 
-      <Box className="showcase-dots" aria-label="Indicadores da vitrine">
-        {Array.from({ length: Math.max(visibleShowcaseProducts.length, 1) }).map((_, index) => (
-          <button
-            key={`showcase-dot-${index}`}
-            type="button"
-            className={index === Math.min(activeProductStep, Math.max(visibleShowcaseProducts.length - 1, 0)) ? 'is-active' : ''}
-            onClick={() => setActiveProductStep(index)}
-            aria-label={`Ir para produto ${index + 1}`}
-          />
-        ))}
-      </Box>
     </Container>
   )
 }
