@@ -183,6 +183,25 @@ Nele você consegue, de forma simples:
 
 ---
 
+
+## 🔐 Login com Google
+
+O botão de login usa o Google Identity Services no front-end e valida o token no endpoint serverless:
+
+```txt
+/api/auth/google
+```
+
+Configure a variável de ambiente abaixo no desenvolvimento e no deploy:
+
+```bash
+VITE_GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
+```
+
+> Dica: no back-end serverless também aceitamos `GOOGLE_CLIENT_ID` (fallback), mas `VITE_GOOGLE_CLIENT_ID` é a forma recomendada para manter front-end e API alinhados.
+
+---
+
 ## 💬 Configuração de comentários (Disqus)
 
 A seção **Depoimentos** pode exibir comentários reais de clientes com Disqus.

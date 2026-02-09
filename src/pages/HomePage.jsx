@@ -27,22 +27,7 @@ const AUTH_PROFILE_STORAGE_KEY = 'carliz-auth-user-profile'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 
-const parseJwtPayload = (credential) => {
-  if (typeof credential !== 'string') return null
-
-  const segments = credential.split('.')
-  if (segments.length < 2) return null
-
-  try {
-    const base64 = segments[1].replace(/-/g, '+').replace(/_/g, '/')
-    const paddedBase64 = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
-    const payloadJson = window.atob(paddedBase64)
-    const payload = JSON.parse(payloadJson)
-    return payload && typeof payload === 'object' ? payload : null
-  } catch {
-    return null
-  }
-}
+const GOOGLE_AUTH_API_URL = '/api/auth/google'
 
 const getStoredAuthenticatedProfile = () => {
   try {
@@ -260,20 +245,45 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleGoogleCredentialResponse = (response) => {
-    const payload = parseJwtPayload(response?.credential)
+  const handleGoogleCredentialResponse = async (response) => {
+    const credential = typeof response?.credential === 'string' ? response.credential : ''
 
-    if (!payload?.sub) {
+    if (!credential) {
       setSnackbar({ open: true, message: 'Não foi possível concluir o login Google.', severity: 'error' })
       setIsGoogleLoginLoading(false)
       return
     }
 
-    const profile = {
-      id: String(payload.sub),
-      name: String(payload.name ?? 'Usuário Google'),
-      email: String(payload.email ?? ''),
-      picture: String(payload.picture ?? ''),
+    let profile = null
+
+    try {
+      const authResponse = await fetch(GOOGLE_AUTH_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken: credential }),
+      })
+
+      if (!authResponse.ok) {
+        throw new Error('google-auth-failed')
+      }
+
+      const authData = await authResponse.json()
+      profile = authData?.user ?? null
+    } catch {
+      profile = null
+    }
+
+    if (!profile?.id) {
+      setSnackbar({ open: true, message: 'Não foi possível validar seu login Google.', severity: 'error' })
+      setIsGoogleLoginLoading(false)
+      return
+    }
+
+    profile = {
+      id: String(profile.id),
+      name: String(profile.name ?? 'Usuário Google'),
+      email: String(profile.email ?? ''),
+      picture: String(profile.picture ?? ''),
     }
 
     setAuthenticatedUserId(profile.id)
