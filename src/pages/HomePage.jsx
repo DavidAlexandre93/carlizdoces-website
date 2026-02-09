@@ -23,6 +23,7 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
 const COUNT_API_NAMESPACE = 'carlizdoces-website'
+const FAVORITE_PRODUCT_IDS_STORAGE_KEY = 'carliz-favorite-product-ids'
 
 const getCounterValue = async (key) => {
   try {
@@ -76,6 +77,7 @@ export function HomePage() {
   const [totalLikes, setTotalLikes] = useState(0)
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
+  const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
@@ -120,7 +122,17 @@ export function HomePage() {
   const handleFavoriteProduct = async (item) => {
     const counterKey = `product-${item.id}`
 
-    setFavoriteProductIds((currentFavorites) => (currentFavorites.includes(item.id) ? currentFavorites : [...currentFavorites, item.id]))
+    setFavoriteProductIds((currentFavorites) => {
+      const updatedFavorites = currentFavorites.includes(item.id) ? currentFavorites : [...currentFavorites, item.id]
+
+      try {
+        window.localStorage.setItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY, JSON.stringify(updatedFavorites))
+      } catch {
+        // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+      }
+
+      return updatedFavorites
+    })
     setFavoriteCounts((currentCounts) => ({
       ...currentCounts,
       [item.id]: (currentCounts[item.id] ?? 0) + 1,
@@ -197,6 +209,21 @@ export function HomePage() {
       image.src = url
     })
   }, [])
+
+  useEffect(() => {
+    try {
+      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY)
+      if (!storedFavoriteProductIds) return
+
+      const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)
+      if (!Array.isArray(parsedFavoriteProductIds)) return
+
+      const sanitizedFavoriteProductIds = parsedFavoriteProductIds.filter((productId) => validSeasonalProductIds.has(productId))
+      setFavoriteProductIds(sanitizedFavoriteProductIds)
+    } catch {
+      setFavoriteProductIds([])
+    }
+  }, [validSeasonalProductIds])
 
   useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
