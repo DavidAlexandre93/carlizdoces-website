@@ -129,7 +129,7 @@ export function HomePage() {
       return
     }
 
-    setSnackbar({ open: true, message: `${item.name} recebeu +1 coração (offline).`, severity: 'warning' })
+    setSnackbar({ open: true, message: `${item.name} recebeu +1 coração neste dispositivo.`, severity: 'info' })
   }
 
   const handleRateProduct = async (item, rating) => {
