@@ -77,6 +77,7 @@ export function HomePage() {
   const [totalLikes, setTotalLikes] = useState(0)
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
+  const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
@@ -203,6 +204,21 @@ export function HomePage() {
       image.src = url
     })
   }, [])
+
+  useEffect(() => {
+    try {
+      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY)
+      if (!storedFavoriteProductIds) return
+
+      const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)
+      if (!Array.isArray(parsedFavoriteProductIds)) return
+
+      const sanitizedFavoriteProductIds = parsedFavoriteProductIds.filter((productId) => validSeasonalProductIds.has(productId))
+      setFavoriteProductIds(sanitizedFavoriteProductIds)
+    } catch {
+      setFavoriteProductIds([])
+    }
+  }, [validSeasonalProductIds])
 
   useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
