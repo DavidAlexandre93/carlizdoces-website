@@ -1094,7 +1094,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50% !important;
-  background-color: #eeeeee !important;
+  background-color: transparent !important;
   color: #d54a7f !important;
   transition: background-color 220ms ease, color 220ms ease;
 }
@@ -1105,7 +1105,7 @@
 
 .favorite-heart-button:hover,
 .favorite-heart-button:focus-visible {
-  background-color: #e3e3e3 !important;
+  background-color: transparent !important;
   color: #ad1457 !important;
 }
 
