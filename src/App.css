@@ -560,6 +560,17 @@
 }
 
 
+.carousel-nav-button,
+.mui-carousel-nav {
+  width: clamp(64px, 9vw, 86px) !important;
+  height: clamp(64px, 9vw, 86px) !important;
+  border-radius: 50% !important;
+}
+
+.carousel-nav-button .MuiSvgIcon-root {
+  font-size: clamp(38px, 5vw, 52px) !important;
+}
+
 .hero-carousel-arrow {
   position: absolute !important;
   top: 50%;
@@ -1770,9 +1781,11 @@
     border-radius: 12px;
   }
 
-  .hero-carousel-arrow {
-    width: 38px;
-    height: 38px;
+  .hero-carousel-arrow,
+  .carousel-nav-button,
+  .mui-carousel-nav {
+    width: 56px !important;
+    height: 56px !important;
   }
 
   .hero-carousel-arrow-prev {

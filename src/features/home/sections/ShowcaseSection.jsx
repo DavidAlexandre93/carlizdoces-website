@@ -112,6 +112,7 @@ export function ShowcaseSection({
               activeStep={activeProductStep}
               nextButton={
                 <IconButton
+                  className="carousel-nav-button"
                   size="small"
                   onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
                   disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
@@ -122,6 +123,7 @@ export function ShowcaseSection({
               }
               backButton={
                 <IconButton
+                  className="carousel-nav-button"
                   size="small"
                   onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
                   disabled={activeProductStep <= 0}

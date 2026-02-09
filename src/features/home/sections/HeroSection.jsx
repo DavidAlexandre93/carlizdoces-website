@@ -62,10 +62,10 @@ export function HeroSection({ topShowcaseSlides }) {
 
         {maxSteps > 1 ? (
           <>
-            <IconButton className="hero-carousel-arrow hero-carousel-arrow-prev" size="large" onClick={handleBack} aria-label="Banner anterior">
+            <IconButton className="carousel-nav-button hero-carousel-arrow hero-carousel-arrow-prev" size="large" onClick={handleBack} aria-label="Banner anterior">
               {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             </IconButton>
-            <IconButton className="hero-carousel-arrow hero-carousel-arrow-next" size="large" onClick={handleNext} aria-label="Próximo banner">
+            <IconButton className="carousel-nav-button hero-carousel-arrow hero-carousel-arrow-next" size="large" onClick={handleNext} aria-label="Próximo banner">
               {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
             </IconButton>
           </>
