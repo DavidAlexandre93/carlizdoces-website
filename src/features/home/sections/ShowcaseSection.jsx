@@ -1,6 +1,4 @@
 import SwipeableViews from 'react-swipeable-views'
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
 import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
@@ -105,31 +103,31 @@ export function ShowcaseSection({
               ))}
             </SwipeableViews>
 
+            <IconButton
+              className="showcase-arrow showcase-arrow-prev"
+              onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
+              disabled={activeProductStep <= 0}
+              aria-label="Produto anterior"
+            >
+              <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
+            </IconButton>
+
+            <IconButton
+              className="showcase-arrow showcase-arrow-next"
+              onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
+              disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
+              aria-label="Próximo produto"
+            >
+              <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
+            </IconButton>
+
             <MobileStepper
               steps={visibleShowcaseProducts.length}
               position="static"
               className="mui-swipe-stepper"
               activeStep={activeProductStep}
-              nextButton={
-                <IconButton
-                  size="small"
-                  onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
-                  disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
-                  aria-label="Próximo produto"
-                >
-                  {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                </IconButton>
-              }
-              backButton={
-                <IconButton
-                  size="small"
-                  onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
-                  disabled={activeProductStep <= 0}
-                  aria-label="Produto anterior"
-                >
-                  {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                </IconButton>
-              }
+              nextButton={null}
+              backButton={null}
             />
           </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
