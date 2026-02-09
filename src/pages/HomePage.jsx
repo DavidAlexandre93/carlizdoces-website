@@ -146,14 +146,9 @@ export function HomePage() {
 
   const handleFavoriteProduct = async (item) => {
     if (favoriteProductIds.includes(item.id)) {
-      setSnackbar({ open: true, message: `Você já curtiu ${item.name}.`, severity: 'info' })
-      return
-    }
       setSnackbar({ open: true, message: `Você já curtiu ${item.name} neste dispositivo.`, severity: 'info' })
       return
     }
-
-    const counterKey = `product-${item.id}`
 
     setFavoriteProductIds((currentFavorites) => [...currentFavorites, item.id])
     setFavoriteCounts((currentCounts) => ({
@@ -245,7 +240,7 @@ export function HomePage() {
 
   useEffect(() => {
     try {
-      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY)
+      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY)
       if (!storedFavoriteProductIds) return
 
       const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)

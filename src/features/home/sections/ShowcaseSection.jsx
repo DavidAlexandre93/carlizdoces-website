@@ -126,8 +126,28 @@ export function ShowcaseSection({
               position="static"
               className="mui-swipe-stepper"
               activeStep={activeProductStep}
-              nextButton={null}
-              backButton={null}
+              nextButton={
+                <IconButton
+                  className="carousel-nav-button"
+                  size="small"
+                  onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
+                  disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
+                  aria-label="Próximo produto"
+                >
+                  {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                </IconButton>
+              }
+              backButton={
+                <IconButton
+                  className="carousel-nav-button"
+                  size="small"
+                  onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
+                  disabled={activeProductStep <= 0}
+                  aria-label="Produto anterior"
+                >
+                  {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                </IconButton>
+              }
             />
           </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
