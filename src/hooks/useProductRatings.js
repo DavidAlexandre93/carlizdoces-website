@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const STORAGE_KEY = 'carliz-product-ratings'
+const STORAGE_STATS_KEY = 'carliz-product-ratings-stats'
 
 const normalizeStats = (stats) => {
   const votes = Number(stats?.votes ?? stats?.count ?? 0)
@@ -23,11 +24,32 @@ const readStoredRatings = () => {
   }
 }
 
+const readStoredRatingStats = () => {
+  if (typeof window === 'undefined') return {}
+
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(STORAGE_STATS_KEY) ?? '{}')
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
 const writeStoredRatings = (value) => {
   if (typeof window === 'undefined') return
 
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+  } catch {
+    // Ignora erro de persistência local para não travar o fluxo principal.
+  }
+}
+
+const writeStoredRatingStats = (value) => {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.localStorage.setItem(STORAGE_STATS_KEY, JSON.stringify(value))
   } catch {
     // Ignora erro de persistência local para não travar o fluxo principal.
   }
@@ -61,6 +83,7 @@ async function saveRemoteRating(baseUrl, productId, nextValue) {
 export function useProductRatings(products) {
   const ratingsApiUrl = import.meta.env.VITE_RATINGS_API_URL || '/api/ratings'
   const [userRatings, setUserRatings] = useState(() => readStoredRatings())
+  const [localRatingStats, setLocalRatingStats] = useState(() => readStoredRatingStats())
   const [remoteRatings, setRemoteRatings] = useState({})
   const [isRemoteEnabled, setIsRemoteEnabled] = useState(false)
 
@@ -93,23 +116,24 @@ export function useProductRatings(products) {
   const ratingsByProductId = useMemo(() => {
     return products.reduce((acc, product) => {
       const baseline = {
-        votes: Number(product.reviewCount ?? 0),
-        total: Number(product.rating ?? 0) * Number(product.reviewCount ?? 0),
+        votes: 0,
+        total: 0,
       }
 
       const remote = normalizeStats(remoteRatings[product.id])
+      const localStats = normalizeStats(localRatingStats[product.id])
       const localUserRating = Number(userRatings[product.id] ?? 0)
-      const merged = remote.votes > 0 ? remote : baseline
+      const merged = remote.votes > 0 ? remote : (localStats.votes > 0 ? localStats : baseline)
 
       acc[product.id] = {
-        average: merged.votes > 0 ? merged.total / merged.votes : Number(product.rating ?? 0),
+        average: merged.votes > 0 ? merged.total / merged.votes : 0,
         votes: merged.votes,
         userRating: Number.isFinite(localUserRating) ? localUserRating : 0,
       }
 
       return acc
     }, {})
-  }, [products, remoteRatings, userRatings])
+  }, [localRatingStats, products, remoteRatings, userRatings])
 
   const submitRating = useCallback(async (productId, nextValue) => {
     const normalizedValue = Number(nextValue)
@@ -131,6 +155,20 @@ export function useProductRatings(products) {
     setUserRatings(nextLocalRatings)
     writeStoredRatings(nextLocalRatings)
 
+    const currentStats = normalizeStats(localRatingStats[productId])
+    const nextStats = {
+      votes: previousValue > 0 ? currentStats.votes : currentStats.votes + 1,
+      total: currentStats.total + normalizedValue - previousValue,
+    }
+
+    const nextLocalStats = {
+      ...localRatingStats,
+      [productId]: nextStats,
+    }
+
+    setLocalRatingStats(nextLocalStats)
+    writeStoredRatingStats(nextLocalStats)
+
     if (!ratingsApiUrl) {
       return { ok: true, isRemote: false }
     }
@@ -147,7 +185,7 @@ export function useProductRatings(products) {
     } catch {
       return { ok: true, isRemote: false, fallback: true }
     }
-  }, [isRemoteEnabled, ratingsApiUrl, userRatings])
+  }, [isRemoteEnabled, localRatingStats, ratingsApiUrl, userRatings])
 
   return {
     ratingsByProductId,
