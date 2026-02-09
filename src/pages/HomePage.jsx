@@ -342,8 +342,8 @@ export function HomePage() {
 
     setSnackbar({
       open: true,
-      message: '💛 +1 coração registrado localmente. Sem conexão para sincronizar agora.',
-      severity: 'warning',
+      message: '💛 Obrigado pelo carinho! +1 coração registrado neste dispositivo.',
+      severity: 'success',
     })
   }
 
