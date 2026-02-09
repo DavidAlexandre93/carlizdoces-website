@@ -319,6 +319,15 @@ export function HomePage() {
   }, [])
 
   const handleToggleLike = async () => {
+    if (hasLikedStore) {
+      setSnackbar({
+        open: true,
+        message: 'Você já deixou seu coração. Obrigado pelo carinho! 💛',
+        severity: 'info',
+      })
+      return
+    }
+
     setHasLikedStore(true)
     setShowLikeCelebration(true)
     setTotalLikes((currentLikes) => currentLikes + 1)
