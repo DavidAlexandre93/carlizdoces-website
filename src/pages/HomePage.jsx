@@ -58,8 +58,10 @@ export function HomePage() {
   const wrapperRef = useRef(null)
   const [introStage, setIntroStage] = useState('message')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [activeProductStep, setActiveProductStep] = useState(0)
-  const [maxShowcasePrice, setMaxShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
+  const [menuProductStep, setMenuProductStep] = useState(0)
+  const [orderProductStep, setOrderProductStep] = useState(0)
+  const [maxMenuShowcasePrice, setMaxMenuShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
+  const [maxOrderShowcasePrice, setMaxOrderShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
   const [customizations, setCustomizations] = useState({})
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
   const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
@@ -78,11 +80,16 @@ export function HomePage() {
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
 
-  const visibleShowcaseProducts = useMemo(
-    () => seasonalProducts.filter((item) => item.price <= maxShowcasePrice),
-    [maxShowcasePrice],
+  const menuShowcaseProducts = useMemo(
+    () => seasonalProducts.filter((item) => item.price <= maxMenuShowcasePrice),
+    [maxMenuShowcasePrice],
   )
-  const selectedShowcaseProduct = visibleShowcaseProducts[activeProductStep] ?? visibleShowcaseProducts[0] ?? null
+  const orderShowcaseProducts = useMemo(
+    () => seasonalProducts.filter((item) => item.price <= maxOrderShowcasePrice),
+    [maxOrderShowcasePrice],
+  )
+  const selectedMenuShowcaseProduct = menuShowcaseProducts[menuProductStep] ?? menuShowcaseProducts[0] ?? null
+  const selectedOrderShowcaseProduct = orderShowcaseProducts[orderProductStep] ?? orderShowcaseProducts[0] ?? null
 
   const whatsappLink = useWhatsAppOrderLink({
     selectedItems,
@@ -454,12 +461,12 @@ export function HomePage() {
           <ShowcaseSection
             BRL={BRL}
             seasonalProducts={seasonalProducts}
-            visibleShowcaseProducts={visibleShowcaseProducts}
-            selectedShowcaseProduct={selectedShowcaseProduct}
-            activeProductStep={activeProductStep}
-            setActiveProductStep={setActiveProductStep}
-            maxShowcasePrice={maxShowcasePrice}
-            setMaxShowcasePrice={setMaxShowcasePrice}
+            visibleShowcaseProducts={menuShowcaseProducts}
+            selectedShowcaseProduct={selectedMenuShowcaseProduct}
+            activeProductStep={menuProductStep}
+            setActiveProductStep={setMenuProductStep}
+            maxShowcasePrice={maxMenuShowcasePrice}
+            setMaxShowcasePrice={setMaxMenuShowcasePrice}
             addItem={addItem}
             removeItem={removeItem}
             onShareProduct={handleShareProduct}
@@ -480,12 +487,12 @@ export function HomePage() {
           <ShowcaseSection
             BRL={BRL}
             seasonalProducts={seasonalProducts}
-            visibleShowcaseProducts={visibleShowcaseProducts}
-            selectedShowcaseProduct={selectedShowcaseProduct}
-            activeProductStep={activeProductStep}
-            setActiveProductStep={setActiveProductStep}
-            maxShowcasePrice={maxShowcasePrice}
-            setMaxShowcasePrice={setMaxShowcasePrice}
+            visibleShowcaseProducts={orderShowcaseProducts}
+            selectedShowcaseProduct={selectedOrderShowcaseProduct}
+            activeProductStep={orderProductStep}
+            setActiveProductStep={setOrderProductStep}
+            maxShowcasePrice={maxOrderShowcasePrice}
+            setMaxShowcasePrice={setMaxOrderShowcasePrice}
             addItem={addItem}
             removeItem={removeItem}
             onShareProduct={handleShareProduct}
