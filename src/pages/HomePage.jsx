@@ -28,6 +28,7 @@ const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 
 const GOOGLE_AUTH_API_URL = '/api/auth/google'
+const GOOGLE_CLIENT_ID_API_URL = '/api/auth/google-client-id'
 
 const getStoredAuthenticatedProfile = () => {
   try {
@@ -118,6 +119,7 @@ export function HomePage() {
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
+  const [googleClientId, setGoogleClientId] = useState(() => String(import.meta.env.VITE_GOOGLE_CLIENT_ID ?? '').trim())
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
@@ -324,9 +326,8 @@ export function HomePage() {
       return
     }
 
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
     if (!googleClientId) {
-      setSnackbar({ open: true, message: 'Defina VITE_GOOGLE_CLIENT_ID para ativar o login Google.', severity: 'warning' })
+      setSnackbar({ open: true, message: 'Defina VITE_GOOGLE_CLIENT_ID (ou GOOGLE_CLIENT_ID no servidor) para ativar o login Google.', severity: 'warning' })
       return
     }
 
@@ -355,6 +356,26 @@ export function HomePage() {
     }, 4500)
   }
 
+
+  useEffect(() => {
+    if (googleClientId) return
+
+    fetch(GOOGLE_CLIENT_ID_API_URL)
+      .then(async (response) => {
+        if (!response.ok) {
+          return
+        }
+
+        const data = await response.json()
+        const configuredClientId = typeof data?.clientId === 'string' ? data.clientId.trim() : ''
+        if (configuredClientId) {
+          setGoogleClientId(configuredClientId)
+        }
+      })
+      .catch(() => {
+        // Ignora falha silenciosamente para manter experiência sem bloqueio.
+      })
+  }, [googleClientId])
 
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
