@@ -171,7 +171,7 @@ Nele você consegue, de forma simples:
 3. Edite (ou apague) o objeto desejado;
 4. Salve e rode `npm start` para validar no navegador.
 
-> Dica: mantenha o campo `id` único em cada item para evitar conflitos na interface.
+> Dica: mantenha o campo `id` único de identificação em cada item para evitar conflitos na interface.
 
 ---
 
