@@ -80,7 +80,7 @@ export function ShowcaseSection({
 
       {selectedShowcaseProduct ? (
         <Paper className="showcase-card" sx={{ p: 2.5 }}>
-          <div className="showcase-image-stage" key={selectedShowcaseProduct.id}>
+          <div className="showcase-image-stage">
             <IconButton
               className="showcase-arrow showcase-arrow-prev"
               onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
@@ -89,7 +89,13 @@ export function ShowcaseSection({
             >
               <span className="showcase-arrow-icon showcase-arrow-icon-prev" aria-hidden="true" />
             </IconButton>
-            <img className="showcase-image" src={selectedShowcaseProduct.image} alt={selectedShowcaseProduct.name} />
+            <img
+              className="showcase-image"
+              src={selectedShowcaseProduct.image}
+              alt={selectedShowcaseProduct.name}
+              loading="eager"
+              decoding="async"
+            />
             <IconButton
               className="showcase-arrow showcase-arrow-next"
               onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
