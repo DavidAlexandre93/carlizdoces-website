@@ -2,6 +2,8 @@ import SwipeableViews from 'react-swipeable-views'
 import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
 import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
+import KeyboardArrowLeft from '../../../mui-icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '../../../mui-icons/KeyboardArrowRight'
 import {
   Alert,
   Badge,
