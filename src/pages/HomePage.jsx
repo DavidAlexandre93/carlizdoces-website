@@ -23,9 +23,38 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const LIKES_API_BASE_URL = '/api/likes'
 const AUTH_USER_STORAGE_KEY = 'carliz-auth-user-id'
-const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
-const COUNT_API_NAMESPACE = 'carlizdoces-website'
+const AUTH_PROFILE_STORAGE_KEY = 'carliz-auth-user-profile'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
+
+
+const parseJwtPayload = (credential) => {
+  if (typeof credential !== 'string') return null
+
+  const segments = credential.split('.')
+  if (segments.length < 2) return null
+
+  try {
+    const base64 = segments[1].replace(/-/g, '+').replace(/_/g, '/')
+    const paddedBase64 = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')
+    const payloadJson = window.atob(paddedBase64)
+    const payload = JSON.parse(payloadJson)
+    return payload && typeof payload === 'object' ? payload : null
+  } catch {
+    return null
+  }
+}
+
+const getStoredAuthenticatedProfile = () => {
+  try {
+    const rawProfile = window.localStorage.getItem(AUTH_PROFILE_STORAGE_KEY)
+    if (!rawProfile) return null
+
+    const parsed = JSON.parse(rawProfile)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
 
 const getAuthenticatedUserId = () => {
   try {
@@ -102,6 +131,8 @@ export function HomePage() {
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
+  const [authenticatedUser, setAuthenticatedUser] = useState(null)
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
@@ -145,15 +176,15 @@ export function HomePage() {
   }
 
   const handleFavoriteProduct = async (item) => {
+    if (!authenticatedUserId) {
+      setSnackbar({ open: true, message: 'Faça login com Google para registrar corações.', severity: 'info' })
+      return
+    }
+
     if (favoriteProductIds.includes(item.id)) {
       setSnackbar({ open: true, message: `Você já curtiu ${item.name}.`, severity: 'info' })
       return
     }
-      setSnackbar({ open: true, message: `Você já curtiu ${item.name} neste dispositivo.`, severity: 'info' })
-      return
-    }
-
-    const counterKey = `product-${item.id}`
 
     setFavoriteProductIds((currentFavorites) => [...currentFavorites, item.id])
     setFavoriteCounts((currentCounts) => ({
@@ -161,27 +192,21 @@ export function HomePage() {
       [item.id]: (currentCounts[item.id] ?? 0) + 1,
     }))
 
-    if (authenticatedUserId) {
-      try {
-        const result = await registerProductLike(item.id, authenticatedUserId)
-        setFavoriteCounts((currentCounts) => ({
-          ...currentCounts,
-          [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
-        }))
-        setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
-        return
-      } catch {
-        setFavoriteProductIds((currentFavorites) => currentFavorites.filter((productId) => productId !== item.id))
-        setFavoriteCounts((currentCounts) => ({
-          ...currentCounts,
-          [item.id]: Math.max(0, (currentCounts[item.id] ?? 1) - 1),
-        }))
-        setSnackbar({ open: true, message: 'Não foi possível registrar seu coração agora.', severity: 'error' })
-        return
-      }
+    try {
+      const result = await registerProductLike(item.id, authenticatedUserId)
+      setFavoriteCounts((currentCounts) => ({
+        ...currentCounts,
+        [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
+      }))
+      setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
+    } catch {
+      setFavoriteProductIds((currentFavorites) => currentFavorites.filter((productId) => productId !== item.id))
+      setFavoriteCounts((currentCounts) => ({
+        ...currentCounts,
+        [item.id]: Math.max(0, (currentCounts[item.id] ?? 1) - 1),
+      }))
+      setSnackbar({ open: true, message: 'Não foi possível registrar seu coração agora.', severity: 'error' })
     }
-
-    setSnackbar({ open: true, message: `${item.name} recebeu +1 coração neste dispositivo.`, severity: 'info' })
   }
 
   const handleRateProduct = async (item, rating) => {
@@ -234,6 +259,87 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
+  const handleGoogleCredentialResponse = (response) => {
+    const payload = parseJwtPayload(response?.credential)
+
+    if (!payload?.sub) {
+      setSnackbar({ open: true, message: 'Não foi possível concluir o login Google.', severity: 'error' })
+      setIsGoogleLoginLoading(false)
+      return
+    }
+
+    const profile = {
+      id: String(payload.sub),
+      name: String(payload.name ?? 'Usuário Google'),
+      email: String(payload.email ?? ''),
+      picture: String(payload.picture ?? ''),
+    }
+
+    setAuthenticatedUserId(profile.id)
+    setAuthenticatedUser(profile)
+    setIsGoogleLoginLoading(false)
+
+    try {
+      window.localStorage.setItem(AUTH_USER_STORAGE_KEY, profile.id)
+      window.localStorage.setItem(AUTH_PROFILE_STORAGE_KEY, JSON.stringify(profile))
+    } catch {
+      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+    }
+
+    fetchLikesSummary(profile.id)
+      .then((summary) => {
+        setTotalLikes(Number(summary?.store?.likes ?? 0))
+        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
+
+        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
+        const likesById = summary?.products?.likesById ?? {}
+
+        setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
+          ...counts,
+          [product.id]: Number(likesById[product.id] ?? 0),
+        }), {}))
+        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+      })
+      .catch(() => {
+        setSnackbar({ open: true, message: 'Login feito, mas não foi possível sincronizar os corações.', severity: 'warning' })
+      })
+
+    setSnackbar({ open: true, message: `Login realizado com Google. Bem-vindo(a), ${profile.name}!`, severity: 'success' })
+  }
+
+  const handleGoogleLogin = () => {
+    if (!window.google?.accounts?.id) {
+      setSnackbar({ open: true, message: 'Login Google indisponível no momento.', severity: 'warning' })
+      return
+    }
+
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
+    if (!googleClientId) {
+      setSnackbar({ open: true, message: 'Defina VITE_GOOGLE_CLIENT_ID para ativar o login Google.', severity: 'warning' })
+      return
+    }
+
+    setIsGoogleLoginLoading(true)
+
+    window.google.accounts.id.initialize({
+      client_id: googleClientId,
+      callback: handleGoogleCredentialResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true,
+    })
+
+    window.google.accounts.id.prompt((notification) => {
+      const wasNotDisplayed = notification.isNotDisplayed && notification.isNotDisplayed()
+      const wasSkipped = notification.isSkippedMoment && notification.isSkippedMoment()
+      const wasDismissed = notification.isDismissedMoment && notification.isDismissedMoment()
+
+      if (wasNotDisplayed || wasSkipped || wasDismissed) {
+        setIsGoogleLoginLoading(false)
+      }
+    })
+  }
+
+
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
 
@@ -245,7 +351,7 @@ export function HomePage() {
 
   useEffect(() => {
     try {
-      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCT_IDS_STORAGE_KEY)
+      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY)
       if (!storedFavoriteProductIds) return
 
       const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)
@@ -339,67 +445,35 @@ export function HomePage() {
   useEffect(() => {
     let isMounted = true
 
-    const loadGlobalHearts = async () => {
-      const currentUserId = getAuthenticatedUserId()
+    const currentUserId = getAuthenticatedUserId()
+    const currentUserProfile = getStoredAuthenticatedProfile()
 
-      if (isMounted) {
-        setAuthenticatedUserId(currentUserId)
-      }
+    if (isMounted) {
+      setAuthenticatedUserId(currentUserId)
+      setAuthenticatedUser(currentUserProfile)
+    }
 
-      if (!currentUserId) {
-        try {
-          const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
-          if (!isMounted) return
-          setHasLikedStore(savedLiked)
-          setTotalLikes((currentLikes) => Math.max(currentLikes, savedLiked ? 1 : 0))
-        } catch {
-          if (!isMounted) return
-          setHasLikedStore(false)
-        }
-        return
-      }
+    fetchLikesSummary(currentUserId)
+      .then((summary) => {
+        if (!isMounted) return
 
-      const summary = await fetchLikesSummary(currentUserId)
+        setTotalLikes(Number(summary?.store?.likes ?? 0))
+        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
 
-      if (!isMounted) return
+        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
+        const likesById = summary?.products?.likesById ?? {}
 
-      setTotalLikes(Number(summary?.store?.likes ?? 0))
-      setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
-
-      const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
-      const likesById = summary?.products?.likesById ?? {}
-
-      setFavoriteCounts(() =>
-        seasonalProducts.reduce((counts, product) => ({
+        setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
           ...counts,
           [product.id]: Number(likesById[product.id] ?? 0),
-        }), {}),
-      )
+        }), {}))
 
-      setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
-      try {
-        setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
-      } catch {
-        setHasLikedStore(false)
-      }
-    }
-
-    try {
-      const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
-      const savedFavoriteProductIds = JSON.parse(window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY) ?? '[]')
-
-      setHasLikedStore(savedLiked)
-      setFavoriteProductIds(Array.isArray(savedFavoriteProductIds) ? savedFavoriteProductIds : [])
-      setTotalLikes((currentLikes) => Math.max(currentLikes, savedLiked ? 1 : 0))
-    } catch {
-      setHasLikedStore(false)
-      setFavoriteProductIds([])
-    }
-
-    loadGlobalHearts().catch(() => {
-      if (!isMounted) return
-      setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
-    })
+        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+      })
+      .catch(() => {
+        if (!isMounted) return
+        setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
+      })
 
     return () => {
       isMounted = false
@@ -424,24 +498,18 @@ export function HomePage() {
       return
     }
 
-    setHasLikedStore(true)
-    setShowLikeCelebration(true)
-    setTotalLikes((currentLikes) => currentLikes + 1)
-
     if (!authenticatedUserId) {
-      try {
-        window.localStorage.setItem('carliz-store-liked', 'true')
-      } catch {
-        // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-      }
-
       setSnackbar({
         open: true,
-        message: '💛 Obrigado pelo carinho! +1 coração registrado neste dispositivo.',
-        severity: 'success',
+        message: 'Faça login com Google para registrar seu coração.',
+        severity: 'info',
       })
       return
     }
+
+    setHasLikedStore(true)
+    setShowLikeCelebration(true)
+    setTotalLikes((currentLikes) => currentLikes + 1)
 
     try {
       const result = await registerStoreLike(authenticatedUserId)
@@ -562,6 +630,9 @@ export function HomePage() {
         isMobileMenuOpen={isMobileMenuOpen}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
+        authenticatedUser={authenticatedUser}
+        isGoogleLoginLoading={isGoogleLoginLoading}
+        onGoogleLogin={handleGoogleLogin}
       />
 
       <main>

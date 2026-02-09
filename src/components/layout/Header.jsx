@@ -20,7 +20,15 @@ import {
   Typography,
 } from '@mui/material'
 
-export function Header({ navItems, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
+export function Header({
+  navItems,
+  isMobileMenuOpen,
+  onOpenMobileMenu,
+  onCloseMobileMenu,
+  authenticatedUser,
+  isGoogleLoginLoading,
+  onGoogleLogin,
+}) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
@@ -173,11 +181,34 @@ Deus abençoe! 🙌`
                 </IconButton>
               </Tooltip>
 
-              <Tooltip title="Bem vindo" arrow>
-                <Avatar aria-label="Bem vindo" sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}>
-                  <Icon sx={{ fontSize: 20 }}>person</Icon>
-                </Avatar>
-              </Tooltip>
+              {authenticatedUser ? (
+                <Tooltip title={`Conectado como ${authenticatedUser.name}`} arrow>
+                  <Avatar
+                    aria-label={`Usuário conectado: ${authenticatedUser.name}`}
+                    src={authenticatedUser.picture}
+                    sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}
+                  >
+                    {authenticatedUser.name?.slice(0, 1)?.toUpperCase() ?? <Icon sx={{ fontSize: 20 }}>person</Icon>}
+                  </Avatar>
+                </Tooltip>
+              ) : (
+                <Button
+                  color="inherit"
+                  variant="text"
+                  size="small"
+                  onClick={onGoogleLogin}
+                  disabled={isGoogleLoginLoading}
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.8rem',
+                    opacity: 0.82,
+                    minWidth: 'fit-content',
+                    px: 1,
+                  }}
+                >
+                  realizar login
+                </Button>
+              )}
 
               <IconButton color="inherit" aria-label="Abrir menu" edge="end" onClick={onOpenMobileMenu} className="topbar-menu-button">
                 <Icon>menu</Icon>
