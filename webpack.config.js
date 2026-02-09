@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -38,6 +39,11 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'import.meta.env.VITE_DISQUS_SHORTNAME': JSON.stringify(process.env.VITE_DISQUS_SHORTNAME || ''),
+      'import.meta.env.VITE_RATINGS_API_URL': JSON.stringify(process.env.VITE_RATINGS_API_URL || ''),
+      'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || ''),
+    }),
     new HtmlWebpackPlugin({
       template: './index.html'
     })
