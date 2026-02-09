@@ -94,14 +94,9 @@ export function useProductRatings(products) {
 
   const baselineStatsByProductId = useMemo(() => {
     return products.reduce((acc, product) => {
-      const votes = Number(product.reviewCount ?? 0)
-      const average = Number(product.rating ?? 0)
-      const normalizedVotes = Number.isFinite(votes) ? Math.max(0, Math.floor(votes)) : 0
-      const normalizedAverage = Number.isFinite(average) ? Math.max(0, average) : 0
-
       acc[product.id] = {
-        votes: normalizedVotes,
-        total: normalizedVotes * normalizedAverage,
+        votes: 0,
+        total: 0,
       }
 
       return acc
