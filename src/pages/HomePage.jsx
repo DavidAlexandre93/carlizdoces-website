@@ -21,38 +21,62 @@ const TestimonialsSection = lazy(() => import('../components/sections/Testimonia
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
+const LIKES_API_BASE_URL = '/api/likes'
+const AUTH_USER_STORAGE_KEY = 'carliz-auth-user-id'
 const COUNT_API_BASE_URL = 'https://api.countapi.xyz'
 const COUNT_API_NAMESPACE = 'carlizdoces-website'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
-const getCounterValue = async (key) => {
+const getAuthenticatedUserId = () => {
   try {
-    const response = await fetch(`${COUNT_API_BASE_URL}/get/${COUNT_API_NAMESPACE}/${key}`)
-    if (!response.ok) {
-      return 0
+    const storedUserId = window.localStorage.getItem(AUTH_USER_STORAGE_KEY)
+    if (storedUserId && storedUserId.trim()) {
+      return storedUserId.trim()
     }
-
-    const data = await response.json()
-    const value = Number(data?.value ?? 0)
-    return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0
   } catch {
-    return 0
+    return ''
   }
+
+  return ''
 }
 
-const incrementCounterValue = async (key, amount = 1) => {
-  try {
-    const response = await fetch(`${COUNT_API_BASE_URL}/hit/${COUNT_API_NAMESPACE}/${key}?amount=${amount}`)
-    if (!response.ok) {
-      return null
-    }
+const fetchLikesSummary = async (userId) => {
+  const query = userId ? `?userId=${encodeURIComponent(userId)}` : ''
+  const response = await fetch(`${LIKES_API_BASE_URL}/summary${query}`)
 
-    const data = await response.json()
-    const value = Number(data?.value ?? 0)
-    return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0
-  } catch {
-    return null
+  if (!response.ok) {
+    throw new Error('likes-summary-failed')
   }
+
+  return response.json()
+}
+
+const registerStoreLike = async (userId) => {
+  const response = await fetch(`${LIKES_API_BASE_URL}/store`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  })
+
+  if (!response.ok) {
+    throw new Error('store-like-failed')
+  }
+
+  return response.json()
+}
+
+const registerProductLike = async (productId, userId) => {
+  const response = await fetch(`${LIKES_API_BASE_URL}/product/${encodeURIComponent(productId)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  })
+
+  if (!response.ok) {
+    throw new Error('product-like-failed')
+  }
+
+  return response.json()
 }
 
 export function HomePage() {
@@ -77,6 +101,7 @@ export function HomePage() {
   const [totalLikes, setTotalLikes] = useState(0)
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
+  const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
@@ -121,6 +146,9 @@ export function HomePage() {
 
   const handleFavoriteProduct = async (item) => {
     if (favoriteProductIds.includes(item.id)) {
+      setSnackbar({ open: true, message: `Você já curtiu ${item.name}.`, severity: 'info' })
+      return
+    }
       setSnackbar({ open: true, message: `Você já curtiu ${item.name} neste dispositivo.`, severity: 'info' })
       return
     }
@@ -133,14 +161,24 @@ export function HomePage() {
       [item.id]: (currentCounts[item.id] ?? 0) + 1,
     }))
 
-    const updatedValue = await incrementCounterValue(counterKey)
-    if (updatedValue !== null) {
-      setFavoriteCounts((currentCounts) => ({
-        ...currentCounts,
-        [item.id]: updatedValue,
-      }))
-      setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
-      return
+    if (authenticatedUserId) {
+      try {
+        const result = await registerProductLike(item.id, authenticatedUserId)
+        setFavoriteCounts((currentCounts) => ({
+          ...currentCounts,
+          [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
+        }))
+        setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
+        return
+      } catch {
+        setFavoriteProductIds((currentFavorites) => currentFavorites.filter((productId) => productId !== item.id))
+        setFavoriteCounts((currentCounts) => ({
+          ...currentCounts,
+          [item.id]: Math.max(0, (currentCounts[item.id] ?? 1) - 1),
+        }))
+        setSnackbar({ open: true, message: 'Não foi possível registrar seu coração agora.', severity: 'error' })
+        return
+      }
     }
 
     setSnackbar({ open: true, message: `${item.name} recebeu +1 coração neste dispositivo.`, severity: 'info' })
@@ -302,22 +340,43 @@ export function HomePage() {
     let isMounted = true
 
     const loadGlobalHearts = async () => {
-      const [storeLikes, ...productLikes] = await Promise.all([
-        getCounterValue('store-likes'),
-        ...seasonalProducts.map((product) => getCounterValue(`product-${product.id}`)),
-      ])
+      const currentUserId = getAuthenticatedUserId()
+
+      if (isMounted) {
+        setAuthenticatedUserId(currentUserId)
+      }
+
+      if (!currentUserId) {
+        try {
+          const savedLiked = window.localStorage.getItem('carliz-store-liked') === 'true'
+          if (!isMounted) return
+          setHasLikedStore(savedLiked)
+          setTotalLikes((currentLikes) => Math.max(currentLikes, savedLiked ? 1 : 0))
+        } catch {
+          if (!isMounted) return
+          setHasLikedStore(false)
+        }
+        return
+      }
+
+      const summary = await fetchLikesSummary(currentUserId)
 
       if (!isMounted) return
 
-      setTotalLikes(storeLikes)
+      setTotalLikes(Number(summary?.store?.likes ?? 0))
+      setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
+
+      const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
+      const likesById = summary?.products?.likesById ?? {}
 
       setFavoriteCounts(() =>
-        seasonalProducts.reduce((counts, product, index) => ({
+        seasonalProducts.reduce((counts, product) => ({
           ...counts,
-          [product.id]: productLikes[index] ?? 0,
+          [product.id]: Number(likesById[product.id] ?? 0),
         }), {}),
       )
 
+      setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
       try {
         setHasLikedStore(window.localStorage.getItem('carliz-store-liked') === 'true')
       } catch {
@@ -337,7 +396,10 @@ export function HomePage() {
       setFavoriteProductIds([])
     }
 
-    loadGlobalHearts()
+    loadGlobalHearts().catch(() => {
+      if (!isMounted) return
+      setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
+    })
 
     return () => {
       isMounted = false
@@ -366,28 +428,39 @@ export function HomePage() {
     setShowLikeCelebration(true)
     setTotalLikes((currentLikes) => currentLikes + 1)
 
-    try {
-      window.localStorage.setItem('carliz-store-liked', 'true')
-    } catch {
-      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-    }
+    if (!authenticatedUserId) {
+      try {
+        window.localStorage.setItem('carliz-store-liked', 'true')
+      } catch {
+        // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+      }
 
-    const updatedValue = await incrementCounterValue('store-likes')
-    if (updatedValue !== null) {
-      setTotalLikes(updatedValue)
       setSnackbar({
         open: true,
-        message: '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨',
+        message: '💛 Obrigado pelo carinho! +1 coração registrado neste dispositivo.',
         severity: 'success',
       })
       return
     }
 
-    setSnackbar({
-      open: true,
-      message: '💛 Obrigado pelo carinho! +1 coração registrado neste dispositivo.',
-      severity: 'success',
-    })
+    try {
+      const result = await registerStoreLike(authenticatedUserId)
+      setTotalLikes(Number(result.likes ?? totalLikes + 1))
+      setSnackbar({
+        open: true,
+        message: '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨',
+        severity: 'success',
+      })
+    } catch {
+      setHasLikedStore(false)
+      setShowLikeCelebration(false)
+      setTotalLikes((currentLikes) => Math.max(0, currentLikes - 1))
+      setSnackbar({
+        open: true,
+        message: 'Não foi possível registrar seu coração agora.',
+        severity: 'error',
+      })
+    }
   }
 
   useEffect(() => {
