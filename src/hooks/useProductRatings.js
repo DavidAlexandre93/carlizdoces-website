@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 const STORAGE_KEY = 'carliz-product-ratings'
 const STORAGE_STATS_KEY = 'carliz-product-ratings-stats'
 
+const toStorageKey = (baseKey, scopeKey = 'default') => `${baseKey}:${scopeKey}`
+
 const normalizeStats = (stats) => {
   const votes = Number(stats?.votes ?? stats?.count ?? 0)
   const total = Number(stats?.total ?? stats?.sum ?? 0)
@@ -18,43 +20,43 @@ const addStats = (baseStats, extraStats) => ({
   total: baseStats.total + extraStats.total,
 })
 
-const readStoredRatings = () => {
+const readStoredRatings = (scopeKey) => {
   if (typeof window === 'undefined') return {}
 
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}')
+    const parsed = JSON.parse(window.localStorage.getItem(toStorageKey(STORAGE_KEY, scopeKey)) ?? '{}')
     return parsed && typeof parsed === 'object' ? parsed : {}
   } catch {
     return {}
   }
 }
 
-const readStoredRatingStats = () => {
+const readStoredRatingStats = (scopeKey) => {
   if (typeof window === 'undefined') return {}
 
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(STORAGE_STATS_KEY) ?? '{}')
+    const parsed = JSON.parse(window.localStorage.getItem(toStorageKey(STORAGE_STATS_KEY, scopeKey)) ?? '{}')
     return parsed && typeof parsed === 'object' ? parsed : {}
   } catch {
     return {}
   }
 }
 
-const writeStoredRatings = (value) => {
+const writeStoredRatings = (scopeKey, value) => {
   if (typeof window === 'undefined') return
 
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+    window.localStorage.setItem(toStorageKey(STORAGE_KEY, scopeKey), JSON.stringify(value))
   } catch {
     // Ignora erro de persistência local para não travar o fluxo principal.
   }
 }
 
-const writeStoredRatingStats = (value) => {
+const writeStoredRatingStats = (scopeKey, value) => {
   if (typeof window === 'undefined') return
 
   try {
-    window.localStorage.setItem(STORAGE_STATS_KEY, JSON.stringify(value))
+    window.localStorage.setItem(toStorageKey(STORAGE_STATS_KEY, scopeKey), JSON.stringify(value))
   } catch {
     // Ignora erro de persistência local para não travar o fluxo principal.
   }
@@ -85,10 +87,13 @@ async function saveRemoteRating(baseUrl, productId, nextValue) {
   return payload && typeof payload === 'object' ? payload : null
 }
 
-export function useProductRatings(products) {
+const buildScopedProductId = (scopeKey, productId) => `${scopeKey}::${productId}`
+
+export function useProductRatings(products, options = {}) {
+  const scopeKey = String(options.scopeKey || 'default').trim() || 'default'
   const ratingsApiUrl = import.meta.env.VITE_RATINGS_API_URL || '/api/ratings'
-  const [userRatings, setUserRatings] = useState(() => readStoredRatings())
-  const [localRatingStats, setLocalRatingStats] = useState(() => readStoredRatingStats())
+  const [userRatings, setUserRatings] = useState(() => readStoredRatings(scopeKey))
+  const [localRatingStats, setLocalRatingStats] = useState(() => readStoredRatingStats(scopeKey))
   const [remoteRatings, setRemoteRatings] = useState({})
   const [isRemoteEnabled, setIsRemoteEnabled] = useState(false)
 
@@ -102,6 +107,13 @@ export function useProductRatings(products) {
       return acc
     }, {})
   }, [products])
+
+  const scopedProductIds = useMemo(() => {
+    return products.reduce((acc, product) => {
+      acc[product.id] = buildScopedProductId(scopeKey, product.id)
+      return acc
+    }, {})
+  }, [products, scopeKey])
 
   useEffect(() => {
     if (!ratingsApiUrl) {
@@ -137,7 +149,8 @@ export function useProductRatings(products) {
       }
 
       const baselineStats = normalizeStats(baselineStatsByProductId[product.id] ?? baseline)
-      const remote = normalizeStats(remoteRatings[product.id])
+      const remoteProductId = scopedProductIds[product.id]
+      const remote = normalizeStats(remoteRatings[remoteProductId])
       const localStats = normalizeStats(localRatingStats[product.id])
       const localUserRating = Number(userRatings[product.id] ?? 0)
       const merged = remote.votes > 0
@@ -152,7 +165,7 @@ export function useProductRatings(products) {
 
       return acc
     }, {})
-  }, [baselineStatsByProductId, localRatingStats, products, remoteRatings, userRatings])
+  }, [baselineStatsByProductId, localRatingStats, products, remoteRatings, scopedProductIds, userRatings])
 
   const submitRating = useCallback(async (productId, nextValue) => {
     const normalizedValue = Number(nextValue)
@@ -172,7 +185,7 @@ export function useProductRatings(products) {
     }
 
     setUserRatings(nextLocalRatings)
-    writeStoredRatings(nextLocalRatings)
+    writeStoredRatings(scopeKey, nextLocalRatings)
 
     const baselineStats = normalizeStats(baselineStatsByProductId[productId])
     const currentStats = normalizeStats(localRatingStats[productId] ?? baselineStats)
@@ -187,25 +200,26 @@ export function useProductRatings(products) {
     }
 
     setLocalRatingStats(nextLocalStats)
-    writeStoredRatingStats(nextLocalStats)
+    writeStoredRatingStats(scopeKey, nextLocalStats)
 
     if (!ratingsApiUrl) {
       return { ok: true, isRemote: false }
     }
 
     try {
-      const payload = await saveRemoteRating(ratingsApiUrl, productId, normalizedValue)
+      const scopedProductId = scopedProductIds[productId] ?? buildScopedProductId(scopeKey, productId)
+      const payload = await saveRemoteRating(ratingsApiUrl, scopedProductId, normalizedValue)
       if (payload) {
         setRemoteRatings((current) => ({
           ...current,
-          [productId]: payload,
+          [scopedProductId]: payload,
         }))
       }
       return { ok: true, isRemote: true }
     } catch {
       return { ok: true, isRemote: false, fallback: true }
     }
-  }, [baselineStatsByProductId, isRemoteEnabled, localRatingStats, ratingsApiUrl, userRatings])
+  }, [baselineStatsByProductId, isRemoteEnabled, localRatingStats, ratingsApiUrl, scopeKey, scopedProductIds, userRatings])
 
   return {
     ratingsByProductId,

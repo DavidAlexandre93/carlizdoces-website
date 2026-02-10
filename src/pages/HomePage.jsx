@@ -42,6 +42,9 @@ const normalizeGoogleClientId = (clientId) => {
   return /\.apps\.googleusercontent\.com$/i.test(normalized) ? normalized : ''
 }
 
+const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
+const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
+
 const getStoredAuthenticatedProfile = () => {
   try {
     const rawProfile = window.localStorage.getItem(AUTH_PROFILE_STORAGE_KEY)
@@ -112,8 +115,8 @@ export function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [menuProductStep, setMenuProductStep] = useState(0)
   const [orderProductStep, setOrderProductStep] = useState(0)
-  const [maxMenuShowcasePrice, setMaxMenuShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
-  const [maxOrderShowcasePrice, setMaxOrderShowcasePrice] = useState(Math.max(...seasonalProducts.map((item) => item.price)))
+  const [maxMenuShowcasePrice, setMaxMenuShowcasePrice] = useState(() => Math.max(...seasonalProducts.filter((item) => isEasterMenuProduct(item)).map((item) => item.price), 0))
+  const [maxOrderShowcasePrice, setMaxOrderShowcasePrice] = useState(() => Math.max(...seasonalProducts.filter((item) => isCandyOrderProduct(item)).map((item) => item.price), 0))
   const [customizations, setCustomizations] = useState({})
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
   const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
@@ -134,16 +137,28 @@ export function HomePage() {
   const [googleClientId, setGoogleClientId] = useState(() => normalizeGoogleClientId(import.meta.env.VITE_GOOGLE_CLIENT_ID))
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
+  const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
+  const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
+
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
-  const { ratingsByProductId, submitRating, isGlobalRatingsActive } = useProductRatings(seasonalProducts)
+  const {
+    ratingsByProductId: easterRatingsByProductId,
+    submitRating: submitEasterRating,
+    isGlobalRatingsActive: isEasterGlobalRatingsActive,
+  } = useProductRatings(easterMenuProducts, { scopeKey: 'cardapio-de-pascoa' })
+  const {
+    ratingsByProductId: candyRatingsByProductId,
+    submitRating: submitCandyRating,
+    isGlobalRatingsActive: isCandyGlobalRatingsActive,
+  } = useProductRatings(candyOrderProducts, { scopeKey: 'pedidos-de-doces' })
 
   const menuShowcaseProducts = useMemo(
-    () => seasonalProducts.filter((item) => item.price <= maxMenuShowcasePrice),
-    [maxMenuShowcasePrice],
+    () => easterMenuProducts.filter((item) => item.price <= maxMenuShowcasePrice),
+    [easterMenuProducts, maxMenuShowcasePrice],
   )
   const orderShowcaseProducts = useMemo(
-    () => seasonalProducts.filter((item) => item.price <= maxOrderShowcasePrice),
-    [maxOrderShowcasePrice],
+    () => candyOrderProducts.filter((item) => item.price <= maxOrderShowcasePrice),
+    [candyOrderProducts, maxOrderShowcasePrice],
   )
   const selectedMenuShowcaseProduct = menuShowcaseProducts[menuProductStep] ?? menuShowcaseProducts[0] ?? null
   const selectedOrderShowcaseProduct = orderShowcaseProducts[orderProductStep] ?? orderShowcaseProducts[0] ?? null
@@ -209,7 +224,8 @@ export function HomePage() {
     }
   }
 
-  const handleRateProduct = async (item, rating) => {
+  const handleRateProduct = async (item, rating, sectionType) => {
+    const submitRating = sectionType === 'pedidos-de-doces' ? submitCandyRating : submitEasterRating
     const result = await submitRating(item.id, rating)
 
     if (!result.ok) {
@@ -706,7 +722,7 @@ export function HomePage() {
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.15 }}>
           <ShowcaseSection
             BRL={BRL}
-            seasonalProducts={seasonalProducts}
+            seasonalProducts={easterMenuProducts}
             visibleShowcaseProducts={menuShowcaseProducts}
             selectedShowcaseProduct={selectedMenuShowcaseProduct}
             activeProductStep={menuProductStep}
@@ -719,9 +735,9 @@ export function HomePage() {
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
             onFavoriteProduct={handleFavoriteProduct}
-            productRatings={ratingsByProductId}
-            onRateProduct={handleRateProduct}
-            isGlobalRatingsActive={isGlobalRatingsActive}
+            productRatings={easterRatingsByProductId}
+            onRateProduct={(item, rating) => handleRateProduct(item, rating, 'cardapio-de-pascoa')}
+            isGlobalRatingsActive={isEasterGlobalRatingsActive}
           />
         </MotionDiv>
 
@@ -732,7 +748,7 @@ export function HomePage() {
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.19 }}>
           <ShowcaseSection
             BRL={BRL}
-            seasonalProducts={seasonalProducts}
+            seasonalProducts={candyOrderProducts}
             visibleShowcaseProducts={orderShowcaseProducts}
             selectedShowcaseProduct={selectedOrderShowcaseProduct}
             activeProductStep={orderProductStep}
@@ -745,9 +761,9 @@ export function HomePage() {
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
             onFavoriteProduct={handleFavoriteProduct}
-            productRatings={ratingsByProductId}
-            onRateProduct={handleRateProduct}
-            isGlobalRatingsActive={isGlobalRatingsActive}
+            productRatings={candyRatingsByProductId}
+            onRateProduct={(item, rating) => handleRateProduct(item, rating, 'pedidos-de-doces')}
+            isGlobalRatingsActive={isCandyGlobalRatingsActive}
           />
         </MotionDiv>
 
