@@ -1,11 +1,13 @@
+const readFirebaseEnvVar = (envVarName) => String(import.meta.env[envVarName] ?? '').trim()
+
 const firebaseConfig = {
-  apiKey: String(import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyB8eq9Que0GvzGQvFcjOi0SeIvCnG9rNp0'),
-  authDomain: String(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'carliz-doces.firebaseapp.com'),
-  projectId: String(import.meta.env.VITE_FIREBASE_PROJECT_ID || 'carliz-doces'),
-  storageBucket: String(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'carliz-doces.firebasestorage.app'),
-  messagingSenderId: String(import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '232159863056'),
-  appId: String(import.meta.env.VITE_FIREBASE_APP_ID || '1:232159863056:web:9b82a1a594373d4df90595'),
-  measurementId: String(import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-B1NGLYRF3D'),
+  apiKey: readFirebaseEnvVar('VITE_FIREBASE_API_KEY'),
+  authDomain: readFirebaseEnvVar('VITE_FIREBASE_AUTH_DOMAIN'),
+  projectId: readFirebaseEnvVar('VITE_FIREBASE_PROJECT_ID'),
+  storageBucket: readFirebaseEnvVar('VITE_FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: readFirebaseEnvVar('VITE_FIREBASE_MESSAGING_SENDER_ID'),
+  appId: readFirebaseEnvVar('VITE_FIREBASE_APP_ID'),
+  measurementId: readFirebaseEnvVar('VITE_FIREBASE_MEASUREMENT_ID'),
 }
 
 const isFirebaseAuthConfigured = () => Boolean(
