@@ -29,6 +29,18 @@ const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 const GOOGLE_AUTH_API_URL = '/api/auth/google'
 const GOOGLE_CLIENT_ID_API_URL = '/api/auth/google-client-id'
+const GOOGLE_CLIENT_ID_PLACEHOLDERS = ['SEU_CLIENT_ID', 'YOUR_CLIENT_ID', 'INSIRA_SEU_CLIENT_ID']
+
+const normalizeGoogleClientId = (clientId) => {
+  const normalized = String(clientId ?? '').trim()
+  if (!normalized) return ''
+
+  const upperValue = normalized.toUpperCase()
+  const containsPlaceholder = GOOGLE_CLIENT_ID_PLACEHOLDERS.some((placeholder) => upperValue.includes(placeholder))
+  if (containsPlaceholder) return ''
+
+  return /\.apps\.googleusercontent\.com$/i.test(normalized) ? normalized : ''
+}
 
 const getStoredAuthenticatedProfile = () => {
   try {
@@ -119,7 +131,7 @@ export function HomePage() {
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
-  const [googleClientId, setGoogleClientId] = useState(() => String(import.meta.env.VITE_GOOGLE_CLIENT_ID ?? '').trim())
+  const [googleClientId, setGoogleClientId] = useState(() => normalizeGoogleClientId(import.meta.env.VITE_GOOGLE_CLIENT_ID))
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
@@ -327,7 +339,7 @@ export function HomePage() {
     }
 
     if (!googleClientId) {
-      setSnackbar({ open: true, message: 'Defina VITE_GOOGLE_CLIENT_ID (ou GOOGLE_CLIENT_ID no servidor) para ativar o login Google.', severity: 'warning' })
+      setSnackbar({ open: true, message: 'Defina um Google Client ID válido em VITE_GOOGLE_CLIENT_ID (ou GOOGLE_CLIENT_ID no servidor) para ativar o login Google.', severity: 'warning' })
       return
     }
 
@@ -367,7 +379,7 @@ export function HomePage() {
         }
 
         const data = await response.json()
-        const configuredClientId = typeof data?.clientId === 'string' ? data.clientId.trim() : ''
+        const configuredClientId = normalizeGoogleClientId(data?.clientId)
         if (configuredClientId) {
           setGoogleClientId(configuredClientId)
         }
