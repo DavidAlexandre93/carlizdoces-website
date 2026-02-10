@@ -5,6 +5,7 @@
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
+    "deploy:firebase": "npm run build && npx firebase-tools deploy --only hosting",
     "lint": "eslint .",
     "generate:image-data": "node scripts/generate-image-data.mjs",
     "prestart": "npm run generate:image-data",
