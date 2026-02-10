@@ -357,7 +357,7 @@ npm install
 
 ### Login Google falhando
 
-- Verifique `VITE_GOOGLE_CLIENT_ID` e/ou `GOOGLE_CLIENT_ID`.
+- Verifique `VITE_GOOGLE_CLIENT_ID` e/ou `GOOGLE_CLIENT_ID` (não use placeholders como `SEU_CLIENT_ID`).
 - Confirme se o OAuth Client está habilitado e com origens autorizadas.
 - Em produção, garanta que as variáveis também estejam configuradas na Vercel.
 
