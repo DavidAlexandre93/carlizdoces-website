@@ -1,39 +1,46 @@
 # 🍫 Carliz Doces Website
 
-Landing page institucional e comercial da **Carliz Doces**, desenvolvida com React + Webpack, com foco em apresentação de produtos, captação de pedidos e conversão via WhatsApp.
+Landing page institucional e comercial da **Carliz Doces**, construída com **React + Webpack**, com foco em apresentação do catálogo, captação de pedidos e conversão direta para WhatsApp.
 
-> Projeto pronto para deploy estático (SPA) com suporte a Vercel.
+> Projeto preparado para deploy na Vercel (SPA + funções serverless em `/api`).
 
 ---
 
 ## 📑 Sumário
 
-- [📌 Sobre o projeto](#-sobre-o-projeto)
-- [🔗 Demo](#-demo)
-- [✨ Funcionalidades](#-funcionalidades)
-- [🧱 Arquitetura e stack](#-arquitetura-e-stack)
-- [📂 Estrutura de pastas](#-estrutura-de-pastas)
-- [⚙️ Pré-requisitos](#️-pré-requisitos)
-- [🚀 Como executar localmente](#-como-executar-localmente)
-- [📜 Scripts disponíveis](#-scripts-disponíveis)
-- [📦 Dependências](#-dependências)
-- [🌎 Deploy](#-deploy)
-- [🧪 Qualidade e boas práticas](#-qualidade-e-boas-práticas)
-- [🔧 Solução de problemas](#-solução-de-problemas)
-- [📄 Licença](#-licença)
+- [Visão geral](#-visão-geral)
+- [Demo](#-demo)
+- [Principais funcionalidades](#-principais-funcionalidades)
+- [Tecnologias e arquitetura](#-tecnologias-e-arquitetura)
+- [Estrutura de pastas](#-estrutura-de-pastas)
+- [Pré-requisitos](#-pré-requisitos)
+- [Instalação e execução local](#-instalação-e-execução-local)
+- [Scripts disponíveis](#-scripts-disponíveis)
+- [Fluxo de conteúdo dinâmico por imagens](#-fluxo-de-conteúdo-dinâmico-por-imagens)
+- [Guia rápido de edição de catálogo](#-guia-rápido-de-edição-de-catálogo)
+- [Variáveis de ambiente](#-variáveis-de-ambiente)
+- [APIs serverless disponíveis](#-apis-serverless-disponíveis)
+- [Build e deploy](#-build-e-deploy)
+- [CI/CD com GitHub Actions](#-cicd-com-github-actions)
+- [Boas práticas para evolução do projeto](#-boas-práticas-para-evolução-do-projeto)
+- [Troubleshooting](#-troubleshooting)
+- [Roadmap sugerido](#-roadmap-sugerido)
+- [Licença](#-licença)
 
 ---
 
-## 📌 Sobre o projeto
+## 👀 Visão geral
 
-Este repositório contém o front-end do site da **Carliz Doces**, com navegação por seções, catálogo sazonal, destaques promocionais, depoimentos, atualizações e formulário de pedido.
+Este repositório contém o front-end do site da **Carliz Doces** em formato **Single Page Application (SPA)**, com:
 
-A aplicação foi estruturada como **Single Page Application (SPA)** e utiliza:
+- Hero com destaque visual da marca;
+- Sessões institucionais (sobre, contato, localização);
+- Vitrine de produtos com avaliações por estrelas;
+- Carrinho simplificado e geração automática de pedido via WhatsApp;
+- Destaques/novidades e integrações de engajamento (curtidas, depoimentos e Instagram);
+- Login via Google (token validado em endpoint serverless).
 
-- **React 19** para construção da interface;
-- **Material UI (MUI)** para componentes visuais;
-- **TanStack React Query** para padrão de gerenciamento de dados assíncronos (quando necessário);
-- **Webpack 5 + Babel** para build e ambiente de desenvolvimento.
+A arquitetura foi pensada para permitir que pessoas não técnicas consigam atualizar produtos e novidades principalmente por **adição/remoção de imagens** em `public/images` e ajustes pontuais em `src/data/editableContent.js`.
 
 ---
 
@@ -41,46 +48,49 @@ A aplicação foi estruturada como **Single Page Application (SPA)** e utiliza:
 
 - **Produção (Vercel):** `https://carlizdoces-website.vercel.app`
 
-> Caso o domínio mude, basta atualizar este link e/ou configurar domínio customizado na Vercel.
-
 ---
 
-## ✨ Funcionalidades
+## ✨ Principais funcionalidades
 
 - Layout responsivo para desktop e mobile;
-- Seções institucionais (hero, sobre, contato e localização);
-- Vitrine de produtos e destaques sazonais;
-- Carrinho simplificado com cálculo de total por item e valor final;
-- Montagem automática de mensagem para pedido no WhatsApp;
-- Botões de ação rápida para Instagram e WhatsApp;
-- Carregamento sob demanda (lazy loading) em seções específicas;
-- Suporte a tema claro/escuro e interações modernas da interface.
+- Navegação por âncoras entre seções da página;
+- Catálogo de produtos com preços, quantidades e detalhes;
+- Carrinho com totalizador e resumo por item;
+- Montagem de mensagem pronta para WhatsApp com nome, telefone e itens do pedido;
+- Avaliação por estrelas por produto (com persistência local e tentativa de sincronização com API);
+- Curtidas da loja e por produto (endpoints em `/api/likes/...`);
+- Comentários da comunidade com fallback para Disqus configurável;
+- Login com Google (obtenção de client ID + validação de `idToken` em API);
+- Carregamento lazy de seções para reduzir custo inicial de renderização.
 
 ---
 
-## 🧱 Arquitetura e stack
+## 🧱 Tecnologias e arquitetura
 
 ### Front-end
 
-- **React:** `^19.0.0`
-- **React DOM:** `^19.0.0`
-- **MUI Material:** `^6.4.0`
-- **Emotion (styled/react):** `^11.14.0`
-- **TanStack React Query:** `^5.90.20`
+- **React 19**
+- **React DOM 19**
+- **Material UI (MUI)**
+- **Emotion**
+- **TanStack React Query**
+- **Motion** (`motion/react`) para animações
 
 ### Build e tooling
 
-- **Webpack:** `^5.98.0`
-- **Webpack Dev Server:** `^5.2.0`
-- **Babel:** `@babel/core`, `@babel/preset-env`, `@babel/preset-react`
-- **ESLint 9** com plugins de hooks e react-refresh
+- **Webpack 5**
+- **Webpack Dev Server**
+- **Babel** (`preset-env` + `preset-react`)
+- **ESLint 9** (`react-hooks` + `react-refresh`)
 
-### Padrões aplicados
+### Organização de código
 
-- Organização por domínio/seção (`features`, `components`, `hooks`, `data`);
-- Componentização orientada a reutilização;
-- Hooks customizados para regras de negócio (ex.: carrinho e link de pedido);
-- Separação entre dados estáticos e camada visual.
+- `src/app`: providers e roteamento base
+- `src/features`: componentes de domínio/fluxo principal
+- `src/components`: layout e seções reutilizáveis
+- `src/hooks`: regras de negócio reaproveitáveis
+- `src/data`: conteúdo e agregação de dados exibidos
+- `api`: funções serverless utilizadas no deploy da Vercel
 
 ---
 
@@ -88,18 +98,26 @@ A aplicação foi estruturada como **Single Page Application (SPA)** e utiliza:
 
 ```bash
 .
-├── public/                     # Arquivos estáticos (imagens, ícones)
+├── api/                        # Endpoints serverless (likes, auth, ratings)
+├── public/
+│   └── images/                 # Imagens por coleção (catálogo, novidades, etc.)
+├── scripts/
+│   └── generate-image-data.mjs # Gera src/data/generatedImages.js automaticamente
 ├── src/
-│   ├── app/                    # Providers e roteamento base
-│   ├── components/             # Componentes reutilizáveis de layout e seções
-│   ├── data/                   # Dados e constantes da aplicação
-│   ├── features/               # Seções/páginas por domínio
-│   ├── hooks/                  # Hooks customizados
-│   ├── pages/                  # Composição de páginas
+│   ├── app/
+│   ├── components/
+│   ├── data/
+│   │   ├── editableContent.js  # Edição manual rápida (override de textos/dados)
+│   │   ├── generatedImages.js  # Arquivo gerado por script (não editar manualmente)
+│   │   └── siteData.js         # Consolida dados renderizados no app
+│   ├── features/
+│   ├── hooks/
+│   ├── pages/
 │   ├── App.jsx
 │   └── main.jsx
-├── vercel.json                 # Configuração de deploy
-├── webpack.config.js           # Configuração de build
+├── .github/workflows/          # CI/CD
+├── vercel.json                 # Configuração de build/deploy
+├── webpack.config.js
 └── package.json
 ```
 
@@ -107,12 +125,10 @@ A aplicação foi estruturada como **Single Page Application (SPA)** e utiliza:
 
 ## ⚙️ Pré-requisitos
 
-Antes de iniciar, tenha instalado:
+- **Node.js** `>= 20`
+- **npm** `>= 10`
 
-- **Node.js** `>= 20` (recomendado LTS);
-- **npm** `>= 10`.
-
-Verifique as versões:
+Verifique:
 
 ```bash
 node -v
@@ -121,22 +137,22 @@ npm -v
 
 ---
 
-## 🚀 Como executar localmente
+## 🚀 Instalação e execução local
 
-1. **Clone o repositório**
+1. Clone o repositório:
 
 ```bash
 git clone https://github.com/<seu-usuario>/carlizdoces-website.git
 cd carlizdoces-website
 ```
 
-2. **Instale as dependências**
+2. Instale as dependências:
 
 ```bash
 npm install
 ```
 
-3. **Inicie o servidor de desenvolvimento**
+3. Rode o projeto em desenvolvimento:
 
 ```bash
 npm start
@@ -144,228 +160,224 @@ npm start
 
 4. Acesse no navegador:
 
-```txt
+```text
 http://localhost:3000
 ```
 
----
-
-
-## ✍️ Alteração manual rápida de produtos, imagens e descrições
-
-Agora existe um arquivo único para edição de conteúdo:
-
-- `src/data/editableContent.js`
-
-Nele você consegue, de forma simples:
-
-- adicionar/remover produtos (`productsCatalog`);
-- trocar imagens dos produtos (`image`);
-- editar descrição curta e informações do doce (`shortDescription` e `details`);
-- adicionar/remover cards de novidades (`updatesCatalog`), incluindo imagem, título e texto.
-
-### Passo a passo
-
-1. Coloque sua imagem em `public/images/...`;
-2. Abra `src/data/editableContent.js`;
-3. Edite (ou apague) o objeto desejado;
-4. Salve e rode `npm start` para validar no navegador.
-
-> Dica: mantenha o campo `id` único de identificação em cada item para evitar conflitos na interface.
+> `npm start` e `npm run build` executam automaticamente o script de geração de dados de imagem antes do comando principal.
 
 ---
 
 ## 📜 Scripts disponíveis
 
-- `npm start` → inicia ambiente de desenvolvimento com hot reload;
-- `npm run build` → gera bundle de produção em `dist/`;
-- `npm run lint` → executa análise estática com ESLint.
+- `npm start`  
+  Inicia o `webpack-dev-server` em modo desenvolvimento.
+- `npm run build`  
+  Gera build de produção em `dist/`.
+- `npm run lint`  
+  Executa análise estática com ESLint.
+- `npm run generate:image-data`  
+  Escaneia `public/images/*` e atualiza `src/data/generatedImages.js`.
+
+### Scripts automáticos encadeados
+
+- `prestart`: roda `generate:image-data` antes de `start`.
+- `prebuild`: roda `generate:image-data` antes de `build`.
+- `postbuild`: copia os assets de `public/` para `dist/`.
 
 ---
 
+## 🖼️ Fluxo de conteúdo dinâmico por imagens
 
-## 🔐 Login com Google
+Este projeto usa um fluxo híbrido para facilitar manutenção:
 
-O botão de login usa o Google Identity Services no front-end e valida o token no endpoint serverless:
+1. Você adiciona/remove imagens nas subpastas de `public/images`.
+2. O script `generate-image-data.mjs` transforma isso em estrutura JavaScript (`generatedImages.js`).
+3. `siteData.js` cruza imagens geradas com os overrides de `editableContent.js`.
+4. A interface renderiza os dados finais (com fallback automático quando não há override manual).
 
-```txt
-/api/auth/google
-```
+### Benefícios
 
-Configure a variável de ambiente abaixo no desenvolvimento e no deploy:
+- Menos necessidade de alterar componentes para atualizar catálogo;
+- Menor risco de erro em mudanças recorrentes de conteúdo;
+- Escalabilidade para novas coleções visuais.
+
+---
+
+## ✍️ Guia rápido de edição de catálogo
+
+Arquivo principal de edição manual:
+
+- `src/data/editableContent.js`
+
+Você pode:
+
+- atualizar produtos (`productsCatalog`);
+- ajustar preço, descrição e quantidades;
+- adicionar/remover cards de novidades (`updatesCatalog`);
+- trocar imagens (desde que elas existam em `public/images/...`).
+
+### Regras importantes
+
+- mantenha `id` único para cada item;
+- `price` deve ser número;
+- use caminhos válidos em `image`/`imageUrl` (ex.: `/images/pedidos-de-doces/brigadeiro.png`).
+
+### Passo a passo recomendado
+
+1. Adicione a imagem na pasta correta em `public/images/...`;
+2. Rode `npm run generate:image-data` (ou apenas `npm start`);
+3. Ajuste dados no `editableContent.js` se precisar de override;
+4. Valide visualmente em `http://localhost:3000`.
+
+---
+
+## 🔐 Variáveis de ambiente
+
+Crie um `.env.local` para desenvolvimento local (ou configure no painel da Vercel em produção).
+
+| Variável | Obrigatória? | Uso |
+|---|---:|---|
+| `VITE_GOOGLE_CLIENT_ID` | Recomendada | Client ID do Google no front-end e fallback para API. |
+| `GOOGLE_CLIENT_ID` | Opcional | Prioritária para APIs serverless de autenticação Google. |
+| `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
+
+### Exemplo
 
 ```bash
 VITE_GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
-```
-
-> Dica: no back-end serverless também aceitamos `GOOGLE_CLIENT_ID` (fallback), mas `VITE_GOOGLE_CLIENT_ID` é a forma recomendada para manter front-end e API alinhados.
-
----
-
-## 💬 Configuração de comentários (Disqus)
-
-A seção **Depoimentos** pode exibir comentários reais de clientes com Disqus.
-
-1. Crie um site no Disqus e obtenha o seu `shortname`;
-2. Defina a variável abaixo no ambiente local/deploy:
-
-```bash
+GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
 VITE_DISQUS_SHORTNAME=seu-shortname
 ```
 
-> Sem essa variável, a aplicação exibe uma mensagem orientando a configuração e não carrega o widget.
+---
+
+## 🔌 APIs serverless disponíveis
+
+A pasta `api/` contém rotas usadas no deploy da Vercel.
+
+### Autenticação Google
+
+- `GET /api/auth/google-client-id` → retorna `clientId` configurado.
+- `POST /api/auth/google` → valida `idToken` no Google TokenInfo e retorna dados do usuário.
+
+### Likes
+
+- `GET /api/likes/summary?userId=...` → resumo de likes da loja e produtos.
+- `POST /api/likes/store` com `{ userId }` → curte a loja.
+- `POST /api/likes/product/:id` com `{ userId }` → curte um produto.
+
+### Ratings
+
+- `GET /api/ratings` → estatísticas agregadas por produto.
+- `POST /api/ratings` com `{ productId, rating }` → registra/atualiza avaliação (1–5).
+
+> Observação: likes e ratings usam armazenamento em memória no ambiente serverless (sem banco persistente).
 
 ---
 
-## ⭐ Avaliações por estrelas dos produtos
+## 🌐 Build e deploy
 
-A vitrine agora permite que cada usuário escolha seu próprio nível de estrelas para cada produto.
+### Build local de produção
 
-- O voto do usuário fica salvo no navegador (localStorage), para manter o valor selecionado quando a página for aberta novamente;
-- A média exibida considera os votos agregados vindos da API em `/api/ratings`, quando disponível;
-- Sem API disponível, a interface mantém a avaliação local no dispositivo e mostra fallback da média base do catálogo.
-
-### Endpoint de avaliação
-
-O projeto já inclui um endpoint serverless em:
-
-```txt
-/api/ratings
+```bash
+npm run build
 ```
 
-Ele aceita:
+Saída em `dist/`.
 
-- `GET` → retorna as estatísticas agregadas por produto;
-- `POST` com `{ productId, rating }` → registra/atualiza voto (1 a 5).
+### Deploy na Vercel
 
----
-
-## 📦 Dependências
-
-### Dependências de produção
-
-- `@emotion/react`
-- `@emotion/styled`
-- `@mui/material`
-- `@tanstack/react-query`
-- `react`
-- `react-dom`
-
-### Dependências de desenvolvimento
-
-- `@babel/core`
-- `@babel/preset-env`
-- `@babel/preset-react`
-- `@eslint/js`
-- `babel-loader`
-- `css-loader`
-- `eslint`
-- `eslint-plugin-react-hooks`
-- `eslint-plugin-react-refresh`
-- `globals`
-- `html-webpack-plugin`
-- `style-loader`
-- `webpack`
-- `webpack-cli`
-- `webpack-dev-server`
-
----
-
-## 🌎 Deploy
-
-O projeto está preparado para deploy na **Vercel** com saída estática em `dist/`.
-
-### Configuração atual (`vercel.json`)
+O projeto já possui `vercel.json` com:
 
 - `installCommand`: `npm install --production=false`
 - `buildCommand`: `npm run build`
 - `outputDirectory`: `dist`
-- `rewrites`: fallback para `index.html` (compatível com SPA)
-
-### Publicação rápida
-
-1. Faça push da branch para o GitHub;
-2. Importe o repositório na Vercel;
-3. Garanta que os comandos de build sejam os mesmos do `vercel.json`.
+- `rewrites` para SPA (`/(.*) -> /index.html`)
 
 ---
 
-## 🔁 CI/CD (GitHub Actions + Vercel)
+## 🔁 CI/CD com GitHub Actions
 
-Foram adicionados pipelines completos para elevar a qualidade das entregas:
+Workflows presentes:
 
-- **CI - Quality Gate** (`.github/workflows/ci.yml`)
-  - roda em **Node 20 e 22** (matrix);
-  - executa `npm ci`, lint com **zero warnings** e build de produção;
-  - publica artefato `dist` para inspeção;
-  - inclui **Dependency Review** (falha para vulnerabilidades de severidade alta+ em PRs);
-  - inclui **CodeQL** para análise de segurança de código.
+- **CI (`.github/workflows/ci.yml`)**
+  - checkout
+  - setup Node 20
+  - `npm ci`
+  - `npm run lint -- --max-warnings=0`
+  - `npm run build`
 
-- **CD - Vercel Preview** (`.github/workflows/cd-vercel-preview.yml`)
-  - dispara em PRs e gera deploy de preview na Vercel;
-  - comenta automaticamente a URL do preview no próprio PR.
+- **CD Preview (`.github/workflows/cd-vercel-preview.yml`)**
+  - executa em PR
+  - faz deploy preview na Vercel se secrets estiverem presentes
+  - comenta URL (ou motivo de skip) no PR
 
-- **CD - Vercel Production** (`.github/workflows/cd-vercel.yml`)
-  - dispara após CI verde em `main` (via `workflow_run`);
-  - também pode ser executado manualmente (`workflow_dispatch`);
-  - faz deploy de produção na Vercel.
+- **CD Production (`.github/workflows/cd-vercel.yml`)**
+  - executa em push para `main` e manualmente (`workflow_dispatch`)
+  - deploy de produção se credenciais existirem
 
-### 🔐 Secrets obrigatórios no GitHub
-
-Configure os seguintes segredos no repositório (Settings → Secrets and variables → Actions):
+### Secrets necessários para deploy
 
 - `VERCEL_TOKEN`
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-Sem eles, os jobs de deploy irão falhar por segurança.
+---
 
-## 🧪 Qualidade e boas práticas
+## ✅ Boas práticas para evolução do projeto
 
-- Lint com ESLint para padronização e prevenção de erros comuns;
-- Código modular e organizado por responsabilidade;
-- Mensagens de pedido no WhatsApp geradas de forma padronizada;
-- Estrutura pronta para escalar novas seções e integrações.
+- Antes de commitar: rode `npm run lint` e `npm run build`.
+- Evite editar manualmente `src/data/generatedImages.js` (arquivo gerado).
+- Sempre que alterar imagens, garanta que os caminhos no catálogo batem com os arquivos em `public/images`.
+- Para mudanças de UX, preserve IDs de seção usados na navegação por âncoras.
+- Ao adicionar endpoint novo em `api/`, documente no README e atualize chamadas no front-end.
 
 ---
 
-## 🔧 Solução de problemas
+## 🛠️ Troubleshooting
 
-### Porta 3000 em uso
-
-Inicie em outra porta:
+### Porta 3000 ocupada
 
 ```bash
 PORT=3001 npm start
 ```
 
-### Erros após atualizar dependências
-
-Faça uma instalação limpa:
+### Erros após atualização de dependências
 
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Aviso "New major version of npm available"
+### Comentários Disqus não aparecem
 
-Esse aviso é apenas informativo e não impede a execução do projeto.
+- Verifique se `VITE_DISQUS_SHORTNAME` está definido corretamente.
+- Confirme se o domínio do site está cadastrado no Disqus.
 
-Se quiser ocultar a notificação localmente no repositório, mantemos `update-notifier=false` no arquivo `.npmrc`.
+### Login Google falhando
 
-Para atualizar o npm globalmente (opcional):
+- Verifique `VITE_GOOGLE_CLIENT_ID` e/ou `GOOGLE_CLIENT_ID`.
+- Confirme se o OAuth Client está habilitado e com origens autorizadas.
+- Em produção, garanta que as variáveis também estejam configuradas na Vercel.
 
-```bash
-npm install -g npm@latest
-```
+### Build Vercel sem deploy
 
-### Build falhando na Vercel
+- Confira os secrets de deploy no GitHub Actions.
+- Verifique logs do workflow para identificar ausência de credenciais.
 
-Verifique se o output está apontando para `dist/` e se não há override conflitante no painel do projeto.
+---
+
+## 🗺️ Roadmap sugerido
+
+- Persistência real de likes/ratings em banco de dados;
+- Painel administrativo simples para edição de catálogo sem mexer em código;
+- Testes automatizados (unitários + integração de componentes);
+- Monitoramento de erro e analytics de conversão de pedidos;
+- Otimização adicional de imagens (formatos modernos e compressão por pipeline).
 
 ---
 
 ## 📄 Licença
 
-Distribuído sob a licença **MIT**. Consulte o arquivo [`LICENSE`](./LICENSE) para mais detalhes.
+Este projeto está sob a licença **MIT**. Veja [`LICENSE`](./LICENSE).
