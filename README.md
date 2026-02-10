@@ -300,6 +300,22 @@ O projeto já possui `vercel.json` com:
 - `outputDirectory`: `dist`
 - `rewrites` para SPA (`/(.*) -> /index.html`)
 
+### Deploy no Firebase Hosting
+
+A configuração de hosting também está pronta com `firebase.json` + `.firebaserc`:
+
+```bash
+firebase login
+firebase init
+npm run deploy:firebase
+```
+
+Configuração aplicada:
+
+- diretório público: `dist`
+- rewrite SPA: `** -> /index.html`
+- projeto padrão: `carliz-doces`
+
 ---
 
 ## 🔁 CI/CD com GitHub Actions
