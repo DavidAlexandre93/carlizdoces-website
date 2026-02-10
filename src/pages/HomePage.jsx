@@ -15,7 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { isFirebaseAuthConfigured, signInWithFirebasePopup, subscribeToFirebaseUser } from '../services/firebaseAuth'
+import { isFirebaseAuthConfigured, resetFirebaseUi, startFirebaseUiLogin, subscribeToFirebaseUser } from '../services/firebaseAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -120,6 +120,7 @@ export function HomePage() {
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [isAuthLoading, setIsAuthLoading] = useState(false)
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
@@ -260,24 +261,48 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleFirebaseLogin = async () => {
+  const handleFirebaseLogin = () => {
     if (!isFirebaseAuthConfigured()) {
       setSnackbar({ open: true, message: 'Firebase Authentication não está configurado no momento.', severity: 'warning' })
       return
     }
 
-    setIsAuthLoading(true)
-
-    try {
-      const user = await signInWithFirebasePopup()
-      const profileName = String(user?.displayName ?? 'usuário')
-      setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
-    } catch {
-      setSnackbar({ open: true, message: 'Não foi possível concluir o login agora. Tente novamente.', severity: 'error' })
-    } finally {
-      setIsAuthLoading(false)
-    }
+    setIsAuthModalOpen(true)
   }
+
+  useEffect(() => {
+    if (!isAuthModalOpen) {
+      resetFirebaseUi()
+      return undefined
+    }
+
+    const startUiTimerId = window.setTimeout(() => {
+      try {
+        setIsAuthLoading(true)
+        startFirebaseUiLogin({
+          containerSelector: '#firebaseui-auth-container',
+          onSuccess: (user) => {
+            setIsAuthLoading(false)
+            setIsAuthModalOpen(false)
+            const profileName = String(user?.displayName ?? 'usuário')
+            setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
+          },
+          onError: () => {
+            setIsAuthLoading(false)
+            setSnackbar({ open: true, message: 'Não foi possível concluir o login agora. Tente novamente.', severity: 'error' })
+          },
+        })
+      } catch {
+        setIsAuthLoading(false)
+        setSnackbar({ open: true, message: 'FirebaseUI não está disponível no momento.', severity: 'warning' })
+      }
+    }, 50)
+
+    return () => {
+      window.clearTimeout(startUiTimerId)
+      resetFirebaseUi()
+    }
+  }, [isAuthModalOpen])
 
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
@@ -593,6 +618,8 @@ export function HomePage() {
         authenticatedUser={authenticatedUser}
         isAuthLoading={isAuthLoading}
         onAuthLogin={handleFirebaseLogin}
+        isAuthModalOpen={isAuthModalOpen}
+        onCloseAuthModal={() => setIsAuthModalOpen(false)}
       />
 
       <main>
