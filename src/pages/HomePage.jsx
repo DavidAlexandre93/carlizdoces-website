@@ -15,6 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
+import { isFirebaseAuthConfigured, signInWithFirebasePopup, subscribeToFirebaseUser } from '../services/firebaseAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -26,21 +27,6 @@ const AUTH_USER_STORAGE_KEY = 'carliz-auth-user-id'
 const AUTH_PROFILE_STORAGE_KEY = 'carliz-auth-user-profile'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
-
-const GOOGLE_AUTH_API_URL = '/api/auth/google'
-const GOOGLE_CLIENT_ID_API_URL = '/api/auth/google-client-id'
-const GOOGLE_CLIENT_ID_PLACEHOLDERS = ['SEU_CLIENT_ID', 'YOUR_CLIENT_ID', 'INSIRA_SEU_CLIENT_ID']
-
-const normalizeGoogleClientId = (clientId) => {
-  const normalized = String(clientId ?? '').trim()
-  if (!normalized) return ''
-
-  const upperValue = normalized.toUpperCase()
-  const containsPlaceholder = GOOGLE_CLIENT_ID_PLACEHOLDERS.some((placeholder) => upperValue.includes(placeholder))
-  if (containsPlaceholder) return ''
-
-  return /\.apps\.googleusercontent\.com$/i.test(normalized) ? normalized : ''
-}
 
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
@@ -133,8 +119,7 @@ export function HomePage() {
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
-  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
-  const [googleClientId, setGoogleClientId] = useState(() => normalizeGoogleClientId(import.meta.env.VITE_GOOGLE_CLIENT_ID))
+  const [isAuthLoading, setIsAuthLoading] = useState(false)
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
@@ -191,8 +176,8 @@ export function HomePage() {
 
   const handleFavoriteProduct = async (item) => {
     if (!authenticatedUserId) {
-      setSnackbar({ open: true, message: 'Faça login com Google para registrar corações.', severity: 'info' })
-      handleGoogleLogin()
+      setSnackbar({ open: true, message: 'Faça login para registrar corações.', severity: 'info' })
+      handleFirebaseLogin()
       return
     }
 
@@ -275,135 +260,24 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleGoogleCredentialResponse = async (response) => {
-    const credential = typeof response?.credential === 'string' ? response.credential : ''
-
-    if (!credential) {
-      setSnackbar({ open: true, message: 'Não foi possível concluir o login Google.', severity: 'error' })
-      setIsGoogleLoginLoading(false)
+  const handleFirebaseLogin = async () => {
+    if (!isFirebaseAuthConfigured()) {
+      setSnackbar({ open: true, message: 'Firebase Authentication não está configurado no momento.', severity: 'warning' })
       return
     }
 
-    let profile = null
+    setIsAuthLoading(true)
 
     try {
-      const authResponse = await fetch(GOOGLE_AUTH_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken: credential }),
-      })
-
-      if (!authResponse.ok) {
-        throw new Error('google-auth-failed')
-      }
-
-      const authData = await authResponse.json()
-      profile = authData?.user ?? null
+      const user = await signInWithFirebasePopup()
+      const profileName = String(user?.displayName ?? 'usuário')
+      setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
     } catch {
-      profile = null
+      setSnackbar({ open: true, message: 'Não foi possível concluir o login agora. Tente novamente.', severity: 'error' })
+    } finally {
+      setIsAuthLoading(false)
     }
-
-    if (!profile?.id) {
-      setSnackbar({ open: true, message: 'Não foi possível validar seu login Google.', severity: 'error' })
-      setIsGoogleLoginLoading(false)
-      return
-    }
-
-    profile = {
-      id: String(profile.id),
-      name: String(profile.name ?? 'Usuário Google'),
-      email: String(profile.email ?? ''),
-      picture: String(profile.picture ?? ''),
-    }
-
-    setAuthenticatedUserId(profile.id)
-    setAuthenticatedUser(profile)
-    setIsGoogleLoginLoading(false)
-
-    try {
-      window.localStorage.setItem(AUTH_USER_STORAGE_KEY, profile.id)
-      window.localStorage.setItem(AUTH_PROFILE_STORAGE_KEY, JSON.stringify(profile))
-    } catch {
-      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-    }
-
-    fetchLikesSummary(profile.id)
-      .then((summary) => {
-        setTotalLikes(Number(summary?.store?.likes ?? 0))
-        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
-
-        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
-        const likesById = summary?.products?.likesById ?? {}
-
-        setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
-          ...counts,
-          [product.id]: Number(likesById[product.id] ?? 0),
-        }), {}))
-        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
-      })
-      .catch(() => {
-        setSnackbar({ open: true, message: 'Login feito, mas não foi possível sincronizar os corações.', severity: 'warning' })
-      })
-
-    setSnackbar({ open: true, message: `Login realizado com Google. Bem-vindo(a), ${profile.name}!`, severity: 'success' })
   }
-
-  const handleGoogleLogin = () => {
-    if (!window.google?.accounts?.id) {
-      setSnackbar({ open: true, message: 'Login Google indisponível no momento.', severity: 'warning' })
-      return
-    }
-
-    if (!googleClientId) {
-      setSnackbar({ open: true, message: 'Defina um Google Client ID válido em VITE_GOOGLE_CLIENT_ID (ou GOOGLE_CLIENT_ID no servidor) para ativar o login Google.', severity: 'warning' })
-      return
-    }
-
-    setIsGoogleLoginLoading(true)
-
-    window.google.accounts.id.initialize({
-      client_id: googleClientId,
-      callback: handleGoogleCredentialResponse,
-      auto_select: false,
-      cancel_on_tap_outside: true,
-    })
-
-    window.google.accounts.id.prompt((notification) => {
-      const wasNotDisplayed = notification.isNotDisplayed && notification.isNotDisplayed()
-      const wasSkipped = notification.isSkippedMoment && notification.isSkippedMoment()
-      const wasDismissed = notification.isDismissedMoment && notification.isDismissedMoment()
-
-      if (wasNotDisplayed || wasSkipped || wasDismissed) {
-        setSnackbar({ open: true, message: 'Não foi possível abrir o login Google agora. Tente novamente.', severity: 'warning' })
-        setIsGoogleLoginLoading(false)
-      }
-    })
-
-    window.setTimeout(() => {
-      setIsGoogleLoginLoading(false)
-    }, 4500)
-  }
-
-
-  useEffect(() => {
-    if (googleClientId) return
-
-    fetch(GOOGLE_CLIENT_ID_API_URL)
-      .then(async (response) => {
-        if (!response.ok) {
-          return
-        }
-
-        const data = await response.json()
-        const configuredClientId = normalizeGoogleClientId(data?.clientId)
-        if (configuredClientId) {
-          setGoogleClientId(configuredClientId)
-        }
-      })
-      .catch(() => {
-        // Ignora falha silenciosamente para manter experiência sem bloqueio.
-      })
-  }, [googleClientId])
 
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
@@ -510,38 +384,58 @@ export function HomePage() {
   useEffect(() => {
     let isMounted = true
 
-    const currentUserId = getAuthenticatedUserId()
-    const currentUserProfile = getStoredAuthenticatedProfile()
+    const unsubscribeAuth = subscribeToFirebaseUser((user) => {
+      const profile = user
+        ? {
+          id: String(user.uid),
+          name: String(user.displayName ?? 'Usuário'),
+          email: String(user.email ?? ''),
+          picture: String(user.photoURL ?? ''),
+        }
+        : getStoredAuthenticatedProfile()
 
-    if (isMounted) {
-      setAuthenticatedUserId(currentUserId)
-      setAuthenticatedUser(currentUserProfile)
-    }
+      const currentUserId = profile?.id ?? getAuthenticatedUserId()
 
-    fetchLikesSummary(currentUserId)
-      .then((summary) => {
-        if (!isMounted) return
+      if (isMounted) {
+        setAuthenticatedUserId(currentUserId)
+        setAuthenticatedUser(profile)
+      }
 
-        setTotalLikes(Number(summary?.store?.likes ?? 0))
-        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
+      if (profile?.id) {
+        try {
+          window.localStorage.setItem(AUTH_USER_STORAGE_KEY, profile.id)
+          window.localStorage.setItem(AUTH_PROFILE_STORAGE_KEY, JSON.stringify(profile))
+        } catch {
+          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+        }
+      }
 
-        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
-        const likesById = summary?.products?.likesById ?? {}
+      fetchLikesSummary(currentUserId)
+        .then((summary) => {
+          if (!isMounted) return
 
-        setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
-          ...counts,
-          [product.id]: Number(likesById[product.id] ?? 0),
-        }), {}))
+          setTotalLikes(Number(summary?.store?.likes ?? 0))
+          setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
 
-        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
-      })
-      .catch(() => {
-        if (!isMounted) return
-        setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
-      })
+          const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
+          const likesById = summary?.products?.likesById ?? {}
+
+          setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
+            ...counts,
+            [product.id]: Number(likesById[product.id] ?? 0),
+          }), {}))
+
+          setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+        })
+        .catch(() => {
+          if (!isMounted) return
+          setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
+        })
+    })
 
     return () => {
       isMounted = false
+      unsubscribeAuth()
     }
   }, [])
 
@@ -566,10 +460,10 @@ export function HomePage() {
     if (!authenticatedUserId) {
       setSnackbar({
         open: true,
-        message: 'Faça login com Google para registrar seu coração.',
+        message: 'Faça login para registrar seu coração.',
         severity: 'info',
       })
-      handleGoogleLogin()
+      handleFirebaseLogin()
       return
     }
 
@@ -697,8 +591,8 @@ export function HomePage() {
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
         authenticatedUser={authenticatedUser}
-        isGoogleLoginLoading={isGoogleLoginLoading}
-        onGoogleLogin={handleGoogleLogin}
+        isAuthLoading={isAuthLoading}
+        onAuthLogin={handleFirebaseLogin}
       />
 
       <main>

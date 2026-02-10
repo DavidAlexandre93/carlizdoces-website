@@ -26,8 +26,8 @@ export function Header({
   onOpenMobileMenu,
   onCloseMobileMenu,
   authenticatedUser,
-  isGoogleLoginLoading,
-  onGoogleLogin,
+  isAuthLoading,
+  onAuthLogin,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -196,8 +196,8 @@ Deus abençoe! 🙌`
                   color="inherit"
                   variant="text"
                   size="small"
-                  onClick={onGoogleLogin}
-                  disabled={isGoogleLoginLoading}
+                  onClick={onAuthLogin}
+                  disabled={isAuthLoading}
                   sx={{
                     textTransform: 'none',
                     fontSize: '0.8rem',
