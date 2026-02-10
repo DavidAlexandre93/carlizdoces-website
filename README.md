@@ -246,6 +246,9 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 | `VITE_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
 | `VITE_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
 | `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
+| `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |
+| `FIREBASE_PRIVATE_KEY` | Opcional (server) | Alternativa ao JSON completo: chave privada da conta de serviço. |
 
 ### Exemplo
 
@@ -259,6 +262,29 @@ VITE_FIREBASE_APP_ID=1:000000000000:web:abc123
 VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 VITE_DISQUS_SHORTNAME=seu-shortname
 ```
+
+### Firebase Admin SDK (serverless)
+
+> ⚠️ **Nunca exponha a chave privada no frontend**. Use somente em variáveis de ambiente do backend/serverless (Vercel/Firebase Functions/etc.).
+
+Você pode configurar de duas formas:
+
+1. **JSON único (recomendado)**
+
+```bash
+FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"..."}
+```
+
+2. **Campos separados**
+
+```bash
+FIREBASE_PROJECT_ID=seu-projeto
+FIREBASE_CLIENT_EMAIL=sua-conta@seu-projeto.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+```
+
+Este repositório inclui o utilitário `api/firebaseServiceAccount.js` para validar e normalizar essas credenciais no ambiente serverless.
+
 
 ---
 
