@@ -22,16 +22,24 @@ const getFirebaseNamespace = () => window.firebase ?? null
 const getFirebaseUiNamespace = () => window.firebaseui ?? null
 
 const initializeFirebaseAuth = () => {
+  if (!isFirebaseAuthConfigured()) {
+    return null
+  }
+
   const firebaseNamespace = getFirebaseNamespace()
   if (!firebaseNamespace?.apps || !firebaseNamespace?.initializeApp || !firebaseNamespace?.auth) {
     return null
   }
 
-  if (!firebaseNamespace.apps.length) {
-    firebaseNamespace.initializeApp(firebaseConfig)
-  }
+  try {
+    if (!firebaseNamespace.apps.length) {
+      firebaseNamespace.initializeApp(firebaseConfig)
+    }
 
-  return firebaseNamespace.auth()
+    return firebaseNamespace.auth()
+  } catch {
+    return null
+  }
 }
 
 const subscribeToFirebaseUser = (onUserChange) => {
