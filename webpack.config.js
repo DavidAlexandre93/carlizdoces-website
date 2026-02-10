@@ -65,6 +65,7 @@ module.exports = (_, argv = {}) => {
   const mode = argv.mode || 'development';
   const fileEnv = loadDotEnv(mode);
   const getEnvValue = (name) => process.env[name] || fileEnv[name] || '';
+  const getEnvValueAny = (...names) => names.map((name) => getEnvValue(name)).find(Boolean) || '';
 
   return {
     entry: './src/main.jsx',
@@ -106,13 +107,13 @@ module.exports = (_, argv = {}) => {
       new webpack.DefinePlugin({
         'import.meta.env.VITE_DISQUS_SHORTNAME': JSON.stringify(getEnvValue('VITE_DISQUS_SHORTNAME')),
         'import.meta.env.VITE_RATINGS_API_URL': JSON.stringify(getEnvValue('VITE_RATINGS_API_URL')),
-        'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(getEnvValue('VITE_FIREBASE_API_KEY')),
-        'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(getEnvValue('VITE_FIREBASE_AUTH_DOMAIN')),
-        'import.meta.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_PROJECT_ID')),
-        'import.meta.env.VITE_FIREBASE_STORAGE_BUCKET': JSON.stringify(getEnvValue('VITE_FIREBASE_STORAGE_BUCKET')),
-        'import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_MESSAGING_SENDER_ID')),
-        'import.meta.env.VITE_FIREBASE_APP_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_APP_ID')),
-        'import.meta.env.VITE_FIREBASE_MEASUREMENT_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_MEASUREMENT_ID')),
+        'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(getEnvValueAny('VITE_FIREBASE_API_KEY', 'FIREBASE_API_KEY', 'NEXT_PUBLIC_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_API_KEY')),
+        'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(getEnvValueAny('VITE_FIREBASE_AUTH_DOMAIN', 'FIREBASE_AUTH_DOMAIN', 'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', 'REACT_APP_FIREBASE_AUTH_DOMAIN')),
+        'import.meta.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(getEnvValueAny('VITE_FIREBASE_PROJECT_ID', 'FIREBASE_PROJECT_ID', 'NEXT_PUBLIC_FIREBASE_PROJECT_ID', 'REACT_APP_FIREBASE_PROJECT_ID')),
+        'import.meta.env.VITE_FIREBASE_STORAGE_BUCKET': JSON.stringify(getEnvValueAny('VITE_FIREBASE_STORAGE_BUCKET', 'FIREBASE_STORAGE_BUCKET', 'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', 'REACT_APP_FIREBASE_STORAGE_BUCKET')),
+        'import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(getEnvValueAny('VITE_FIREBASE_MESSAGING_SENDER_ID', 'FIREBASE_MESSAGING_SENDER_ID', 'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', 'REACT_APP_FIREBASE_MESSAGING_SENDER_ID')),
+        'import.meta.env.VITE_FIREBASE_APP_ID': JSON.stringify(getEnvValueAny('VITE_FIREBASE_APP_ID', 'FIREBASE_APP_ID', 'NEXT_PUBLIC_FIREBASE_APP_ID', 'REACT_APP_FIREBASE_APP_ID')),
+        'import.meta.env.VITE_FIREBASE_MEASUREMENT_ID': JSON.stringify(getEnvValueAny('VITE_FIREBASE_MEASUREMENT_ID', 'FIREBASE_MEASUREMENT_ID', 'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID', 'REACT_APP_FIREBASE_MEASUREMENT_ID')),
       }),
       new HtmlWebpackPlugin({
         template: './index.html'
