@@ -38,7 +38,7 @@ Este repositório contém o front-end do site da **Carliz Doces** em formato **S
 - Vitrine de produtos com avaliações por estrelas;
 - Carrinho simplificado e geração automática de pedido via WhatsApp;
 - Destaques/novidades e integrações de engajamento (curtidas, depoimentos e Instagram);
-- Login via Google (token validado em endpoint serverless).
+- Login com Firebase Authentication (sessão de usuário sincronizada no front-end).
 
 A arquitetura foi pensada para permitir que pessoas não técnicas consigam atualizar produtos e novidades principalmente por **adição/remoção de imagens** em `public/images` e ajustes pontuais em `src/data/editableContent.js`.
 
@@ -60,7 +60,7 @@ A arquitetura foi pensada para permitir que pessoas não técnicas consigam atua
 - Avaliação por estrelas por produto (com persistência local e tentativa de sincronização com API);
 - Curtidas da loja e por produto (endpoints em `/api/likes/...`);
 - Comentários da comunidade com fallback para Disqus configurável;
-- Login com Google (obtenção de client ID + validação de `idToken` em API);
+- Login com Firebase Authentication (Google Provider via Firebase);
 - Carregamento lazy de seções para reduzir custo inicial de renderização.
 
 ---
@@ -98,7 +98,7 @@ A arquitetura foi pensada para permitir que pessoas não técnicas consigam atua
 
 ```bash
 .
-├── api/                        # Endpoints serverless (likes, auth, ratings)
+├── api/                        # Endpoints serverless (likes, ratings)
 ├── public/
 │   └── images/                 # Imagens por coleção (catálogo, novidades, etc.)
 ├── scripts/
@@ -238,15 +238,25 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 
 | Variável | Obrigatória? | Uso |
 |---|---:|---|
-| `VITE_GOOGLE_CLIENT_ID` | Recomendada | Client ID do Google no front-end e fallback para API. |
-| `GOOGLE_CLIENT_ID` | Opcional | Prioritária para APIs serverless de autenticação Google. |
+| `VITE_FIREBASE_API_KEY` | Recomendada | Chave pública do projeto Firebase. |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Recomendada | Domínio de autenticação Firebase (`*.firebaseapp.com`). |
+| `VITE_FIREBASE_PROJECT_ID` | Recomendada | ID do projeto Firebase. |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Opcional | Bucket do Firebase Storage. |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
+| `VITE_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
+| `VITE_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
 | `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
 
 ### Exemplo
 
 ```bash
-VITE_GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
+VITE_FIREBASE_API_KEY=sua-api-key
+VITE_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=seu-projeto
+VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=000000000000
+VITE_FIREBASE_APP_ID=1:000000000000:web:abc123
+VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 VITE_DISQUS_SHORTNAME=seu-shortname
 ```
 
@@ -255,11 +265,6 @@ VITE_DISQUS_SHORTNAME=seu-shortname
 ## 🔌 APIs serverless disponíveis
 
 A pasta `api/` contém rotas usadas no deploy da Vercel.
-
-### Autenticação Google
-
-- `GET /api/auth/google-client-id` → retorna `clientId` configurado.
-- `POST /api/auth/google` → valida `idToken` no Google TokenInfo e retorna dados do usuário.
 
 ### Likes
 
@@ -355,11 +360,11 @@ npm install
 - Verifique se `VITE_DISQUS_SHORTNAME` está definido corretamente.
 - Confirme se o domínio do site está cadastrado no Disqus.
 
-### Login Google falhando
+### Login Firebase falhando
 
-- Verifique `VITE_GOOGLE_CLIENT_ID` e/ou `GOOGLE_CLIENT_ID` (não use placeholders como `SEU_CLIENT_ID`).
-- Confirme se o OAuth Client está habilitado e com origens autorizadas.
-- Em produção, garanta que as variáveis também estejam configuradas na Vercel.
+- Verifique as variáveis `VITE_FIREBASE_*` no `.env.local` e na Vercel.
+- Confirme se o método de login Google está habilitado no Firebase Authentication.
+- Confira se o domínio da aplicação está listado em **Authentication → Settings → Authorized domains**.
 
 ### Build Vercel sem deploy
 

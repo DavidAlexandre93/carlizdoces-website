@@ -106,7 +106,13 @@ module.exports = (_, argv = {}) => {
       new webpack.DefinePlugin({
         'import.meta.env.VITE_DISQUS_SHORTNAME': JSON.stringify(getEnvValue('VITE_DISQUS_SHORTNAME')),
         'import.meta.env.VITE_RATINGS_API_URL': JSON.stringify(getEnvValue('VITE_RATINGS_API_URL')),
-        'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(getEnvValue('VITE_GOOGLE_CLIENT_ID') || getEnvValue('GOOGLE_CLIENT_ID')),
+        'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(getEnvValue('VITE_FIREBASE_API_KEY')),
+        'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(getEnvValue('VITE_FIREBASE_AUTH_DOMAIN')),
+        'import.meta.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_PROJECT_ID')),
+        'import.meta.env.VITE_FIREBASE_STORAGE_BUCKET': JSON.stringify(getEnvValue('VITE_FIREBASE_STORAGE_BUCKET')),
+        'import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_MESSAGING_SENDER_ID')),
+        'import.meta.env.VITE_FIREBASE_APP_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_APP_ID')),
+        'import.meta.env.VITE_FIREBASE_MEASUREMENT_ID': JSON.stringify(getEnvValue('VITE_FIREBASE_MEASUREMENT_ID')),
       }),
       new HtmlWebpackPlugin({
         template: './index.html'
