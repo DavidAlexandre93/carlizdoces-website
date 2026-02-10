@@ -17,6 +17,8 @@ const isFirebaseAuthConfigured = () => Boolean(
 
 const getFirebaseNamespace = () => window.firebase ?? null
 
+const getFirebaseUiNamespace = () => window.firebaseui ?? null
+
 const initializeFirebaseAuth = () => {
   const firebaseNamespace = getFirebaseNamespace()
   if (!firebaseNamespace?.apps || !firebaseNamespace?.initializeApp || !firebaseNamespace?.auth) {
@@ -42,22 +44,78 @@ const subscribeToFirebaseUser = (onUserChange) => {
   })
 }
 
-const signInWithFirebasePopup = async () => {
-  const firebaseAuth = initializeFirebaseAuth()
+const resolveFirebaseUiConfig = () => {
   const firebaseNamespace = getFirebaseNamespace()
-  if (!firebaseAuth || !firebaseNamespace?.auth?.GoogleAuthProvider) {
-    throw new Error('firebase-auth-not-available')
+
+  return {
+    callbacks: {
+      signInSuccessWithAuthResult: () => false,
+    },
+    signInFlow: 'popup',
+    signInOptions: [
+      {
+        provider: firebaseNamespace.auth.EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: true,
+      },
+      firebaseNamespace.auth.GoogleAuthProvider.PROVIDER_ID,
+    ],
+    tosUrl: '#contato',
+    privacyPolicyUrl: '#contato',
+  }
+}
+
+const startFirebaseUiLogin = ({ containerSelector, onSuccess, onError }) => {
+  const firebaseAuth = initializeFirebaseAuth()
+  const firebaseUiNamespace = getFirebaseUiNamespace()
+
+  if (!firebaseAuth || !firebaseUiNamespace?.auth?.AuthUI) {
+    throw new Error('firebase-ui-auth-not-available')
   }
 
-  const provider = new firebaseNamespace.auth.GoogleAuthProvider()
-  provider.setCustomParameters({ prompt: 'select_account' })
-  const credentialResult = await firebaseAuth.signInWithPopup(provider)
-  return credentialResult.user ?? null
+  const authUi = firebaseUiNamespace.auth.AuthUI.getInstance()
+    ?? new firebaseUiNamespace.auth.AuthUI(firebaseAuth)
+
+  authUi.start(containerSelector, {
+    ...resolveFirebaseUiConfig(),
+    callbacks: {
+      signInSuccessWithAuthResult: (authResult) => {
+        if (typeof onSuccess === 'function') {
+          onSuccess(authResult?.user ?? null)
+        }
+        return false
+      },
+      signInFailure: (error) => {
+        if (typeof onError === 'function') {
+          onError(error)
+        }
+        return Promise.resolve()
+      },
+      uiShown: () => {
+        const loaderElement = document.getElementById('firebaseui-loader')
+        if (loaderElement) {
+          loaderElement.style.display = 'none'
+        }
+      },
+    },
+  })
+
+  return authUi
+}
+
+const resetFirebaseUi = () => {
+  const firebaseUiNamespace = getFirebaseUiNamespace()
+  const authUi = firebaseUiNamespace?.auth?.AuthUI?.getInstance?.()
+  if (!authUi) {
+    return Promise.resolve()
+  }
+
+  return authUi.reset()
 }
 
 export {
   initializeFirebaseAuth,
   isFirebaseAuthConfigured,
-  signInWithFirebasePopup,
+  resetFirebaseUi,
+  startFirebaseUiLogin,
   subscribeToFirebaseUser,
 }

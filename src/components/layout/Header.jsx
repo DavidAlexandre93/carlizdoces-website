@@ -28,6 +28,8 @@ export function Header({
   authenticatedUser,
   isAuthLoading,
   onAuthLogin,
+  isAuthModalOpen,
+  onCloseAuthModal,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -251,6 +253,40 @@ Deus abençoe! 🙌`
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button variant="contained" onClick={() => setIsNotificationOpen(false)}>
+                Fechar
+              </Button>
+            </Box>
+          </Paper>
+        </Box>
+      </Modal>
+
+      <Modal open={isAuthModalOpen} onClose={onCloseAuthModal} aria-labelledby="auth-modal-title">
+        <Box
+          sx={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '92%', sm: 440 },
+            maxHeight: '90vh',
+            overflowY: 'auto',
+          }}
+        >
+          <Paper elevation={8} sx={{ p: 3, borderRadius: 2 }}>
+            <Typography id="auth-modal-title" variant="h6" component="h2" sx={{ mb: 1, fontWeight: 700 }}>
+              Realizar login
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+              Entre com Google ou e-mail/senha para curtir produtos e salvar seu perfil.
+            </Typography>
+
+            <Box id="firebaseui-loader" sx={{ display: isAuthLoading ? 'block' : 'none', mb: 2 }}>
+              <Typography variant="body2">Carregando opções de login...</Typography>
+            </Box>
+            <Box id="firebaseui-auth-container" />
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button variant="text" onClick={onCloseAuthModal}>
                 Fechar
               </Button>
             </Box>
