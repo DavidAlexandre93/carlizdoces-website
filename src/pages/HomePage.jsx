@@ -15,7 +15,14 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { isFirebaseAuthConfigured, signInWithEmailPassword, signUpWithEmailPassword, subscribeToFirebaseUser } from '../services/firebaseAuth'
+import {
+  isFirebaseAuthConfigured,
+  signInWithEmailPassword,
+  signOutFirebaseUser,
+  signUpWithEmailPassword,
+  subscribeToFirebaseUser,
+  validatePasswordPolicy,
+} from '../services/firebaseAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -54,6 +61,15 @@ const getAuthenticatedUserId = () => {
   }
 
   return ''
+}
+
+const clearStoredAuthenticatedProfile = () => {
+  try {
+    window.localStorage.removeItem(AUTH_USER_STORAGE_KEY)
+    window.localStorage.removeItem(AUTH_PROFILE_STORAGE_KEY)
+  } catch {
+    // Ignora erro de armazenamento local para não bloquear o fluxo principal.
+  }
 }
 
 const fetchLikesSummary = async (userId) => {
@@ -274,7 +290,7 @@ export function HomePage() {
   const translateFirebaseAuthError = (error) => {
     const errorCode = String(error?.code ?? '')
 
-    if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
+    if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found' || errorCode === 'auth/invalid-login-credentials') {
       return 'E-mail ou senha inválidos. Confira os dados e tente novamente.'
     }
 
@@ -295,6 +311,44 @@ export function HomePage() {
     }
 
     return 'Não foi possível concluir o login agora. Tente novamente.'
+  }
+
+  const translatePasswordPolicyRequirements = (passwordStatus) => {
+    if (!passwordStatus || passwordStatus.isValid) {
+      return ''
+    }
+
+    const missingRequirements = []
+
+    if (passwordStatus.containsLowercaseLetter === false) {
+      missingRequirements.push('uma letra minúscula')
+    }
+
+    if (passwordStatus.containsUppercaseLetter === false) {
+      missingRequirements.push('uma letra maiúscula')
+    }
+
+    if (passwordStatus.containsNumericCharacter === false) {
+      missingRequirements.push('um número')
+    }
+
+    if (passwordStatus.containsNonAlphanumericCharacter === false) {
+      missingRequirements.push('um caractere especial')
+    }
+
+    if (passwordStatus.meetsMinPasswordLength === false) {
+      missingRequirements.push('o tamanho mínimo exigido')
+    }
+
+    if (passwordStatus.meetsMaxPasswordLength === false) {
+      missingRequirements.push('o tamanho máximo permitido')
+    }
+
+    if (!missingRequirements.length) {
+      return 'A senha não atende à política definida no Firebase. Ajuste e tente novamente.'
+    }
+
+    return `A senha precisa incluir: ${missingRequirements.join(', ')}.`
   }
 
   const handleAuthInputChange = (event) => {
@@ -338,10 +392,42 @@ export function HomePage() {
 
     try {
       setIsAuthLoading(true)
+      const passwordStatus = await validatePasswordPolicy(password)
+      const passwordValidationMessage = translatePasswordPolicyRequirements(passwordStatus)
+      if (passwordValidationMessage) {
+        setSnackbar({ open: true, message: passwordValidationMessage, severity: 'warning' })
+        return
+      }
+
       await signUpWithEmailPassword(email, password)
       setSnackbar({ open: true, message: 'Conta criada com sucesso! Você já está conectado(a).', severity: 'success' })
       setIsAuthModalOpen(false)
       setAuthForm({ email: '', password: '' })
+    } catch (error) {
+      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
+    } finally {
+      setIsAuthLoading(false)
+    }
+  }
+
+  const handleAuthLogout = async () => {
+    try {
+      setIsAuthLoading(true)
+      await signOutFirebaseUser()
+      clearStoredAuthenticatedProfile()
+      setAuthenticatedUserId('')
+      setAuthenticatedUser(null)
+      setFavoriteProductIds([])
+      setHasLikedStore(false)
+
+      const summary = await fetchLikesSummary('')
+      setTotalLikes(Number(summary?.store?.likes ?? 0))
+      setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
+        ...counts,
+        [product.id]: Number(summary?.products?.likesById?.[product.id] ?? 0),
+      }), {}))
+
+      setSnackbar({ open: true, message: 'Você saiu da conta com sucesso.', severity: 'success' })
     } catch (error) {
       setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
     } finally {
@@ -669,6 +755,7 @@ export function HomePage() {
         onAuthInputChange={handleAuthInputChange}
         onSubmitAuth={handleEmailPasswordLogin}
         onCreateAuthAccount={handleCreateUserWithEmailPassword}
+        onAuthLogout={handleAuthLogout}
       />
 
       <main>

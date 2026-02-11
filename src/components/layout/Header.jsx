@@ -35,6 +35,7 @@ export function Header({
   onAuthInputChange,
   onSubmitAuth,
   onCreateAuthAccount,
+  onAuthLogout,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -189,15 +190,33 @@ Deus abençoe! 🙌`
               </Tooltip>
 
               {authenticatedUser ? (
-                <Tooltip title={`Conectado como ${authenticatedUser.name}`} arrow>
-                  <Avatar
-                    aria-label={`Usuário conectado: ${authenticatedUser.name}`}
-                    src={authenticatedUser.picture}
-                    sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}
+                <Stack direction="row" spacing={0.75} alignItems="center">
+                  <Tooltip title={`Conectado como ${authenticatedUser.name}`} arrow>
+                    <Avatar
+                      aria-label={`Usuário conectado: ${authenticatedUser.name}`}
+                      src={authenticatedUser.picture}
+                      sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}
+                    >
+                      {authenticatedUser.name?.slice(0, 1)?.toUpperCase() ?? <Icon sx={{ fontSize: 20 }}>person</Icon>}
+                    </Avatar>
+                  </Tooltip>
+                  <Button
+                    color="inherit"
+                    variant="text"
+                    size="small"
+                    onClick={onAuthLogout}
+                    disabled={isAuthLoading}
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '0.8rem',
+                      opacity: 0.82,
+                      minWidth: 'fit-content',
+                      px: 1,
+                    }}
                   >
-                    {authenticatedUser.name?.slice(0, 1)?.toUpperCase() ?? <Icon sx={{ fontSize: 20 }}>person</Icon>}
-                  </Avatar>
-                </Tooltip>
+                    sair
+                  </Button>
+                </Stack>
               ) : (
                 <Button
                   color="inherit"
