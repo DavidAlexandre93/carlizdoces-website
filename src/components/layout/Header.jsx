@@ -15,6 +15,7 @@ import {
   Modal,
   Paper,
   Stack,
+  TextField,
   Toolbar,
   Tooltip,
   Typography,
@@ -30,6 +31,10 @@ export function Header({
   onAuthLogin,
   isAuthModalOpen,
   onCloseAuthModal,
+  authForm,
+  onAuthInputChange,
+  onSubmitAuth,
+  onCreateAuthAccount,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -277,13 +282,40 @@ Deus abençoe! 🙌`
               Realizar login
             </Typography>
             <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-              Entre com Google ou e-mail/senha para curtir produtos e salvar seu perfil.
+              Faça login com e-mail e senha para curtir produtos e salvar seu perfil.
             </Typography>
 
-            <Box id="firebaseui-loader" sx={{ display: isAuthLoading ? 'block' : 'none', mb: 2 }}>
-              <Typography variant="body2">Carregando opções de login...</Typography>
+            <Box component="form" onSubmit={onSubmitAuth} sx={{ display: 'grid', gap: 1.5 }}>
+              <TextField
+                label="E-mail"
+                name="email"
+                type="email"
+                value={authForm.email}
+                onChange={onAuthInputChange}
+                autoComplete="email"
+                fullWidth
+                required
+              />
+              <TextField
+                label="Senha"
+                name="password"
+                type="password"
+                value={authForm.password}
+                onChange={onAuthInputChange}
+                autoComplete="current-password"
+                fullWidth
+                required
+              />
+
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mt: 1 }}>
+                <Button type="submit" variant="contained" disabled={isAuthLoading} fullWidth>
+                  {isAuthLoading ? 'Entrando...' : 'Entrar'}
+                </Button>
+                <Button type="button" variant="outlined" onClick={onCreateAuthAccount} disabled={isAuthLoading} fullWidth>
+                  Criar conta
+                </Button>
+              </Stack>
             </Box>
-            <Box id="firebaseui-auth-container" />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
               <Button variant="text" onClick={onCloseAuthModal}>
