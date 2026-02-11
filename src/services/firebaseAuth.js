@@ -1,10 +1,12 @@
 const readFirebaseEnvVar = (envVarName) => String(import.meta.env[envVarName] ?? '').trim()
 
+const projectId = readFirebaseEnvVar('VITE_FIREBASE_PROJECT_ID')
+
 const firebaseConfig = {
   apiKey: readFirebaseEnvVar('VITE_FIREBASE_API_KEY'),
-  authDomain: readFirebaseEnvVar('VITE_FIREBASE_AUTH_DOMAIN'),
-  projectId: readFirebaseEnvVar('VITE_FIREBASE_PROJECT_ID'),
-  storageBucket: readFirebaseEnvVar('VITE_FIREBASE_STORAGE_BUCKET'),
+  authDomain: readFirebaseEnvVar('VITE_FIREBASE_AUTH_DOMAIN') || (projectId ? `${projectId}.firebaseapp.com` : ''),
+  projectId,
+  storageBucket: readFirebaseEnvVar('VITE_FIREBASE_STORAGE_BUCKET') || (projectId ? `${projectId}.appspot.com` : ''),
   messagingSenderId: readFirebaseEnvVar('VITE_FIREBASE_MESSAGING_SENDER_ID'),
   appId: readFirebaseEnvVar('VITE_FIREBASE_APP_ID'),
   measurementId: readFirebaseEnvVar('VITE_FIREBASE_MEASUREMENT_ID'),
@@ -12,7 +14,6 @@ const firebaseConfig = {
 
 const isFirebaseAuthConfigured = () => Boolean(
   firebaseConfig.apiKey
-  && firebaseConfig.authDomain
   && firebaseConfig.projectId
   && firebaseConfig.appId,
 )
