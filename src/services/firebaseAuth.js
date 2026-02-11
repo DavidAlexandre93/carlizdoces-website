@@ -14,30 +14,27 @@ const firebaseConfig = {
 
 const isFirebaseAuthConfigured = () => Boolean(
   firebaseConfig.apiKey
-  && firebaseConfig.projectId
-  && firebaseConfig.appId,
+  && (firebaseConfig.authDomain || firebaseConfig.projectId),
 )
 
-const getFirebaseNamespace = () => window.firebase ?? null
-
-const getFirebaseUiNamespace = () => window.firebaseui ?? null
+const getFirebaseModularNamespace = () => window.firebaseModular ?? null
 
 const initializeFirebaseAuth = () => {
   if (!isFirebaseAuthConfigured()) {
     return null
   }
 
-  const firebaseNamespace = getFirebaseNamespace()
-  if (!firebaseNamespace?.apps || !firebaseNamespace?.initializeApp || !firebaseNamespace?.auth) {
+  const firebaseModular = getFirebaseModularNamespace()
+  if (!firebaseModular?.initializeApp || !firebaseModular?.getAuth) {
     return null
   }
 
   try {
-    if (!firebaseNamespace.apps.length) {
-      firebaseNamespace.initializeApp(firebaseConfig)
-    }
+    const app = firebaseModular.getApps().length
+      ? firebaseModular.getApp()
+      : firebaseModular.initializeApp(firebaseConfig)
 
-    return firebaseNamespace.auth()
+    return firebaseModular.getAuth(app)
   } catch {
     return null
   }
@@ -45,88 +42,46 @@ const initializeFirebaseAuth = () => {
 
 const subscribeToFirebaseUser = (onUserChange) => {
   const firebaseAuth = initializeFirebaseAuth()
-  if (!firebaseAuth) {
+  const firebaseModular = getFirebaseModularNamespace()
+
+  if (!firebaseAuth || !firebaseModular?.onAuthStateChanged) {
     onUserChange(null)
     return () => {}
   }
 
-  return firebaseAuth.onAuthStateChanged((user) => {
+  return firebaseModular.onAuthStateChanged(firebaseAuth, (user) => {
     onUserChange(user ?? null)
   })
 }
 
-const resolveFirebaseUiConfig = () => {
-  const firebaseNamespace = getFirebaseNamespace()
-
-  return {
-    callbacks: {
-      signInSuccessWithAuthResult: () => false,
-    },
-    signInFlow: 'popup',
-    signInOptions: [
-      {
-        provider: firebaseNamespace.auth.EmailAuthProvider.PROVIDER_ID,
-        requireDisplayName: true,
-      },
-      firebaseNamespace.auth.GoogleAuthProvider.PROVIDER_ID,
-    ],
-    tosUrl: '#contato',
-    privacyPolicyUrl: '#contato',
-  }
-}
-
-const startFirebaseUiLogin = ({ containerSelector, onSuccess, onError }) => {
+const signInWithEmailPassword = async (email, password) => {
   const firebaseAuth = initializeFirebaseAuth()
-  const firebaseUiNamespace = getFirebaseUiNamespace()
+  const firebaseModular = getFirebaseModularNamespace()
 
-  if (!firebaseAuth || !firebaseUiNamespace?.auth?.AuthUI) {
-    throw new Error('firebase-ui-auth-not-available')
+  if (!firebaseAuth || !firebaseModular?.signInWithEmailAndPassword) {
+    throw new Error('firebase-auth-not-configured')
   }
 
-  const authUi = firebaseUiNamespace.auth.AuthUI.getInstance()
-    ?? new firebaseUiNamespace.auth.AuthUI(firebaseAuth)
-
-  authUi.start(containerSelector, {
-    ...resolveFirebaseUiConfig(),
-    callbacks: {
-      signInSuccessWithAuthResult: (authResult) => {
-        if (typeof onSuccess === 'function') {
-          onSuccess(authResult?.user ?? null)
-        }
-        return false
-      },
-      signInFailure: (error) => {
-        if (typeof onError === 'function') {
-          onError(error)
-        }
-        return Promise.resolve()
-      },
-      uiShown: () => {
-        const loaderElement = document.getElementById('firebaseui-loader')
-        if (loaderElement) {
-          loaderElement.style.display = 'none'
-        }
-      },
-    },
-  })
-
-  return authUi
+  const userCredential = await firebaseModular.signInWithEmailAndPassword(firebaseAuth, email, password)
+  return userCredential.user ?? null
 }
 
-const resetFirebaseUi = () => {
-  const firebaseUiNamespace = getFirebaseUiNamespace()
-  const authUi = firebaseUiNamespace?.auth?.AuthUI?.getInstance?.()
-  if (!authUi) {
-    return Promise.resolve()
+const signUpWithEmailPassword = async (email, password) => {
+  const firebaseAuth = initializeFirebaseAuth()
+  const firebaseModular = getFirebaseModularNamespace()
+
+  if (!firebaseAuth || !firebaseModular?.createUserWithEmailAndPassword) {
+    throw new Error('firebase-auth-not-configured')
   }
 
-  return authUi.reset()
+  const userCredential = await firebaseModular.createUserWithEmailAndPassword(firebaseAuth, email, password)
+  return userCredential.user ?? null
 }
 
 export {
   initializeFirebaseAuth,
   isFirebaseAuthConfigured,
-  resetFirebaseUi,
-  startFirebaseUiLogin,
+  signInWithEmailPassword,
+  signUpWithEmailPassword,
   subscribeToFirebaseUser,
 }

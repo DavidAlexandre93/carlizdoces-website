@@ -15,7 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { isFirebaseAuthConfigured, resetFirebaseUi, startFirebaseUiLogin, subscribeToFirebaseUser } from '../services/firebaseAuth'
+import { isFirebaseAuthConfigured, signInWithEmailPassword, signUpWithEmailPassword, subscribeToFirebaseUser } from '../services/firebaseAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -121,6 +121,7 @@ export function HomePage() {
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
   const [isAuthLoading, setIsAuthLoading] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [authForm, setAuthForm] = useState({ email: '', password: '' })
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
@@ -270,39 +271,83 @@ export function HomePage() {
     setIsAuthModalOpen(true)
   }
 
-  useEffect(() => {
-    if (!isAuthModalOpen) {
-      resetFirebaseUi()
-      return undefined
+  const translateFirebaseAuthError = (error) => {
+    const errorCode = String(error?.code ?? '')
+
+    if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
+      return 'E-mail ou senha inválidos. Confira os dados e tente novamente.'
     }
 
-    const startUiTimerId = window.setTimeout(() => {
-      try {
-        setIsAuthLoading(true)
-        startFirebaseUiLogin({
-          containerSelector: '#firebaseui-auth-container',
-          onSuccess: (user) => {
-            setIsAuthLoading(false)
-            setIsAuthModalOpen(false)
-            const profileName = String(user?.displayName ?? 'usuário')
-            setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
-          },
-          onError: () => {
-            setIsAuthLoading(false)
-            setSnackbar({ open: true, message: 'Não foi possível concluir o login agora. Tente novamente.', severity: 'error' })
-          },
-        })
-      } catch {
-        setIsAuthLoading(false)
-        setSnackbar({ open: true, message: 'FirebaseUI não está disponível no momento.', severity: 'warning' })
-      }
-    }, 50)
-
-    return () => {
-      window.clearTimeout(startUiTimerId)
-      resetFirebaseUi()
+    if (errorCode === 'auth/invalid-email') {
+      return 'Digite um e-mail válido para continuar.'
     }
-  }, [isAuthModalOpen])
+
+    if (errorCode === 'auth/too-many-requests') {
+      return 'Muitas tentativas de login. Aguarde alguns minutos e tente de novo.'
+    }
+
+    if (errorCode === 'auth/weak-password') {
+      return 'A senha precisa ter pelo menos 6 caracteres.'
+    }
+
+    if (errorCode === 'auth/email-already-in-use') {
+      return 'Este e-mail já está cadastrado. Faça login normalmente.'
+    }
+
+    return 'Não foi possível concluir o login agora. Tente novamente.'
+  }
+
+  const handleAuthInputChange = (event) => {
+    const { name, value } = event.target
+    setAuthForm((currentForm) => ({ ...currentForm, [name]: value }))
+  }
+
+  const handleEmailPasswordLogin = async (event) => {
+    event.preventDefault()
+
+    const email = authForm.email.trim()
+    const password = authForm.password
+
+    if (!email || !password) {
+      setSnackbar({ open: true, message: 'Preencha e-mail e senha para fazer login.', severity: 'warning' })
+      return
+    }
+
+    try {
+      setIsAuthLoading(true)
+      const user = await signInWithEmailPassword(email, password)
+      const profileName = String(user?.displayName ?? email)
+      setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
+      setIsAuthModalOpen(false)
+      setAuthForm({ email: '', password: '' })
+    } catch (error) {
+      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
+    } finally {
+      setIsAuthLoading(false)
+    }
+  }
+
+  const handleCreateUserWithEmailPassword = async () => {
+    const email = authForm.email.trim()
+    const password = authForm.password
+
+    if (!email || !password) {
+      setSnackbar({ open: true, message: 'Preencha e-mail e senha para criar sua conta.', severity: 'warning' })
+      return
+    }
+
+    try {
+      setIsAuthLoading(true)
+      await signUpWithEmailPassword(email, password)
+      setSnackbar({ open: true, message: 'Conta criada com sucesso! Você já está conectado(a).', severity: 'success' })
+      setIsAuthModalOpen(false)
+      setAuthForm({ email: '', password: '' })
+    } catch (error) {
+      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
+    } finally {
+      setIsAuthLoading(false)
+    }
+  }
 
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
@@ -620,6 +665,10 @@ export function HomePage() {
         onAuthLogin={handleFirebaseLogin}
         isAuthModalOpen={isAuthModalOpen}
         onCloseAuthModal={() => setIsAuthModalOpen(false)}
+        authForm={authForm}
+        onAuthInputChange={handleAuthInputChange}
+        onSubmitAuth={handleEmailPasswordLogin}
+        onCreateAuthAccount={handleCreateUserWithEmailPassword}
       />
 
       <main>
