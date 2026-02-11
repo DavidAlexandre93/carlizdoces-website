@@ -78,10 +78,34 @@ const signUpWithEmailPassword = async (email, password) => {
   return userCredential.user ?? null
 }
 
+const validatePasswordPolicy = async (password) => {
+  const firebaseAuth = initializeFirebaseAuth()
+  const firebaseModular = getFirebaseModularNamespace()
+
+  if (!firebaseAuth || !firebaseModular?.validatePassword) {
+    return null
+  }
+
+  return firebaseModular.validatePassword(firebaseAuth, password)
+}
+
+const signOutFirebaseUser = async () => {
+  const firebaseAuth = initializeFirebaseAuth()
+  const firebaseModular = getFirebaseModularNamespace()
+
+  if (!firebaseAuth || !firebaseModular?.signOut) {
+    throw new Error('firebase-auth-not-configured')
+  }
+
+  await firebaseModular.signOut(firebaseAuth)
+}
+
 export {
   initializeFirebaseAuth,
   isFirebaseAuthConfigured,
   signInWithEmailPassword,
+  signOutFirebaseUser,
   signUpWithEmailPassword,
   subscribeToFirebaseUser,
+  validatePasswordPolicy,
 }
