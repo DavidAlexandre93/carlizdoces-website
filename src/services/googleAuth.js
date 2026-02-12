@@ -1,78 +1,55 @@
-const GOOGLE_SESSION_STORAGE_KEY = 'carliz-google-session'
+const getCurrentUrl = () => `${window.location.origin}${window.location.pathname}`
 
-const buildRedirectUri = () => `${window.location.origin}${window.location.pathname}`
-
-const normalizeGoogleUser = (userInfo) => {
-  if (!userInfo?.email) return null
+const normalizeSession = (sessionResponse) => {
+  if (!sessionResponse?.user?.email) return null
 
   return {
-    id: String(userInfo.sub ?? userInfo.email),
-    name: String(userInfo.name ?? userInfo.email),
-    email: String(userInfo.email),
-    picture: String(userInfo.picture ?? ''),
+    id: String(sessionResponse.user.email),
+    name: String(sessionResponse.user.name ?? sessionResponse.user.email),
+    email: String(sessionResponse.user.email),
+    picture: String(sessionResponse.user.image ?? ''),
   }
 }
 
-export const getGoogleOAuthConfig = () => ({
-  clientId:
-    import.meta.env.VITE_GOOGLE_CLIENT_ID
-    || import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
-    || '',
-  scope: 'openid profile email',
-})
-
-export const startGoogleLogin = ({ clientId, scope }) => {
-  const redirectUri = buildRedirectUri()
-  const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
-  authUrl.searchParams.set('client_id', clientId)
-  authUrl.searchParams.set('redirect_uri', redirectUri)
-  authUrl.searchParams.set('response_type', 'token')
-  authUrl.searchParams.set('scope', scope)
-  authUrl.searchParams.set('include_granted_scopes', 'true')
-  authUrl.searchParams.set('prompt', 'select_account')
-
-  window.location.assign(authUrl.toString())
+export const startGoogleLogin = () => {
+  const callbackUrl = encodeURIComponent(`${window.location.origin}/dashboard`)
+  window.location.assign(`/api/auth/signin/google?callbackUrl=${callbackUrl}`)
 }
 
-export const getStoredGoogleSession = () => {
-  try {
-    const rawSession = window.localStorage.getItem(GOOGLE_SESSION_STORAGE_KEY)
-    if (!rawSession) return null
+const getCsrfToken = async () => {
+  const response = await fetch('/api/auth/csrf')
+  if (!response.ok) throw new Error('csrf-token-failed')
 
-    const parsedSession = JSON.parse(rawSession)
-    return parsedSession && typeof parsedSession === 'object' ? parsedSession : null
-  } catch {
-    return null
-  }
+  const data = await response.json()
+  if (!data?.csrfToken) throw new Error('missing-csrf-token')
+
+  return data.csrfToken
 }
 
-const persistGoogleSession = (session) => {
-  window.localStorage.setItem(GOOGLE_SESSION_STORAGE_KEY, JSON.stringify(session))
-}
+export const signOutGoogleSession = async () => {
+  const csrfToken = await getCsrfToken()
 
-export const resolveGoogleSessionFromUrlHash = async () => {
-  const hash = window.location.hash.replace(/^#/, '')
-  if (!hash) return null
-
-  const params = new URLSearchParams(hash)
-  const accessToken = params.get('access_token')
-
-  if (!accessToken) return null
-
-  const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-    headers: { Authorization: `Bearer ${accessToken}` },
+  const signOutResponse = await fetch('/api/auth/signout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      csrfToken,
+      callbackUrl: getCurrentUrl(),
+      json: 'true',
+    }).toString(),
   })
 
-  if (!response.ok) {
-    return null
+  if (!signOutResponse.ok) {
+    throw new Error('google-signout-failed')
   }
-
-  const userInfo = await response.json()
-  const session = normalizeGoogleUser(userInfo)
-  if (!session) return null
-
-  persistGoogleSession(session)
-  window.history.replaceState(null, '', buildRedirectUri())
-
-  return session
 }
+
+export const getStoredGoogleSession = async () => {
+  const response = await fetch('/api/auth/session')
+  if (!response.ok) return null
+
+  const sessionResponse = await response.json()
+  return normalizeSession(sessionResponse)
+}
+
+export const resolveGoogleSessionFromUrlHash = async () => getStoredGoogleSession()
