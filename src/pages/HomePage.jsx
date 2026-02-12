@@ -15,14 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import {
-  isFirebaseAuthConfigured,
-  signInWithEmailPassword,
-  signOutFirebaseUser,
-  signUpWithEmailPassword,
-  subscribeToFirebaseUser,
-  validatePasswordPolicy,
-} from '../services/firebaseAuth'
+import { getGoogleOAuthConfig, getStoredGoogleSession, resolveGoogleSessionFromUrlHash, startGoogleLogin } from '../services/googleAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -30,46 +23,16 @@ const InstagramSection = lazy(() => import('../components/sections/InstagramSect
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
 const LIKES_API_BASE_URL = '/api/likes'
-const AUTH_USER_STORAGE_KEY = 'carliz-auth-user-id'
-const AUTH_PROFILE_STORAGE_KEY = 'carliz-auth-user-profile'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
 
 
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
-const getStoredAuthenticatedProfile = () => {
-  try {
-    const rawProfile = window.localStorage.getItem(AUTH_PROFILE_STORAGE_KEY)
-    if (!rawProfile) return null
-
-    const parsed = JSON.parse(rawProfile)
-    return parsed && typeof parsed === 'object' ? parsed : null
-  } catch {
-    return null
-  }
-}
-
-const getAuthenticatedUserId = () => {
-  try {
-    const storedUserId = window.localStorage.getItem(AUTH_USER_STORAGE_KEY)
-    if (storedUserId && storedUserId.trim()) {
-      return storedUserId.trim()
-    }
-  } catch {
-    return ''
-  }
-
-  return ''
-}
+const getAuthenticatedUserId = (profile) => String(profile?.email ?? profile?.id ?? '')
 
 const clearStoredAuthenticatedProfile = () => {
-  try {
-    window.localStorage.removeItem(AUTH_USER_STORAGE_KEY)
-    window.localStorage.removeItem(AUTH_PROFILE_STORAGE_KEY)
-  } catch {
-    // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-  }
+  window.localStorage.removeItem('carliz-google-session')
 }
 
 const fetchLikesSummary = async (userId) => {
@@ -135,9 +98,8 @@ export function HomePage() {
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
   const [authenticatedUserId, setAuthenticatedUserId] = useState('')
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
-  const [isAuthLoading, setIsAuthLoading] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const [authForm, setAuthForm] = useState({ email: '', password: '' })
+  const [authStatus, setAuthStatus] = useState('loading')
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
@@ -195,7 +157,7 @@ export function HomePage() {
   const handleFavoriteProduct = async (item) => {
     if (!authenticatedUserId) {
       setSnackbar({ open: true, message: 'Faça login para registrar corações.', severity: 'info' })
-      handleFirebaseLogin()
+      handleGoogleLogin()
       return
     }
 
@@ -278,148 +240,26 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleFirebaseLogin = () => {
-    if (!isFirebaseAuthConfigured()) {
-      setSnackbar({ open: true, message: 'Firebase Authentication não está configurado no momento.', severity: 'warning' })
+  const handleGoogleLogin = () => {
+    const config = getGoogleOAuthConfig()
+
+    if (!config.clientId) {
+      setSnackbar({ open: true, message: 'Google OAuth não está configurado no momento.', severity: 'warning' })
       return
     }
 
-    setIsAuthModalOpen(true)
-  }
-
-  const translateFirebaseAuthError = (error) => {
-    const errorCode = String(error?.code ?? '')
-
-    if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found' || errorCode === 'auth/invalid-login-credentials') {
-      return 'E-mail ou senha inválidos. Confira os dados e tente novamente.'
-    }
-
-    if (errorCode === 'auth/invalid-email') {
-      return 'Digite um e-mail válido para continuar.'
-    }
-
-    if (errorCode === 'auth/too-many-requests') {
-      return 'Muitas tentativas de login. Aguarde alguns minutos e tente de novo.'
-    }
-
-    if (errorCode === 'auth/weak-password') {
-      return 'A senha precisa ter pelo menos 6 caracteres.'
-    }
-
-    if (errorCode === 'auth/email-already-in-use') {
-      return 'Este e-mail já está cadastrado. Faça login normalmente.'
-    }
-
-    return 'Não foi possível concluir o login agora. Tente novamente.'
-  }
-
-  const translatePasswordPolicyRequirements = (passwordStatus) => {
-    if (!passwordStatus || passwordStatus.isValid) {
-      return ''
-    }
-
-    const missingRequirements = []
-
-    if (passwordStatus.containsLowercaseLetter === false) {
-      missingRequirements.push('uma letra minúscula')
-    }
-
-    if (passwordStatus.containsUppercaseLetter === false) {
-      missingRequirements.push('uma letra maiúscula')
-    }
-
-    if (passwordStatus.containsNumericCharacter === false) {
-      missingRequirements.push('um número')
-    }
-
-    if (passwordStatus.containsNonAlphanumericCharacter === false) {
-      missingRequirements.push('um caractere especial')
-    }
-
-    if (passwordStatus.meetsMinPasswordLength === false) {
-      missingRequirements.push('o tamanho mínimo exigido')
-    }
-
-    if (passwordStatus.meetsMaxPasswordLength === false) {
-      missingRequirements.push('o tamanho máximo permitido')
-    }
-
-    if (!missingRequirements.length) {
-      return 'A senha não atende à política definida no Firebase. Ajuste e tente novamente.'
-    }
-
-    return `A senha precisa incluir: ${missingRequirements.join(', ')}.`
-  }
-
-  const handleAuthInputChange = (event) => {
-    const { name, value } = event.target
-    setAuthForm((currentForm) => ({ ...currentForm, [name]: value }))
-  }
-
-  const handleEmailPasswordLogin = async (event) => {
-    event.preventDefault()
-
-    const email = authForm.email.trim()
-    const password = authForm.password
-
-    if (!email || !password) {
-      setSnackbar({ open: true, message: 'Preencha e-mail e senha para fazer login.', severity: 'warning' })
-      return
-    }
-
-    try {
-      setIsAuthLoading(true)
-      const user = await signInWithEmailPassword(email, password)
-      const profileName = String(user?.displayName ?? email)
-      setSnackbar({ open: true, message: `Login realizado com sucesso. Bem-vindo(a), ${profileName}!`, severity: 'success' })
-      setIsAuthModalOpen(false)
-      setAuthForm({ email: '', password: '' })
-    } catch (error) {
-      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
-    } finally {
-      setIsAuthLoading(false)
-    }
-  }
-
-  const handleCreateUserWithEmailPassword = async () => {
-    const email = authForm.email.trim()
-    const password = authForm.password
-
-    if (!email || !password) {
-      setSnackbar({ open: true, message: 'Preencha e-mail e senha para criar sua conta.', severity: 'warning' })
-      return
-    }
-
-    try {
-      setIsAuthLoading(true)
-      const passwordStatus = await validatePasswordPolicy(password)
-      const passwordValidationMessage = translatePasswordPolicyRequirements(passwordStatus)
-      if (passwordValidationMessage) {
-        setSnackbar({ open: true, message: passwordValidationMessage, severity: 'warning' })
-        return
-      }
-
-      await signUpWithEmailPassword(email, password)
-      setSnackbar({ open: true, message: 'Conta criada com sucesso! Você já está conectado(a).', severity: 'success' })
-      setIsAuthModalOpen(false)
-      setAuthForm({ email: '', password: '' })
-    } catch (error) {
-      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
-    } finally {
-      setIsAuthLoading(false)
-    }
+    startGoogleLogin(config)
   }
 
   const handleAuthLogout = async () => {
-    try {
-      setIsAuthLoading(true)
-      await signOutFirebaseUser()
-      clearStoredAuthenticatedProfile()
-      setAuthenticatedUserId('')
-      setAuthenticatedUser(null)
-      setFavoriteProductIds([])
-      setHasLikedStore(false)
+    clearStoredAuthenticatedProfile()
+    setAuthenticatedUserId('')
+    setAuthenticatedUser(null)
+    setFavoriteProductIds([])
+    setHasLikedStore(false)
+    setAuthStatus('unauthenticated')
 
+    try {
       const summary = await fetchLikesSummary('')
       setTotalLikes(Number(summary?.store?.likes ?? 0))
       setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
@@ -428,10 +268,8 @@ export function HomePage() {
       }), {}))
 
       setSnackbar({ open: true, message: 'Você saiu da conta com sucesso.', severity: 'success' })
-    } catch (error) {
-      setSnackbar({ open: true, message: translateFirebaseAuthError(error), severity: 'error' })
-    } finally {
-      setIsAuthLoading(false)
+    } catch {
+      setSnackbar({ open: true, message: 'Não foi possível atualizar os dados após sair.', severity: 'warning' })
     }
   }
 
@@ -540,58 +378,46 @@ export function HomePage() {
   useEffect(() => {
     let isMounted = true
 
-    const unsubscribeAuth = subscribeToFirebaseUser((user) => {
-      const profile = user
-        ? {
-          id: String(user.uid),
-          name: String(user.displayName ?? 'Usuário'),
-          email: String(user.email ?? ''),
-          picture: String(user.photoURL ?? ''),
-        }
-        : getStoredAuthenticatedProfile()
+    const bootstrapAuth = async () => {
+      setAuthStatus('loading')
 
-      const currentUserId = profile?.id ?? getAuthenticatedUserId()
+      const hashSession = await resolveGoogleSessionFromUrlHash()
+      const storedSession = getStoredGoogleSession()
+      const profile = hashSession ?? storedSession
+      const currentUserId = getAuthenticatedUserId(profile)
 
       if (isMounted) {
-        setAuthenticatedUserId(currentUserId)
         setAuthenticatedUser(profile)
+        setAuthenticatedUserId(currentUserId)
+        setAuthStatus(profile ? 'authenticated' : 'unauthenticated')
       }
 
-      if (profile?.id) {
-        try {
-          window.localStorage.setItem(AUTH_USER_STORAGE_KEY, profile.id)
-          window.localStorage.setItem(AUTH_PROFILE_STORAGE_KEY, JSON.stringify(profile))
-        } catch {
-          // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-        }
+      try {
+        const summary = await fetchLikesSummary(currentUserId)
+        if (!isMounted) return
+
+        setTotalLikes(Number(summary?.store?.likes ?? 0))
+        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
+
+        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
+        const likesById = summary?.products?.likesById ?? {}
+
+        setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
+          ...counts,
+          [product.id]: Number(likesById[product.id] ?? 0),
+        }), {}))
+
+        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+      } catch {
+        if (!isMounted) return
+        setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
       }
+    }
 
-      fetchLikesSummary(currentUserId)
-        .then((summary) => {
-          if (!isMounted) return
-
-          setTotalLikes(Number(summary?.store?.likes ?? 0))
-          setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
-
-          const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
-          const likesById = summary?.products?.likesById ?? {}
-
-          setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
-            ...counts,
-            [product.id]: Number(likesById[product.id] ?? 0),
-          }), {}))
-
-          setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
-        })
-        .catch(() => {
-          if (!isMounted) return
-          setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
-        })
-    })
+    bootstrapAuth()
 
     return () => {
       isMounted = false
-      unsubscribeAuth()
     }
   }, [])
 
@@ -619,7 +445,7 @@ export function HomePage() {
         message: 'Faça login para registrar seu coração.',
         severity: 'info',
       })
-      handleFirebaseLogin()
+      handleGoogleLogin()
       return
     }
 
@@ -747,15 +573,11 @@ export function HomePage() {
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
         authenticatedUser={authenticatedUser}
-        isAuthLoading={isAuthLoading}
-        onAuthLogin={handleFirebaseLogin}
+        onAuthLogin={() => setIsAuthModalOpen(true)}
         isAuthModalOpen={isAuthModalOpen}
         onCloseAuthModal={() => setIsAuthModalOpen(false)}
-        authForm={authForm}
-        onAuthInputChange={handleAuthInputChange}
-        onSubmitAuth={handleEmailPasswordLogin}
-        onCreateAuthAccount={handleCreateUserWithEmailPassword}
         onAuthLogout={handleAuthLogout}
+        authStatus={authStatus}
       />
 
       <main>
