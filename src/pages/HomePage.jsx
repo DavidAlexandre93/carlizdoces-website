@@ -573,7 +573,8 @@ export function HomePage() {
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
         authenticatedUser={authenticatedUser}
-        onAuthLogin={() => setIsAuthModalOpen(true)}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onAuthLogin={handleGoogleLogin}
         isAuthModalOpen={isAuthModalOpen}
         onCloseAuthModal={() => setIsAuthModalOpen(false)}
         onAuthLogout={handleAuthLogout}

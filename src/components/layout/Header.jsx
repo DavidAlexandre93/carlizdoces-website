@@ -27,6 +27,7 @@ export function Header({
   onOpenMobileMenu,
   onCloseMobileMenu,
   authenticatedUser,
+  onOpenAuthModal,
   onAuthLogin,
   isAuthModalOpen,
   onCloseAuthModal,
@@ -218,7 +219,7 @@ Deus abençoe! 🙌`
                   color="inherit"
                   variant="text"
                   size="small"
-                  onClick={onAuthLogin}
+                  onClick={onOpenAuthModal}
                   disabled={authStatus === 'loading'}
                   sx={{
                     textTransform: 'none',
