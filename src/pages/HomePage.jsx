@@ -372,7 +372,7 @@ export function HomePage() {
       setAuthStatus('loading')
 
       const hashSession = await resolveGoogleSessionFromUrlHash()
-      const storedSession = getStoredGoogleSession()
+      const storedSession = await getStoredGoogleSession()
       const profile = hashSession ?? storedSession
       const currentUserId = getAuthenticatedUserId(profile)
 
