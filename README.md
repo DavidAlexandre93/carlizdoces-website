@@ -239,6 +239,7 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 | Variável | Obrigatória? | Uso |
 |---|---:|---|
 | `VITE_FIREBASE_API_KEY` / `NEXT_PUBLIC_FIREBASE_API_KEY` | Recomendada | Chave pública do projeto Firebase. |
+| `VITE_GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_ID` / `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Recomendada (login Google) | Client ID OAuth Web usado no botão "Entrar com Google". |
 | `VITE_FIREBASE_AUTH_DOMAIN` / `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Recomendada | Domínio de autenticação Firebase (`*.firebaseapp.com`). |
 | `VITE_FIREBASE_PROJECT_ID` / `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Recomendada | ID do projeto Firebase. |
 | `VITE_FIREBASE_STORAGE_BUCKET` / `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Opcional | Bucket do Firebase Storage. |
@@ -255,6 +256,7 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 
 ```bash
 VITE_FIREBASE_API_KEY=sua-api-key
+VITE_GOOGLE_CLIENT_ID=seu-google-oauth-client-id
 VITE_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=seu-projeto
 VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app

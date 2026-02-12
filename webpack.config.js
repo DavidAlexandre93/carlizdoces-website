@@ -107,6 +107,7 @@ module.exports = (_, argv = {}) => {
       new webpack.DefinePlugin({
         'import.meta.env.VITE_DISQUS_SHORTNAME': JSON.stringify(getEnvValue('VITE_DISQUS_SHORTNAME')),
         'import.meta.env.VITE_RATINGS_API_URL': JSON.stringify(getEnvValue('VITE_RATINGS_API_URL')),
+        'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(getEnvValueAny('VITE_GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_ID', 'NEXT_PUBLIC_GOOGLE_CLIENT_ID', 'REACT_APP_GOOGLE_CLIENT_ID')),
         'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(getEnvValueAny('VITE_FIREBASE_API_KEY', 'FIREBASE_API_KEY', 'NEXT_PUBLIC_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_API_KEY')),
         'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(getEnvValueAny('VITE_FIREBASE_AUTH_DOMAIN', 'FIREBASE_AUTH_DOMAIN', 'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', 'REACT_APP_FIREBASE_AUTH_DOMAIN')),
         'import.meta.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(getEnvValueAny('VITE_FIREBASE_PROJECT_ID', 'FIREBASE_PROJECT_ID', 'NEXT_PUBLIC_FIREBASE_PROJECT_ID', 'REACT_APP_FIREBASE_PROJECT_ID')),
