@@ -238,13 +238,13 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 
 | Variável | Obrigatória? | Uso |
 |---|---:|---|
-| `VITE_FIREBASE_API_KEY` | Recomendada | Chave pública do projeto Firebase. |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Recomendada | Domínio de autenticação Firebase (`*.firebaseapp.com`). |
-| `VITE_FIREBASE_PROJECT_ID` | Recomendada | ID do projeto Firebase. |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Opcional | Bucket do Firebase Storage. |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
-| `VITE_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
-| `VITE_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
+| `VITE_FIREBASE_API_KEY` / `NEXT_PUBLIC_FIREBASE_API_KEY` | Recomendada | Chave pública do projeto Firebase. |
+| `VITE_FIREBASE_AUTH_DOMAIN` / `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Recomendada | Domínio de autenticação Firebase (`*.firebaseapp.com`). |
+| `VITE_FIREBASE_PROJECT_ID` / `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Recomendada | ID do projeto Firebase. |
+| `VITE_FIREBASE_STORAGE_BUCKET` / `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Opcional | Bucket do Firebase Storage. |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` / `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
+| `VITE_FIREBASE_APP_ID` / `NEXT_PUBLIC_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
+| `VITE_FIREBASE_MEASUREMENT_ID` / `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
 | `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
 | `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |
@@ -261,6 +261,10 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=000000000000
 VITE_FIREBASE_APP_ID=1:000000000000:web:abc123
 VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 VITE_DISQUS_SHORTNAME=seu-shortname
+
+# Se estiver migrando de Next.js, pode usar os equivalentes NEXT_PUBLIC_FIREBASE_*
+NEXT_PUBLIC_FIREBASE_API_KEY=sua-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
 ```
 
 ### Firebase Admin SDK (serverless)
