@@ -245,6 +245,7 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` / `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
 | `VITE_FIREBASE_APP_ID` / `NEXT_PUBLIC_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
 | `VITE_FIREBASE_MEASUREMENT_ID` / `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
+| `VITE_GOOGLE_CLIENT_ID` / `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Recomendada (login Google) | Client ID OAuth 2.0 para o fluxo de login com Google. |
 | `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
 | `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |
@@ -260,11 +261,13 @@ VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=000000000000
 VITE_FIREBASE_APP_ID=1:000000000000:web:abc123
 VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+VITE_GOOGLE_CLIENT_ID=1234567890-abcdefg.apps.googleusercontent.com
 VITE_DISQUS_SHORTNAME=seu-shortname
 
 # Se estiver migrando de Next.js, pode usar os equivalentes NEXT_PUBLIC_FIREBASE_*
 NEXT_PUBLIC_FIREBASE_API_KEY=sua-api-key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=1234567890-abcdefg.apps.googleusercontent.com
 ```
 
 ### Firebase Admin SDK (serverless)

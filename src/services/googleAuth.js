@@ -14,7 +14,10 @@ const normalizeGoogleUser = (userInfo) => {
 }
 
 export const getGoogleOAuthConfig = () => ({
-  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
+  clientId:
+    import.meta.env.VITE_GOOGLE_CLIENT_ID
+    || import.meta.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    || '',
   scope: 'openid profile email',
 })
 
