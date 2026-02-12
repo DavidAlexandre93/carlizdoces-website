@@ -12,7 +12,7 @@ const normalizeSession = (sessionResponse) => {
 }
 
 export const startGoogleLogin = () => {
-  const callbackUrl = encodeURIComponent(`${window.location.origin}/dashboard`)
+  const callbackUrl = encodeURIComponent(getCurrentUrl())
   window.location.assign(`/api/auth/signin/google?callbackUrl=${callbackUrl}`)
 }
 
