@@ -15,11 +15,11 @@ import {
   Modal,
   Paper,
   Stack,
-  TextField,
   Toolbar,
   Tooltip,
   Typography,
 } from '@mui/material'
+import { GoogleLoginButton } from '../auth/GoogleLoginButton'
 
 export function Header({
   navItems,
@@ -27,15 +27,11 @@ export function Header({
   onOpenMobileMenu,
   onCloseMobileMenu,
   authenticatedUser,
-  isAuthLoading,
   onAuthLogin,
   isAuthModalOpen,
   onCloseAuthModal,
-  authForm,
-  onAuthInputChange,
-  onSubmitAuth,
-  onCreateAuthAccount,
   onAuthLogout,
+  authStatus,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -205,7 +201,7 @@ Deus abençoe! 🙌`
                     variant="text"
                     size="small"
                     onClick={onAuthLogout}
-                    disabled={isAuthLoading}
+                    disabled={authStatus === 'loading'}
                     sx={{
                       textTransform: 'none',
                       fontSize: '0.8rem',
@@ -223,7 +219,7 @@ Deus abençoe! 🙌`
                   variant="text"
                   size="small"
                   onClick={onAuthLogin}
-                  disabled={isAuthLoading}
+                  disabled={authStatus === 'loading'}
                   sx={{
                     textTransform: 'none',
                     fontSize: '0.8rem',
@@ -301,40 +297,15 @@ Deus abençoe! 🙌`
               Realizar login
             </Typography>
             <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-              Faça login com e-mail e senha para curtir produtos e salvar seu perfil.
+              Faça login com Google para curtir produtos e salvar seu perfil.
             </Typography>
 
-            <Box component="form" onSubmit={onSubmitAuth} sx={{ display: 'grid', gap: 1.5 }}>
-              <TextField
-                label="E-mail"
-                name="email"
-                type="email"
-                value={authForm.email}
-                onChange={onAuthInputChange}
-                autoComplete="email"
-                fullWidth
-                required
-              />
-              <TextField
-                label="Senha"
-                name="password"
-                type="password"
-                value={authForm.password}
-                onChange={onAuthInputChange}
-                autoComplete="current-password"
-                fullWidth
-                required
-              />
-
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mt: 1 }}>
-                <Button type="submit" variant="contained" disabled={isAuthLoading} fullWidth>
-                  {isAuthLoading ? 'Entrando...' : 'Entrar'}
-                </Button>
-                <Button type="button" variant="outlined" onClick={onCreateAuthAccount} disabled={isAuthLoading} fullWidth>
-                  Criar conta
-                </Button>
-              </Stack>
-            </Box>
+            <GoogleLoginButton
+              status={authStatus}
+              session={authenticatedUser ? { user: authenticatedUser } : null}
+              onSignIn={onAuthLogin}
+              onSignOut={onAuthLogout}
+            />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
               <Button variant="text" onClick={onCloseAuthModal}>
