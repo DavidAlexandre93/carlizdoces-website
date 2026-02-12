@@ -38,7 +38,7 @@ Este repositório contém o front-end do site da **Carliz Doces** em formato **S
 - Vitrine de produtos com avaliações por estrelas;
 - Carrinho simplificado e geração automática de pedido via WhatsApp;
 - Destaques/novidades e integrações de engajamento (curtidas, depoimentos e Instagram);
-- Login com Firebase Authentication (sessão de usuário sincronizada no front-end).
+- Login com Google via NextAuth (OAuth no backend, sem expor `GOOGLE_CLIENT_SECRET` no front-end).
 
 A arquitetura foi pensada para permitir que pessoas não técnicas consigam atualizar produtos e novidades principalmente por **adição/remoção de imagens** em `public/images` e ajustes pontuais em `src/data/editableContent.js`.
 
@@ -60,7 +60,7 @@ A arquitetura foi pensada para permitir que pessoas não técnicas consigam atua
 - Avaliação por estrelas por produto (com persistência local e tentativa de sincronização com API);
 - Curtidas da loja e por produto (endpoints em `/api/likes/...`);
 - Comentários da comunidade com fallback para Disqus configurável;
-- Login com Firebase Authentication (Google Provider via Firebase);
+- Login com Google via NextAuth em `/api/auth/[...nextauth]`;
 - Carregamento lazy de seções para reduzir custo inicial de renderização.
 
 ---
@@ -245,7 +245,10 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` / `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
 | `VITE_FIREBASE_APP_ID` / `NEXT_PUBLIC_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
 | `VITE_FIREBASE_MEASUREMENT_ID` / `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
-| `VITE_GOOGLE_CLIENT_ID` / `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Recomendada (login Google) | Client ID OAuth 2.0 para o fluxo de login com Google. |
+| `GOOGLE_CLIENT_ID` | Obrigatória (server) | Client ID OAuth 2.0 para autenticação com Google via NextAuth. |
+| `GOOGLE_CLIENT_SECRET` | Obrigatória (server) | Secret OAuth 2.0 usado apenas no backend (nunca no front). |
+| `NEXTAUTH_URL` | Obrigatória (server) | URL base da aplicação (ex.: `http://localhost:3000` / URL da Vercel). |
+| `NEXTAUTH_SECRET` | Obrigatória (server) | String aleatória usada para assinar tokens e cookies de sessão. |
 | `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
 | `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |

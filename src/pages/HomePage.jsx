@@ -15,7 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { getGoogleOAuthConfig, getStoredGoogleSession, resolveGoogleSessionFromUrlHash, startGoogleLogin } from '../services/googleAuth'
+import { getStoredGoogleSession, resolveGoogleSessionFromUrlHash, signOutGoogleSession, startGoogleLogin } from '../services/googleAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -31,9 +31,6 @@ const isCandyOrderProduct = (product) => product.image?.includes('/images/pedido
 
 const getAuthenticatedUserId = (profile) => String(profile?.email ?? profile?.id ?? '')
 
-const clearStoredAuthenticatedProfile = () => {
-  window.localStorage.removeItem('carliz-google-session')
-}
 
 const fetchLikesSummary = async (userId) => {
   const query = userId ? `?userId=${encodeURIComponent(userId)}` : ''
@@ -241,18 +238,11 @@ export function HomePage() {
   }
 
   const handleGoogleLogin = () => {
-    const config = getGoogleOAuthConfig()
-
-    if (!config.clientId) {
-      setSnackbar({ open: true, message: 'Google OAuth não está configurado no momento.', severity: 'warning' })
-      return
-    }
-
-    startGoogleLogin(config)
+    startGoogleLogin()
   }
 
   const handleAuthLogout = async () => {
-    clearStoredAuthenticatedProfile()
+    await signOutGoogleSession()
     setAuthenticatedUserId('')
     setAuthenticatedUser(null)
     setFavoriteProductIds([])
