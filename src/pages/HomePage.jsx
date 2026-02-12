@@ -244,7 +244,7 @@ export function HomePage() {
     const config = getGoogleOAuthConfig()
 
     if (!config.clientId) {
-      setSnackbar({ open: true, message: 'Google OAuth não está configurado no momento.', severity: 'warning' })
+      setSnackbar({ open: true, message: 'Google OAuth não está configurado. Defina VITE_GOOGLE_CLIENT_ID (ou GOOGLE_CLIENT_ID/NEXT_PUBLIC_GOOGLE_CLIENT_ID) e faça novo deploy.', severity: 'warning' })
       return
     }
 
