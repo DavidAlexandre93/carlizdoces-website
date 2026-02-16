@@ -15,7 +15,6 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { getStoredGoogleSession, resolveGoogleSessionFromUrlHash, signOutGoogleSession, startGoogleLogin } from '../services/googleAuth'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -24,12 +23,19 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const LIKES_API_BASE_URL = '/api/likes'
 const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
+const VISITOR_ID_STORAGE_KEY = 'carliz-visitor-id'
 
 
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
-const getAuthenticatedUserId = (profile) => String(profile?.email ?? profile?.id ?? '')
+const createVisitorId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  return `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
 
 
 const fetchLikesSummary = async (userId) => {
@@ -93,10 +99,7 @@ export function HomePage() {
   const [totalLikes, setTotalLikes] = useState(0)
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
-  const [authenticatedUserId, setAuthenticatedUserId] = useState('')
-  const [authenticatedUser, setAuthenticatedUser] = useState(null)
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const [authStatus, setAuthStatus] = useState('loading')
+  const [visitorId, setVisitorId] = useState('')
   const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
 
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
@@ -152,9 +155,8 @@ export function HomePage() {
   }
 
   const handleFavoriteProduct = async (item) => {
-    if (!authenticatedUserId) {
-      setSnackbar({ open: true, message: 'Faça login para registrar corações.', severity: 'info' })
-      handleGoogleLogin()
+    if (!visitorId) {
+      setSnackbar({ open: true, message: 'Não foi possível identificar este dispositivo agora.', severity: 'warning' })
       return
     }
 
@@ -170,7 +172,7 @@ export function HomePage() {
     }))
 
     try {
-      const result = await registerProductLike(item.id, authenticatedUserId)
+      const result = await registerProductLike(item.id, visitorId)
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
         [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
@@ -237,32 +239,6 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleGoogleLogin = () => {
-    startGoogleLogin()
-  }
-
-  const handleAuthLogout = async () => {
-    await signOutGoogleSession()
-    setAuthenticatedUserId('')
-    setAuthenticatedUser(null)
-    setFavoriteProductIds([])
-    setHasLikedStore(false)
-    setAuthStatus('unauthenticated')
-
-    try {
-      const summary = await fetchLikesSummary('')
-      setTotalLikes(Number(summary?.store?.likes ?? 0))
-      setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
-        ...counts,
-        [product.id]: Number(summary?.products?.likesById?.[product.id] ?? 0),
-      }), {}))
-
-      setSnackbar({ open: true, message: 'Você saiu da conta com sucesso.', severity: 'success' })
-    } catch {
-      setSnackbar({ open: true, message: 'Não foi possível atualizar os dados após sair.', severity: 'warning' })
-    }
-  }
-
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
 
@@ -312,6 +288,22 @@ export function HomePage() {
       document.body.style.overflow = previousOverflow
     }
   }, [introStage])
+
+  useEffect(() => {
+    try {
+      const storedVisitorId = window.localStorage.getItem(VISITOR_ID_STORAGE_KEY)
+      if (storedVisitorId) {
+        setVisitorId(storedVisitorId)
+        return
+      }
+
+      const nextVisitorId = createVisitorId()
+      window.localStorage.setItem(VISITOR_ID_STORAGE_KEY, nextVisitorId)
+      setVisitorId(nextVisitorId)
+    } catch {
+      setVisitorId(createVisitorId())
+    }
+  }, [])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -366,24 +358,15 @@ export function HomePage() {
   }
 
   useEffect(() => {
+    if (!visitorId) {
+      return
+    }
+
     let isMounted = true
 
-    const bootstrapAuth = async () => {
-      setAuthStatus('loading')
-
-      const hashSession = await resolveGoogleSessionFromUrlHash()
-      const storedSession = await getStoredGoogleSession()
-      const profile = hashSession ?? storedSession
-      const currentUserId = getAuthenticatedUserId(profile)
-
-      if (isMounted) {
-        setAuthenticatedUser(profile)
-        setAuthenticatedUserId(currentUserId)
-        setAuthStatus(profile ? 'authenticated' : 'unauthenticated')
-      }
-
+    const bootstrapLikes = async () => {
       try {
-        const summary = await fetchLikesSummary(currentUserId)
+        const summary = await fetchLikesSummary(visitorId)
         if (!isMounted) return
 
         setTotalLikes(Number(summary?.store?.likes ?? 0))
@@ -404,12 +387,12 @@ export function HomePage() {
       }
     }
 
-    bootstrapAuth()
+    bootstrapLikes()
 
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [visitorId])
 
   useEffect(() => {
     try {
@@ -429,13 +412,12 @@ export function HomePage() {
       return
     }
 
-    if (!authenticatedUserId) {
+    if (!visitorId) {
       setSnackbar({
         open: true,
-        message: 'Faça login para registrar seu coração.',
-        severity: 'info',
+        message: 'Não foi possível identificar este dispositivo agora.',
+        severity: 'warning',
       })
-      handleGoogleLogin()
       return
     }
 
@@ -444,7 +426,7 @@ export function HomePage() {
     setTotalLikes((currentLikes) => currentLikes + 1)
 
     try {
-      const result = await registerStoreLike(authenticatedUserId)
+      const result = await registerStoreLike(visitorId)
       setTotalLikes(Number(result.likes ?? totalLikes + 1))
       setSnackbar({
         open: true,
@@ -562,13 +544,6 @@ export function HomePage() {
         isMobileMenuOpen={isMobileMenuOpen}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
-        authenticatedUser={authenticatedUser}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onAuthLogin={handleGoogleLogin}
-        isAuthModalOpen={isAuthModalOpen}
-        onCloseAuthModal={() => setIsAuthModalOpen(false)}
-        onAuthLogout={handleAuthLogout}
-        authStatus={authStatus}
       />
 
       <main>

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   AppBar,
-  Avatar,
   Box,
   Button,
   Container,
@@ -19,20 +18,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
-import { GoogleLoginButton } from '../auth/GoogleLoginButton'
 
 export function Header({
   navItems,
   isMobileMenuOpen,
   onOpenMobileMenu,
   onCloseMobileMenu,
-  authenticatedUser,
-  onOpenAuthModal,
-  onAuthLogin,
-  isAuthModalOpen,
-  onCloseAuthModal,
-  onAuthLogout,
-  authStatus,
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
@@ -186,53 +177,6 @@ Deus abençoe! 🙌`
                 </IconButton>
               </Tooltip>
 
-              {authenticatedUser ? (
-                <Stack direction="row" spacing={0.75} alignItems="center">
-                  <Tooltip title={`Conectado como ${authenticatedUser.name}`} arrow>
-                    <Avatar
-                      aria-label={`Usuário conectado: ${authenticatedUser.name}`}
-                      src={authenticatedUser.picture}
-                      sx={{ width: 36, height: 36, bgcolor: '#ad1457' }}
-                    >
-                      {authenticatedUser.name?.slice(0, 1)?.toUpperCase() ?? <Icon sx={{ fontSize: 20 }}>person</Icon>}
-                    </Avatar>
-                  </Tooltip>
-                  <Button
-                    color="inherit"
-                    variant="text"
-                    size="small"
-                    onClick={onAuthLogout}
-                    disabled={authStatus === 'loading'}
-                    sx={{
-                      textTransform: 'none',
-                      fontSize: '0.8rem',
-                      opacity: 0.82,
-                      minWidth: 'fit-content',
-                      px: 1,
-                    }}
-                  >
-                    sair
-                  </Button>
-                </Stack>
-              ) : (
-                <Button
-                  color="inherit"
-                  variant="text"
-                  size="small"
-                  onClick={onOpenAuthModal}
-                  disabled={authStatus === 'loading'}
-                  sx={{
-                    textTransform: 'none',
-                    fontSize: '0.8rem',
-                    opacity: 0.82,
-                    minWidth: 'fit-content',
-                    px: 1,
-                  }}
-                >
-                  realizar login
-                </Button>
-              )}
-
               <IconButton color="inherit" aria-label="Abrir menu" edge="end" onClick={onOpenMobileMenu} className="topbar-menu-button">
                 <Icon>menu</Icon>
               </IconButton>
@@ -274,42 +218,6 @@ Deus abençoe! 🙌`
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button variant="contained" onClick={() => setIsNotificationOpen(false)}>
-                Fechar
-              </Button>
-            </Box>
-          </Paper>
-        </Box>
-      </Modal>
-
-      <Modal open={isAuthModalOpen} onClose={onCloseAuthModal} aria-labelledby="auth-modal-title">
-        <Box
-          sx={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: { xs: '92%', sm: 440 },
-            maxHeight: '90vh',
-            overflowY: 'auto',
-          }}
-        >
-          <Paper elevation={8} sx={{ p: 3, borderRadius: 2 }}>
-            <Typography id="auth-modal-title" variant="h6" component="h2" sx={{ mb: 1, fontWeight: 700 }}>
-              Realizar login
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-              Faça login com Google para curtir produtos e salvar seu perfil.
-            </Typography>
-
-            <GoogleLoginButton
-              status={authStatus}
-              session={authenticatedUser ? { user: authenticatedUser } : null}
-              onSignIn={onAuthLogin}
-              onSignOut={onAuthLogout}
-            />
-
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-              <Button variant="text" onClick={onCloseAuthModal}>
                 Fechar
               </Button>
             </Box>
