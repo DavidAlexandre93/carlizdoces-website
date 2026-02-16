@@ -128,6 +128,24 @@ export function HomePage() {
   const selectedMenuShowcaseProduct = menuShowcaseProducts[menuProductStep] ?? menuShowcaseProducts[0] ?? null
   const selectedOrderShowcaseProduct = orderShowcaseProducts[orderProductStep] ?? orderShowcaseProducts[0] ?? null
 
+  useEffect(() => {
+    if (menuShowcaseProducts.length === 0) {
+      setMenuProductStep(0)
+      return
+    }
+
+    setMenuProductStep((currentStep) => Math.min(currentStep, menuShowcaseProducts.length - 1))
+  }, [menuShowcaseProducts])
+
+  useEffect(() => {
+    if (orderShowcaseProducts.length === 0) {
+      setOrderProductStep(0)
+      return
+    }
+
+    setOrderProductStep((currentStep) => Math.min(currentStep, orderShowcaseProducts.length - 1))
+  }, [orderShowcaseProducts])
+
   const whatsappLink = useWhatsAppOrderLink({
     selectedItems,
     customizations,

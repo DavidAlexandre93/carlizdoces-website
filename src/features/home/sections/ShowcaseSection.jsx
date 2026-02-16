@@ -41,6 +41,20 @@ export function ShowcaseSection({
 }) {
   const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
+  const totalVisibleProducts = visibleShowcaseProducts.length
+  const hasMultipleProducts = totalVisibleProducts > 1
+
+  const handlePreviousProduct = () => {
+    if (!hasMultipleProducts) return
+
+    setActiveProductStep((step) => (step - 1 + totalVisibleProducts) % totalVisibleProducts)
+  }
+
+  const handleNextProduct = () => {
+    if (!hasMultipleProducts) return
+
+    setActiveProductStep((step) => (step + 1) % totalVisibleProducts)
+  }
 
   return (
     <Container id="ovos-de-pascoa" maxWidth="xl" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
@@ -104,8 +118,8 @@ export function ShowcaseSection({
 
             <IconButton
               className="showcase-arrow showcase-arrow-prev"
-              onClick={() => setActiveProductStep((step) => Math.max(step - 1, 0))}
-              disabled={activeProductStep <= 0}
+              onClick={handlePreviousProduct}
+              disabled={!hasMultipleProducts}
               aria-label="Produto anterior"
             >
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
@@ -113,8 +127,8 @@ export function ShowcaseSection({
 
             <IconButton
               className="showcase-arrow showcase-arrow-next"
-              onClick={() => setActiveProductStep((step) => Math.min(step + 1, visibleShowcaseProducts.length - 1))}
-              disabled={activeProductStep >= visibleShowcaseProducts.length - 1}
+              onClick={handleNextProduct}
+              disabled={!hasMultipleProducts}
               aria-label="Próximo produto"
             >
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
