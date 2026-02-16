@@ -49,7 +49,7 @@ const fetchLikesSummary = async (userId) => {
   return response.json()
 }
 
-const registerStoreLike = async (userId) => {
+const toggleStoreLike = async (userId) => {
   const response = await fetch(`${LIKES_API_BASE_URL}/store`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -63,7 +63,7 @@ const registerStoreLike = async (userId) => {
   return response.json()
 }
 
-const registerProductLike = async (productId, userId) => {
+const toggleProductLike = async (productId, userId) => {
   const response = await fetch(`${LIKES_API_BASE_URL}/product/${encodeURIComponent(productId)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -160,31 +160,45 @@ export function HomePage() {
       return
     }
 
-    if (favoriteProductIds.includes(item.id)) {
-      setSnackbar({ open: true, message: `Você já curtiu ${item.name}.`, severity: 'info' })
-      return
-    }
+    const wasFavorite = favoriteProductIds.includes(item.id)
 
-    setFavoriteProductIds((currentFavorites) => [...currentFavorites, item.id])
+    setFavoriteProductIds((currentFavorites) => {
+      if (wasFavorite) {
+        return currentFavorites.filter((productId) => productId !== item.id)
+      }
+
+      return [...currentFavorites, item.id]
+    })
+
     setFavoriteCounts((currentCounts) => ({
       ...currentCounts,
-      [item.id]: (currentCounts[item.id] ?? 0) + 1,
+      [item.id]: Math.max(0, (currentCounts[item.id] ?? 0) + (wasFavorite ? -1 : 1)),
     }))
 
     try {
-      const result = await registerProductLike(item.id, visitorId)
+      const result = await toggleProductLike(item.id, visitorId)
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
         [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
       }))
-      setSnackbar({ open: true, message: `${item.name} recebeu +1 coração!`, severity: 'success' })
+      setSnackbar({
+        open: true,
+        message: result.liked ? `${item.name} recebeu +1 coração!` : `Você removeu seu coração de ${item.name}.`,
+        severity: 'success',
+      })
     } catch {
-      setFavoriteProductIds((currentFavorites) => currentFavorites.filter((productId) => productId !== item.id))
+      setFavoriteProductIds((currentFavorites) => {
+        if (wasFavorite) {
+          return [...currentFavorites, item.id]
+        }
+
+        return currentFavorites.filter((productId) => productId !== item.id)
+      })
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
-        [item.id]: Math.max(0, (currentCounts[item.id] ?? 1) - 1),
+        [item.id]: Math.max(0, (currentCounts[item.id] ?? 0) + (wasFavorite ? 1 : -1)),
       }))
-      setSnackbar({ open: true, message: 'Não foi possível registrar seu coração agora.', severity: 'error' })
+      setSnackbar({ open: true, message: 'Não foi possível atualizar seu coração agora.', severity: 'error' })
     }
   }
 
@@ -403,15 +417,6 @@ export function HomePage() {
   }, [favoriteProductIds])
 
   const handleToggleLike = async () => {
-    if (hasLikedStore) {
-      setSnackbar({
-        open: true,
-        message: 'Você já deixou seu coração. Obrigado pelo carinho! 💛',
-        severity: 'info',
-      })
-      return
-    }
-
     if (!visitorId) {
       setSnackbar({
         open: true,
@@ -421,25 +426,31 @@ export function HomePage() {
       return
     }
 
-    setHasLikedStore(true)
-    setShowLikeCelebration(true)
-    setTotalLikes((currentLikes) => currentLikes + 1)
+    const wasLiked = hasLikedStore
+
+    setHasLikedStore(!wasLiked)
+    setShowLikeCelebration(!wasLiked)
+    setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? -1 : 1)))
 
     try {
-      const result = await registerStoreLike(visitorId)
-      setTotalLikes(Number(result.likes ?? totalLikes + 1))
+      const result = await toggleStoreLike(visitorId)
+      setHasLikedStore(Boolean(result.liked))
+      setShowLikeCelebration(Boolean(result.liked))
+      setTotalLikes(Number(result.likes ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
       setSnackbar({
         open: true,
-        message: '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨',
+        message: result.liked
+          ? '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨'
+          : 'Coração removido. Clique novamente quando quiser apoiar de novo. 💛',
         severity: 'success',
       })
     } catch {
-      setHasLikedStore(false)
+      setHasLikedStore(wasLiked)
       setShowLikeCelebration(false)
-      setTotalLikes((currentLikes) => Math.max(0, currentLikes - 1))
+      setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? 1 : -1)))
       setSnackbar({
         open: true,
-        message: 'Não foi possível registrar seu coração agora.',
+        message: 'Não foi possível atualizar seu coração agora.',
         severity: 'error',
       })
     }

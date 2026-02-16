@@ -1,5 +1,5 @@
 /* global module, require */
-const { likeProductForUser } = require('../../likesStore')
+const { toggleProductLikeForUser } = require('../../likesStore')
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   }
 
   const { userId } = req.body ?? {}
-  const result = likeProductForUser(productId, userId)
+  const result = toggleProductLikeForUser(productId, userId)
 
   if (!result.ok) {
     res.status(400).json({ error: result.error })
