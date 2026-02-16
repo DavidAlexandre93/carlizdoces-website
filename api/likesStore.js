@@ -26,7 +26,7 @@ const hasUserLikedProduct = (productId, userId) => {
   return likesByUser[userId] === true
 }
 
-const likeProductForUser = (productId, userId) => {
+const toggleProductLikeForUser = (productId, userId) => {
   const safeUserId = sanitizeUserId(userId)
   if (!safeUserId) {
     return { ok: false, error: 'userId inválido' }
@@ -38,20 +38,22 @@ const likeProductForUser = (productId, userId) => {
 
   const alreadyLiked = hasUserLikedProduct(productId, safeUserId)
 
-  if (!alreadyLiked) {
+  if (alreadyLiked) {
+    globalLikesStore.productLikedUsersById[productId][safeUserId] = false
+    globalLikesStore.productLikesCountById[productId] = Math.max(0, getProductLikesCount(productId) - 1)
+  } else {
     globalLikesStore.productLikedUsersById[productId][safeUserId] = true
     globalLikesStore.productLikesCountById[productId] = getProductLikesCount(productId) + 1
   }
 
   return {
     ok: true,
-    liked: true,
-    alreadyLiked,
+    liked: !alreadyLiked,
     likes: getProductLikesCount(productId),
   }
 }
 
-const likeStoreForUser = (userId) => {
+const toggleStoreLikeForUser = (userId) => {
   const safeUserId = sanitizeUserId(userId)
   if (!safeUserId) {
     return { ok: false, error: 'userId inválido' }
@@ -59,15 +61,17 @@ const likeStoreForUser = (userId) => {
 
   const alreadyLiked = globalLikesStore.storeLikedUsers[safeUserId] === true
 
-  if (!alreadyLiked) {
+  if (alreadyLiked) {
+    globalLikesStore.storeLikedUsers[safeUserId] = false
+    globalLikesStore.storeLikesCount = Math.max(0, globalLikesStore.storeLikesCount - 1)
+  } else {
     globalLikesStore.storeLikedUsers[safeUserId] = true
     globalLikesStore.storeLikesCount += 1
   }
 
   return {
     ok: true,
-    liked: true,
-    alreadyLiked,
+    liked: !alreadyLiked,
     likes: globalLikesStore.storeLikesCount,
   }
 }
@@ -93,6 +97,6 @@ const getLikesSummary = (userId) => {
 
 module.exports = {
   getLikesSummary,
-  likeProductForUser,
-  likeStoreForUser,
+  toggleProductLikeForUser,
+  toggleStoreLikeForUser,
 }
