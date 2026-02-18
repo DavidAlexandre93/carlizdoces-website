@@ -170,6 +170,10 @@ Deus abençoe! 🙌`
                       py: 0.75,
                       minWidth: 'max-content',
                       whiteSpace: 'nowrap',
+                      fontSize: {
+                        lg: '0.92rem',
+                        xl: '0.96rem',
+                      },
                       fontWeight: 600,
                       textTransform: 'none',
                       borderRadius: 999,
@@ -216,7 +220,13 @@ Deus abençoe! 🙌`
           <List>
             {navItems.map((item) => (
               <ListItemButton key={item.sectionId} component="a" href={`#${item.sectionId}`}>
-                <ListItemText primary={item.label} />
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                  }}
+                />
               </ListItemButton>
             ))}
           </List>
