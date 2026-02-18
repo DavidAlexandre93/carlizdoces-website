@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Button,
+  Divider,
   Container,
   Drawer,
   Icon,
@@ -208,25 +209,38 @@ Deus abençoe! 🙌`
         open={isMobileMenuOpen && isMobileNavigation}
         onClose={onCloseMobileMenu}
         PaperProps={{
+          className: 'mobile-nav-drawer',
           sx: {
             width: {
-              xs: '100vw',
-              sm: 'min(82vw, 360px)',
+              xs: 'min(88vw, 320px)',
+              sm: 'min(74vw, 340px)',
             },
+            borderTopLeftRadius: 20,
+            borderBottomLeftRadius: 20,
           },
         }}
       >
-        <Box className="mobile-nav" role="presentation" onClick={onCloseMobileMenu}>
-          <List>
+        <Box className="mobile-nav" role="presentation">
+          <Box className="mobile-nav-header">
+            <Typography variant="subtitle1" component="h2" className="mobile-nav-title">
+              Menu
+            </Typography>
+            <IconButton
+              color="inherit"
+              aria-label="Fechar menu"
+              onClick={onCloseMobileMenu}
+              className="mobile-nav-close"
+            >
+              <Icon>close</Icon>
+            </IconButton>
+          </Box>
+
+          <Divider className="mobile-nav-divider" />
+
+          <List className="mobile-nav-list">
             {navItems.map((item) => (
-              <ListItemButton key={item.sectionId} component="a" href={`#${item.sectionId}`}>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontSize: '0.95rem',
-                    fontWeight: 500,
-                  }}
-                />
+              <ListItemButton key={item.sectionId} component="a" href={`#${item.sectionId}`} onClick={onCloseMobileMenu}>
+                <ListItemText primary={item.label} />
               </ListItemButton>
             ))}
           </List>
