@@ -582,6 +582,7 @@ export function HomePage() {
             productRatings={easterRatingsByProductId}
             onRateProduct={(item, rating) => handleRateProduct(item, rating, 'cardapio-de-pascoa')}
             isGlobalRatingsActive={isEasterGlobalRatingsActive}
+            disablePrevAtLast
           />
         </MotionDiv>
 
