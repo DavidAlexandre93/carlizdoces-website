@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Alert, Box, Container, Snackbar } from '@mui/material'
+import { Alert, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
 import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
@@ -207,6 +207,8 @@ export function HomePage() {
   const [deliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [isSendingContactEmail] = useState(false)
+  const [isEmailOptionsOpen, setIsEmailOptionsOpen] = useState(false)
+  const [emailProviderLinks, setEmailProviderLinks] = useState(null)
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
@@ -403,9 +405,34 @@ export function HomePage() {
     ]
       .filter(Boolean)
       .join('\n')
-    const fallbackMailtoLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(fallbackSubject)}&body=${encodeURIComponent(fallbackBody)}`
+    const toEmail = 'carlizdoces@gmail.com'
+    const subjectEncoded = encodeURIComponent(fallbackSubject)
+    const bodyEncoded = encodeURIComponent(fallbackBody)
 
-    window.location.href = fallbackMailtoLink
+    const emailProviderLinks = {
+      gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(toEmail)}&su=${subjectEncoded}&body=${bodyEncoded}`,
+      outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(toEmail)}&subject=${subjectEncoded}&body=${bodyEncoded}`,
+      yahoo: `https://compose.mail.yahoo.com/?to=${encodeURIComponent(toEmail)}&subject=${subjectEncoded}&body=${bodyEncoded}`,
+      other: `mailto:${toEmail}?subject=${subjectEncoded}&body=${bodyEncoded}`,
+    }
+
+    setEmailProviderLinks(emailProviderLinks)
+    setIsEmailOptionsOpen(true)
+    setSnackbar({ open: true, message: 'Escolha seu provedor de e-mail para continuar o envio.', severity: 'info' })
+  }
+
+  const handleEmailProviderSelect = (provider) => {
+    if (!emailProviderLinks?.[provider]) return
+
+    const providerLink = emailProviderLinks[provider]
+    setIsEmailOptionsOpen(false)
+
+    if (provider === 'other') {
+      window.location.href = providerLink
+      return
+    }
+
+    window.open(providerLink, '_blank', 'noopener,noreferrer')
   }
 
   useEffect(() => {
@@ -795,6 +822,24 @@ export function HomePage() {
         onGoToOrderSection={handleGoToOrderSection}
         isFooterVisible={showScrollTop}
       />
+
+      <Dialog open={isEmailOptionsOpen} onClose={() => setIsEmailOptionsOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>Escolha onde enviar seu e-mail</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Selecione seu provedor de e-mail preferido para continuar com a mensagem já preenchida.
+          </Typography>
+          <Stack spacing={1}>
+            <Button variant="contained" onClick={() => handleEmailProviderSelect('gmail')}>Gmail</Button>
+            <Button variant="contained" onClick={() => handleEmailProviderSelect('outlook')}>Outlook</Button>
+            <Button variant="contained" onClick={() => handleEmailProviderSelect('yahoo')}>Yahoo</Button>
+            <Button variant="outlined" onClick={() => handleEmailProviderSelect('other')}>Outros aplicativos</Button>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsEmailOptionsOpen(false)}>Cancelar</Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
