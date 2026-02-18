@@ -181,13 +181,11 @@ export const deviceId = getOrCreateDeviceId()
 
 const SUPABASE_URL =
   process.env.REACT_APP_SUPABASE_URL
-  || process.env.VITE_SUPABASE_URL
   || ''
 
 const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
   process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
   || process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT
-  || process.env.VITE_SUPABASE_ANON_KEY
   || ''
 
 export const supabase = createClient(
