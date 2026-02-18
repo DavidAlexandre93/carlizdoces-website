@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { deviceId, supabase } from '../supabaseClient'
+import { deviceId, isSupabaseConfigured, supabase } from '../supabaseClient'
 
 function clampStars(value) {
   const numberValue = Number(value)
@@ -13,11 +13,16 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
   const [avgStars, setAvgStars] = useState(0)
   const [count, setCount] = useState(0)
   const [hoverStars, setHoverStars] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const displayStars = hoverStars || myStars
 
   const load = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -46,6 +51,9 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
       }
 
       setMyStars(clampStars(mine?.stars || 0))
+    } catch {
+      setAvgStars(0)
+      setCount(0)
     } finally {
       setLoading(false)
     }
@@ -61,6 +69,10 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
     const nextMyStars = isRemoving ? 0 : next
 
     setMyStars(nextMyStars)
+
+    if (!isSupabaseConfigured) {
+      return
+    }
 
     try {
       if (isRemoving) {
@@ -100,7 +112,6 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
       await load()
     } catch (error) {
       console.error(error)
-      alert('Erro ao salvar avaliação. Veja o console.')
       await load()
     }
   }, [itemId, load, myStars])
