@@ -50,7 +50,7 @@ export function HeroSection({ topShowcaseSlides }) {
                     <Button variant="contained" color="secondary" component="a" href="#realizar-pedido">
                       Fazer pedido
                     </Button>
-                    <Button variant="contained" color="inherit" component="a" href="#ovos-de-pascoa">
+                    <Button variant="contained" color="inherit" component="a" href="#ovos-de-pascoa" sx={{ color: '#6a1b9a' }}>
                       Ver catálogo
                     </Button>
                   </Stack>
