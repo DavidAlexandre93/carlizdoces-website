@@ -180,8 +180,8 @@ function getOrCreateDeviceId() {
 export const deviceId = getOrCreateDeviceId()
 
 export const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL,
-  process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+  import.meta.env.REACT_APP_SUPABASE_URL,
+  import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
   {
     global: {
       headers: { 'x-device-id': deviceId },
