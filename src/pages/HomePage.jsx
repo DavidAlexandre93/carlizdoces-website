@@ -209,6 +209,7 @@ export function HomePage() {
   const [isSendingContactEmail] = useState(false)
   const [isEmailOptionsOpen, setIsEmailOptionsOpen] = useState(false)
   const [emailProviderLinks, setEmailProviderLinks] = useState(null)
+  const [emailComposeData, setEmailComposeData] = useState(null)
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
@@ -417,6 +418,7 @@ export function HomePage() {
     }
 
     setEmailProviderLinks(emailProviderLinks)
+    setEmailComposeData({ toEmail, subject: fallbackSubject, body: fallbackBody })
     setIsEmailOptionsOpen(true)
   }
 
@@ -424,6 +426,8 @@ export function HomePage() {
     if (!emailProviderLinks?.[provider]) return
 
     const providerLink = emailProviderLinks[provider]
+    const isMobileDevice = /android|iphone|ipad|ipod|mobile/i.test(window.navigator.userAgent || '')
+
     setIsEmailOptionsOpen(false)
 
     if (provider === 'other') {
@@ -431,7 +435,37 @@ export function HomePage() {
       return
     }
 
-    window.open(providerLink, '_blank', 'noopener,noreferrer')
+    if (!isMobileDevice) {
+      window.open(providerLink, '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    const toEmail = emailComposeData?.toEmail || 'carlizdoces@gmail.com'
+    const subject = emailComposeData?.subject || ''
+    const body = emailComposeData?.body || ''
+
+    const appDeepLinks = {
+      gmail: `googlegmail://co?to=${encodeURIComponent(toEmail)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      outlook: `ms-outlook://compose?to=${encodeURIComponent(toEmail)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      yahoo: `ymail://mail/compose?to=${encodeURIComponent(toEmail)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+    }
+
+    const deepLink = appDeepLinks[provider]
+
+    if (!deepLink) {
+      window.open(providerLink, '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    const fallbackTimer = window.setTimeout(() => {
+      window.open(providerLink, '_blank', 'noopener,noreferrer')
+    }, 900)
+
+    window.location.href = deepLink
+
+    window.setTimeout(() => {
+      window.clearTimeout(fallbackTimer)
+    }, 1400)
   }
 
   useEffect(() => {
