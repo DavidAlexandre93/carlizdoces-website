@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { deviceId, supabase } from '../supabaseClient'
+import { deviceId, isSupabaseConfigured, supabase } from '../supabaseClient'
 
 const clampStars = (value) => {
   const numberValue = Number(value)
@@ -16,7 +16,7 @@ const toStats = (summaryRow) => ({
 export function useProductRatings(products) {
   const [summaryByProductId, setSummaryByProductId] = useState({})
   const [myRatingsByProductId, setMyRatingsByProductId] = useState({})
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isGlobalRatingsActive, setIsGlobalRatingsActive] = useState(false)
 
   const productIds = useMemo(() => products.map((product) => product.id), [products])
 
@@ -24,7 +24,20 @@ export function useProductRatings(products) {
     if (productIds.length === 0) {
       setSummaryByProductId({})
       setMyRatingsByProductId({})
-      setIsLoaded(true)
+      setIsGlobalRatingsActive(false)
+      return
+    }
+
+    if (!isSupabaseConfigured) {
+      setSummaryByProductId({})
+      setMyRatingsByProductId((current) => {
+        const next = {}
+        productIds.forEach((productId) => {
+          next[productId] = clampStars(current[productId] || 0)
+        })
+        return next
+      })
+      setIsGlobalRatingsActive(false)
       return
     }
 
@@ -67,21 +80,21 @@ export function useProductRatings(products) {
 
     setSummaryByProductId(nextSummaryByProductId)
     setMyRatingsByProductId(nextMyRatingsByProductId)
-    setIsLoaded(true)
+    setIsGlobalRatingsActive(true)
   }, [productIds])
 
   useEffect(() => {
     let isMounted = true
 
     const run = async () => {
-      setIsLoaded(false)
+      setIsGlobalRatingsActive(false)
       try {
         await loadRatings()
       } catch {
         if (!isMounted) return
         setSummaryByProductId({})
         setMyRatingsByProductId({})
-        setIsLoaded(true)
+        setIsGlobalRatingsActive(false)
       }
     }
 
@@ -122,6 +135,14 @@ export function useProductRatings(products) {
       ...current,
       [productId]: nextMyStars,
     }))
+
+    if (!isSupabaseConfigured) {
+      return {
+        ok: true,
+        removed: isRemoving,
+        isRemote: false,
+      }
+    }
 
     try {
       if (isRemoving) {
@@ -166,7 +187,11 @@ export function useProductRatings(products) {
         isRemote: true,
       }
     } catch {
-      await loadRatings()
+      try {
+        await loadRatings()
+      } catch {
+        // Mantém a UI funcional localmente quando não for possível sincronizar com Supabase.
+      }
       return { ok: false, reason: 'request-failed' }
     }
   }, [loadRatings, myRatingsByProductId])
@@ -174,6 +199,6 @@ export function useProductRatings(products) {
   return {
     ratingsByProductId,
     submitRating,
-    isGlobalRatingsActive: isLoaded,
+    isGlobalRatingsActive,
   }
 }
