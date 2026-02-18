@@ -182,9 +182,8 @@ function getOrCreateDeviceId() {
 
 export const deviceId = getOrCreateDeviceId()
 
-const env = globalThis?.process?.env || {}
-const supabaseUrl = env.REACT_APP_SUPABASE_URL || ''
-const supabaseAnonKey = env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || ''
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || ''
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
 // Ajuda a diagnosticar env vars faltando no deploy
