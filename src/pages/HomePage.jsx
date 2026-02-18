@@ -391,6 +391,20 @@ export function HomePage() {
       return
     }
 
+    const fallbackSubject = `Contato pelo site - ${name}`
+    const fallbackBody = [
+      'Olá, equipe Carliz Doces!',
+      '',
+      `Nome: ${name}`,
+      email ? `Email: ${email}` : null,
+      '',
+      'Mensagem:',
+      message,
+    ]
+      .filter(Boolean)
+      .join('\n')
+    const fallbackMailtoLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(fallbackSubject)}&body=${encodeURIComponent(fallbackBody)}`
+
     try {
       setIsSendingContactEmail(true)
 
@@ -401,14 +415,24 @@ export function HomePage() {
       })
 
       if (!response.ok) {
-        setSnackbar({ open: true, message: 'Não foi possível enviar agora. Tente novamente em instantes.', severity: 'error' })
+        window.location.href = fallbackMailtoLink
+        setSnackbar({
+          open: true,
+          message: 'Não foi possível enviar automaticamente. Abrimos seu app de e-mail para concluir o envio.',
+          severity: 'warning',
+        })
         return
       }
 
       setContactForm({ name: '', email: '', message: '' })
       setSnackbar({ open: true, message: 'Mensagem enviada com sucesso para a equipe da Carliz Doces!', severity: 'success' })
     } catch {
-      setSnackbar({ open: true, message: 'Sem conexão para enviar e-mail no momento. Tente novamente.', severity: 'error' })
+      window.location.href = fallbackMailtoLink
+      setSnackbar({
+        open: true,
+        message: 'Sem conexão para envio automático. Abrimos seu app de e-mail para concluir o envio.',
+        severity: 'warning',
+      })
     } finally {
       setIsSendingContactEmail(false)
     }
