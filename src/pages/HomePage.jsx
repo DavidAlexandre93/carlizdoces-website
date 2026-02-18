@@ -406,11 +406,6 @@ export function HomePage() {
     const fallbackMailtoLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(fallbackSubject)}&body=${encodeURIComponent(fallbackBody)}`
 
     window.location.href = fallbackMailtoLink
-    setSnackbar({
-      open: true,
-      message: 'Não foi possível enviar automaticamente. Abrimos seu app de e-mail para concluir o envio.',
-      severity: 'warning',
-    })
   }
 
   useEffect(() => {
