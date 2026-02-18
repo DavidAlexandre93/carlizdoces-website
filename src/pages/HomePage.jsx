@@ -15,67 +15,19 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
+import { deviceId, supabase } from '../supabaseClient'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
 const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
-const LIKES_API_BASE_URL = '/api/likes'
-const FAVORITE_PRODUCTS_STORAGE_KEY = 'carliz-favorite-products-liked'
-const VISITOR_ID_STORAGE_KEY = 'carliz-visitor-id'
+const STORE_LIKES_ITEM_ID = 'store'
 
+const isUniqueConstraintError = (error) => error?.code === '23505'
 
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
-
-const createVisitorId = () => {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID()
-  }
-
-  return `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`
-}
-
-
-const fetchLikesSummary = async (userId) => {
-  const query = userId ? `?userId=${encodeURIComponent(userId)}` : ''
-  const response = await fetch(`${LIKES_API_BASE_URL}/summary${query}`)
-
-  if (!response.ok) {
-    throw new Error('likes-summary-failed')
-  }
-
-  return response.json()
-}
-
-const toggleStoreLike = async (userId) => {
-  const response = await fetch(`${LIKES_API_BASE_URL}/store`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId }),
-  })
-
-  if (!response.ok) {
-    throw new Error('store-like-failed')
-  }
-
-  return response.json()
-}
-
-const toggleProductLike = async (productId, userId) => {
-  const response = await fetch(`${LIKES_API_BASE_URL}/product/${encodeURIComponent(productId)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId }),
-  })
-
-  if (!response.ok) {
-    throw new Error('product-like-failed')
-  }
-
-  return response.json()
-}
 
 export function HomePage() {
   const wrapperRef = useRef(null)
@@ -100,9 +52,6 @@ export function HomePage() {
   const [totalLikes, setTotalLikes] = useState(0)
   const [hasLikedStore, setHasLikedStore] = useState(false)
   const [showLikeCelebration, setShowLikeCelebration] = useState(false)
-  const [visitorId, setVisitorId] = useState('')
-  const validSeasonalProductIds = useMemo(() => new Set(seasonalProducts.map((product) => product.id)), [])
-
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
@@ -174,11 +123,6 @@ export function HomePage() {
   }
 
   const handleFavoriteProduct = async (item) => {
-    if (!visitorId) {
-      setSnackbar({ open: true, message: 'Não foi possível identificar este dispositivo agora.', severity: 'warning' })
-      return
-    }
-
     const wasFavorite = favoriteProductIds.includes(item.id)
 
     setFavoriteProductIds((currentFavorites) => {
@@ -195,14 +139,27 @@ export function HomePage() {
     }))
 
     try {
-      const result = await toggleProductLike(item.id, visitorId)
+      const action = wasFavorite
+        ? supabase.from('likes_anon').delete().eq('item_id', item.id).eq('device_id', deviceId)
+        : supabase.from('likes_anon').insert({ item_id: item.id, device_id: deviceId })
+
+      const { error } = await action
+      if (error && !(isUniqueConstraintError(error) && !wasFavorite)) throw error
+
+      const { count, error: countError } = await supabase
+        .from('likes_anon')
+        .select('*', { count: 'exact', head: true })
+        .eq('item_id', item.id)
+
+      if (countError) throw countError
+
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
-        [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
+        [item.id]: Number(count ?? currentCounts[item.id] ?? 0),
       }))
       setSnackbar({
         open: true,
-        message: result.liked ? `${item.name} recebeu +1 coração!` : `Você removeu seu coração de ${item.name}.`,
+        message: !wasFavorite ? `${item.name} recebeu +1 coração!` : `Você removeu seu coração de ${item.name}.`,
         severity: 'success',
       })
     } catch {
@@ -315,21 +272,6 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
-    try {
-      const storedFavoriteProductIds = window.localStorage.getItem(FAVORITE_PRODUCTS_STORAGE_KEY)
-      if (!storedFavoriteProductIds) return
-
-      const parsedFavoriteProductIds = JSON.parse(storedFavoriteProductIds)
-      if (!Array.isArray(parsedFavoriteProductIds)) return
-
-      const sanitizedFavoriteProductIds = parsedFavoriteProductIds.filter((productId) => validSeasonalProductIds.has(productId))
-      setFavoriteProductIds(sanitizedFavoriteProductIds)
-    } catch {
-      setFavoriteProductIds([])
-    }
-  }, [validSeasonalProductIds])
-
-  useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
       setIntroStage('opening')
     }, 2200)
@@ -354,22 +296,6 @@ export function HomePage() {
       document.body.style.overflow = previousOverflow
     }
   }, [introStage])
-
-  useEffect(() => {
-    try {
-      const storedVisitorId = window.localStorage.getItem(VISITOR_ID_STORAGE_KEY)
-      if (storedVisitorId) {
-        setVisitorId(storedVisitorId)
-        return
-      }
-
-      const nextVisitorId = createVisitorId()
-      window.localStorage.setItem(VISITOR_ID_STORAGE_KEY, nextVisitorId)
-      setVisitorId(nextVisitorId)
-    } catch {
-      setVisitorId(createVisitorId())
-    }
-  }, [])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -424,29 +350,43 @@ export function HomePage() {
   }
 
   useEffect(() => {
-    if (!visitorId) {
-      return
-    }
-
     let isMounted = true
 
     const bootstrapLikes = async () => {
       try {
-        const summary = await fetchLikesSummary(visitorId)
+        const allItemIds = [STORE_LIKES_ITEM_ID, ...seasonalProducts.map((product) => product.id)]
+
+        const { data: rows, error } = await supabase
+          .from('likes_anon')
+          .select('item_id,device_id')
+          .in('item_id', allItemIds)
+
+        if (error) throw error
+
         if (!isMounted) return
 
-        setTotalLikes(Number(summary?.store?.likes ?? 0))
-        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
+        const likesByItemId = allItemIds.reduce((acc, itemId) => ({ ...acc, [itemId]: 0 }), {})
+        const likedItemIds = new Set()
 
-        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
-        const likesById = summary?.products?.likesById ?? {}
+        ;(rows ?? []).forEach((row) => {
+          if (!(row.item_id in likesByItemId)) return
+
+          likesByItemId[row.item_id] += 1
+
+          if (row.device_id === deviceId) {
+            likedItemIds.add(row.item_id)
+          }
+        })
+
+        setTotalLikes(Number(likesByItemId[STORE_LIKES_ITEM_ID] ?? 0))
+        setHasLikedStore(likedItemIds.has(STORE_LIKES_ITEM_ID))
 
         setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
           ...counts,
-          [product.id]: Number(likesById[product.id] ?? 0),
+          [product.id]: Number(likesByItemId[product.id] ?? 0),
         }), {}))
 
-        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedByCurrentUserById[product.id]).map((product) => product.id))
+        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedItemIds.has(product.id)).map((product) => product.id))
       } catch {
         if (!isMounted) return
         setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
@@ -458,26 +398,9 @@ export function HomePage() {
     return () => {
       isMounted = false
     }
-  }, [visitorId])
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(FAVORITE_PRODUCTS_STORAGE_KEY, JSON.stringify(favoriteProductIds))
-    } catch {
-      // Ignora erro de armazenamento local para não bloquear o fluxo principal.
-    }
-  }, [favoriteProductIds])
+  }, [])
 
   const handleToggleLike = async () => {
-    if (!visitorId) {
-      setSnackbar({
-        open: true,
-        message: 'Não foi possível identificar este dispositivo agora.',
-        severity: 'warning',
-      })
-      return
-    }
-
     const wasLiked = hasLikedStore
 
     setHasLikedStore(!wasLiked)
@@ -485,13 +408,26 @@ export function HomePage() {
     setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? -1 : 1)))
 
     try {
-      const result = await toggleStoreLike(visitorId)
-      setHasLikedStore(Boolean(result.liked))
-      setShowLikeCelebration(Boolean(result.liked))
-      setTotalLikes(Number(result.likes ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
+      const action = wasLiked
+        ? supabase.from('likes_anon').delete().eq('item_id', STORE_LIKES_ITEM_ID).eq('device_id', deviceId)
+        : supabase.from('likes_anon').insert({ item_id: STORE_LIKES_ITEM_ID, device_id: deviceId })
+
+      const { error } = await action
+      if (error && !(isUniqueConstraintError(error) && !wasLiked)) throw error
+
+      const { count, error: countError } = await supabase
+        .from('likes_anon')
+        .select('*', { count: 'exact', head: true })
+        .eq('item_id', STORE_LIKES_ITEM_ID)
+
+      if (countError) throw countError
+
+      setHasLikedStore(!wasLiked)
+      setShowLikeCelebration(!wasLiked)
+      setTotalLikes(Number(count ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
       setSnackbar({
         open: true,
-        message: result.liked
+        message: !wasLiked
           ? '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨'
           : 'Coração removido. Clique novamente quando quiser apoiar de novo. 💛',
         severity: 'success',
