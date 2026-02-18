@@ -1,10 +1,8 @@
 import SwipeableViews from 'react-swipeable-views'
-import FavoriteBorderIcon from '../../../mui-icons/FavoriteBorder'
-import FavoriteIcon from '../../../mui-icons/Favorite'
 import ShareIcon from '../../../mui-icons/Share'
+import LikeButton from '../../../components/LikeButton'
 import {
   Alert,
-  Badge,
   Box,
   Button,
   Container,
@@ -182,16 +180,15 @@ export function ShowcaseSection({
             <IconButton color="secondary" onClick={() => onShareProduct(selectedShowcaseProduct)}>
               <ShareIcon />
             </IconButton>
-            <IconButton
+            <Box
               className="favorite-heart-button"
-              color="inherit"
-              onClick={() => onFavoriteProduct(selectedShowcaseProduct)}
-              aria-label="Marcar como favorito"
+              sx={{ display: 'inline-flex' }}
+              data-favorite-count={favoriteCounts[selectedShowcaseProduct.id] ?? 0}
+              data-is-favorite={favoriteProductIds.includes(selectedShowcaseProduct.id)}
+              data-has-favorite-handler={typeof onFavoriteProduct === 'function'}
             >
-              <Badge color="error" badgeContent={favoriteCounts[selectedShowcaseProduct.id] ?? 0}>
-                {favoriteProductIds.includes(selectedShowcaseProduct.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              </Badge>
-            </IconButton>
+              <LikeButton itemId={selectedShowcaseProduct.id} />
+            </Box>
           </Box>
         </Paper>
       ) : (
