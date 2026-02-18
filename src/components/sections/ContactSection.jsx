@@ -5,6 +5,7 @@ export default function ContactSection({
   onChange,
   onSubmit,
   onEmailSubmit,
+  isSendingContactEmail,
   contactTipOpen,
   onToggleTip,
 }) {
@@ -79,8 +80,8 @@ export default function ContactSection({
           <Button type="submit" variant="contained" disabled={isSubmitDisabled} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
             Enviar mensagem no WhatsApp
           </Button>
-          <Button type="button" variant="contained" color="secondary" disabled={isSubmitDisabled} onClick={onEmailSubmit} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
-            Enviar mensagem no e-mail
+          <Button type="button" variant="contained" color="secondary" disabled={isSubmitDisabled || isSendingContactEmail} onClick={onEmailSubmit} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
+            {isSendingContactEmail ? 'Enviando...' : 'Enviar mensagem no e-mail'}
           </Button>
         </Box>
         {contactTipOpen ? (
