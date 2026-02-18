@@ -17,6 +17,8 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 
 export function Header({
@@ -25,6 +27,8 @@ export function Header({
   onOpenMobileMenu,
   onCloseMobileMenu,
 }) {
+  const theme = useTheme()
+  const isMobileNavigation = useMediaQuery(theme.breakpoints.down('lg'))
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
@@ -59,6 +63,12 @@ Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de co
 Queremos ver sua experiência!
 
 Deus abençoe! 🙌`
+
+  useEffect(() => {
+    if (!isMobileNavigation && isMobileMenuOpen) {
+      onCloseMobileMenu()
+    }
+  }, [isMobileMenuOpen, isMobileNavigation, onCloseMobileMenu])
 
   useEffect(() => {
     if (!logoMotion.isFollowing) {
@@ -138,36 +148,38 @@ Deus abençoe! 🙌`
               </Typography>
             </Link>
 
-            <Stack
-              component="nav"
-              direction="row"
-              className="topbar-nav"
-              spacing={1.25}
-              useFlexGap
-              sx={{ flexWrap: 'nowrap' }}
-            >
-              {navItems.map((item) => (
-                <Button
-                  key={item.sectionId}
-                  component={Link}
-                  href={`#${item.sectionId}`}
-                  color="inherit"
-                  variant="text"
-                  disableElevation
-                  sx={{
-                    px: 1.5,
-                    py: 0.75,
-                    minWidth: 'max-content',
-                    whiteSpace: 'nowrap',
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    borderRadius: 999,
-                  }}
-                >
-                  {item.label}
-                </Button>
-              ))}
-            </Stack>
+            {!isMobileNavigation && (
+              <Stack
+                component="nav"
+                direction="row"
+                className="topbar-nav"
+                spacing={1.25}
+                useFlexGap
+                sx={{ flexWrap: 'nowrap' }}
+              >
+                {navItems.map((item) => (
+                  <Button
+                    key={item.sectionId}
+                    component={Link}
+                    href={`#${item.sectionId}`}
+                    color="inherit"
+                    variant="text"
+                    disableElevation
+                    sx={{
+                      px: 1.5,
+                      py: 0.75,
+                      minWidth: 'max-content',
+                      whiteSpace: 'nowrap',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      borderRadius: 999,
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </Stack>
+            )}
 
             <Box className="topbar-actions">
 
@@ -177,15 +189,29 @@ Deus abençoe! 🙌`
                 </IconButton>
               </Tooltip>
 
-              <IconButton color="inherit" aria-label="Abrir menu" edge="end" onClick={onOpenMobileMenu} className="topbar-menu-button">
-                <Icon>menu</Icon>
-              </IconButton>
+              {isMobileNavigation && (
+                <IconButton color="inherit" aria-label="Abrir menu" edge="end" onClick={onOpenMobileMenu} className="topbar-menu-button">
+                  <Icon>menu</Icon>
+                </IconButton>
+              )}
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
 
-      <Drawer anchor="right" open={isMobileMenuOpen} onClose={onCloseMobileMenu}>
+      <Drawer
+        anchor="right"
+        open={isMobileMenuOpen && isMobileNavigation}
+        onClose={onCloseMobileMenu}
+        PaperProps={{
+          sx: {
+            width: {
+              xs: '100vw',
+              sm: 'min(82vw, 360px)',
+            },
+          },
+        }}
+      >
         <Box className="mobile-nav" role="presentation" onClick={onCloseMobileMenu}>
           <List>
             {navItems.map((item) => (
