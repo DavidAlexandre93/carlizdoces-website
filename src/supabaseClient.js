@@ -27,14 +27,20 @@ function getOrCreateDeviceId() {
   }
 }
 
+const env = globalThis?.process?.env || {}
+
 const supabaseUrl = (
-  import.meta.env.VITE_SUPABASE_URL
+  env.REACT_APP_SUPABASE_URL
+  || env.VITE_SUPABASE_URL
+  || import.meta.env.VITE_SUPABASE_URL
   || import.meta.env.REACT_APP_SUPABASE_URL
   || ''
 ).replace(/\/$/, '')
 
 const supabaseAnonKey = (
-  import.meta.env.VITE_SUPABASE_ANON_KEY
+  env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+  || env.VITE_SUPABASE_ANON_KEY
+  || import.meta.env.VITE_SUPABASE_ANON_KEY
   || import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
   || ''
 )
