@@ -171,6 +171,10 @@ Deus abençoe! 🙌`
                       py: 0.75,
                       minWidth: 'max-content',
                       whiteSpace: 'nowrap',
+                      fontSize: {
+                        lg: '0.92rem',
+                        xl: '0.96rem',
+                      },
                       fontWeight: 600,
                       textTransform: 'none',
                       borderRadius: 999,
