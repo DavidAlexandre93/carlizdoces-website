@@ -80,7 +80,7 @@ function createClient(url, key, options = {}) {
           data: null,
           count: null,
           error: {
-            message: 'Supabase não configurado. Defina REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY (ou REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT).',
+            message: 'Supabase não configurado. Defina REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY.',
           },
         }
       }
@@ -187,7 +187,6 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
   env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-  || env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT
   || ''
 
 export const supabase = createClient(
