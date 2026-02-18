@@ -46,6 +46,7 @@ export function ShowcaseSection({
   const hasMultipleProducts = totalVisibleProducts > 1
   const isLastProduct = activeProductStep >= totalVisibleProducts - 1
   const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isLastProduct)
+  const isNextArrowDisabled = !hasMultipleProducts
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -119,26 +120,25 @@ export function ShowcaseSection({
               ))}
             </SwipeableViews>
 
-            {hasMultipleProducts ? (
-              <>
-                <IconButton
-                  className="showcase-arrow showcase-arrow-prev"
-                  onClick={handlePreviousProduct}
-                  disabled={isPrevArrowDisabled}
-                  aria-label="Produto anterior"
-                >
-                  <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
-                </IconButton>
+            <>
+              <IconButton
+                className="showcase-arrow showcase-arrow-prev"
+                onClick={handlePreviousProduct}
+                disabled={isPrevArrowDisabled}
+                aria-label="Produto anterior"
+              >
+                <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
+              </IconButton>
 
-                <IconButton
-                  className="showcase-arrow showcase-arrow-next"
-                  onClick={handleNextProduct}
-                  aria-label="Próximo produto"
-                >
-                  <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
-                </IconButton>
-              </>
-            ) : null}
+              <IconButton
+                className="showcase-arrow showcase-arrow-next"
+                onClick={handleNextProduct}
+                disabled={isNextArrowDisabled}
+                aria-label="Próximo produto"
+              >
+                <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
+              </IconButton>
+            </>
 
           </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
