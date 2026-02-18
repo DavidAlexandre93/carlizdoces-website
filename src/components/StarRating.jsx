@@ -25,38 +25,32 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
 
     setLoading(true)
 
-    try {
-      const { data: summary, error: summaryError } = await supabase
-        .from('ratings_summary')
-        .select('avg_stars, ratings_count')
-        .eq('item_id', itemId)
-        .maybeSingle()
+    const { data: summary, error: summaryError } = await supabase
+      .from('ratings_summary')
+      .select('avg_stars, ratings_count')
+      .eq('item_id', itemId)
+      .maybeSingle()
 
-      if (summaryError) {
-        throw summaryError
-      }
-
-      setAvgStars(Number(summary?.avg_stars || 0))
-      setCount(Number(summary?.ratings_count || 0))
-
-      const { data: mine, error: mineError } = await supabase
-        .from('ratings_anon')
-        .select('stars')
-        .eq('item_id', itemId)
-        .eq('device_id', deviceId)
-        .maybeSingle()
-
-      if (mineError) {
-        throw mineError
-      }
-
-      setMyStars(clampStars(mine?.stars || 0))
-    } catch {
-      setAvgStars(0)
-      setCount(0)
-    } finally {
-      setLoading(false)
+    if (summaryError) {
+      console.error(summaryError)
     }
+
+    setAvgStars(Number(summary?.avg_stars ?? 0))
+    setCount(Number(summary?.ratings_count ?? 0))
+
+    const { data: mine, error: mineError } = await supabase
+      .from('ratings_anon')
+      .select('stars')
+      .eq('item_id', itemId)
+      .eq('device_id', deviceId)
+      .maybeSingle()
+
+    if (mineError) {
+      console.error(mineError)
+    }
+
+    setMyStars(clampStars(mine?.stars ?? 0))
+    setLoading(false)
   }, [itemId])
 
   useEffect(() => {
@@ -66,46 +60,39 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
   const setRating = useCallback(async (starsClicked) => {
     const next = clampStars(starsClicked)
     const isRemoving = myStars === next
-    const nextMyStars = isRemoving ? 0 : next
-
-    setMyStars(nextMyStars)
 
     if (!isSupabaseConfigured) {
+      setMyStars(isRemoving ? 0 : next)
       return
     }
 
-    try {
-      if (isRemoving) {
-        const { error: removeError } = await supabase
-          .from('ratings_anon')
-          .delete()
-          .eq('item_id', itemId)
-          .eq('device_id', deviceId)
+    if (isRemoving) {
+      const { error } = await supabase
+        .from('ratings_anon')
+        .delete()
+        .eq('item_id', itemId)
+        .eq('device_id', deviceId)
 
-        if (removeError) {
-          throw removeError
-        }
-      } else {
-        const { error: upsertError } = await supabase
-          .from('ratings_anon')
-          .upsert({
-            item_id: itemId,
-            device_id: deviceId,
-            stars: next,
-          }, {
-            onConflict: 'item_id,device_id',
-          })
-
-        if (upsertError) {
-          throw upsertError
-        }
+      if (error) {
+        console.error(error)
       }
+    } else {
+      const { error } = await supabase
+        .from('ratings_anon')
+        .upsert({
+          item_id: itemId,
+          device_id: deviceId,
+          stars: next,
+        }, {
+          onConflict: 'item_id,device_id',
+        })
 
-      await load()
-    } catch (error) {
-      console.error(error)
-      await load()
+      if (error) {
+        console.error(error)
+      }
     }
+
+    await load()
   }, [itemId, load, myStars])
 
   const stars = useMemo(() => [1, 2, 3, 4, 5], [])
