@@ -1,88 +1,76 @@
-import { useCallback, useEffect, useState } from 'react'
-import { deviceId, supabase } from '../supabaseClient'
+import React, { useCallback, useEffect, useState } from "react";
+import { supabase, deviceId } from "../supabaseClient";
 
 export default function LikeButton({ itemId }) {
-  const [count, setCount] = useState(0)
-  const [liked, setLiked] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [count, setCount] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    setLoading(true)
-
+    setLoading(true);
     try {
-      const { count: total, error: countError } = await supabase
-        .from('likes_anon')
-        .select('*', { count: 'exact', head: true })
-        .eq('item_id', itemId)
+      // total global
+      const { count: total, error: countErr } = await supabase
+        .from("likes_anon")
+        .select("*", { count: "exact", head: true })
+        .eq("item_id", itemId);
 
-      if (countError) {
-        throw countError
-      }
+      if (countErr) throw countErr;
+      setCount(total ?? 0);
 
-      setCount(total || 0)
+      // liked para o device atual
+      const { data: rows, error: likedErr } = await supabase
+        .from("likes_anon")
+        .select("id")
+        .eq("item_id", itemId)
+        .eq("device_id", deviceId)
+        .limit(1);
 
-      const { data: rows, error: likedError } = await supabase
-        .from('likes_anon')
-        .select('id')
-        .eq('item_id', itemId)
-        .eq('device_id', deviceId)
-        .limit(1)
-
-      if (likedError) {
-        throw likedError
-      }
-
-      setLiked((rows?.length || 0) > 0)
+      if (likedErr) throw likedErr;
+      setLiked((rows?.length ?? 0) > 0);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [itemId])
+  }, [itemId]);
 
   useEffect(() => {
-    load()
-  }, [load])
+    load();
+  }, [load]);
 
   const toggle = useCallback(async () => {
-    const nextLiked = !liked
+    const nextLiked = !liked;
 
-    setLiked(nextLiked)
-    setCount((currentCount) => Math.max(0, currentCount + (nextLiked ? 1 : -1)))
+    // UI otimista
+    setLiked(nextLiked);
+    setCount((c) => Math.max(0, c + (nextLiked ? 1 : -1)));
 
     try {
       if (nextLiked) {
-        const { error } = await supabase.from('likes_anon').insert({
+        const { error } = await supabase.from("likes_anon").insert({
           item_id: itemId,
           device_id: deviceId,
-        })
-
-        if (error) {
-          console.error('INSERT ERROR:', error)
-          throw error
-        }
+        });
+        if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('likes_anon')
+          .from("likes_anon")
           .delete()
-          .eq('item_id', itemId)
-          .eq('device_id', deviceId)
+          .eq("item_id", itemId)
+          .eq("device_id", deviceId);
 
-        if (error) {
-          console.error('DELETE ERROR:', error)
-          throw error
-        }
+        if (error) throw error;
       }
     } catch (e) {
-      setLiked(liked)
-      setCount((currentCount) => Math.max(0, currentCount + (liked ? 1 : -1)))
-      console.error('LIKE ERROR:', e)
-      alert(
-        `Não foi possível atualizar o coração.\n\n`
-        + `Mensagem: ${e?.message || 'sem mensagem'}\n`
-        + `Detalhes: ${e?.details || 'sem detalhes'}\n`
-        + `Hint: ${e?.hint || 'sem hint'}`
-      )
+      // Reverte se falhar
+      setLiked(liked);
+      setCount((c) => Math.max(0, c + (liked ? 1 : -1)));
+
+      // Log detalhado para debug
+      console.error("LIKE ERROR:", e);
+
+      alert("Não foi possível atualizar seu coração agora.");
     }
-  }, [itemId, liked])
+  }, [itemId, liked]);
 
   return (
     <button
@@ -90,23 +78,23 @@ export default function LikeButton({ itemId }) {
       onClick={toggle}
       disabled={loading}
       aria-pressed={liked}
-      title={liked ? 'Remover curtida' : 'Curtir'}
+      title={liked ? "Remover curtida" : "Curtir"}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
+        display: "inline-flex",
+        alignItems: "center",
         gap: 8,
-        padding: '10px 14px',
+        padding: "10px 14px",
         borderRadius: 12,
-        border: '1px solid #ddd',
-        background: 'white',
-        cursor: loading ? 'not-allowed' : 'pointer',
+        border: "1px solid #ddd",
+        background: "white",
+        cursor: loading ? "not-allowed" : "pointer",
         fontSize: 16,
-        userSelect: 'none',
+        userSelect: "none",
         opacity: loading ? 0.65 : 1,
       }}
     >
-      <span style={{ fontSize: 22, color: liked ? 'red' : '#444' }}>♥</span>
+      <span style={{ fontSize: 22, color: liked ? "red" : "#444" }}>♥</span>
       <span style={{ fontWeight: 700 }}>{count}</span>
     </button>
-  )
+  );
 }
