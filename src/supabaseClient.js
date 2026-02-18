@@ -56,6 +56,8 @@ class PostgrestQuery {
     this.head = false
     this.wantExactCount = false
     this.payload = null
+    this.onConflict = ''
+    this.singleMode = null
   }
 
   select(columns = '*', options = {}) {
@@ -69,6 +71,13 @@ class PostgrestQuery {
   insert(payload) {
     this.method = 'POST'
     this.payload = payload
+    return this
+  }
+
+  upsert(payload, options = {}) {
+    this.method = 'POST'
+    this.payload = payload
+    this.onConflict = options.onConflict || ''
     return this
   }
 
@@ -93,6 +102,12 @@ class PostgrestQuery {
     return this
   }
 
+  maybeSingle() {
+    this.singleMode = 'maybe-single'
+    this.limit(1)
+    return this
+  }
+
   then(resolve, reject) {
     return this.execute().then(resolve, reject)
   }
@@ -114,14 +129,28 @@ class PostgrestQuery {
       url.searchParams.set('select', this.selectColumns)
     }
 
+    if (this.onConflict) {
+      url.searchParams.set('on_conflict', this.onConflict)
+    }
+
     this.filters.forEach(([column, expression]) => {
       url.searchParams.append(column, expression)
     })
 
     const headers = buildHeaders()
 
+    const preferHeaders = []
+
     if (this.wantExactCount) {
-      headers.Prefer = 'count=exact'
+      preferHeaders.push('count=exact')
+    }
+
+    if (this.onConflict) {
+      preferHeaders.push('resolution=merge-duplicates')
+    }
+
+    if (preferHeaders.length > 0) {
+      headers.Prefer = preferHeaders.join(',')
     }
 
     if (this.method === 'POST') {
@@ -159,6 +188,23 @@ class PostgrestQuery {
     }
 
     const data = await response.json()
+
+    if (this.singleMode === 'maybe-single') {
+      if (Array.isArray(data)) {
+        return {
+          data: data[0] ?? null,
+          count,
+          error: null,
+        }
+      }
+
+      return {
+        data: data ?? null,
+        count,
+        error: null,
+      }
+    }
+
     return { data, count, error: null }
   }
 }

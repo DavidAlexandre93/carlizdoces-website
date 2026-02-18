@@ -1,229 +1,172 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { deviceId, supabase } from '../supabaseClient'
 
-const STORAGE_KEY = 'carliz-product-ratings'
-const STORAGE_STATS_KEY = 'carliz-product-ratings-stats'
+const clampStars = (value) => {
+  const numberValue = Number(value)
 
-const toStorageKey = (baseKey, scopeKey = 'default') => `${baseKey}:${scopeKey}`
-
-const normalizeStats = (stats) => {
-  const votes = Number(stats?.votes ?? stats?.count ?? 0)
-  const total = Number(stats?.total ?? stats?.sum ?? 0)
-
-  return {
-    votes: Number.isFinite(votes) ? Math.max(0, Math.floor(votes)) : 0,
-    total: Number.isFinite(total) ? Math.max(0, total) : 0,
-  }
+  if (!Number.isFinite(numberValue)) return 0
+  return Math.min(5, Math.max(0, numberValue))
 }
 
-const addStats = (baseStats, extraStats) => ({
-  votes: baseStats.votes + extraStats.votes,
-  total: baseStats.total + extraStats.total,
+const toStats = (summaryRow) => ({
+  average: Number(summaryRow?.avg_stars ?? 0),
+  votes: Number(summaryRow?.ratings_count ?? 0),
 })
 
-const readStoredRatings = (scopeKey) => {
-  if (typeof window === 'undefined') return {}
+export function useProductRatings(products) {
+  const [summaryByProductId, setSummaryByProductId] = useState({})
+  const [myRatingsByProductId, setMyRatingsByProductId] = useState({})
+  const [isLoaded, setIsLoaded] = useState(false)
 
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(toStorageKey(STORAGE_KEY, scopeKey)) ?? '{}')
-    return parsed && typeof parsed === 'object' ? parsed : {}
-  } catch {
-    return {}
-  }
-}
+  const productIds = useMemo(() => products.map((product) => product.id), [products])
 
-const readStoredRatingStats = (scopeKey) => {
-  if (typeof window === 'undefined') return {}
-
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(toStorageKey(STORAGE_STATS_KEY, scopeKey)) ?? '{}')
-    return parsed && typeof parsed === 'object' ? parsed : {}
-  } catch {
-    return {}
-  }
-}
-
-const writeStoredRatings = (scopeKey, value) => {
-  if (typeof window === 'undefined') return
-
-  try {
-    window.localStorage.setItem(toStorageKey(STORAGE_KEY, scopeKey), JSON.stringify(value))
-  } catch {
-    // Ignora erro de persistência local para não travar o fluxo principal.
-  }
-}
-
-const writeStoredRatingStats = (scopeKey, value) => {
-  if (typeof window === 'undefined') return
-
-  try {
-    window.localStorage.setItem(toStorageKey(STORAGE_STATS_KEY, scopeKey), JSON.stringify(value))
-  } catch {
-    // Ignora erro de persistência local para não travar o fluxo principal.
-  }
-}
-
-async function fetchRemoteRatings(baseUrl) {
-  const response = await fetch(baseUrl, { cache: 'no-store' })
-  if (!response.ok) {
-    throw new Error('Falha ao carregar avaliações globais.')
-  }
-
-  const payload = await response.json()
-  return payload && typeof payload === 'object' ? payload : {}
-}
-
-async function saveRemoteRating(baseUrl, productId, nextValue) {
-  const response = await fetch(baseUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productId, rating: nextValue }),
-  })
-
-  if (!response.ok) {
-    throw new Error('Falha ao salvar avaliação global.')
-  }
-
-  const payload = await response.json()
-  return payload && typeof payload === 'object' ? payload : null
-}
-
-const buildScopedProductId = (scopeKey, productId) => `${scopeKey}::${productId}`
-
-export function useProductRatings(products, options = {}) {
-  const scopeKey = String(options.scopeKey || 'default').trim() || 'default'
-  const ratingsApiUrl = import.meta.env.VITE_RATINGS_API_URL || '/api/ratings'
-  const [userRatings, setUserRatings] = useState(() => readStoredRatings(scopeKey))
-  const [localRatingStats, setLocalRatingStats] = useState(() => readStoredRatingStats(scopeKey))
-  const [remoteRatings, setRemoteRatings] = useState({})
-  const [isRemoteEnabled, setIsRemoteEnabled] = useState(false)
-
-  const baselineStatsByProductId = useMemo(() => {
-    return products.reduce((acc, product) => {
-      acc[product.id] = {
-        votes: 0,
-        total: 0,
-      }
-
-      return acc
-    }, {})
-  }, [products])
-
-  const scopedProductIds = useMemo(() => {
-    return products.reduce((acc, product) => {
-      acc[product.id] = buildScopedProductId(scopeKey, product.id)
-      return acc
-    }, {})
-  }, [products, scopeKey])
-
-  useEffect(() => {
-    if (!ratingsApiUrl) {
-      setRemoteRatings({})
-      setIsRemoteEnabled(false)
+  const loadRatings = useCallback(async () => {
+    if (productIds.length === 0) {
+      setSummaryByProductId({})
+      setMyRatingsByProductId({})
+      setIsLoaded(true)
       return
     }
 
+    const { data: summaryRows, error: summaryError } = await supabase
+      .from('ratings_summary')
+      .select('item_id, avg_stars, ratings_count')
+      .in('item_id', productIds)
+
+    if (summaryError) {
+      throw new Error(summaryError.message || 'ratings-summary-load-failed')
+    }
+
+    const { data: myRows, error: myRowsError } = await supabase
+      .from('ratings_anon')
+      .select('item_id, stars')
+      .eq('device_id', deviceId)
+      .in('item_id', productIds)
+
+    if (myRowsError) {
+      throw new Error(myRowsError.message || 'ratings-my-load-failed')
+    }
+
+    const nextSummaryByProductId = productIds.reduce((acc, productId) => {
+      acc[productId] = { average: 0, votes: 0 }
+      return acc
+    }, {})
+
+    ;(summaryRows || []).forEach((row) => {
+      nextSummaryByProductId[row.item_id] = toStats(row)
+    })
+
+    const nextMyRatingsByProductId = productIds.reduce((acc, productId) => {
+      acc[productId] = 0
+      return acc
+    }, {})
+
+    ;(myRows || []).forEach((row) => {
+      nextMyRatingsByProductId[row.item_id] = clampStars(row.stars)
+    })
+
+    setSummaryByProductId(nextSummaryByProductId)
+    setMyRatingsByProductId(nextMyRatingsByProductId)
+    setIsLoaded(true)
+  }, [productIds])
+
+  useEffect(() => {
     let isMounted = true
 
-    fetchRemoteRatings(ratingsApiUrl)
-      .then((payload) => {
+    const run = async () => {
+      setIsLoaded(false)
+      try {
+        await loadRatings()
+      } catch {
         if (!isMounted) return
-        setRemoteRatings(payload)
-        setIsRemoteEnabled(true)
-      })
-      .catch(() => {
-        if (!isMounted) return
-        setRemoteRatings({})
-        setIsRemoteEnabled(false)
-      })
+        setSummaryByProductId({})
+        setMyRatingsByProductId({})
+        setIsLoaded(true)
+      }
+    }
+
+    run()
 
     return () => {
       isMounted = false
     }
-  }, [ratingsApiUrl])
+  }, [loadRatings])
 
   const ratingsByProductId = useMemo(() => {
-    return products.reduce((acc, product) => {
-      const baseline = {
-        votes: 0,
-        total: 0,
-      }
+    return productIds.reduce((acc, productId) => {
+      const stats = summaryByProductId[productId] || { average: 0, votes: 0 }
+      const userRating = myRatingsByProductId[productId] || 0
 
-      const baselineStats = normalizeStats(baselineStatsByProductId[product.id] ?? baseline)
-      const remoteProductId = scopedProductIds[product.id]
-      const remote = normalizeStats(remoteRatings[remoteProductId])
-      const localStats = normalizeStats(localRatingStats[product.id])
-      const localUserRating = Number(userRatings[product.id] ?? 0)
-      const merged = remote.votes > 0
-        ? addStats(baselineStats, remote)
-        : (localStats.votes > 0 ? localStats : baselineStats)
-
-      acc[product.id] = {
-        average: merged.votes > 0 ? merged.total / merged.votes : 0,
-        votes: merged.votes,
-        userRating: Number.isFinite(localUserRating) ? localUserRating : 0,
+      acc[productId] = {
+        average: clampStars(stats.average),
+        votes: Math.max(0, Number(stats.votes || 0)),
+        userRating,
       }
 
       return acc
     }, {})
-  }, [baselineStatsByProductId, localRatingStats, products, remoteRatings, scopedProductIds, userRatings])
+  }, [myRatingsByProductId, productIds, summaryByProductId])
 
-  const submitRating = useCallback(async (productId, nextValue) => {
-    const normalizedValue = Number(nextValue)
+  const submitRating = useCallback(async (productId, starsClicked) => {
+    const nextStars = clampStars(starsClicked)
 
-    if (!Number.isFinite(normalizedValue) || normalizedValue < 1 || normalizedValue > 5) {
+    if (nextStars < 1 || nextStars > 5) {
       return { ok: false, reason: 'invalid-rating' }
     }
 
-    const previousValue = Number(userRatings[productId] ?? 0)
-    if (previousValue === normalizedValue) {
-      return { ok: true, unchanged: true, isRemote: isRemoteEnabled }
-    }
+    const previousStars = clampStars(myRatingsByProductId[productId] || 0)
+    const isRemoving = previousStars === nextStars
+    const nextMyStars = isRemoving ? 0 : nextStars
 
-    const nextLocalRatings = {
-      ...userRatings,
-      [productId]: normalizedValue,
-    }
-
-    setUserRatings(nextLocalRatings)
-    writeStoredRatings(scopeKey, nextLocalRatings)
-
-    const baselineStats = normalizeStats(baselineStatsByProductId[productId])
-    const currentStats = normalizeStats(localRatingStats[productId] ?? baselineStats)
-    const nextStats = {
-      votes: previousValue > 0 ? currentStats.votes : currentStats.votes + 1,
-      total: currentStats.total + normalizedValue - previousValue,
-    }
-
-    const nextLocalStats = {
-      ...localRatingStats,
-      [productId]: nextStats,
-    }
-
-    setLocalRatingStats(nextLocalStats)
-    writeStoredRatingStats(scopeKey, nextLocalStats)
-
-    if (!ratingsApiUrl) {
-      return { ok: true, isRemote: false }
-    }
+    setMyRatingsByProductId((current) => ({
+      ...current,
+      [productId]: nextMyStars,
+    }))
 
     try {
-      const scopedProductId = scopedProductIds[productId] ?? buildScopedProductId(scopeKey, productId)
-      const payload = await saveRemoteRating(ratingsApiUrl, scopedProductId, normalizedValue)
-      if (payload) {
-        setRemoteRatings((current) => ({
-          ...current,
-          [scopedProductId]: payload,
-        }))
+      if (isRemoving) {
+        const { error } = await supabase
+          .from('ratings_anon')
+          .delete()
+          .eq('item_id', productId)
+          .eq('device_id', deviceId)
+
+        if (error) {
+          throw new Error(error.message || 'rating-remove-failed')
+        }
+      } else {
+        const { error } = await supabase
+          .from('ratings_anon')
+          .upsert(
+            {
+              item_id: productId,
+              device_id: deviceId,
+              stars: nextStars,
+            },
+            { onConflict: 'item_id,device_id' },
+          )
+
+        if (error) {
+          throw new Error(error.message || 'rating-save-failed')
+        }
       }
-      return { ok: true, isRemote: true }
+
+      await loadRatings()
+
+      return {
+        ok: true,
+        removed: isRemoving,
+        isRemote: true,
+      }
     } catch {
-      return { ok: true, isRemote: false, fallback: true }
+      await loadRatings()
+      return { ok: false, reason: 'request-failed' }
     }
-  }, [baselineStatsByProductId, isRemoteEnabled, localRatingStats, ratingsApiUrl, scopeKey, scopedProductIds, userRatings])
+  }, [loadRatings, myRatingsByProductId])
 
   return {
     ratingsByProductId,
     submitRating,
-    isGlobalRatingsActive: isRemoteEnabled,
+    isGlobalRatingsActive: isLoaded,
   }
 }
