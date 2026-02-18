@@ -90,6 +90,7 @@ export function HomePage() {
   const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
   const [deliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
+  const [isSendingContactEmail, setIsSendingContactEmail] = useState(false)
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
@@ -271,7 +272,7 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleContactEmailSubmit = () => {
+  const handleContactEmailSubmit = async () => {
     const name = contactForm.name.trim()
     const email = contactForm.email.trim()
     const message = contactForm.message.trim()
@@ -281,23 +282,27 @@ export function HomePage() {
       return
     }
 
-    const emailSubject = `Contato pelo site - ${name}`
-    const emailBody = [
-      'Olá, Carliz Doces! Vim pelo site e gostaria de atendimento.',
-      '',
-      `Nome: ${name}`,
-      email ? `Email: ${email}` : null,
-      '',
-      'Mensagem:',
-      message,
-    ]
-      .filter(Boolean)
-      .join('\n')
+    try {
+      setIsSendingContactEmail(true)
 
-    const contactEmailLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+      const response = await fetch('/api/contact-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      })
 
-    window.location.href = contactEmailLink
-    setSnackbar({ open: true, message: 'E-mail preparado! Revise e envie no seu aplicativo de e-mail.', severity: 'success' })
+      if (!response.ok) {
+        setSnackbar({ open: true, message: 'Não foi possível enviar agora. Tente novamente em instantes.', severity: 'error' })
+        return
+      }
+
+      setContactForm({ name: '', email: '', message: '' })
+      setSnackbar({ open: true, message: 'Mensagem enviada com sucesso para a equipe da Carliz Doces!', severity: 'success' })
+    } catch {
+      setSnackbar({ open: true, message: 'Sem conexão para enviar e-mail no momento. Tente novamente.', severity: 'error' })
+    } finally {
+      setIsSendingContactEmail(false)
+    }
   }
 
   useEffect(() => {
@@ -711,6 +716,7 @@ export function HomePage() {
                 onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
                 onSubmit={handleContactSubmit}
                 onEmailSubmit={handleContactEmailSubmit}
+                isSendingContactEmail={isSendingContactEmail}
                 contactTipOpen={contactTipOpen}
                 onToggleTip={() => setContactTipOpen((open) => !open)}
               />

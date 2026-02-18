@@ -254,6 +254,9 @@ Crie um `.env.local` para desenvolvimento local (ou configure no painel da Verce
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
 | `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |
 | `FIREBASE_PRIVATE_KEY` | Opcional (server) | Alternativa ao JSON completo: chave privada da conta de serviço. |
+| `RESEND_API_KEY` | Obrigatória (server, envio de contato) | Chave da API Resend usada para enviar o formulário de contato sem abrir aplicativo de e-mail. |
+| `CONTACT_TO_EMAIL` | Opcional (server, envio de contato) | E-mail que recebe os contatos do site (padrão: `carlizdoces@gmail.com`). |
+| `CONTACT_FROM_EMAIL` | Opcional (server, envio de contato) | Remetente usado no envio via Resend (padrão: `Carliz Doces <onboarding@resend.dev>`). |
 
 ### Exemplo
 
@@ -314,6 +317,10 @@ A pasta `api/` contém rotas usadas no deploy da Vercel.
 
 - `GET /api/ratings` → estatísticas agregadas por produto.
 - `POST /api/ratings` com `{ productId, rating }` → registra/atualiza avaliação (1–5).
+
+### Contact Email
+
+- `POST /api/contact-email` com `{ name, email?, message }` → envia o contato diretamente para o e-mail da Carliz Doces via Resend (sem abrir cliente de e-mail no dispositivo do visitante).
 
 > Observação: likes e ratings usam armazenamento em memória no ambiente serverless (sem banco persistente).
 
