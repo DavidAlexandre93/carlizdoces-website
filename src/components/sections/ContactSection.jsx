@@ -1,6 +1,13 @@
 import { Box, Button, Chip, Container, Paper, TextField, Typography } from '@mui/material'
 
-export default function ContactSection({ contactForm, onChange, onSubmit, contactTipOpen, onToggleTip }) {
+export default function ContactSection({
+  contactForm,
+  onChange,
+  onSubmit,
+  onEmailSubmit,
+  contactTipOpen,
+  onToggleTip,
+}) {
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
@@ -67,6 +74,9 @@ export default function ContactSection({ contactForm, onChange, onSubmit, contac
         <Box sx={{ mt: 2.5, display: 'flex', gap: 1.25, flexWrap: 'wrap' }}>
           <Button type="submit" variant="contained" disabled={isSubmitDisabled} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
             Enviar mensagem no WhatsApp
+          </Button>
+          <Button type="button" variant="contained" color="secondary" disabled={isSubmitDisabled} onClick={onEmailSubmit} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
+            Enviar mensagem no e-mail
           </Button>
           <Button variant="outlined" onClick={onToggleTip}>
             {contactTipOpen ? 'Ocultar horários' : 'Horários de atendimento'}
