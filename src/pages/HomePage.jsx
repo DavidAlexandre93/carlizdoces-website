@@ -271,6 +271,35 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
+  const handleContactEmailSubmit = () => {
+    const name = contactForm.name.trim()
+    const email = contactForm.email.trim()
+    const message = contactForm.message.trim()
+
+    if (!name || !message) {
+      setSnackbar({ open: true, message: 'Preencha nome e mensagem para enviar no e-mail.', severity: 'warning' })
+      return
+    }
+
+    const emailSubject = `Contato pelo site - ${name}`
+    const emailBody = [
+      'Olá, Carliz Doces! Vim pelo site e gostaria de atendimento.',
+      '',
+      `Nome: ${name}`,
+      email ? `Email: ${email}` : null,
+      '',
+      'Mensagem:',
+      message,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const contactEmailLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+
+    window.location.href = contactEmailLink
+    setSnackbar({ open: true, message: 'E-mail preparado! Revise e envie no seu aplicativo de e-mail.', severity: 'success' })
+  }
+
   useEffect(() => {
     const imageUrls = Array.from(new Set(seasonalProducts.map((product) => product.image).filter(Boolean)))
 
@@ -681,6 +710,7 @@ export function HomePage() {
                 contactForm={contactForm}
                 onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
                 onSubmit={handleContactSubmit}
+                onEmailSubmit={handleContactEmailSubmit}
                 contactTipOpen={contactTipOpen}
                 onToggleTip={() => setContactTipOpen((open) => !open)}
               />
