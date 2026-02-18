@@ -80,7 +80,7 @@ function createClient(url, key, options = {}) {
           data: null,
           count: null,
           error: {
-            message: 'Supabase não configurado. Defina REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY.',
+            message: 'Supabase não configurado. Defina REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY (ou REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT).',
           },
         }
       }
@@ -181,11 +181,14 @@ export const deviceId = getOrCreateDeviceId()
 
 const SUPABASE_URL =
   process.env.REACT_APP_SUPABASE_URL
-  || 'https://jrvkddqdxphwifbxjpvs.supabase.co'
+  || process.env.VITE_SUPABASE_URL
+  || ''
 
 const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
   process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpydmtkZHFkeHBod2lmYnhqcHZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzODMwMzIsImV4cCI6MjA4Njk1OTAzMn0.1qFT87BmORZiGDAdivxMraiGJzs-LTatqUyUKHonMO4'
+  || process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT
+  || process.env.VITE_SUPABASE_ANON_KEY
+  || ''
 
 export const supabase = createClient(
   SUPABASE_URL,
