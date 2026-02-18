@@ -27,16 +27,20 @@ export default function ContactSection({
           border: '1px solid rgba(171, 120, 197, 0.3)',
         }}
       >
-        <Chip
-          label="Atendimento personalizado"
-          size="small"
-          sx={{
-            mb: 1.5,
-            bgcolor: 'rgba(173, 20, 87, 0.12)',
-            color: '#6b1641',
-            fontWeight: 600,
-          }}
-        />
+        <Box sx={{ mb: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
+          <Chip
+            label="Atendimento personalizado"
+            size="small"
+            sx={{
+              bgcolor: 'rgba(173, 20, 87, 0.12)',
+              color: '#6b1641',
+              fontWeight: 600,
+            }}
+          />
+          <Button size="small" variant="outlined" onClick={onToggleTip}>
+            {contactTipOpen ? 'Ocultar horários' : 'Horários de atendimento'}
+          </Button>
+        </Box>
         <Typography variant="body1" sx={{ mb: 2.5, color: 'rgba(58, 23, 41, 0.86)' }}>
           Conte pra gente o que você está planejando. Em um clique, sua mensagem vai pronta para o WhatsApp.
         </Typography>
@@ -71,15 +75,12 @@ export default function ContactSection({
             slotProps={{ inputLabel: { shrink: true } }}
           />
         </Box>
-        <Box sx={{ mt: 2.5, display: 'flex', gap: 1.25, flexWrap: 'wrap' }}>
+        <Box sx={{ mt: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1.25, alignItems: 'center' }}>
           <Button type="submit" variant="contained" disabled={isSubmitDisabled} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
             Enviar mensagem no WhatsApp
           </Button>
           <Button type="button" variant="contained" color="secondary" disabled={isSubmitDisabled} onClick={onEmailSubmit} sx={{ px: 3, py: 1.15, fontWeight: 700 }}>
             Enviar mensagem no e-mail
-          </Button>
-          <Button variant="outlined" onClick={onToggleTip}>
-            {contactTipOpen ? 'Ocultar horários' : 'Horários de atendimento'}
           </Button>
         </Box>
         {contactTipOpen ? (
