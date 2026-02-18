@@ -108,6 +108,7 @@ function createClient(url, key, options = {}) {
 
       if (this.onConflict) {
         preferHeaders.push('resolution=merge-duplicates')
+        preferHeaders.push('return=representation')
       }
 
       if (preferHeaders.length > 0) {
