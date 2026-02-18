@@ -432,6 +432,12 @@ npm install
 - Confira os secrets de deploy no GitHub Actions.
 - Verifique logs do workflow para identificar ausência de credenciais.
 
+### Clique no coração não executa `LikeButton.jsx`
+
+- O app em produção entra por `src/main.jsx` e renderiza `src/App.jsx` (que usa `AppRouter`).
+- O arquivo `src/App.js` (que importa `LikeButton`) não é o ponto de entrada atual.
+- O coração da vitrine usa o fluxo de favoritos em `HomePage`/`ShowcaseSection`, não o componente `LikeButton.jsx`.
+
 ---
 
 ## 🗺️ Roadmap sugerido
