@@ -74,17 +74,26 @@ export default function StarRating({ itemId, label = 'Avalie este item' }) {
           throw error
         }
       } else {
-        const { error } = await supabase.from('ratings_anon').upsert(
-          {
+        const { error: removeExistingError } = await supabase
+          .from('ratings_anon')
+          .delete()
+          .eq('item_id', itemId)
+          .eq('device_id', deviceId)
+
+        if (removeExistingError) {
+          throw removeExistingError
+        }
+
+        const { error: insertError } = await supabase
+          .from('ratings_anon')
+          .insert({
             item_id: itemId,
             device_id: deviceId,
             stars: next,
-          },
-          { onConflict: 'item_id,device_id' },
-        )
+          })
 
-        if (error) {
-          throw error
+        if (insertError) {
+          throw insertError
         }
       }
 
