@@ -44,18 +44,29 @@ export function ShowcaseSection({
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
   const totalVisibleProducts = visibleShowcaseProducts.length
   const hasMultipleProducts = totalVisibleProducts > 1
+  const isFirstProduct = activeProductStep <= 0
   const isLastProduct = activeProductStep >= totalVisibleProducts - 1
   const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isLastProduct)
-  const isNextArrowDisabled = !hasMultipleProducts
+  const isNextArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isFirstProduct)
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
+
+    if (disablePrevAtLast) {
+      setActiveProductStep((step) => Math.min(totalVisibleProducts - 1, step + 1))
+      return
+    }
 
     setActiveProductStep((step) => (step <= 0 ? totalVisibleProducts - 1 : step - 1))
   }
 
   const handleNextProduct = () => {
-    if (!hasMultipleProducts) return
+    if (isNextArrowDisabled) return
+
+    if (disablePrevAtLast) {
+      setActiveProductStep((step) => Math.max(0, step - 1))
+      return
+    }
 
     setActiveProductStep((step) => (step >= totalVisibleProducts - 1 ? 0 : step + 1))
   }
