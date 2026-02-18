@@ -15,7 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { deviceId, supabase } from '../supabaseClient'
+import { deviceId } from '../supabaseClient'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -24,10 +24,45 @@ const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
 
-const isUniqueConstraintError = (error) => error?.code === '23505'
-
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
+
+async function requestLikesSummary(currentDeviceId) {
+  const response = await fetch(`/api/likes/summary?userId=${encodeURIComponent(currentDeviceId)}`)
+  if (!response.ok) {
+    throw new Error('likes-summary-request-failed')
+  }
+
+  return response.json()
+}
+
+async function requestProductLikeToggle(productId, currentDeviceId) {
+  const response = await fetch(`/api/likes/product/${encodeURIComponent(productId)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: currentDeviceId }),
+  })
+
+  if (!response.ok) {
+    throw new Error('product-like-toggle-request-failed')
+  }
+
+  return response.json()
+}
+
+async function requestStoreLikeToggle(currentDeviceId) {
+  const response = await fetch('/api/likes/store', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: currentDeviceId }),
+  })
+
+  if (!response.ok) {
+    throw new Error('store-like-toggle-request-failed')
+  }
+
+  return response.json()
+}
 
 export function HomePage() {
   const wrapperRef = useRef(null)
@@ -139,23 +174,11 @@ export function HomePage() {
     }))
 
     try {
-      const action = wasFavorite
-        ? supabase.from('likes_anon').delete().eq('item_id', item.id).eq('device_id', deviceId)
-        : supabase.from('likes_anon').insert({ item_id: item.id, device_id: deviceId })
-
-      const { error } = await action
-      if (error && !(isUniqueConstraintError(error) && !wasFavorite)) throw error
-
-      const { count, error: countError } = await supabase
-        .from('likes_anon')
-        .select('*', { count: 'exact', head: true })
-        .eq('item_id', item.id)
-
-      if (countError) throw countError
+      const result = await requestProductLikeToggle(item.id, deviceId)
 
       setFavoriteCounts((currentCounts) => ({
         ...currentCounts,
-        [item.id]: Number(count ?? currentCounts[item.id] ?? 0),
+        [item.id]: Number(result.likes ?? currentCounts[item.id] ?? 0),
       }))
       setSnackbar({
         open: true,
@@ -354,39 +377,22 @@ export function HomePage() {
 
     const bootstrapLikes = async () => {
       try {
-        const allItemIds = [STORE_LIKES_ITEM_ID, ...seasonalProducts.map((product) => product.id)]
-
-        const { data: rows, error } = await supabase
-          .from('likes_anon')
-          .select('item_id,device_id')
-          .in('item_id', allItemIds)
-
-        if (error) throw error
+        const summary = await requestLikesSummary(deviceId)
 
         if (!isMounted) return
 
-        const likesByItemId = allItemIds.reduce((acc, itemId) => ({ ...acc, [itemId]: 0 }), {})
-        const likedItemIds = new Set()
+        const likesById = summary?.products?.likesById ?? {}
+        const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
 
-        ;(rows ?? []).forEach((row) => {
-          if (!(row.item_id in likesByItemId)) return
-
-          likesByItemId[row.item_id] += 1
-
-          if (row.device_id === deviceId) {
-            likedItemIds.add(row.item_id)
-          }
-        })
-
-        setTotalLikes(Number(likesByItemId[STORE_LIKES_ITEM_ID] ?? 0))
-        setHasLikedStore(likedItemIds.has(STORE_LIKES_ITEM_ID))
+        setTotalLikes(Number(summary?.store?.likes ?? 0))
+        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
 
         setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
           ...counts,
-          [product.id]: Number(likesByItemId[product.id] ?? 0),
+          [product.id]: Number(likesById[product.id] ?? 0),
         }), {}))
 
-        setFavoriteProductIds(() => seasonalProducts.filter((product) => likedItemIds.has(product.id)).map((product) => product.id))
+        setFavoriteProductIds(() => seasonalProducts.filter((product) => Boolean(likedByCurrentUserById[product.id])).map((product) => product.id))
       } catch {
         if (!isMounted) return
         setSnackbar({ open: true, message: 'Não foi possível carregar os corações globais.', severity: 'warning' })
@@ -408,23 +414,11 @@ export function HomePage() {
     setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? -1 : 1)))
 
     try {
-      const action = wasLiked
-        ? supabase.from('likes_anon').delete().eq('item_id', STORE_LIKES_ITEM_ID).eq('device_id', deviceId)
-        : supabase.from('likes_anon').insert({ item_id: STORE_LIKES_ITEM_ID, device_id: deviceId })
-
-      const { error } = await action
-      if (error && !(isUniqueConstraintError(error) && !wasLiked)) throw error
-
-      const { count, error: countError } = await supabase
-        .from('likes_anon')
-        .select('*', { count: 'exact', head: true })
-        .eq('item_id', STORE_LIKES_ITEM_ID)
-
-      if (countError) throw countError
+      const result = await requestStoreLikeToggle(deviceId)
 
       setHasLikedStore(!wasLiked)
       setShowLikeCelebration(!wasLiked)
-      setTotalLikes(Number(count ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
+      setTotalLikes(Number(result.likes ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
       setSnackbar({
         open: true,
         message: !wasLiked
