@@ -68,7 +68,7 @@ module.exports = (_, argv = {}) => {
   const getEnvValueAny = (...names) => names.map((name) => getEnvValue(name)).find(Boolean) || '';
 
   return {
-    entry: './src/main.jsx',
+    entry: './src/index.js',
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'bundle.[contenthash].js',
