@@ -179,13 +179,15 @@ function getOrCreateDeviceId() {
 
 export const deviceId = getOrCreateDeviceId()
 
+const env = globalThis?.process?.env || {}
+
 const SUPABASE_URL =
-  process.env.REACT_APP_SUPABASE_URL
+  env.REACT_APP_SUPABASE_URL
   || ''
 
 const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
-  process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-  || process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT
+  env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+  || env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT
   || ''
 
 export const supabase = createClient(
