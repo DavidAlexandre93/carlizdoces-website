@@ -56,6 +56,7 @@ export default function LikeButton({ itemId }) {
         })
 
         if (error) {
+          console.error('INSERT ERROR:', error)
           throw error
         }
       } else {
@@ -66,14 +67,20 @@ export default function LikeButton({ itemId }) {
           .eq('device_id', deviceId)
 
         if (error) {
+          console.error('DELETE ERROR:', error)
           throw error
         }
       }
-    } catch (error) {
+    } catch (e) {
       setLiked(liked)
       setCount((currentCount) => Math.max(0, currentCount + (liked ? 1 : -1)))
-      console.error(error)
-      alert('Erro ao atualizar o like. Veja o console.')
+      console.error('LIKE ERROR:', e)
+      alert(
+        `Não foi possível atualizar o coração.\n\n`
+        + `Mensagem: ${e?.message || 'sem mensagem'}\n`
+        + `Detalhes: ${e?.details || 'sem detalhes'}\n`
+        + `Hint: ${e?.hint || 'sem hint'}`
+      )
     }
   }, [itemId, liked])
 

@@ -47,6 +47,10 @@ const supabaseAnonKey = (
 
 export const deviceId = getOrCreateDeviceId()
 
+console.log('deviceId:', deviceId)
+console.log('SUPABASE URL:', env.REACT_APP_SUPABASE_URL || env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || import.meta.env.REACT_APP_SUPABASE_URL)
+console.log('SUPABASE KEY:', (env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || '').slice(0, 20))
+
 const buildHeaders = () => ({
   apikey: supabaseAnonKey,
   Authorization: `Bearer ${supabaseAnonKey}`,
