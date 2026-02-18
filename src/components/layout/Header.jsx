@@ -154,9 +154,15 @@ Deus abençoe! 🙌`
                 component="nav"
                 direction="row"
                 className="topbar-nav"
-                spacing={1.25}
+                spacing={0}
                 useFlexGap
-                sx={{ flexWrap: 'nowrap' }}
+                sx={{
+                  flexWrap: 'nowrap',
+                  gap: {
+                    lg: 0.25,
+                    xl: 0.6,
+                  },
+                }}
               >
                 {navItems.map((item) => (
                   <Button
@@ -167,15 +173,22 @@ Deus abençoe! 🙌`
                     variant="text"
                     disableElevation
                     sx={{
-                      px: 1.5,
-                      py: 0.75,
-                      minWidth: 'max-content',
+                      px: {
+                        lg: 0.95,
+                        xl: 1.2,
+                      },
+                      py: {
+                        lg: 0.45,
+                        xl: 0.55,
+                      },
+                      minWidth: 0,
                       whiteSpace: 'nowrap',
                       fontSize: {
-                        lg: '0.92rem',
-                        xl: '0.96rem',
+                        lg: '0.78rem',
+                        xl: '0.88rem',
                       },
                       fontWeight: 600,
+                      letterSpacing: '-0.01em',
                       textTransform: 'none',
                       borderRadius: 999,
                     }}
