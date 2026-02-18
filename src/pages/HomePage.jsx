@@ -418,7 +418,6 @@ export function HomePage() {
 
     setEmailProviderLinks(emailProviderLinks)
     setIsEmailOptionsOpen(true)
-    setSnackbar({ open: true, message: 'Escolha seu provedor de e-mail para continuar o envio.', severity: 'info' })
   }
 
   const handleEmailProviderSelect = (provider) => {
