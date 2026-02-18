@@ -224,12 +224,12 @@ export function HomePage() {
     ratingsByProductId: easterRatingsByProductId,
     submitRating: submitEasterRating,
     isGlobalRatingsActive: isEasterGlobalRatingsActive,
-  } = useProductRatings(easterMenuProducts, { scopeKey: 'cardapio-de-pascoa' })
+  } = useProductRatings(easterMenuProducts)
   const {
     ratingsByProductId: candyRatingsByProductId,
     submitRating: submitCandyRating,
     isGlobalRatingsActive: isCandyGlobalRatingsActive,
-  } = useProductRatings(candyOrderProducts, { scopeKey: 'pedidos-de-doces' })
+  } = useProductRatings(candyOrderProducts)
 
   const menuShowcaseProducts = useMemo(
     () => easterMenuProducts.filter((item) => item.price <= maxMenuShowcasePrice),
@@ -339,8 +339,8 @@ export function HomePage() {
       return
     }
 
-    if (result.unchanged) {
-      setSnackbar({ open: true, message: `Você manteve ${rating} estrela(s) para ${item.name}.`, severity: 'info' })
+    if (result.removed) {
+      setSnackbar({ open: true, message: `Sua avaliação de ${item.name} foi removida.`, severity: 'info' })
       return
     }
 
@@ -795,7 +795,7 @@ export function HomePage() {
         onScrollTop={handleScrollTop}
         totalLikes={totalLikes}
         hasLiked={hasLikedStore}
-        disabled={hasLikedStore}
+        disabled={false}
         onToggleLike={handleToggleLike}
         showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}
