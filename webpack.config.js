@@ -106,14 +106,14 @@ module.exports = (_, argv = {}) => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env.REACT_APP_SUPABASE_URL': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_URL', 'VITE_SUPABASE_URL')),
-        'process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY', 'VITE_SUPABASE_ANON_KEY')),
+        'process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY', 'REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT', 'VITE_SUPABASE_ANON_KEY')),
         'process.env.VITE_SUPABASE_URL': JSON.stringify(getEnvValue('VITE_SUPABASE_URL')),
         'process.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(getEnvValue('VITE_SUPABASE_ANON_KEY')),
         'import.meta.env.VITE_DISQUS_SHORTNAME': JSON.stringify(getEnvValue('VITE_DISQUS_SHORTNAME')),
         'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(getEnvValue('VITE_SUPABASE_URL')),
         'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(getEnvValue('VITE_SUPABASE_ANON_KEY')),
         'import.meta.env.REACT_APP_SUPABASE_URL': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_URL', 'VITE_SUPABASE_URL')),
-        'import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY', 'VITE_SUPABASE_ANON_KEY')),
+        'import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(getEnvValueAny('REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY', 'REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT', 'VITE_SUPABASE_ANON_KEY')),
         'import.meta.env.VITE_RATINGS_API_URL': JSON.stringify(getEnvValue('VITE_RATINGS_API_URL')),
         'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(getEnvValueAny('VITE_GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_ID', 'NEXT_PUBLIC_GOOGLE_CLIENT_ID', 'REACT_APP_GOOGLE_CLIENT_ID')),
         'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(getEnvValueAny('VITE_FIREBASE_API_KEY', 'FIREBASE_API_KEY', 'NEXT_PUBLIC_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_API_KEY')),
