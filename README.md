@@ -1,123 +1,106 @@
 # 🍫 Carliz Doces Website
 
-Landing page institucional e comercial da **Carliz Doces**, construída com **React + Webpack**, com foco em apresentação do catálogo, captação de pedidos e conversão direta para WhatsApp.
+Landing page institucional/comercial da **Carliz Doces** construída com **React + Webpack**, com foco em conversão para WhatsApp e manutenção simples do catálogo por imagens.
 
-> Projeto preparado para deploy na Vercel (SPA + funções serverless em `/api`).
+> Deploy principal preparado para **Vercel** (SPA em `dist` + funções serverless em `api/`).
 
 ---
 
 ## 📑 Sumário
 
 - [Visão geral](#-visão-geral)
-- [Demo](#-demo)
-- [Principais funcionalidades](#-principais-funcionalidades)
-- [Tecnologias e arquitetura](#-tecnologias-e-arquitetura)
-- [Estrutura de pastas](#-estrutura-de-pastas)
+- [Funcionalidades](#-funcionalidades)
+- [Stack real do projeto](#-stack-real-do-projeto)
+- [Arquitetura e pastas](#-arquitetura-e-pastas)
 - [Pré-requisitos](#-pré-requisitos)
 - [Instalação e execução local](#-instalação-e-execução-local)
 - [Scripts disponíveis](#-scripts-disponíveis)
-- [Fluxo de conteúdo dinâmico por imagens](#-fluxo-de-conteúdo-dinâmico-por-imagens)
-- [Guia rápido de edição de catálogo](#-guia-rápido-de-edição-de-catálogo)
+- [Fluxo de catálogo por imagens](#-fluxo-de-catálogo-por-imagens)
 - [Variáveis de ambiente](#-variáveis-de-ambiente)
-- [APIs serverless disponíveis](#-apis-serverless-disponíveis)
+- [APIs serverless](#-apis-serverless)
 - [Build e deploy](#-build-e-deploy)
-- [CI/CD com GitHub Actions](#-cicd-com-github-actions)
-- [Boas práticas para evolução do projeto](#-boas-práticas-para-evolução-do-projeto)
 - [Troubleshooting](#-troubleshooting)
-- [Roadmap sugerido](#-roadmap-sugerido)
 - [Licença](#-licença)
 
 ---
 
 ## 👀 Visão geral
 
-Este repositório contém o front-end do site da **Carliz Doces** em formato **Single Page Application (SPA)**, com:
+O app é uma SPA com:
 
-- Hero com destaque visual da marca;
-- Sessões institucionais (sobre, contato, localização);
-- Vitrine de produtos com avaliações por estrelas;
-- Carrinho simplificado e geração automática de pedido via WhatsApp;
-- Destaques/novidades e integrações de engajamento (curtidas, depoimentos e Instagram);
-- Login com Google via NextAuth (OAuth no backend, sem expor `GOOGLE_CLIENT_SECRET` no front-end).
-
-A arquitetura foi pensada para permitir que pessoas não técnicas consigam atualizar produtos e novidades principalmente por **adição/remoção de imagens** em `public/images` e ajustes pontuais em `src/data/editableContent.js`.
-
----
-
-## 🔗 Demo
-
-- **Produção (Vercel):** `https://carlizdoces-website.vercel.app`
+- seções institucionais (hero, sobre, localização, contato);
+- vitrine de produtos e novidades;
+- carrinho simples com resumo e total;
+- geração de link de pedido para WhatsApp;
+- curtidas e avaliações com sincronização no Supabase quando configurado;
+- seção de depoimentos + integração opcional com Disqus;
+- envio de contato por e-mail via endpoint serverless.
 
 ---
 
-## ✨ Principais funcionalidades
+## ✨ Funcionalidades
 
-- Layout responsivo para desktop e mobile;
-- Navegação por âncoras entre seções da página;
-- Catálogo de produtos com preços, quantidades e detalhes;
-- Carrinho com totalizador e resumo por item;
-- Montagem de mensagem pronta para WhatsApp com nome, telefone e itens do pedido;
-- Avaliação por estrelas por produto (com persistência local e tentativa de sincronização com API);
-- Curtidas da loja e por produto (endpoints em `/api/likes/...`);
-- Comentários da comunidade com fallback para Disqus configurável;
-- Login com Google via NextAuth em `/api/auth/[...nextauth]`;
-- Carregamento lazy de seções para reduzir custo inicial de renderização.
+- Layout responsivo (desktop/mobile);
+- Navegação por âncoras;
+- Catálogo com dados editáveis e fallback automático por imagem;
+- Lazy loading de seções secundárias;
+- Likes de loja/produto por `device_id`;
+- Ratings por estrelas por `device_id`;
+- Envio de mensagem pelo WhatsApp com pedido formatado;
+- Envio de contato por e-mail via Resend (`/api/contact-email`).
 
 ---
 
-## 🧱 Tecnologias e arquitetura
+## 🧱 Stack real do projeto
 
 ### Front-end
 
-- **React 19**
-- **React DOM 19**
-- **Material UI (MUI)**
-- **Emotion**
-- **TanStack React Query**
-- **Motion** (`motion/react`) para animações
+- **React 19** + **React DOM 19**;
+- **Material UI** (`@mui/material`) + **Emotion** (`@emotion/react`, `@emotion/styled`);
+- **TanStack React Query** para providers/cache;
+- **Motion** (`motion/react`) para animações;
+- CSS próprio (`src/index.css`, `src/App.css`, `src/animate.css`).
 
 ### Build e tooling
 
-- **Webpack 5**
-- **Webpack Dev Server**
-- **Babel** (`preset-env` + `preset-react`)
-- **ESLint 9** (`react-hooks` + `react-refresh`)
+- **Webpack 5** + **webpack-dev-server**;
+- **Babel** (`@babel/preset-env`, `@babel/preset-react`);
+- **ESLint 9** (`@eslint/js`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`);
+- Script Node ESM para geração automática de dados de imagens (`scripts/generate-image-data.mjs`).
 
-### Organização de código
+### Back-end (serverless em `api/`)
 
-- `src/app`: providers e roteamento base
-- `src/features`: componentes de domínio/fluxo principal
-- `src/components`: layout e seções reutilizáveis
-- `src/hooks`: regras de negócio reaproveitáveis
-- `src/data`: conteúdo e agregação de dados exibidos
-- `api`: funções serverless utilizadas no deploy da Vercel
+- Funções Node/CommonJS executadas na Vercel;
+- Endpoint de contato integrando com **Resend API**;
+- Endpoints de likes e ratings em memória (fallback/local API);
+- Utilitário para leitura/validação de credenciais de conta de serviço Firebase (`api/firebaseServiceAccount.js`).
+
+### Dados e persistência
+
+- Cliente customizado de Supabase REST (sem SDK oficial) em `src/supabaseClient.js`;
+- Tabelas esperadas no Supabase para uso em produção: `likes_anon`, `ratings_anon` e visão `ratings_summary`.
 
 ---
 
-## 📂 Estrutura de pastas
+## 🗂️ Arquitetura e pastas
 
 ```bash
 .
-├── api/                        # Endpoints serverless (likes, ratings)
-├── public/
-│   └── images/                 # Imagens por coleção (catálogo, novidades, etc.)
-├── scripts/
-│   └── generate-image-data.mjs # Gera src/data/generatedImages.js automaticamente
+├── api/                          # Funções serverless (likes, ratings, contato por e-mail)
+├── public/images/               # Fonte de imagens do catálogo/novidades
+├── scripts/generate-image-data.mjs
 ├── src/
-│   ├── app/
-│   ├── components/
-│   ├── data/
-│   │   ├── editableContent.js  # Edição manual rápida (override de textos/dados)
-│   │   ├── generatedImages.js  # Arquivo gerado por script (não editar manualmente)
-│   │   └── siteData.js         # Consolida dados renderizados no app
-│   ├── features/
-│   ├── hooks/
-│   ├── pages/
-│   ├── App.jsx
-│   └── main.jsx
-├── .github/workflows/          # CI/CD
-├── vercel.json                 # Configuração de build/deploy
+│   ├── app/                     # Providers e roteamento
+│   ├── components/              # Componentes de layout/UI/seções
+│   ├── features/home/sections/  # Seções principais da home
+│   ├── data/                    # Conteúdo editável + agregação
+│   ├── hooks/                   # Regras de negócio (carrinho, ratings, WhatsApp)
+│   ├── pages/HomePage.jsx
+│   ├── supabaseClient.js
+│   └── index.js                 # Entry usado no Webpack
 ├── webpack.config.js
+├── vercel.json
+├── firebase.json
 └── package.json
 ```
 
@@ -139,196 +122,132 @@ npm -v
 
 ## 🚀 Instalação e execução local
 
-1. Clone o repositório:
-
 ```bash
 git clone https://github.com/<seu-usuario>/carlizdoces-website.git
 cd carlizdoces-website
-```
-
-2. Instale as dependências:
-
-```bash
 npm install
-```
-
-3. Rode o projeto em desenvolvimento:
-
-```bash
 npm start
 ```
 
-4. Acesse no navegador:
+A aplicação abre em:
 
 ```text
 http://localhost:3000
 ```
 
-> `npm start` e `npm run build` executam automaticamente o script de geração de dados de imagem antes do comando principal.
+> `prestart` executa automaticamente `npm run generate:image-data` antes de subir o dev server.
 
 ---
 
 ## 📜 Scripts disponíveis
 
-- `npm start`  
-  Inicia o `webpack-dev-server` em modo desenvolvimento.
-- `npm run build`  
-  Gera build de produção em `dist/`.
-- `npm run lint`  
-  Executa análise estática com ESLint.
-- `npm run generate:image-data`  
-  Escaneia `public/images/*` e atualiza `src/data/generatedImages.js`.
+- `npm start` → sobe o `webpack-dev-server` (modo desenvolvimento);
+- `npm run build` → gera build de produção em `dist/`;
+- `npm run lint` → executa ESLint;
+- `npm run generate:image-data` → atualiza `src/data/generatedImages.js` com base em `public/images`;
+- `npm run deploy:firebase` → build + deploy de hosting no Firebase.
 
-### Scripts automáticos encadeados
+Scripts encadeados:
 
-- `prestart`: roda `generate:image-data` antes de `start`.
-- `prebuild`: roda `generate:image-data` antes de `build`.
-- `postbuild`: copia os assets de `public/` para `dist/`.
+- `prestart`: `generate:image-data`
+- `prebuild`: `generate:image-data`
+- `postbuild`: `cp -r public/* dist/`
 
 ---
 
-## 🖼️ Fluxo de conteúdo dinâmico por imagens
+## 🖼️ Fluxo de catálogo por imagens
 
-Este projeto usa um fluxo híbrido para facilitar manutenção:
+Este projeto foi pensado para facilitar manutenção sem mexer em muitos componentes:
 
-1. Você adiciona/remove imagens nas subpastas de `public/images`.
-2. O script `generate-image-data.mjs` transforma isso em estrutura JavaScript (`generatedImages.js`).
-3. `siteData.js` cruza imagens geradas com os overrides de `editableContent.js`.
-4. A interface renderiza os dados finais (com fallback automático quando não há override manual).
+1. Adicione/remova imagens em `public/images/*`;
+2. Rode `npm run generate:image-data` (ou use `npm start`/`npm run build`, que já chamam o script);
+3. O arquivo `src/data/generatedImages.js` será atualizado automaticamente;
+4. `src/data/siteData.js` combina imagens detectadas com overrides de `src/data/editableContent.js`.
 
-### Benefícios
-
-- Menos necessidade de alterar componentes para atualizar catálogo;
-- Menor risco de erro em mudanças recorrentes de conteúdo;
-- Escalabilidade para novas coleções visuais.
-
----
-
-## ✍️ Guia rápido de edição de catálogo
-
-Arquivo principal de edição manual:
-
-- `src/data/editableContent.js`
-
-Você pode:
-
-- atualizar produtos (`productsCatalog`);
-- ajustar preço, descrição e quantidades;
-- adicionar/remover cards de novidades (`updatesCatalog`);
-- trocar imagens (desde que elas existam em `public/images/...`).
-
-### Regras importantes
-
-- mantenha `id` único para cada item;
-- `price` deve ser número;
-- use caminhos válidos em `image`/`imageUrl` (ex.: `/images/pedidos-de-doces/brigadeiro.png`).
-
-### Passo a passo recomendado
-
-1. Adicione a imagem na pasta correta em `public/images/...`;
-2. Rode `npm run generate:image-data` (ou apenas `npm start`);
-3. Ajuste dados no `editableContent.js` se precisar de override;
-4. Valide visualmente em `http://localhost:3000`.
+Assim é possível cadastrar novos itens rapidamente mantendo fallback automático (nome, slug, texto básico) e customização opcional de preço/descrição.
 
 ---
 
 ## 🔐 Variáveis de ambiente
 
-Crie um `.env.local` para desenvolvimento local (ou configure no painel da Vercel em produção).
+### Front-end / build
 
-| Variável | Obrigatória? | Uso |
+| Variável | Obrigatória | Uso |
 |---|---:|---|
-| `VITE_FIREBASE_API_KEY` / `NEXT_PUBLIC_FIREBASE_API_KEY` | Recomendada | Chave pública do projeto Firebase. |
-| `VITE_GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_ID` / `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Recomendada (login Google) | Client ID OAuth Web usado no botão "Entrar com Google". |
-| `VITE_FIREBASE_AUTH_DOMAIN` / `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Recomendada | Domínio de autenticação Firebase (`*.firebaseapp.com`). |
-| `VITE_FIREBASE_PROJECT_ID` / `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Recomendada | ID do projeto Firebase. |
-| `VITE_FIREBASE_STORAGE_BUCKET` / `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Opcional | Bucket do Firebase Storage. |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` / `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Opcional | Sender ID do Firebase Cloud Messaging. |
-| `VITE_FIREBASE_APP_ID` / `NEXT_PUBLIC_FIREBASE_APP_ID` | Recomendada | App ID do Firebase Web App. |
-| `VITE_FIREBASE_MEASUREMENT_ID` / `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Opcional | Measurement ID para Analytics. |
-| `GOOGLE_CLIENT_ID` | Obrigatória (server) | Client ID OAuth 2.0 para autenticação com Google via NextAuth. |
-| `GOOGLE_CLIENT_SECRET` | Obrigatória (server) | Secret OAuth 2.0 usado apenas no backend (nunca no front). |
-| `NEXTAUTH_URL` | Obrigatória (server) | URL base da aplicação (ex.: `http://localhost:3000` / URL da Vercel). |
-| `NEXTAUTH_SECRET` | Obrigatória (server) | String aleatória usada para assinar tokens e cookies de sessão. |
-| `VITE_DISQUS_SHORTNAME` | Opcional | Habilita widget de comentários Disqus na seção de depoimentos. |
-| `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional (server) | JSON da conta de serviço para Firebase Admin SDK (uso apenas em APIs/serverless). |
-| `FIREBASE_CLIENT_EMAIL` | Opcional (server) | Alternativa ao JSON completo: e-mail da conta de serviço. |
-| `FIREBASE_PRIVATE_KEY` | Opcional (server) | Alternativa ao JSON completo: chave privada da conta de serviço. |
-| `RESEND_API_KEY` | Obrigatória (server, envio de contato) | Chave da API Resend usada para enviar o formulário de contato sem abrir aplicativo de e-mail. |
-| `CONTACT_TO_EMAIL` | Opcional (server, envio de contato) | E-mail que recebe os contatos do site (padrão: `carlizdoces@gmail.com`). |
-| `CONTACT_FROM_EMAIL` | Opcional (server, envio de contato) | Remetente usado no envio via Resend (padrão: `Carliz Doces <onboarding@resend.dev>`). |
+| `REACT_APP_SUPABASE_URL` | Recomendada | URL do projeto Supabase para likes/ratings. |
+| `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY` (ou `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT`) | Recomendada | Chave pública (anon) do Supabase. |
+| `VITE_DISQUS_SHORTNAME` | Opcional | Habilita comentários Disqus na seção de depoimentos. |
+| `VITE_RATINGS_API_URL` | Opcional | URL alternativa para endpoint de ratings (quando não usar rota local). |
 
-### Exemplo
+### Serverless (`api/`)
+
+| Variável | Obrigatória | Uso |
+|---|---:|---|
+| `RESEND_API_KEY` | Obrigatória para `/api/contact-email` | Token da API Resend para envio de e-mails. |
+| `CONTACT_TO_EMAIL` | Opcional | Destinatário dos contatos (default: `carlizdoces@gmail.com`). |
+| `CONTACT_FROM_EMAIL` | Opcional | Remetente dos e-mails (default: `Carliz Doces <onboarding@resend.dev>`). |
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional | JSON completo de conta de serviço Firebase (uso server-side). |
+| `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | Opcional | Alternativa em campos separados para conta de serviço Firebase. |
+
+Exemplo mínimo (`.env.local`):
 
 ```bash
-VITE_FIREBASE_API_KEY=sua-api-key
-VITE_GOOGLE_CLIENT_ID=seu-google-oauth-client-id
-VITE_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=seu-projeto
-VITE_FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=000000000000
-VITE_FIREBASE_APP_ID=1:000000000000:web:abc123
-VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
-VITE_GOOGLE_CLIENT_ID=1234567890-abcdefg.apps.googleusercontent.com
+REACT_APP_SUPABASE_URL=https://SEU-PROJETO.supabase.co
+REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY=SEU_ANON_KEY
 VITE_DISQUS_SHORTNAME=seu-shortname
 
-# Se estiver migrando de Next.js, pode usar os equivalentes NEXT_PUBLIC_FIREBASE_*
-NEXT_PUBLIC_FIREBASE_API_KEY=sua-api-key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=1234567890-abcdefg.apps.googleusercontent.com
+RESEND_API_KEY=re_xxx
+CONTACT_TO_EMAIL=carlizdoces@gmail.com
 ```
-
-### Firebase Admin SDK (serverless)
-
-> ⚠️ **Nunca exponha a chave privada no frontend**. Use somente em variáveis de ambiente do backend/serverless (Vercel/Firebase Functions/etc.).
-
-Você pode configurar de duas formas:
-
-1. **JSON único (recomendado)**
-
-```bash
-FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"..."}
-```
-
-2. **Campos separados**
-
-```bash
-FIREBASE_PROJECT_ID=seu-projeto
-FIREBASE_CLIENT_EMAIL=sua-conta@seu-projeto.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-```
-
-Este repositório inclui o utilitário `api/firebaseServiceAccount.js` para validar e normalizar essas credenciais no ambiente serverless.
-
 
 ---
 
-## 🔌 APIs serverless disponíveis
+## 🔌 APIs serverless
 
-A pasta `api/` contém rotas usadas no deploy da Vercel.
+### `POST /api/contact-email`
 
-### Likes
+Envia contato por e-mail via Resend.
 
-- `GET /api/likes/summary?userId=...` → resumo de likes da loja e produtos.
-- `POST /api/likes/store` com `{ userId }` → curte a loja.
-- `POST /api/likes/product/:id` com `{ userId }` → curte um produto.
+Body esperado:
 
-### Ratings
+```json
+{
+  "name": "Seu nome",
+  "email": "voce@email.com",
+  "message": "Mensagem"
+}
+```
 
-- `GET /api/ratings` → estatísticas agregadas por produto.
-- `POST /api/ratings` com `{ productId, rating }` → registra/atualiza avaliação (1–5).
+### `GET /api/ratings`
 
-### Contact Email
+Retorna agregados do store em memória (`{ [productId]: { votes, total } }`).
 
-- `POST /api/contact-email` com `{ name, email?, message }` → envia o contato diretamente para o e-mail da Carliz Doces via Resend (sem abrir cliente de e-mail no dispositivo do visitante).
+### `POST /api/ratings`
 
-> Observação: likes e ratings usam armazenamento em memória no ambiente serverless (sem banco persistente).
+Registra voto em memória por IP e produto.
+
+Body:
+
+```json
+{
+  "productId": "ferrero",
+  "rating": 5
+}
+```
+
+### Likes (store em memória)
+
+- `GET /api/likes/summary?userId=...`
+- `POST /api/likes/store` com `{ "userId": "..." }`
+- `POST /api/likes/product/:id` com `{ "userId": "..." }`
+
+> Observação: no fluxo atual da Home, curtidas/ratings priorizam Supabase quando configurado; os endpoints em memória funcionam como alternativa de API local.
 
 ---
 
 ## 🌐 Build e deploy
 
-### Build local de produção
+### Build local
 
 ```bash
 npm run build
@@ -336,68 +255,23 @@ npm run build
 
 Saída em `dist/`.
 
-### Deploy na Vercel
+### Vercel
 
-O projeto já possui `vercel.json` com:
+`vercel.json` já define:
 
 - `installCommand`: `npm install --production=false`
 - `buildCommand`: `npm run build`
 - `outputDirectory`: `dist`
-- `rewrites` para SPA (`/(.*) -> /index.html`)
+- rewrite para SPA (`/(.*) -> /index.html`)
+- rota explícita para APIs (`/api/(.*) -> /api/$1`)
 
-### Deploy no Firebase Hosting
-
-A configuração de hosting também está pronta com `firebase.json` + `.firebaserc`:
+### Firebase Hosting (opcional)
 
 ```bash
-firebase login
-firebase init
 npm run deploy:firebase
 ```
 
-Configuração aplicada:
-
-- diretório público: `dist`
-- rewrite SPA: `** -> /index.html`
-- projeto padrão: `carliz-doces`
-
----
-
-## 🔁 CI/CD com GitHub Actions
-
-Workflows presentes:
-
-- **CI (`.github/workflows/ci.yml`)**
-  - checkout
-  - setup Node 20
-  - `npm ci`
-  - `npm run lint -- --max-warnings=0`
-  - `npm run build`
-
-- **CD Preview (`.github/workflows/cd-vercel-preview.yml`)**
-  - executa em PR
-  - faz deploy preview na Vercel se secrets estiverem presentes
-  - comenta URL (ou motivo de skip) no PR
-
-- **CD Production (`.github/workflows/cd-vercel.yml`)**
-  - executa em push para `main` e manualmente (`workflow_dispatch`)
-  - deploy de produção se credenciais existirem
-
-### Secrets necessários para deploy
-
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
-
----
-
-## ✅ Boas práticas para evolução do projeto
-
-- Antes de commitar: rode `npm run lint` e `npm run build`.
-- Evite editar manualmente `src/data/generatedImages.js` (arquivo gerado).
-- Sempre que alterar imagens, garanta que os caminhos no catálogo batem com os arquivos em `public/images`.
-- Para mudanças de UX, preserve IDs de seção usados na navegação por âncoras.
-- Ao adicionar endpoint novo em `api/`, documente no README e atualize chamadas no front-end.
+Com `firebase.json` configurado para servir `dist/` com rewrite SPA.
 
 ---
 
@@ -416,40 +290,23 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
+### Likes/Ratings não persistem
+
+- Verifique `REACT_APP_SUPABASE_URL` e `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY`.
+- Confirme a existência das tabelas/visões no Supabase.
+
 ### Comentários Disqus não aparecem
 
-- Verifique se `VITE_DISQUS_SHORTNAME` está definido corretamente.
-- Confirme se o domínio do site está cadastrado no Disqus.
+- Defina `VITE_DISQUS_SHORTNAME` corretamente.
+- Verifique configuração de domínio no Disqus.
 
-### Login Firebase falhando
+### Endpoint de contato retorna erro
 
-- Verifique as variáveis `VITE_FIREBASE_*` no `.env.local` e na Vercel.
-- Confirme se o método de login Google está habilitado no Firebase Authentication.
-- Confira se o domínio da aplicação está listado em **Authentication → Settings → Authorized domains**.
-
-### Build Vercel sem deploy
-
-- Confira os secrets de deploy no GitHub Actions.
-- Verifique logs do workflow para identificar ausência de credenciais.
-
-### Clique no coração não executa `LikeButton.jsx`
-
-- O app em produção entra por `src/main.jsx` e renderiza `src/App.jsx` (que usa `AppRouter`).
-- O arquivo `src/App.js` (que importa `LikeButton`) não é o ponto de entrada atual.
-- O coração da vitrine usa o fluxo de favoritos em `HomePage`/`ShowcaseSection`, não o componente `LikeButton.jsx`.
-
----
-
-## 🗺️ Roadmap sugerido
-
-- Persistência real de likes/ratings em banco de dados;
-- Painel administrativo simples para edição de catálogo sem mexer em código;
-- Testes automatizados (unitários + integração de componentes);
-- Monitoramento de erro e analytics de conversão de pedidos;
-- Otimização adicional de imagens (formatos modernos e compressão por pipeline).
+- Verifique `RESEND_API_KEY`.
+- Confira logs da função `/api/contact-email` no ambiente de deploy.
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a licença **MIT**. Veja [`LICENSE`](./LICENSE).
+Este projeto está sob licença **MIT**. Veja [`LICENSE`](./LICENSE).
