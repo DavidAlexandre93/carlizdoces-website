@@ -1,11 +1,11 @@
-const DEVICE_ID_STORAGE_KEY = 'carliz-device-id'
+const DEVICE_ID_STORAGE_KEY = 'device_id'
 
 function createDeviceId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID()
   }
 
-  return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`
+  return `dev_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
 }
 
 function getOrCreateDeviceId() {
@@ -27,8 +27,17 @@ function getOrCreateDeviceId() {
   }
 }
 
-const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/$/, '')
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const supabaseUrl = (
+  import.meta.env.VITE_SUPABASE_URL
+  || import.meta.env.REACT_APP_SUPABASE_URL
+  || ''
+).replace(/\/$/, '')
+
+const supabaseAnonKey = (
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+  || import.meta.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+  || ''
+)
 
 export const deviceId = getOrCreateDeviceId()
 
@@ -93,7 +102,9 @@ class PostgrestQuery {
       return {
         data: null,
         count: null,
-        error: { message: 'Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.' },
+        error: {
+          message: 'Supabase não configurado. Defina VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY ou REACT_APP_SUPABASE_URL/REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY.',
+        },
       }
     }
 

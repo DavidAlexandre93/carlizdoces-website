@@ -15,7 +15,7 @@ import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
 import { ParticlesBackground } from '../components/ui/ParticlesBackground'
-import { deviceId } from '../supabaseClient'
+import { deviceId, supabase } from '../supabaseClient'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
 const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
@@ -27,41 +27,170 @@ const STORE_LIKES_ITEM_ID = 'store'
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
-async function requestLikesSummary(currentDeviceId) {
-  const response = await fetch(`/api/likes/summary?userId=${encodeURIComponent(currentDeviceId)}`)
-  if (!response.ok) {
-    throw new Error('likes-summary-request-failed')
+async function requestLikesSummary(currentDeviceId, productIds) {
+  const itemIds = [STORE_LIKES_ITEM_ID, ...productIds]
+
+  const { data: rows, error: rowsError } = await supabase
+    .from('likes_anon')
+    .select('item_id')
+    .in('item_id', itemIds)
+
+  if (rowsError) {
+    throw new Error(rowsError.message || 'likes-summary-request-failed')
   }
 
-  return response.json()
+  const { data: userRows, error: userRowsError } = await supabase
+    .from('likes_anon')
+    .select('item_id')
+    .eq('device_id', currentDeviceId)
+    .in('item_id', itemIds)
+
+  if (userRowsError) {
+    throw new Error(userRowsError.message || 'likes-summary-request-failed')
+  }
+
+  const likesById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: 0 }), {})
+  let storeLikes = 0
+
+  ;(rows || []).forEach((row) => {
+    if (row.item_id === STORE_LIKES_ITEM_ID) {
+      storeLikes += 1
+      return
+    }
+
+    if (Object.prototype.hasOwnProperty.call(likesById, row.item_id)) {
+      likesById[row.item_id] += 1
+    }
+  })
+
+  const likedByCurrentUserById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: false }), {})
+  let storeLikedByCurrentUser = false
+
+  ;(userRows || []).forEach((row) => {
+    if (row.item_id === STORE_LIKES_ITEM_ID) {
+      storeLikedByCurrentUser = true
+      return
+    }
+
+    if (Object.prototype.hasOwnProperty.call(likedByCurrentUserById, row.item_id)) {
+      likedByCurrentUserById[row.item_id] = true
+    }
+  })
+
+  return {
+    store: {
+      likes: storeLikes,
+      likedByCurrentUser: storeLikedByCurrentUser,
+    },
+    products: {
+      likesById,
+      likedByCurrentUserById,
+    },
+  }
 }
 
 async function requestProductLikeToggle(productId, currentDeviceId) {
-  const response = await fetch(`/api/likes/product/${encodeURIComponent(productId)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId: currentDeviceId }),
-  })
+  const { data: existingRows, error: existingError } = await supabase
+    .from('likes_anon')
+    .select('id')
+    .eq('item_id', productId)
+    .eq('device_id', currentDeviceId)
+    .limit(1)
 
-  if (!response.ok) {
-    throw new Error('product-like-toggle-request-failed')
+  if (existingError) {
+    throw new Error(existingError.message || 'product-like-toggle-request-failed')
   }
 
-  return response.json()
+  const wasLiked = (existingRows?.length || 0) > 0
+
+  if (wasLiked) {
+    const { error: deleteError } = await supabase
+      .from('likes_anon')
+      .delete()
+      .eq('item_id', productId)
+      .eq('device_id', currentDeviceId)
+
+    if (deleteError) {
+      throw new Error(deleteError.message || 'product-like-toggle-request-failed')
+    }
+  } else {
+    const { error: insertError } = await supabase
+      .from('likes_anon')
+      .insert({
+        item_id: productId,
+        device_id: currentDeviceId,
+      })
+
+    if (insertError) {
+      throw new Error(insertError.message || 'product-like-toggle-request-failed')
+    }
+  }
+
+  const { count, error: countError } = await supabase
+    .from('likes_anon')
+    .select('*', { count: 'exact', head: true })
+    .eq('item_id', productId)
+
+  if (countError) {
+    throw new Error(countError.message || 'product-like-toggle-request-failed')
+  }
+
+  return {
+    likes: Number(count || 0),
+    liked: !wasLiked,
+  }
 }
 
 async function requestStoreLikeToggle(currentDeviceId) {
-  const response = await fetch('/api/likes/store', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId: currentDeviceId }),
-  })
+  const { data: existingRows, error: existingError } = await supabase
+    .from('likes_anon')
+    .select('id')
+    .eq('item_id', STORE_LIKES_ITEM_ID)
+    .eq('device_id', currentDeviceId)
+    .limit(1)
 
-  if (!response.ok) {
-    throw new Error('store-like-toggle-request-failed')
+  if (existingError) {
+    throw new Error(existingError.message || 'store-like-toggle-request-failed')
   }
 
-  return response.json()
+  const wasLiked = (existingRows?.length || 0) > 0
+
+  if (wasLiked) {
+    const { error: deleteError } = await supabase
+      .from('likes_anon')
+      .delete()
+      .eq('item_id', STORE_LIKES_ITEM_ID)
+      .eq('device_id', currentDeviceId)
+
+    if (deleteError) {
+      throw new Error(deleteError.message || 'store-like-toggle-request-failed')
+    }
+  } else {
+    const { error: insertError } = await supabase
+      .from('likes_anon')
+      .insert({
+        item_id: STORE_LIKES_ITEM_ID,
+        device_id: currentDeviceId,
+      })
+
+    if (insertError) {
+      throw new Error(insertError.message || 'store-like-toggle-request-failed')
+    }
+  }
+
+  const { count, error: countError } = await supabase
+    .from('likes_anon')
+    .select('*', { count: 'exact', head: true })
+    .eq('item_id', STORE_LIKES_ITEM_ID)
+
+  if (countError) {
+    throw new Error(countError.message || 'store-like-toggle-request-failed')
+  }
+
+  return {
+    likes: Number(count || 0),
+    liked: !wasLiked,
+  }
 }
 
 export function HomePage() {
@@ -377,7 +506,7 @@ export function HomePage() {
 
     const bootstrapLikes = async () => {
       try {
-        const summary = await requestLikesSummary(deviceId)
+        const summary = await requestLikesSummary(deviceId, seasonalProducts.map((product) => product.id))
 
         if (!isMounted) return
 
