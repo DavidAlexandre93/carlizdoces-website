@@ -27,7 +27,65 @@ const STORE_LIKES_ITEM_ID = 'store'
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
-async function requestLikesSummary(currentDeviceId, productIds) {
+async function requestLikesApi(path, options = {}) {
+  const response = await fetch(path, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...options,
+  })
+
+  const payload = await response.json().catch(() => ({}))
+
+  if (!response.ok) {
+    throw new Error(payload?.error || 'likes-api-request-failed')
+  }
+
+  return payload
+}
+
+async function requestLikesSummaryFromApi(currentDeviceId, productIds) {
+  const summary = await requestLikesApi(`/api/likes/summary?userId=${encodeURIComponent(currentDeviceId)}`)
+  const likesById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: Number(summary?.products?.likesById?.[productId] ?? 0) }), {})
+  const likedByCurrentUserById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: Boolean(summary?.products?.likedByCurrentUserById?.[productId]) }), {})
+
+  return {
+    store: {
+      likes: Number(summary?.store?.likes ?? 0),
+      likedByCurrentUser: Boolean(summary?.store?.likedByCurrentUser),
+    },
+    products: {
+      likesById,
+      likedByCurrentUserById,
+    },
+  }
+}
+
+async function requestProductLikeToggleFromApi(productId, currentDeviceId) {
+  const result = await requestLikesApi(`/api/likes/product/${encodeURIComponent(productId)}`, {
+    method: 'POST',
+    body: JSON.stringify({ userId: currentDeviceId }),
+  })
+
+  return {
+    likes: Number(result?.likes ?? 0),
+    liked: Boolean(result?.liked),
+  }
+}
+
+async function requestStoreLikeToggleFromApi(currentDeviceId) {
+  const result = await requestLikesApi('/api/likes/store', {
+    method: 'POST',
+    body: JSON.stringify({ userId: currentDeviceId }),
+  })
+
+  return {
+    likes: Number(result?.likes ?? 0),
+    liked: Boolean(result?.liked),
+  }
+}
+
+async function requestLikesSummaryFromSupabase(currentDeviceId, productIds) {
   const itemIds = [STORE_LIKES_ITEM_ID, ...productIds]
 
   const { data: rows, error: rowsError } = await supabase
@@ -89,7 +147,15 @@ async function requestLikesSummary(currentDeviceId, productIds) {
   }
 }
 
-async function requestProductLikeToggle(productId, currentDeviceId) {
+async function requestLikesSummary(currentDeviceId, productIds) {
+  try {
+    return await requestLikesSummaryFromSupabase(currentDeviceId, productIds)
+  } catch {
+    return requestLikesSummaryFromApi(currentDeviceId, productIds)
+  }
+}
+
+async function requestProductLikeToggleFromSupabase(productId, currentDeviceId) {
   const { data: existingRows, error: existingError } = await supabase
     .from('likes_anon')
     .select('id')
@@ -141,7 +207,15 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
   }
 }
 
-async function requestStoreLikeToggle(currentDeviceId) {
+async function requestProductLikeToggle(productId, currentDeviceId) {
+  try {
+    return await requestProductLikeToggleFromSupabase(productId, currentDeviceId)
+  } catch {
+    return requestProductLikeToggleFromApi(productId, currentDeviceId)
+  }
+}
+
+async function requestStoreLikeToggleFromSupabase(currentDeviceId) {
   const { data: existingRows, error: existingError } = await supabase
     .from('likes_anon')
     .select('id')
@@ -190,6 +264,14 @@ async function requestStoreLikeToggle(currentDeviceId) {
   return {
     likes: Number(count || 0),
     liked: !wasLiked,
+  }
+}
+
+async function requestStoreLikeToggle(currentDeviceId) {
+  try {
+    return await requestStoreLikeToggleFromSupabase(currentDeviceId)
+  } catch {
+    return requestStoreLikeToggleFromApi(currentDeviceId)
   }
 }
 
