@@ -419,15 +419,62 @@
 }
 
 .mobile-nav {
-  width: min(82vw, 320px);
-  padding: 12px;
+  height: 100%;
+  padding: 14px 12px 18px;
+  background: linear-gradient(180deg, #fff8fd 0%, #ffeaf5 100%);
+}
+
+.mobile-nav-drawer {
+  overflow: hidden;
+  border-left: 1px solid rgba(173, 20, 87, 0.16);
+  box-shadow: -12px 0 30px rgba(123, 32, 80, 0.16);
 }
 
 .mobile-nav-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding: 10px 8px 14px;
+  padding: 2px 4px 10px;
+}
+
+.mobile-nav-title {
+  font-weight: 800 !important;
+  color: #7b2050;
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-close {
+  border: 1px solid rgba(173, 20, 87, 0.2) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.mobile-nav-divider {
+  border-color: rgba(173, 20, 87, 0.18) !important;
+}
+
+.mobile-nav-list {
+  margin-top: 8px !important;
+}
+
+.mobile-nav-list .MuiListItemButton-root {
+  border-radius: 14px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(173, 20, 87, 0.12);
+  background: rgba(255, 255, 255, 0.86);
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.mobile-nav-list .MuiListItemButton-root .MuiListItemText-primary {
+  font-weight: 700;
+  color: #7b2050;
+}
+
+.mobile-nav-list .MuiListItemButton-root:hover,
+.mobile-nav-list .MuiListItemButton-root:focus-visible {
+  transform: translateX(-2px);
+  border-color: rgba(173, 20, 87, 0.28);
+  background: #fff;
 }
 
 .mobile-brand-logo {
