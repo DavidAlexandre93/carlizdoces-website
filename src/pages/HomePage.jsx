@@ -206,7 +206,7 @@ export function HomePage() {
   const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
   const [deliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
-  const [isSendingContactEmail, setIsSendingContactEmail] = useState(false)
+  const [isSendingContactEmail] = useState(false)
   const [contactTipOpen, setContactTipOpen] = useState(false)
   const [communityTestimonials] = useState(manualTestimonials)
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
@@ -381,7 +381,7 @@ export function HomePage() {
     setSnackbar({ open: true, message: 'Mensagem preparada! Continue o envio no WhatsApp.', severity: 'success' })
   }
 
-  const handleContactEmailSubmit = async () => {
+  const handleContactEmailSubmit = () => {
     const name = contactForm.name.trim()
     const email = contactForm.email.trim()
     const message = contactForm.message.trim()
@@ -405,37 +405,12 @@ export function HomePage() {
       .join('\n')
     const fallbackMailtoLink = `mailto:carlizdoces@gmail.com?subject=${encodeURIComponent(fallbackSubject)}&body=${encodeURIComponent(fallbackBody)}`
 
-    try {
-      setIsSendingContactEmail(true)
-
-      const response = await fetch('/api/contact-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
-      })
-
-      if (!response.ok) {
-        window.location.href = fallbackMailtoLink
-        setSnackbar({
-          open: true,
-          message: 'Não foi possível enviar automaticamente. Abrimos seu app de e-mail para concluir o envio.',
-          severity: 'warning',
-        })
-        return
-      }
-
-      setContactForm({ name: '', email: '', message: '' })
-      setSnackbar({ open: true, message: 'Mensagem enviada com sucesso para a equipe da Carliz Doces!', severity: 'success' })
-    } catch {
-      window.location.href = fallbackMailtoLink
-      setSnackbar({
-        open: true,
-        message: 'Sem conexão para envio automático. Abrimos seu app de e-mail para concluir o envio.',
-        severity: 'warning',
-      })
-    } finally {
-      setIsSendingContactEmail(false)
-    }
+    window.location.href = fallbackMailtoLink
+    setSnackbar({
+      open: true,
+      message: 'Não foi possível enviar automaticamente. Abrimos seu app de e-mail para concluir o envio.',
+      severity: 'warning',
+    })
   }
 
   useEffect(() => {
