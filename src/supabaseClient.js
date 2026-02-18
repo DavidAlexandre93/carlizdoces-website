@@ -168,33 +168,33 @@ function createClient(url, key, options = {}) {
 function getOrCreateDeviceId() {
   const key = 'device_id'
   let id = localStorage.getItem(key)
+
   if (!id) {
     id =
       (window.crypto?.randomUUID && window.crypto.randomUUID())
       || `dev_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
+
     localStorage.setItem(key, id)
   }
+
   return id
 }
 
 export const deviceId = getOrCreateDeviceId()
 
 const env = globalThis?.process?.env || {}
+const supabaseUrl = env.REACT_APP_SUPABASE_URL || ''
+const supabaseAnonKey = env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || ''
 
-const SUPABASE_URL =
-  env.REACT_APP_SUPABASE_URL
-  || ''
+// Ajuda a diagnosticar env vars faltando no deploy
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase env vars missing:', { supabaseUrl, hasKey: !!supabaseAnonKey })
+}
 
-const SUPABASE_PUBLISHABLE_DEFAULT_KEY =
-  env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-  || ''
-
-export const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_DEFAULT_KEY,
-  {
-    global: {
-      headers: { 'x-device-id': deviceId },
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  global: {
+    headers: {
+      'x-device-id': deviceId,
     },
   },
-)
+})
