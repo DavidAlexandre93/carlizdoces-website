@@ -10,6 +10,14 @@ export const imageCollections = {
       "label": "Ferrero",
       "imageUrl": "/images/cardapio-de-pascoa/ferrero.png",
       "alt": "Ferrero"
+    },
+    {
+      "id": "cardapio-de-pascoa-ovo-chocolate",
+      "slug": "ovo-chocolate",
+      "fileName": "ovo-chocolate.svg",
+      "label": "Ovo Chocolate",
+      "imageUrl": "/images/cardapio-de-pascoa/ovo-chocolate.svg",
+      "alt": "Ovo Chocolate"
     }
   ],
   "carousel": [
