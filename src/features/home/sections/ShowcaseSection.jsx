@@ -44,15 +44,12 @@ export function ShowcaseSection({
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
   const totalVisibleProducts = visibleShowcaseProducts.length
   const hasMultipleProducts = totalVisibleProducts > 1
-  const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && activeProductStep === totalVisibleProducts - 1)
+  const isFirstProduct = activeProductStep <= 0
+  const isLastProduct = activeProductStep >= totalVisibleProducts - 1
+  const isPrevArrowDisabled = !hasMultipleProducts || isFirstProduct || (disablePrevAtLast && isLastProduct)
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
-  const isFirstProduct = activeProductStep <= 0
-  const isLastProduct = activeProductStep >= totalVisibleProducts - 1
-
-  const handlePreviousProduct = () => {
-    if (!hasMultipleProducts || isFirstProduct) return
 
     setActiveProductStep((step) => Math.max(step - 1, 0))
   }
@@ -127,7 +124,6 @@ export function ShowcaseSection({
               className="showcase-arrow showcase-arrow-prev"
               onClick={handlePreviousProduct}
               disabled={isPrevArrowDisabled}
-              disabled={!hasMultipleProducts || isFirstProduct}
               aria-label="Produto anterior"
             >
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
