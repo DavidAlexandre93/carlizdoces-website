@@ -43,17 +43,19 @@ export function ShowcaseSection({
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
   const totalVisibleProducts = visibleShowcaseProducts.length
   const hasMultipleProducts = totalVisibleProducts > 1
+  const isFirstProduct = activeProductStep <= 0
+  const isLastProduct = activeProductStep >= totalVisibleProducts - 1
 
   const handlePreviousProduct = () => {
-    if (!hasMultipleProducts) return
+    if (!hasMultipleProducts || isFirstProduct) return
 
-    setActiveProductStep((step) => (step - 1 + totalVisibleProducts) % totalVisibleProducts)
+    setActiveProductStep((step) => Math.max(step - 1, 0))
   }
 
   const handleNextProduct = () => {
-    if (!hasMultipleProducts) return
+    if (!hasMultipleProducts || isLastProduct) return
 
-    setActiveProductStep((step) => (step + 1) % totalVisibleProducts)
+    setActiveProductStep((step) => Math.min(step + 1, totalVisibleProducts - 1))
   }
 
   return (
@@ -119,7 +121,7 @@ export function ShowcaseSection({
             <IconButton
               className="showcase-arrow showcase-arrow-prev"
               onClick={handlePreviousProduct}
-              disabled={!hasMultipleProducts}
+              disabled={!hasMultipleProducts || isFirstProduct}
               aria-label="Produto anterior"
             >
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-next' : 'showcase-arrow-icon-prev'}`} />
@@ -128,7 +130,7 @@ export function ShowcaseSection({
             <IconButton
               className="showcase-arrow showcase-arrow-next"
               onClick={handleNextProduct}
-              disabled={!hasMultipleProducts}
+              disabled={!hasMultipleProducts || isLastProduct}
               aria-label="Próximo produto"
             >
               <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
