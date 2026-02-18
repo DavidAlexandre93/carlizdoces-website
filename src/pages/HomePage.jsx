@@ -638,6 +638,7 @@ export function HomePage() {
             productRatings={candyRatingsByProductId}
             onRateProduct={(item, rating) => handleRateProduct(item, rating, 'pedidos-de-doces')}
             isGlobalRatingsActive={isCandyGlobalRatingsActive}
+            disablePrevAtLast
           />
         </MotionDiv>
 

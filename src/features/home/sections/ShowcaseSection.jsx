@@ -38,11 +38,16 @@ export function ShowcaseSection({
   productRatings,
   onRateProduct,
   isGlobalRatingsActive,
+  disablePrevAtLast = false,
 }) {
   const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
   const totalVisibleProducts = visibleShowcaseProducts.length
   const hasMultipleProducts = totalVisibleProducts > 1
+  const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && activeProductStep === totalVisibleProducts - 1)
+
+  const handlePreviousProduct = () => {
+    if (isPrevArrowDisabled) return
   const isFirstProduct = activeProductStep <= 0
   const isLastProduct = activeProductStep >= totalVisibleProducts - 1
 
@@ -121,6 +126,7 @@ export function ShowcaseSection({
             <IconButton
               className="showcase-arrow showcase-arrow-prev"
               onClick={handlePreviousProduct}
+              disabled={isPrevArrowDisabled}
               disabled={!hasMultipleProducts || isFirstProduct}
               aria-label="Produto anterior"
             >
