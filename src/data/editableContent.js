@@ -71,7 +71,7 @@ export const updatesCatalog = [
     id: 'bar-de-brigadeiro',
     category: 'lancamento',
     dateLabel: 'Lançamento',
-    title: 'Bar de brigadeiro',
+    title: 'Novidade chegando Bar de Brigadeiro',
     imageUrl: '/images/novidades/bar-de-brigadeiro.jpeg',
     imageAlt: 'Bar de brigadeiro da Carliz Doces',
     mediaDescription: 'Novo formato para servir brigadeiros em eventos e comemorações.',
