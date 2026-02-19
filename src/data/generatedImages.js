@@ -56,28 +56,28 @@ export const imageCollections = {
   ],
   "instagram": [
     {
-      "id": "instagram-divulgacao-brigadeiro",
-      "slug": "divulgacao-brigadeiro",
-      "fileName": "divulgacao-brigadeiro.png",
-      "label": "Divulgacao Brigadeiro",
-      "imageUrl": "/images/instagram/divulgacao-brigadeiro.png",
-      "alt": "Divulgacao Brigadeiro"
+      "id": "instagram-brigadeiro",
+      "slug": "brigadeiro",
+      "fileName": "brigadeiro.png",
+      "label": "Brigadeiro",
+      "imageUrl": "/images/instagram/brigadeiro.png",
+      "alt": "Brigadeiro"
     },
     {
-      "id": "instagram-prestigio",
-      "slug": "prestigio",
-      "fileName": "prestigio.png",
-      "label": "Prestigio",
-      "imageUrl": "/images/instagram/prestigio.png",
-      "alt": "Prestigio"
+      "id": "instagram-encomende-ovo-pascoa",
+      "slug": "encomende-ovo-pascoa",
+      "fileName": "encomende-ovo-pascoa.jpeg",
+      "label": "Encomende Ovo Pascoa",
+      "imageUrl": "/images/instagram/encomende-ovo-pascoa.jpeg",
+      "alt": "Encomende Ovo Pascoa"
     },
     {
-      "id": "instagram-trufado-maracuja",
-      "slug": "trufado-maracuja",
-      "fileName": "trufado-maracuja.png",
-      "label": "Trufado Maracuja",
-      "imageUrl": "/images/instagram/trufado-maracuja.png",
-      "alt": "Trufado Maracuja"
+      "id": "instagram-ovos-de-pascoa-trufados",
+      "slug": "ovos-de-pascoa-trufados",
+      "fileName": "ovos-de-pascoa-trufados.png",
+      "label": "Ovos De Pascoa Trufados",
+      "imageUrl": "/images/instagram/ovos-de-pascoa-trufados.png",
+      "alt": "Ovos De Pascoa Trufados"
     }
   ],
   "logo": [
@@ -92,20 +92,28 @@ export const imageCollections = {
   ],
   "novidades": [
     {
-      "id": "novidades-divulgacao-ovo-pascoa",
-      "slug": "divulgacao-ovo-pascoa",
-      "fileName": "divulgacao-ovo-pascoa.png",
-      "label": "Divulgacao Ovo Pascoa",
-      "imageUrl": "/images/novidades/divulgacao-ovo-pascoa.png",
-      "alt": "Divulgacao Ovo Pascoa"
+      "id": "novidades-bar-de-brigadeiro",
+      "slug": "bar-de-brigadeiro",
+      "fileName": "bar-de-brigadeiro.jpeg",
+      "label": "Bar De Brigadeiro",
+      "imageUrl": "/images/novidades/bar-de-brigadeiro.jpeg",
+      "alt": "Bar De Brigadeiro"
     },
     {
-      "id": "novidades-ninho-uva",
-      "slug": "ninho-uva",
-      "fileName": "ninho-uva.png",
-      "label": "Ninho Uva",
-      "imageUrl": "/images/novidades/ninho-uva.png",
-      "alt": "Ninho Uva"
+      "id": "novidades-brigadeiros",
+      "slug": "brigadeiros",
+      "fileName": "brigadeiros.jpeg",
+      "label": "Brigadeiros",
+      "imageUrl": "/images/novidades/brigadeiros.jpeg",
+      "alt": "Brigadeiros"
+    },
+    {
+      "id": "novidades-sorteio-ovo-pascoa",
+      "slug": "sorteio-ovo-pascoa",
+      "fileName": "sorteio-ovo-pascoa.jpeg",
+      "label": "Sorteio Ovo Pascoa",
+      "imageUrl": "/images/novidades/sorteio-ovo-pascoa.jpeg",
+      "alt": "Sorteio Ovo Pascoa"
     }
   ],
   "pedidos-de-doces": [
