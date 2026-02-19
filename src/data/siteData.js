@@ -195,7 +195,7 @@ export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, i
 export const metrics = [
   ['Pedidos por dia', '120+'],
   ['Sabores disponíveis', '30'],
-  ['Eventos atendidos', '450'],
+  ['Eventos atendidos', '40+'],
 ]
 
 export const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito']
