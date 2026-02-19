@@ -76,7 +76,7 @@ export function ShowcaseSection({
   }
 
   return (
-    <Container id="ovos-de-pascoa" maxWidth="xl" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
+    <Container id="ovos-de-pascoa" maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
       <header className="photo-band-head">
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
           <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
@@ -125,7 +125,7 @@ export function ShowcaseSection({
       </header>
 
       {selectedShowcaseProduct ? (
-        <Paper className="showcase-card" sx={{ p: 2.5 }}>
+        <Paper className="showcase-card" sx={{ p: { xs: 1.25, sm: 1.5 } }}>
           <Box className="showcase-image-stage">
             <SwipeableViews
               axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
