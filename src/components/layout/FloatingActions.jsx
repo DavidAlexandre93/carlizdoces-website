@@ -1,15 +1,13 @@
 import { Badge, Box, Fab, Icon, IconButton, Tooltip } from '@mui/material'
 import FavoriteIcon from '../../mui-icons/Favorite'
 import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
+import LikeButton from '../LikeButton'
 
 export function FloatingActions({
   totalItems,
   showScrollTop,
   onScrollTop,
-  totalLikes,
-  hasLiked,
-  onToggleLike,
-  disabled,
+  onStoreLikeStateChange,
   onGoToOrderSection,
   isFooterVisible,
 }) {
@@ -95,53 +93,59 @@ export function FloatingActions({
         </Fab>
       </Tooltip>
 
-      <Box
-        sx={{
-          ...commonPositionSx,
-          bottom: actionBottom,
-          width: actionSize,
-          height: actionSize,
-          display: 'grid',
-          placeItems: 'center',
-          backgroundColor: neutralBackground,
-          borderRadius: '50%',
-        }}
-      >
-        <Badge
-          color="secondary"
-          badgeContent={totalLikes}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          sx={{
-            '& .MuiBadge-badge': {
-              fontWeight: 700,
-              fontSize: '0.66rem',
-              minWidth: 20,
-              height: 20,
-            },
-          }}
-        >
-          <IconButton
-            type="button"
-            aria-label={hasLiked ? 'Remover curtida' : 'Curtir loja'}
-            aria-pressed={hasLiked}
-            onClick={onToggleLike}
-            disabled={disabled}
+      <LikeButton
+        itemId="store"
+        onStateChange={onStoreLikeStateChange}
+        render={({ liked, likeCount, loading, toggle }) => (
+          <Box
             sx={{
-              width: { xs: 46, md: 50 },
-              height: { xs: 46, md: 50 },
+              ...commonPositionSx,
+              bottom: actionBottom,
+              width: actionSize,
+              height: actionSize,
+              display: 'grid',
+              placeItems: 'center',
+              backgroundColor: neutralBackground,
               borderRadius: '50%',
-              border: hasLiked ? '1px solid #fbc5c5' : '1px solid #f3b6c5',
-              background: hasLiked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #fffafa, #ffeef2)',
-              boxShadow: hasLiked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(229, 57, 53, 0.16)',
-              '&:hover': {
-                background: hasLiked ? 'linear-gradient(145deg, #fff3f3, #ffd9de)' : 'linear-gradient(145deg, #fffafa, #ffe3ec)',
-              },
             }}
           >
-            {hasLiked ? <FavoriteIcon sx={{ color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ color: '#e53935' }} />}
-          </IconButton>
-        </Badge>
-      </Box>
+            <Badge
+              color="secondary"
+              badgeContent={likeCount}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontWeight: 700,
+                  fontSize: '0.66rem',
+                  minWidth: 20,
+                  height: 20,
+                },
+              }}
+            >
+              <IconButton
+                type="button"
+                aria-label={liked ? 'Remover curtida' : 'Curtir loja'}
+                aria-pressed={liked}
+                onClick={toggle}
+                disabled={loading}
+                sx={{
+                  width: { xs: 46, md: 50 },
+                  height: { xs: 46, md: 50 },
+                  borderRadius: '50%',
+                  border: liked ? '1px solid #fbc5c5' : '1px solid #f3b6c5',
+                  background: liked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #fffafa, #ffeef2)',
+                  boxShadow: liked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(229, 57, 53, 0.16)',
+                  '&:hover': {
+                    background: liked ? 'linear-gradient(145deg, #fff3f3, #ffd9de)' : 'linear-gradient(145deg, #fffafa, #ffe3ec)',
+                  },
+                }}
+              >
+                {liked ? <FavoriteIcon sx={{ color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ color: '#e53935' }} />}
+              </IconButton>
+            </Badge>
+          </Box>
+        )}
+      />
     </>
   )
 }

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, deviceId, isSupabaseConfigured } from '../supabaseClient'
 import FavoriteIcon from '../mui-icons/Favorite'
 
-export default function LikeButton({ itemId }) {
+export default function LikeButton({ itemId, onStateChange, render }) {
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -110,6 +110,23 @@ export default function LikeButton({ itemId }) {
       inFlightRef.current = false
     }
   }, [canRun, liked, likeCount, load, safeItemId])
+
+  useEffect(() => {
+    onStateChange?.({
+      liked,
+      likeCount,
+      loading,
+    })
+  }, [liked, likeCount, loading, onStateChange])
+
+  if (typeof render === 'function') {
+    return render({
+      liked,
+      likeCount,
+      loading,
+      toggle,
+    })
+  }
 
   return (
     <div className="like-button-wrapper">
