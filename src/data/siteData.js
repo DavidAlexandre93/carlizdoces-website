@@ -176,7 +176,7 @@ export const manualTestimonials = [
 export const instagramPosts = (imageCollections.instagram ?? []).map((image, index) => ({
   id: image.id || `insta-${index + 1}`,
   imageUrl: image.imageUrl,
-  alt: `${image.label} da Carliz Doces`,
+  alt: `${toTitleFromSlug(image.slug || image.fileName || image.label)} da Carliz Doces`,
 }))
 
 export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, index) => {

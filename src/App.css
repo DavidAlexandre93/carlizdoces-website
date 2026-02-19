@@ -2197,20 +2197,19 @@
 }
 
 .instagram-card a {
-  display: block;
-}
-
-.instagram-card:hover img,
-.instagram-card:focus-within img {
-  transform: scale(1.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  background-color: #fff4fa;
 }
 
 .instagram-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
   display: block;
-  transition: transform 320ms ease;
 }
 
 .instagram-card p {
@@ -2241,6 +2240,14 @@
   .testimonials-grid,
   .updates-grid {
     grid-template-columns: 1fr;
+  }
+
+  .instagram-card a {
+    min-height: 260px;
+  }
+
+  .instagram-card img {
+    max-height: 360px;
   }
 }
 
