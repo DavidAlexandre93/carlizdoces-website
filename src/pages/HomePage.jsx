@@ -249,6 +249,10 @@ export function HomePage() {
     () => easterMenuProducts.filter((item) => item.price <= maxMenuShowcasePrice),
     [easterMenuProducts, maxMenuShowcasePrice],
   )
+  const totalCombinedLikes = useMemo(
+    () => totalLikes + Object.values(favoriteCounts).reduce((sum, likes) => sum + Number(likes || 0), 0),
+    [favoriteCounts, totalLikes],
+  )
   const orderShowcaseProducts = useMemo(
     () => candyOrderProducts.filter((item) => item.price <= maxOrderShowcasePrice),
     [candyOrderProducts, maxOrderShowcasePrice],
@@ -858,7 +862,7 @@ export function HomePage() {
         totalItems={totalItems}
         showScrollTop={showScrollTop}
         onScrollTop={handleScrollTop}
-        totalLikes={totalLikes}
+        totalLikes={totalCombinedLikes}
         hasLiked={hasLikedStore}
         disabled={false}
         onToggleLike={handleToggleLike}
