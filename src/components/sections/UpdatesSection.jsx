@@ -30,9 +30,6 @@ export default function UpdatesSection({ updates, announcementChannels }) {
                 </Box>
               ) : null}
 
-              <Typography component="p" variant="body2" className="updates-description">{item.description}</Typography>
-
-              <Typography component="p" variant="subtitle2" className="updates-status">{item.status}</Typography>
             </Paper>
           )
         })}
