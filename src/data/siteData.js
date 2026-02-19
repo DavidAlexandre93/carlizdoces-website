@@ -193,7 +193,7 @@ export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, i
 })
 
 export const metrics = [
-  ['Pedidos por dia', '120+'],
+  ['Pedidos por semana', '4+'],
   ['Sabores disponíveis', '30+'],
   ['Eventos atendidos', '40+'],
 ]
