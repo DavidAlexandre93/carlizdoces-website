@@ -9,6 +9,7 @@ import {
   FormControl,
   IconButton,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Paper,
   Rating,
@@ -46,6 +47,11 @@ export function ShowcaseSection({
   const isLastProduct = activeProductStep >= totalVisibleProducts - 1
   const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isLastProduct)
   const isNextArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isFirstProduct)
+  const traditionalProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-tradicionais/'))
+  const fineProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-finos/'))
+  const otherProducts = visibleShowcaseProducts.filter(
+    (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/')
+  )
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -85,7 +91,17 @@ export function ShowcaseSection({
               }
             }}
           >
-            {visibleShowcaseProducts.map((item) => (
+            {traditionalProducts.length ? <ListSubheader>Doces Tradicionais</ListSubheader> : null}
+            {traditionalProducts.map((item) => (
+              <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            ))}
+
+            {fineProducts.length ? <ListSubheader>Doces Finos</ListSubheader> : null}
+            {fineProducts.map((item) => (
+              <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            ))}
+
+            {otherProducts.map((item) => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>
