@@ -4,6 +4,7 @@ const typeStyles = {
   promocao: { label: 'Promoção', color: 'secondary' },
   lancamento: { label: 'Lançamento', color: 'success' },
   comunicado: { label: 'Comunicado', color: 'info' },
+  sorteio: { label: 'Sorteio', color: 'error' },
   geral: { label: 'Aviso', color: 'warning' },
 }
 
