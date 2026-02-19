@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, deviceId, isSupabaseConfigured } from '../supabaseClient'
 import FavoriteIcon from '../mui-icons/Favorite'
-import FavoriteBorderIcon from '../mui-icons/FavoriteBorder'
 
 export default function LikeButton({ itemId }) {
   const [liked, setLiked] = useState(false)
@@ -113,40 +112,17 @@ export default function LikeButton({ itemId }) {
   }, [canRun, liked, likeCount, load, safeItemId])
 
   return (
-    <div
-      style={{
-        display: 'inline-flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 4,
-      }}
-    >
+    <div className="like-button-wrapper">
       <button
         type="button"
         onClick={toggle}
         disabled={loading}
         aria-pressed={liked}
         title={liked ? 'Remover curtida' : 'Curtir'}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 46,
-          height: 46,
-          padding: 0,
-          borderRadius: '50%',
-          border: liked ? '1px solid #fbc5c5' : '1px solid #f3b6c5',
-          background: liked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #fffafa, #ffeef2)',
-          boxShadow: liked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(229, 57, 53, 0.16)',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          userSelect: 'none',
-          opacity: loading ? 0.65 : 1,
-          transition: 'all 0.2s ease',
-        }}
+        className={`like-button-heart ${liked ? 'is-liked' : 'is-not-liked'}`}
       >
-        {liked ? <FavoriteIcon sx={{ fontSize: 24, color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ fontSize: 24, color: '#e53935' }} />}
+        <FavoriteIcon sx={{ fontSize: 28 }} />
       </button>
-      <span style={{ fontSize: 12, fontWeight: 700, color: '#e53935', lineHeight: 1 }}>{likeCount}</span>
     </div>
   )
 }
