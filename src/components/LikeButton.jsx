@@ -1,24 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { supabase, deviceId } from "../supabaseClient";
+import FavoriteIcon from "../mui-icons/Favorite";
+import FavoriteBorderIcon from "../mui-icons/FavoriteBorder";
 
 export default function LikeButton({ itemId }) {
-  const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      // total global
-      const { count: total, error: countErr } = await supabase
-        .from("likes_anon")
-        .select("*", { count: "exact", head: true })
-        .eq("item_id", itemId);
-
-      if (countErr) throw countErr;
-      setCount(total ?? 0);
-
-      // liked para o device atual
       const { data: rows, error: likedErr } = await supabase
         .from("likes_anon")
         .select("id")
@@ -42,7 +33,6 @@ export default function LikeButton({ itemId }) {
 
     // UI otimista
     setLiked(nextLiked);
-    setCount((c) => Math.max(0, c + (nextLiked ? 1 : -1)));
 
     try {
       if (nextLiked) {
@@ -63,7 +53,6 @@ export default function LikeButton({ itemId }) {
     } catch (e) {
       // Reverte se falhar
       setLiked(liked);
-      setCount((c) => Math.max(0, c + (liked ? 1 : -1)));
 
       // Log detalhado para debug
       console.error("LIKE ERROR:", e);
@@ -82,19 +71,29 @@ export default function LikeButton({ itemId }) {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
-        padding: "10px 14px",
-        borderRadius: 12,
-        border: "1px solid #ddd",
-        background: "white",
+        justifyContent: "center",
+        width: 46,
+        height: 46,
+        padding: 0,
+        borderRadius: "50%",
+        border: liked ? "1px solid #fbc5c5" : "1px solid #e3e3e3",
+        background: liked
+          ? "linear-gradient(145deg, #fff3f3, #ffe4e7)"
+          : "linear-gradient(145deg, #ffffff, #f8f8f8)",
+        boxShadow: liked
+          ? "0 8px 18px rgba(255, 72, 101, 0.25)"
+          : "0 6px 14px rgba(0, 0, 0, 0.08)",
         cursor: loading ? "not-allowed" : "pointer",
-        fontSize: 16,
         userSelect: "none",
         opacity: loading ? 0.65 : 1,
+        transition: "all 0.2s ease",
       }}
     >
-      <span style={{ fontSize: 22, color: liked ? "red" : "#444" }}>♥</span>
-      <span style={{ fontWeight: 700 }}>{count}</span>
+      {liked ? (
+        <FavoriteIcon sx={{ fontSize: 24, color: "#e53935" }} />
+      ) : (
+        <FavoriteBorderIcon sx={{ fontSize: 24, color: "#6b6b6b" }} />
+      )}
     </button>
   );
 }
