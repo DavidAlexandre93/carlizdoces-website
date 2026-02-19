@@ -1,11 +1,15 @@
 import { Badge, Box, Fab, Icon, IconButton, Tooltip } from '@mui/material'
-import LikeButton from '../LikeButton'
+import FavoriteIcon from '../../mui-icons/Favorite'
+import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
 
 export function FloatingActions({
   totalItems,
   showScrollTop,
   onScrollTop,
   totalLikes,
+  hasLiked,
+  onToggleLike,
+  disabled,
   onGoToOrderSection,
   isFooterVisible,
 }) {
@@ -116,7 +120,26 @@ export function FloatingActions({
             },
           }}
         >
-          <LikeButton itemId="store" />
+          <IconButton
+            type="button"
+            aria-label={hasLiked ? 'Remover curtida' : 'Curtir loja'}
+            aria-pressed={hasLiked}
+            onClick={onToggleLike}
+            disabled={disabled}
+            sx={{
+              width: { xs: 46, md: 50 },
+              height: { xs: 46, md: 50 },
+              borderRadius: '50%',
+              border: hasLiked ? '1px solid #fbc5c5' : '1px solid #f3b6c5',
+              background: hasLiked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #fffafa, #ffeef2)',
+              boxShadow: hasLiked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(229, 57, 53, 0.16)',
+              '&:hover': {
+                background: hasLiked ? 'linear-gradient(145deg, #fff3f3, #ffd9de)' : 'linear-gradient(145deg, #fffafa, #ffe3ec)',
+              },
+            }}
+          >
+            {hasLiked ? <FavoriteIcon sx={{ color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ color: '#e53935' }} />}
+          </IconButton>
         </Badge>
       </Box>
     </>
