@@ -27,11 +27,6 @@ export default function UpdatesSection({ updates, announcementChannels }) {
               {item.imageUrl ? (
                 <Box className="updates-media">
                   <img src={item.imageUrl} alt={item.imageAlt || item.title} loading="lazy" />
-                  {item.mediaDescription ? (
-                    <Typography component="p" variant="caption" className="updates-media-text">
-                      {item.mediaDescription}
-                    </Typography>
-                  ) : null}
                 </Box>
               ) : null}
 
