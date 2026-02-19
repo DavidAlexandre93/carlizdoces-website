@@ -1,15 +1,11 @@
-import { Badge, Box, Fab, Icon, IconButton, Tooltip, Zoom } from '@mui/material'
-import FavoriteIcon from '../../mui-icons/Favorite'
+import { Badge, Box, Fab, Icon, IconButton, Tooltip } from '@mui/material'
+import LikeButton from '../LikeButton'
 
 export function FloatingActions({
   totalItems,
   showScrollTop,
   onScrollTop,
   totalLikes,
-  hasLiked,
-  disabled,
-  onToggleLike,
-  showLikeCelebration,
   onGoToOrderSection,
   isFooterVisible,
 }) {
@@ -95,24 +91,16 @@ export function FloatingActions({
         </Fab>
       </Tooltip>
 
-      <IconButton
-        color={hasLiked ? 'secondary' : 'inherit'}
-        size="small"
-        aria-label="Curtir loja"
-        onClick={onToggleLike}
-        disabled={disabled}
+      <Box
         sx={{
           ...commonPositionSx,
           bottom: actionBottom,
           width: actionSize,
           height: actionSize,
+          display: 'grid',
+          placeItems: 'center',
           backgroundColor: neutralBackground,
-          '&:hover': {
-            backgroundColor: isFooterVisible ? '#ddb2c7' : '#ecece6',
-          },
-          transform: showLikeCelebration ? 'scale(1.12)' : 'scale(1)',
-          overflow: 'visible',
-          color: hasLiked ? undefined : 'text.primary',
+          borderRadius: '50%',
         }}
       >
         <Badge
@@ -128,28 +116,9 @@ export function FloatingActions({
             },
           }}
         >
-          <FavoriteIcon
-            sx={{
-              opacity: hasLiked ? 1 : 0.65,
-            }}
-          />
+          <LikeButton itemId="store" />
         </Badge>
-
-        <Zoom in={showLikeCelebration} timeout={220} unmountOnExit>
-          <Box
-            aria-hidden="true"
-            sx={{
-              position: 'absolute',
-              inset: -8,
-              borderRadius: '50%',
-              border: '2px solid',
-              borderColor: 'secondary.main',
-              opacity: 0.55,
-              pointerEvents: 'none',
-            }}
-          />
-        </Zoom>
-      </IconButton>
+      </Box>
     </>
   )
 }
