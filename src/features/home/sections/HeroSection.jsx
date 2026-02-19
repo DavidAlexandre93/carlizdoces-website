@@ -45,7 +45,6 @@ export function HeroSection({ topShowcaseSlides }) {
                 <div>
                   <Chip label={slide.tag} color="secondary" size="small" />
                   <Typography component="h1" className="hero-lamp-title">{slide.title}</Typography>
-                  <Typography component="span">{slide.description}</Typography>
                   <Stack direction="row" spacing={1.5} className="hero-quick-actions">
                     <Button variant="contained" color="secondary" component="a" href="#realizar-pedido">
                       Fazer pedido
