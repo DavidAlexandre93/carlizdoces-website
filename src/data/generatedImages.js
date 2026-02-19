@@ -4,20 +4,92 @@
 export const imageCollections = {
   "cardapio-de-pascoa": [
     {
-      "id": "cardapio-de-pascoa-ferrero",
-      "slug": "ferrero",
-      "fileName": "ferrero.png",
-      "label": "Ferrero",
-      "imageUrl": "/images/cardapio-de-pascoa/ferrero.png",
-      "alt": "Ferrero"
+      "id": "cardapio-de-pascoa-brigadeiro",
+      "slug": "brigadeiro",
+      "fileName": "brigadeiro.jpeg",
+      "label": "Brigadeiro",
+      "imageUrl": "/images/cardapio-de-pascoa/brigadeiro.jpeg",
+      "alt": "Brigadeiro"
     },
     {
-      "id": "cardapio-de-pascoa-ovo-chocolate",
-      "slug": "ovo-chocolate",
-      "fileName": "ovo-chocolate.svg",
-      "label": "Ovo Chocolate",
-      "imageUrl": "/images/cardapio-de-pascoa/ovo-chocolate.svg",
-      "alt": "Ovo Chocolate"
+      "id": "cardapio-de-pascoa-ferreiro-rocher",
+      "slug": "ferreiro-rocher",
+      "fileName": "ferreiro-rocher.jpeg",
+      "label": "Ferreiro Rocher",
+      "imageUrl": "/images/cardapio-de-pascoa/ferreiro-rocher.jpeg",
+      "alt": "Ferreiro Rocher"
+    },
+    {
+      "id": "cardapio-de-pascoa-guloseimas",
+      "slug": "guloseimas",
+      "fileName": "guloseimas.jpeg",
+      "label": "Guloseimas",
+      "imageUrl": "/images/cardapio-de-pascoa/guloseimas.jpeg",
+      "alt": "Guloseimas"
+    },
+    {
+      "id": "cardapio-de-pascoa-m-m",
+      "slug": "m-m",
+      "fileName": "m&m.jpeg",
+      "label": "M&M",
+      "imageUrl": "/images/cardapio-de-pascoa/m&m.jpeg",
+      "alt": "M&M"
+    },
+    {
+      "id": "cardapio-de-pascoa-matilda",
+      "slug": "matilda",
+      "fileName": "matilda.jpeg",
+      "label": "Matilda",
+      "imageUrl": "/images/cardapio-de-pascoa/matilda.jpeg",
+      "alt": "Matilda"
+    },
+    {
+      "id": "cardapio-de-pascoa-ninho-com-nutela",
+      "slug": "ninho-com-nutela",
+      "fileName": "ninho-com-nutela.jpeg",
+      "label": "Ninho Com Nutela",
+      "imageUrl": "/images/cardapio-de-pascoa/ninho-com-nutela.jpeg",
+      "alt": "Ninho Com Nutela"
+    },
+    {
+      "id": "cardapio-de-pascoa-ninho-com-uva",
+      "slug": "ninho-com-uva",
+      "fileName": "ninho-com-uva.jpeg",
+      "label": "Ninho Com Uva",
+      "imageUrl": "/images/cardapio-de-pascoa/ninho-com-uva.jpeg",
+      "alt": "Ninho Com Uva"
+    },
+    {
+      "id": "cardapio-de-pascoa-ninho",
+      "slug": "ninho",
+      "fileName": "ninho.jpeg",
+      "label": "Ninho",
+      "imageUrl": "/images/cardapio-de-pascoa/ninho.jpeg",
+      "alt": "Ninho"
+    },
+    {
+      "id": "cardapio-de-pascoa-petisqueira",
+      "slug": "petisqueira",
+      "fileName": "petisqueira.jpeg",
+      "label": "Petisqueira",
+      "imageUrl": "/images/cardapio-de-pascoa/petisqueira.jpeg",
+      "alt": "Petisqueira"
+    },
+    {
+      "id": "cardapio-de-pascoa-prestigio",
+      "slug": "prestigio",
+      "fileName": "prestigio.jpeg",
+      "label": "Prestigio",
+      "imageUrl": "/images/cardapio-de-pascoa/prestigio.jpeg",
+      "alt": "Prestigio"
+    },
+    {
+      "id": "cardapio-de-pascoa-trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
+      "slug": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
+      "fileName": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
+      "label": "Trufado Ninho Com Nutela Mouse Maracuja Brigadeiro",
+      "imageUrl": "/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
+      "alt": "Trufado Ninho Com Nutela Mouse Maracuja Brigadeiro"
     }
   ],
   "carousel": [
@@ -108,40 +180,7 @@ export const imageCollections = {
       "alt": "Sorteio Ovo Pascoa"
     }
   ],
-  "pedidos-de-doces": [
-    {
-      "id": "pedidos-de-doces-brigadeiro",
-      "slug": "brigadeiro",
-      "fileName": "brigadeiro.png",
-      "label": "Brigadeiro",
-      "imageUrl": "/images/pedidos-de-doces/brigadeiro.png",
-      "alt": "Brigadeiro"
-    },
-    {
-      "id": "pedidos-de-doces-matilda",
-      "slug": "matilda",
-      "fileName": "matilda.png",
-      "label": "Matilda",
-      "imageUrl": "/images/pedidos-de-doces/matilda.png",
-      "alt": "Matilda"
-    },
-    {
-      "id": "pedidos-de-doces-ninho-nutella",
-      "slug": "ninho-nutella",
-      "fileName": "ninho-nutella.png",
-      "label": "Ninho Nutella",
-      "imageUrl": "/images/pedidos-de-doces/ninho-nutella.png",
-      "alt": "Ninho Nutella"
-    },
-    {
-      "id": "pedidos-de-doces-ninho",
-      "slug": "ninho",
-      "fileName": "ninho.png",
-      "label": "Ninho",
-      "imageUrl": "/images/pedidos-de-doces/ninho.png",
-      "alt": "Ninho"
-    }
-  ],
+  "pedidos-de-doces": [],
   "tela-apresentacao": [
     {
       "id": "tela-apresentacao-palhaco",
