@@ -82,7 +82,7 @@ export const updatesCatalog = [
     id: 'brigadeiros',
     category: 'comunicado',
     dateLabel: 'Comunicado',
-    title: 'Brigadeiros',
+    title: 'Faça sua encomenda de Brigadeiros!',
     imageUrl: '/images/novidades/brigadeiros.jpeg',
     imageAlt: 'Brigadeiros da Carliz Doces',
     mediaDescription: 'Comunicado oficial sobre encomendas e disponibilidade de brigadeiros.',
