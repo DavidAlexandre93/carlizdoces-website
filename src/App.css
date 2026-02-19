@@ -2167,8 +2167,8 @@
 }
 
 .instagram-card {
-  background: #fff;
-  border: 1px solid #e6bfd2;
+  background: transparent;
+  border: none;
   border-radius: 16px;
   overflow: hidden;
   transition: transform 220ms ease, box-shadow 220ms ease;
@@ -2181,18 +2181,13 @@
 }
 
 .instagram-card a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 320px;
-  background-color: #fff4fa;
+  display: block;
+  line-height: 0;
 }
 
 .instagram-card img {
   width: 100%;
   height: auto;
-  max-height: 420px;
-  object-fit: contain;
   display: block;
 }
 
@@ -2227,11 +2222,7 @@
   }
 
   .instagram-card a {
-    min-height: 260px;
-  }
-
-  .instagram-card img {
-    max-height: 360px;
+    min-height: 0;
   }
 }
 
