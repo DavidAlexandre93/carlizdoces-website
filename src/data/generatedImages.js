@@ -22,36 +22,28 @@ export const imageCollections = {
   ],
   "carousel": [
     {
-      "id": "carousel-banner-carliz",
-      "slug": "banner-carliz",
-      "fileName": "banner-carliz.png",
-      "label": "Banner Carliz",
-      "imageUrl": "/images/carousel/banner-carliz.png",
-      "alt": "Banner Carliz"
+      "id": "carousel-brigadeiros-finos",
+      "slug": "brigadeiros-finos",
+      "fileName": "brigadeiros-finos.jpeg",
+      "label": "Brigadeiros Finos",
+      "imageUrl": "/images/carousel/brigadeiros-finos.jpeg",
+      "alt": "Brigadeiros Finos"
     },
     {
-      "id": "carousel-brigadeiro",
-      "slug": "brigadeiro",
-      "fileName": "brigadeiro.png",
-      "label": "Brigadeiro",
-      "imageUrl": "/images/carousel/brigadeiro.png",
-      "alt": "Brigadeiro"
+      "id": "carousel-brigadeiros-tradicionais",
+      "slug": "brigadeiros-tradicionais",
+      "fileName": "brigadeiros-tradicionais.jpeg",
+      "label": "Brigadeiros Tradicionais",
+      "imageUrl": "/images/carousel/brigadeiros-tradicionais.jpeg",
+      "alt": "Brigadeiros Tradicionais"
     },
     {
-      "id": "carousel-ferrero",
-      "slug": "ferrero",
-      "fileName": "ferrero.png",
-      "label": "Ferrero",
-      "imageUrl": "/images/carousel/ferrero.png",
-      "alt": "Ferrero"
-    },
-    {
-      "id": "carousel-matilda",
-      "slug": "matilda",
-      "fileName": "matilda.png",
-      "label": "Matilda",
-      "imageUrl": "/images/carousel/matilda.png",
-      "alt": "Matilda"
+      "id": "carousel-coracao-de-brilho",
+      "slug": "coracao-de-brilho",
+      "fileName": "coracao-de-brilho.jpeg",
+      "label": "Coracao De Brilho",
+      "imageUrl": "/images/carousel/coracao-de-brilho.jpeg",
+      "alt": "Coracao De Brilho"
     }
   ],
   "instagram": [
