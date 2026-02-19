@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { supabase, deviceId, isSupabaseConfigured } from "../supabaseClient";
+import React, { useCallback, useEffect, useState } from "react";
+import { supabase, deviceId } from "../supabaseClient";
+import FavoriteIcon from "../mui-icons/Favorite";
+import FavoriteBorderIcon from "../mui-icons/FavoriteBorder";
 
 /**
  * LikeButton (likes_anon)
@@ -9,7 +11,6 @@ import { supabase, deviceId, isSupabaseConfigured } from "../supabaseClient";
  * - Frontend enviando header "x-device-id" = deviceId (configurado no supabaseClient)
  */
 export default function LikeButton({ itemId }) {
-  const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -40,18 +41,7 @@ export default function LikeButton({ itemId }) {
     safeSetState(() => setLoading(true));
 
     try {
-      // 1) total global (count via head)
-      const { count: total, error: countErr } = await supabase
-        .from("likes_anon")
-        .select("*", { count: "exact", head: true })
-        .eq("item_id", safeItemId);
-
-      if (countErr) throw countErr;
-
-      safeSetState(() => setCount(Number.isFinite(total) ? total : 0));
-
-      // 2) like do device atual (não depende de coluna id)
-      const { data: mine, error: mineErr } = await supabase
+      const { data: rows, error: likedErr } = await supabase
         .from("likes_anon")
         .select("item_id")
         .eq("item_id", safeItemId)
@@ -93,10 +83,7 @@ export default function LikeButton({ itemId }) {
     const nextLiked = !prevLiked;
 
     // UI otimista
-    safeSetState(() => {
-      setLiked(nextLiked);
-      setCount((c) => Math.max(0, c + (nextLiked ? 1 : -1)));
-    });
+    setLiked(nextLiked);
 
     try {
       if (nextLiked) {
@@ -122,13 +109,11 @@ export default function LikeButton({ itemId }) {
       // recarrega para bater com o servidor (evita count incorreto em caso de concorrência)
       await load();
     } catch (e) {
-      console.error("LIKE TOGGLE ERROR:", e);
+      // Reverte se falhar
+      setLiked(liked);
 
-      // reverte UI para o estado anterior
-      safeSetState(() => {
-        setLiked(prevLiked);
-        setCount((c) => Math.max(0, c + (prevLiked ? 1 : -1)));
-      });
+      // Log detalhado para debug
+      console.error("LIKE ERROR:", e);
 
       alert("Não foi possível atualizar seu coração agora.");
     } finally {
@@ -146,19 +131,29 @@ export default function LikeButton({ itemId }) {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
-        padding: "10px 14px",
-        borderRadius: 12,
-        border: "1px solid #ddd",
-        background: "white",
+        justifyContent: "center",
+        width: 46,
+        height: 46,
+        padding: 0,
+        borderRadius: "50%",
+        border: liked ? "1px solid #fbc5c5" : "1px solid #e3e3e3",
+        background: liked
+          ? "linear-gradient(145deg, #fff3f3, #ffe4e7)"
+          : "linear-gradient(145deg, #ffffff, #f8f8f8)",
+        boxShadow: liked
+          ? "0 8px 18px rgba(255, 72, 101, 0.25)"
+          : "0 6px 14px rgba(0, 0, 0, 0.08)",
         cursor: loading ? "not-allowed" : "pointer",
-        fontSize: 16,
         userSelect: "none",
         opacity: loading ? 0.65 : 1,
+        transition: "all 0.2s ease",
       }}
     >
-      <span style={{ fontSize: 22, color: liked ? "red" : "#444" }}>♥</span>
-      <span style={{ fontWeight: 700 }}>{count}</span>
+      {liked ? (
+        <FavoriteIcon sx={{ fontSize: 24, color: "#e53935" }} />
+      ) : (
+        <FavoriteBorderIcon sx={{ fontSize: 24, color: "#6b6b6b" }} />
+      )}
     </button>
   );
 }

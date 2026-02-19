@@ -1083,12 +1083,20 @@
   transition: transform 920ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.showcase-section-container {
+  max-width: 640px !important;
+}
+
 .showcase-image-stage {
   position: relative;
   isolation: isolate;
   margin-bottom: 16px;
   border-radius: 16px;
   overflow: hidden;
+  min-height: clamp(130px, 20vw, 170px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #fff4fa, #ffe8f4);
 }
 
@@ -1122,10 +1130,12 @@
 }
 
 .showcase-image {
-  width: 100%;
-  max-height: 380px;
+  width: auto;
+  height: clamp(110px, 16vw, 140px);
+  max-width: 100%;
   object-fit: contain;
   display: block;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
   animation: image-fade-zoom 1.05s cubic-bezier(0.2, 0.8, 0.2, 1) both;

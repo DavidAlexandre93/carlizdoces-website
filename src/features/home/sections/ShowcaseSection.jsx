@@ -9,6 +9,7 @@ import {
   FormControl,
   IconButton,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Paper,
   Rating,
@@ -46,6 +47,11 @@ export function ShowcaseSection({
   const isLastProduct = activeProductStep >= totalVisibleProducts - 1
   const isPrevArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isLastProduct)
   const isNextArrowDisabled = !hasMultipleProducts || (disablePrevAtLast && isFirstProduct)
+  const traditionalProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-tradicionais/'))
+  const fineProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-finos/'))
+  const otherProducts = visibleShowcaseProducts.filter(
+    (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/')
+  )
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -70,7 +76,7 @@ export function ShowcaseSection({
   }
 
   return (
-    <Container id="ovos-de-pascoa" maxWidth="xl" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
+    <Container id="ovos-de-pascoa" maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
       <header className="photo-band-head">
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
           <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
@@ -85,7 +91,17 @@ export function ShowcaseSection({
               }
             }}
           >
-            {visibleShowcaseProducts.map((item) => (
+            {traditionalProducts.length ? <ListSubheader>Doces Tradicionais</ListSubheader> : null}
+            {traditionalProducts.map((item) => (
+              <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            ))}
+
+            {fineProducts.length ? <ListSubheader>Doces Finos</ListSubheader> : null}
+            {fineProducts.map((item) => (
+              <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            ))}
+
+            {otherProducts.map((item) => (
               <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
             ))}
           </Select>
@@ -109,7 +125,7 @@ export function ShowcaseSection({
       </header>
 
       {selectedShowcaseProduct ? (
-        <Paper className="showcase-card" sx={{ p: 2.5 }}>
+        <Paper className="showcase-card" sx={{ p: { xs: 1.25, sm: 1.5 } }}>
           <Box className="showcase-image-stage">
             <SwipeableViews
               axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
