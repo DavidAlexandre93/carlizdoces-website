@@ -150,6 +150,8 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
 
 export function HomePage() {
   const wrapperRef = useRef(null)
+  const hasInitializedMenuShowcaseRef = useRef(false)
+  const hasInitializedOrderShowcaseRef = useRef(false)
   const [introStage, setIntroStage] = useState('message')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [menuProductStep, setMenuProductStep] = useState(0)
@@ -201,12 +203,24 @@ export function HomePage() {
       return
     }
 
+    if (!hasInitializedMenuShowcaseRef.current) {
+      setMenuProductStep(menuShowcaseProducts.length - 1)
+      hasInitializedMenuShowcaseRef.current = true
+      return
+    }
+
     setMenuProductStep((currentStep) => Math.min(currentStep, menuShowcaseProducts.length - 1))
   }, [menuShowcaseProducts])
 
   useEffect(() => {
     if (orderShowcaseProducts.length === 0) {
       setOrderProductStep(0)
+      return
+    }
+
+    if (!hasInitializedOrderShowcaseRef.current) {
+      setOrderProductStep(orderShowcaseProducts.length - 1)
+      hasInitializedOrderShowcaseRef.current = true
       return
     }
 
