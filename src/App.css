@@ -672,7 +672,7 @@
   position: absolute;
   left: 50%;
   bottom: 32px;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(20px);
   width: min(88%, 820px);
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
@@ -682,8 +682,16 @@
   text-align: center;
   padding: 22px 26px;
   box-shadow: 0 20px 45px rgba(20, 5, 15, 0.36);
-  animation: pop-in 700ms ease-out 120ms both;
+  opacity: 0;
+  transition:
+    opacity 620ms ease,
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 1;
+}
+
+.mui-carousel-stage.is-active .top-carousel-slide > div {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .top-carousel-slide p {
