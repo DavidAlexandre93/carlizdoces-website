@@ -23,7 +23,7 @@ const InstagramSection = lazy(() => import('../components/sections/InstagramSect
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
-const FEATURED_VIDEO_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview'
+const FEATURED_VIDEO_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview?autoplay=1'
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
@@ -792,7 +792,7 @@ export function HomePage() {
             Vídeo em destaque
           </DialogTitle>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Assista à nossa apresentação especial e conheça melhor a Carliz Doces.
+            Assista ao nosso vídeo demonstrativo e veja como preparamos nossos doces com qualidade e segurança.
           </Typography>
         </Box>
         <DialogContent sx={{ pt: 1, pb: 3 }}>
