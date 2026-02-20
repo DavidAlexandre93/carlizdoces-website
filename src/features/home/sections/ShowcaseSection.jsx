@@ -1,4 +1,5 @@
 import SwipeableViews from 'react-swipeable-views'
+import { useState } from 'react'
 import ShareIcon from '../../../mui-icons/Share'
 import LikeButton from '../../../components/LikeButton'
 import {
@@ -39,6 +40,7 @@ export function ShowcaseSection({
   isGlobalRatingsActive,
   disablePrevAtLast = false,
 }) {
+  const [isFlavorSelectOpen, setIsFlavorSelectOpen] = useState(false)
   const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
   const totalVisibleProducts = visibleShowcaseProducts.length
@@ -75,6 +77,12 @@ export function ShowcaseSection({
     setActiveProductStep((step) => (step >= totalVisibleProducts - 1 ? 0 : step + 1))
   }
 
+  const SelectToggleIcon = ({ className }) => (
+    <span className={className} aria-hidden="true">
+      {isFlavorSelectOpen ? '✕' : '▾'}
+    </span>
+  )
+
   return (
     <Container id="ovos-de-pascoa" maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
       <header className="photo-band-head">
@@ -84,11 +92,17 @@ export function ShowcaseSection({
             labelId="showcase-select-label"
             value={selectedShowcaseProduct?.id ?? ''}
             label="Selecionar sabor"
+            open={isFlavorSelectOpen}
+            onOpen={() => setIsFlavorSelectOpen(true)}
+            onClose={() => setIsFlavorSelectOpen(false)}
+            IconComponent={SelectToggleIcon}
             onChange={(event) => {
               const nextIndex = visibleShowcaseProducts.findIndex((item) => item.id === event.target.value)
               if (nextIndex >= 0) {
                 setActiveProductStep(nextIndex)
               }
+
+              setIsFlavorSelectOpen(false)
             }}
           >
             {traditionalProducts.length ? <ListSubheader>Doces Tradicionais</ListSubheader> : null}
