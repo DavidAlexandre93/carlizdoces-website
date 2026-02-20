@@ -11,6 +11,7 @@ import {
   IconButton,
   Link,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Modal,
@@ -40,6 +41,7 @@ export function Header({
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
+  const notificationItems = activeNotification.items ?? []
 
   useEffect(() => {
     if (!isMobileNavigation && isMobileMenuOpen) {
@@ -287,9 +289,38 @@ export function Header({
             <Typography id="notification-modal-title" variant="h6" component="h2" sx={{ mb: 2, fontWeight: 700 }}>
               {activeNotification.title}
             </Typography>
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-line', mb: 3 }}>
-              {activeNotification.message}
-            </Typography>
+
+            {notificationItems.length > 0 ? (
+              <List sx={{ display: 'grid', gap: 1.5, mb: 3 }}>
+                {notificationItems.map((notificationItem) => (
+                  <Box
+                    key={notificationItem.title}
+                    sx={{
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      borderRadius: 2,
+                      p: 1.5,
+                    }}
+                  >
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.75 }}>
+                      {notificationItem.title}
+                    </Typography>
+                    <List sx={{ listStyleType: 'disc', pl: 2.5 }}>
+                      {notificationItem.lines.map((line) => (
+                        <ListItem key={line} sx={{ display: 'list-item', py: 0.25, px: 0 }}>
+                          <Typography variant="body2">{line}</Typography>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1" sx={{ mb: 3 }}>
+                Sem notificações no momento.
+              </Typography>
+            )}
+
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button variant="contained" onClick={() => setIsNotificationOpen(false)}>
                 Fechar
