@@ -1953,6 +1953,10 @@
     text-align: left;
   }
 
+  .mui-carousel-stage.is-active .top-carousel-slide > div {
+    transform: none;
+  }
+
   .top-carousel-slide h1 {
     text-align: left;
     margin-top: 10px;
