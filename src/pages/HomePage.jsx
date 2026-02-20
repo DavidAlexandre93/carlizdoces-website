@@ -631,7 +631,7 @@ export function HomePage() {
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.05 }}>
-          <SectionDivider label="Quem somos" />
+          <SectionDivider label="Quem somos" sectionId="quem-somos" />
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.08 }}>
@@ -639,7 +639,7 @@ export function HomePage() {
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
-          <SectionDivider label="Cardápio de Páscoa" />
+          <SectionDivider label="Cardápio de Páscoa" sectionId="ovos-de-pascoa" />
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.15 }}>
@@ -693,7 +693,7 @@ export function HomePage() {
         </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
-            <SectionDivider label="Realizar pedido" />
+            <SectionDivider label="Realizar pedido" sectionId="realizar-pedido" />
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.22 }}>
@@ -713,7 +713,7 @@ export function HomePage() {
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.24 }}>
-            <SectionDivider label="Onde estamos" />
+            <SectionDivider label="Onde estamos" sectionId="onde-estamos" />
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.26 }}>
@@ -722,11 +722,11 @@ export function HomePage() {
 
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
           <Container disableGutters className="section-stack">
-            <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" sectionId="depoimentos" /></MotionDiv>
             <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
-            <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" sectionId="novidades" /></MotionDiv>
             <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
-            <MotionDiv {...revealAnimation}><SectionDivider label="Contato" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Contato" sectionId="contato" /></MotionDiv>
             <MotionDiv {...revealAnimation}>
               <ContactSection
                 contactForm={contactForm}
@@ -738,7 +738,7 @@ export function HomePage() {
                 onToggleTip={() => setContactTipOpen((open) => !open)}
               />
             </MotionDiv>
-            <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" /></MotionDiv>
+            <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" sectionId="instagram" /></MotionDiv>
             <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
           </Container>
         </Suspense>

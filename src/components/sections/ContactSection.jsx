@@ -12,7 +12,7 @@ export default function ContactSection({
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
-    <Container id="contato" maxWidth="lg" className="contact-hero section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <Container maxWidth="lg" className="contact-hero section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper
         component="form"
         onSubmit={onSubmit}

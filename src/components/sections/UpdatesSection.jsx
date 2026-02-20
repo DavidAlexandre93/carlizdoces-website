@@ -10,7 +10,7 @@ const typeStyles = {
 
 export default function UpdatesSection({ updates, announcementChannels }) {
   return (
-    <Container id="novidades" maxWidth="xl" className="updates-section section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '700ms' }}>
+    <Container maxWidth="xl" className="updates-section section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '700ms' }}>
       <Box className="updates-grid">
         {updates.map((item) => {
           const type = typeStyles[item.type] ?? typeStyles.geral
