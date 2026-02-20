@@ -671,8 +671,8 @@
 .top-carousel-slide > div {
   position: absolute;
   left: 50%;
-  bottom: 32px;
-  transform: translateX(-50%) translateY(20px);
+  top: 50%;
+  transform: translateX(-50%) translateY(calc(-50% + 20px));
   width: min(88%, 820px);
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
@@ -691,7 +691,7 @@
 
 .mui-carousel-stage.is-active .top-carousel-slide > div {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .top-carousel-slide p {
@@ -1799,7 +1799,7 @@
 @media (max-width: 1100px) {
   .top-carousel-slide > div {
     width: min(94%, 820px);
-    bottom: 20px;
+    top: 52%;
     padding: 18px 20px;
   }
 
@@ -1825,7 +1825,7 @@
   .top-carousel-slide > div {
     width: min(74%, 760px);
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(calc(-50% + 20px));
   }
 
   .hero-carousel-arrow-prev {
