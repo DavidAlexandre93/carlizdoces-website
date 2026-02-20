@@ -172,7 +172,7 @@ export function HomePage() {
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
-  const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
+  const { cart, addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const {
     ratingsByProductId: easterRatingsByProductId,
     submitRating: submitEasterRating,
@@ -654,6 +654,7 @@ export function HomePage() {
             setMaxShowcasePrice={setMaxMenuShowcasePrice}
             addItem={addItem}
             removeItem={removeItem}
+            cart={cart}
             onShareProduct={handleShareProduct}
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
@@ -681,6 +682,7 @@ export function HomePage() {
             setMaxShowcasePrice={setMaxOrderShowcasePrice}
             addItem={addItem}
             removeItem={removeItem}
+            cart={cart}
             onShareProduct={handleShareProduct}
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
