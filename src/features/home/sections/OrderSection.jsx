@@ -27,7 +27,7 @@ export function OrderSection({
           <Box key={item.id} sx={{ mt: 2, p: 1.5, border: '1px solid #eee', borderRadius: 2 }}>
             <Typography fontWeight={700}>{item.name}</Typography>
             <Typography variant="body2">Qtd: {item.quantity} • Subtotal: {BRL.format(item.subtotal)}</Typography>
-            <Box sx={{ mt: 1.2, display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
+            <Box sx={{ mt: 1.2, display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' } }}>
               <FormControl size="small" sx={{ minWidth: 220 }}>
                 <InputLabel id={`pay-${item.id}`}>Pagamento</InputLabel>
                 <Select
@@ -53,6 +53,19 @@ export function OrderSection({
                   {deliveryMethods.map((method) => (
                     <MenuItem key={method} value={method}>{method}</MenuItem>
                   ))}
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel id={`offers-${item.id}`}>Deseja receber ofertas no WhatsApp?</InputLabel>
+                <Select
+                  labelId={`offers-${item.id}`}
+                  value={customizations[item.id]?.receiveOffersOnWhatsApp ?? ''}
+                  label="Deseja receber ofertas no WhatsApp?"
+                  onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], receiveOffersOnWhatsApp: e.target.value } }))}
+                >
+                  <MenuItem value="Sim">Sim</MenuItem>
+                  <MenuItem value="Não">Não</MenuItem>
                 </Select>
               </FormControl>
             </Box>
