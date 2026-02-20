@@ -43,21 +43,9 @@ Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de co
 
 🍀 Boa sorte!
 
-
 🚚 Entrega (com taxa) ou retirada no ponto de referência mais próximo.
 
-❄️ Conservar na geladeira. Retire alguns minutinhos antes de consumir para aproveitar toda a cremosidade!
-
-
-🥄 Ovos de colher: 250g podendo chegar a 400g
-
-🍬 Ovos trufados: 150g – embalados nas cores verde ou rosa, com laço feito à mão 💝
-
-
 🧁 Produção artesanal, sem conservantes.
-
-⏳ Validade: consumir em até 5 dias, mantendo refrigerado.
-
 
 📸 Marque a gente: @carlizdoces
 
