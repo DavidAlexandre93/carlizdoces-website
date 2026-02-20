@@ -158,8 +158,6 @@ export function HomePage() {
   const [maxOrderShowcasePrice, setMaxOrderShowcasePrice] = useState(() => Math.max(...seasonalProducts.filter((item) => isCandyOrderProduct(item)).map((item) => item.price), 0))
   const [customizations, setCustomizations] = useState({})
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
-  const [orderPreferences] = useState({ needsDelivery: false, receiveOffers: true })
-  const [deliveryMethod] = useState('Retirada na loja')
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [isSendingContactEmail] = useState(false)
   const [isEmailOptionsOpen, setIsEmailOptionsOpen] = useState(false)
@@ -219,8 +217,6 @@ export function HomePage() {
     selectedItems,
     customizations,
     orderCustomer,
-    orderPreferences,
-    deliveryMethod,
     totalItems,
     totalPrice,
     BRL,
@@ -709,6 +705,7 @@ export function HomePage() {
               customizations={customizations}
               setCustomizations={setCustomizations}
               paymentMethods={paymentMethods}
+              deliveryMethods={['Retirada na loja', 'Entrega']}
               totalPrice={totalPrice}
               totalItems={totalItems}
               whatsappLink={whatsappLink}
