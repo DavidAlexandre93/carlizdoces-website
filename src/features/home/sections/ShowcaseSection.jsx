@@ -31,6 +31,7 @@ export function ShowcaseSection({
   setMaxShowcasePrice,
   addItem,
   removeItem,
+  cart,
   onShareProduct,
   favoriteCounts,
   favoriteProductIds,
@@ -54,6 +55,7 @@ export function ShowcaseSection({
   const otherProducts = visibleShowcaseProducts.filter(
     (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/')
   )
+  const selectedProductQuantity = selectedShowcaseProduct ? (cart?.[selectedShowcaseProduct.id] ?? 0) : 0
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -206,7 +208,9 @@ export function ShowcaseSection({
           <Typography color="secondary" fontWeight={700}>{BRL.format(selectedShowcaseProduct.price)}</Typography>
           <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
             <Button variant="contained" onClick={() => addItem(selectedShowcaseProduct.id)}>Adicionar</Button>
-            <Button variant="outlined" onClick={() => removeItem(selectedShowcaseProduct.id)}>Remover</Button>
+            {selectedProductQuantity > 0 ? (
+              <Button variant="outlined" onClick={() => removeItem(selectedShowcaseProduct.id)}>Remover</Button>
+            ) : null}
             <IconButton color="secondary" onClick={() => onShareProduct(selectedShowcaseProduct)}>
               <ShareIcon />
             </IconButton>
