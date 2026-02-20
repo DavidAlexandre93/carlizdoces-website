@@ -15,9 +15,9 @@ export const imageCollections = {
       "id": "cardapio-de-pascoa-ferreiro-rocher",
       "slug": "ferreiro-rocher",
       "fileName": "ferreiro-rocher.jpeg",
-      "label": "Ferreiro Rocher",
+      "label": "Ferrero Rocher",
       "imageUrl": "/images/cardapio-de-pascoa/ferreiro-rocher.jpeg",
-      "alt": "Ferreiro Rocher"
+      "alt": "Ferrero Rocher"
     },
     {
       "id": "cardapio-de-pascoa-guloseimas",
@@ -47,9 +47,9 @@ export const imageCollections = {
       "id": "cardapio-de-pascoa-ninho-com-nutela",
       "slug": "ninho-com-nutela",
       "fileName": "ninho-com-nutela.jpeg",
-      "label": "Ninho Com Nutela",
+      "label": "Ninho com Nutella",
       "imageUrl": "/images/cardapio-de-pascoa/ninho-com-nutela.jpeg",
-      "alt": "Ninho Com Nutela"
+      "alt": "Ninho com Nutella"
     },
     {
       "id": "cardapio-de-pascoa-ninho-com-uva",
@@ -79,17 +79,17 @@ export const imageCollections = {
       "id": "cardapio-de-pascoa-prestigio",
       "slug": "prestigio",
       "fileName": "prestigio.jpeg",
-      "label": "Prestigio",
+      "label": "Prestígio",
       "imageUrl": "/images/cardapio-de-pascoa/prestigio.jpeg",
-      "alt": "Prestigio"
+      "alt": "Prestígio"
     },
     {
       "id": "cardapio-de-pascoa-trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
       "slug": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
       "fileName": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
-      "label": "Trufado Ninho Com Nutela Mousse Maracuja Brigadeiro",
+      "label": "Trufado ninho com Nutella mousse maracujá brigadeiro",
       "imageUrl": "/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
-      "alt": "Trufado Ninho Com Nutela Mousse Maracuja Brigadeiro"
+      "alt": "Trufado ninho com Nutella mousse maracujá brigadeiro"
     }
   ],
   "carousel": [
@@ -131,17 +131,17 @@ export const imageCollections = {
       "id": "instagram-encomende-ovo-pascoa",
       "slug": "encomende-ovo-pascoa",
       "fileName": "encomende-ovo-pascoa.jpeg",
-      "label": "Encomende Ovo Pascoa",
+      "label": "Encomende ovo de Páscoa",
       "imageUrl": "/images/instagram/encomende-ovo-pascoa.jpeg",
-      "alt": "Encomende Ovo Pascoa"
+      "alt": "Encomende ovo de Páscoa"
     },
     {
       "id": "instagram-ovos-de-pascoa-trufados",
       "slug": "ovos-de-pascoa-trufados",
       "fileName": "ovos-de-pascoa-trufados.png",
-      "label": "Ovos De Pascoa Trufados",
+      "label": "Ovos de Páscoa trufados",
       "imageUrl": "/images/instagram/ovos-de-pascoa-trufados.png",
-      "alt": "Ovos De Pascoa Trufados"
+      "alt": "Ovos de Páscoa trufados"
     }
   ],
   "logo": [
@@ -175,9 +175,9 @@ export const imageCollections = {
       "id": "novidades-sorteio-ovo-pascoa",
       "slug": "sorteio-ovo-pascoa",
       "fileName": "sorteio-ovo-pascoa.jpeg",
-      "label": "Sorteio Ovo Pascoa",
+      "label": "Sorteio de ovo de Páscoa",
       "imageUrl": "/images/novidades/sorteio-ovo-pascoa.jpeg",
-      "alt": "Sorteio Ovo Pascoa"
+      "alt": "Sorteio de ovo de Páscoa"
     }
   ],
   "pedidos-de-doces": [],
