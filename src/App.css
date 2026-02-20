@@ -23,7 +23,9 @@
   color: #111;
   animation: fade-in 450ms ease-out;
   transition: background 320ms ease, color 320ms ease;
-  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .site-wrapper > :is(main, aside) {
@@ -204,7 +206,8 @@
 }
 
 .page-container.MuiContainer-root {
-  width: min(100%, 1500px);
+  width: 100%;
+  max-width: 1500px;
   padding-inline: clamp(14px, 2.6vw, 32px);
 }
 
@@ -506,6 +509,10 @@
   gap: clamp(14px, 2.2vw, 24px);
 }
 
+.section-stack > * {
+  min-width: 0;
+}
+
 .hero {
   padding-bottom: 36px;
   position: relative;
@@ -555,16 +562,21 @@
 
 .top-carousel {
   position: relative;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   border-radius: 20px;
   isolation: isolate;
 }
 
 .swipeable-views-root {
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
 }
 
 .swipeable-views-track {
+  width: 100%;
   display: flex;
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
@@ -572,10 +584,14 @@
 
 .swipeable-views-slide {
   flex: 0 0 100%;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 .mui-carousel-stage {
   flex: 0 0 100%;
+  min-width: 100%;
+  max-width: 100%;
   padding: 10px;
   box-sizing: border-box;
   opacity: 0.7;
@@ -605,6 +621,7 @@
 
 .top-carousel-slide {
   position: relative;
+  width: 100%;
 }
 
 .top-carousel-slide::after {
@@ -1824,6 +1841,10 @@
 }
 
 @media (max-width: 960px) {
+  .hero-inner {
+    transform: none;
+  }
+
   .brand-name {
     font-size: clamp(22px, 5vw, 34px) !important;
   }
@@ -1927,10 +1948,15 @@
   .top-carousel-slide h1 {
     text-align: left;
     margin-top: 10px;
+    margin-bottom: 8px;
     color: #7b1b4f;
+    font-size: clamp(26px, 7vw, 34px);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
   }
 
   .hero-lamp-title {
+    font-size: clamp(26px, 7vw, 34px) !important;
     text-shadow:
       0 0 6px rgba(255, 239, 178, 0.92),
       0 0 14px rgba(255, 226, 138, 0.72),
