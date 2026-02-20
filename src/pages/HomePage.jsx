@@ -157,6 +157,7 @@ export function HomePage() {
   const [maxMenuShowcasePrice, setMaxMenuShowcasePrice] = useState(() => Math.max(...seasonalProducts.filter((item) => isEasterMenuProduct(item)).map((item) => item.price), 0))
   const [maxOrderShowcasePrice, setMaxOrderShowcasePrice] = useState(() => Math.max(...seasonalProducts.filter((item) => isCandyOrderProduct(item)).map((item) => item.price), 0))
   const [customizations, setCustomizations] = useState({})
+  const [orderPreferences, setOrderPreferences] = useState({ deliveryMethod: '', receiveOffersOnWhatsApp: '' })
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [isSendingContactEmail] = useState(false)
@@ -216,6 +217,7 @@ export function HomePage() {
   const whatsappLink = useWhatsAppOrderLink({
     selectedItems,
     customizations,
+    orderPreferences,
     orderCustomer,
     totalItems,
     totalPrice,
@@ -708,6 +710,8 @@ export function HomePage() {
               setCustomizations={setCustomizations}
               paymentMethods={paymentMethods}
               deliveryMethods={['Retirada na loja', 'Entrega']}
+              orderPreferences={orderPreferences}
+              setOrderPreferences={setOrderPreferences}
               totalPrice={totalPrice}
               totalItems={totalItems}
               whatsappLink={whatsappLink}
