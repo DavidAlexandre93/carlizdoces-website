@@ -40,7 +40,7 @@ export function Header({
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
 
-  const notificationMessage = `Pedidos páscoa 2026
+  const notificationMessage = `Pedidos de Páscoa 2026
 Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍
 
 🎥 Sorteio ao vivo no Instagram: 03/04/2026

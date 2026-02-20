@@ -8,7 +8,7 @@ export function AboutSection() {
         <Box className="about-message-bubble">
           <Typography component="p" variant="body1" className="about-message-inline">
             “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨
-            Nóóós somos a Carliz Doces e fazemos docinhos prontinhos pra entrega pra deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
+            Nóóós somos a Carliz Doces e fazemos docinhos prontinhos para entrega, para deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
           </Typography>
         </Box>
       </Box>

@@ -133,7 +133,7 @@ export const navItems = [
   { label: 'Depoimentos', sectionId: 'depoimentos' },
   { label: 'Onde estamos', sectionId: 'onde-estamos' },
   { label: 'Realizar pedido', sectionId: 'realizar-pedido' },
-  { label: 'Ovos de páscoa', sectionId: 'ovos-de-pascoa' },
+  { label: 'Ovos de Páscoa', sectionId: 'ovos-de-pascoa' },
   { label: 'Contato', sectionId: 'contato' },
 ]
 
@@ -169,13 +169,13 @@ export const announcementChannels = [
 ]
 
 export const manualTestimonials = [
-  { id: 'manual-1', author: 'Abner Ramos', channel: 'WhatsApp', message: 'Oiii, muito obrigado pelo empenho, os doces e o bolo estavam uma deliiicia, amamos. Vc sabe que vc arrasa muito.' },
+  { id: 'manual-1', author: 'Abner Ramos', channel: 'WhatsApp', message: 'Oiii, muito obrigado pelo empenho. Os doces e o bolo estavam uma delícia, amamos. Você sabe que arrasa muito.' },
   { id: 'manual-2', author: 'Maria', channel: 'WhatsApp', message: 'Carla, amei os doces! Muito obrigada! Lindos; seu trabalho é impecável. Parabéns!' },
-  { id: 'manual-3', author: 'Raysa', channel: 'WhatsApp', message: 'Eu e o William já somos fã do seus doces.' },
-  { id: 'manual-4', author: 'Andreia', channel: 'WhatsApp', message: 'Boaaa, e é dificil achar alguém que faz bem feito. Todo mundo gostou muito do bolo e dos docinhos.' },
-  { id: 'manual-5', author: 'Nil', channel: 'WhatsApp', message: 'Obrigada, Carla, tudo maravilhoso que Deus te abençoe grandemente estar de parabéns!' },
+  { id: 'manual-3', author: 'Raysa', channel: 'WhatsApp', message: 'Eu e o William já somos fãs dos seus doces.' },
+  { id: 'manual-4', author: 'Andreia', channel: 'WhatsApp', message: 'Boaaa, e é difícil achar alguém que faz bem feito. Todo mundo gostou muito do bolo e dos docinhos.' },
+  { id: 'manual-5', author: 'Nil', channel: 'WhatsApp', message: 'Obrigada, Carla! Tudo maravilhoso. Que Deus te abençoe grandemente; você está de parabéns!' },
   { id: 'manual-6', author: 'Luziana', channel: 'WhatsApp', message: 'Tava muito lindo, parabéns! Todo mundo elogiou.' },
-  { id: 'manual-7', author: 'Luziana', channel: 'WhatsApp', message: 'Ficaram lindos docinhos!' },
+  { id: 'manual-7', author: 'Luziana', channel: 'WhatsApp', message: 'Ficaram lindos, docinhos!' },
 ]
 
 export const instagramPosts = (imageCollections.instagram ?? []).map((image, index) => ({
