@@ -1,6 +1,18 @@
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 
-export function OrderSection({ BRL, orderCustomer, setOrderCustomer, selectedItems, customizations, setCustomizations, paymentMethods, totalPrice, totalItems, whatsappLink }) {
+export function OrderSection({
+  BRL,
+  orderCustomer,
+  setOrderCustomer,
+  selectedItems,
+  customizations,
+  setCustomizations,
+  paymentMethods,
+  deliveryMethods,
+  totalPrice,
+  totalItems,
+  whatsappLink,
+}) {
   const canShowConfirmButton = orderCustomer.name.trim() && orderCustomer.phone.trim() && totalItems > 0
 
   return (
@@ -15,19 +27,41 @@ export function OrderSection({ BRL, orderCustomer, setOrderCustomer, selectedIte
           <Box key={item.id} sx={{ mt: 2, p: 1.5, border: '1px solid #eee', borderRadius: 2 }}>
             <Typography fontWeight={700}>{item.name}</Typography>
             <Typography variant="body2">Qtd: {item.quantity} • Subtotal: {BRL.format(item.subtotal)}</Typography>
-            <FormControl size="small" sx={{ mt: 1.2, minWidth: 220 }}>
-              <InputLabel id={`pay-${item.id}`}>Pagamento</InputLabel>
-              <Select
-                labelId={`pay-${item.id}`}
-                value={customizations[item.id]?.paymentMethod ?? ''}
-                label="Pagamento"
-                onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], paymentMethod: e.target.value } }))}
-              >
-                {paymentMethods.map((method) => (
-                  <MenuItem key={method} value={method}>{method}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Box sx={{ mt: 1.2, display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel id={`pay-${item.id}`}>Pagamento</InputLabel>
+                <Select
+                  labelId={`pay-${item.id}`}
+                  value={customizations[item.id]?.paymentMethod ?? ''}
+                  label="Pagamento"
+                  onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], paymentMethod: e.target.value } }))}
+                >
+                  {paymentMethods.map((method) => (
+                    <MenuItem key={method} value={method}>{method}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel id={`delivery-${item.id}`}>Recebimento</InputLabel>
+                <Select
+                  labelId={`delivery-${item.id}`}
+                  value={customizations[item.id]?.deliveryMethod ?? ''}
+                  label="Recebimento"
+                  onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], deliveryMethod: e.target.value } }))}
+                >
+                  {deliveryMethods.map((method) => (
+                    <MenuItem key={method} value={method}>{method}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            {customizations[item.id]?.deliveryMethod === 'Entrega' ? (
+              <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
+                Será cobrada uma taxa de entrega a definir, conforme a região onde você mora.
+              </Typography>
+            ) : null}
           </Box>
         ))}
 
