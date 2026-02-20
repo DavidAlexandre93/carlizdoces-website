@@ -92,7 +92,26 @@ export function OrderSection({
           </Typography>
         ) : null}
 
-        <Typography sx={{ mt: 2 }}><strong>Total:</strong> {BRL.format(totalPrice)} ({totalItems} itens)</Typography>
+        <Box
+          sx={{
+            mt: 4,
+            p: { xs: 1.5, sm: 2 },
+            borderRadius: 2,
+            border: '1px solid #edd7c8',
+            background: 'linear-gradient(120deg, #fff7f2 0%, #fff 100%)',
+            boxShadow: '0 8px 24px rgba(163, 101, 66, 0.08)',
+          }}
+        >
+          <Typography variant="overline" sx={{ color: '#9a5d3b', fontWeight: 700, letterSpacing: '0.08em', lineHeight: 1 }}>
+            Resumo do pedido
+          </Typography>
+          <Typography sx={{ mt: 0.6, fontSize: { xs: '1.4rem', sm: '1.7rem' }, fontWeight: 800, color: '#5c2f1a', lineHeight: 1.2 }}>
+            Total: {BRL.format(totalPrice)}
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 0.5, color: '#6d4c3c', fontWeight: 500 }}>
+            {totalItems} {totalItems === 1 ? 'item selecionado' : 'itens selecionados'}
+          </Typography>
+        </Box>
         {canShowConfirmButton ? (
           <Button sx={{ mt: 2 }} variant="contained" color="secondary" href={whatsappLink} target="_blank" rel="noreferrer">
             Confirmar no WhatsApp
