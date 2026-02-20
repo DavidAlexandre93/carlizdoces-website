@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import SwipeableViews from 'react-swipeable-views'
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
-import { Box, Button, Chip, Container, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Chip, Container, Stack, Typography, useTheme } from '@mui/material'
 
 export function HeroSection({ topShowcaseSlides }) {
   const theme = useTheme()
@@ -20,14 +18,6 @@ export function HeroSection({ topShowcaseSlides }) {
 
     return () => window.clearInterval(timer)
   }, [maxSteps])
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps)
-  }
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => (prevActiveStep - 1 + maxSteps) % maxSteps)
-  }
 
   return (
     <Container maxWidth="xl" className="hero section-alt-pink animate__animated animate__fadeIn page-container hero-inner" style={{ '--animate-duration': '900ms' }}>
@@ -58,17 +48,6 @@ export function HeroSection({ topShowcaseSlides }) {
             </Box>
           ))}
         </SwipeableViews>
-
-        {maxSteps > 1 ? (
-          <>
-            <IconButton className="carousel-nav-button hero-carousel-arrow hero-carousel-arrow-prev" size="large" onClick={handleBack} aria-label="Banner anterior">
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            </IconButton>
-            <IconButton className="carousel-nav-button hero-carousel-arrow hero-carousel-arrow-next" size="large" onClick={handleNext} aria-label="Próximo banner">
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </IconButton>
-          </>
-        ) : null}
       </Box>
     </Container>
   )
