@@ -38,8 +38,8 @@ export function HeroSection({ topShowcaseSlides }) {
           onChangeIndex={setActiveStep}
           enableMouseEvents
         >
-          {topShowcaseSlides.map((slide) => (
-            <Box key={slide.id} className="mui-carousel-stage is-active">
+          {topShowcaseSlides.map((slide, index) => (
+            <Box key={slide.id} className={`mui-carousel-stage${index === activeStep ? ' is-active' : ''}`}>
               <article className="top-carousel-slide">
                 <img src={slide.imageUrl} alt={slide.alt} />
                 <div>
