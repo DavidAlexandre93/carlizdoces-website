@@ -346,8 +346,8 @@ export const productsCatalog = [
   },
   {
     id: 'trufado-mouse-maracuja-fruta',
-    name: 'Trufado mouse maracujá (fruta)',
-    shortDescription: 'Ovo trufado sabor mouse maracujá (fruta).',
+    name: 'Trufado mousse maracujá (fruta)',
+    shortDescription: 'Ovo trufado sabor mousse maracujá (fruta).',
     details: 'Peso: 150g • Valor: R$ 30,00.',
     weight: '150g',
     price: 30,

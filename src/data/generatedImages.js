@@ -87,9 +87,9 @@ export const imageCollections = {
       "id": "cardapio-de-pascoa-trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
       "slug": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro",
       "fileName": "trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
-      "label": "Trufado Ninho Com Nutela Mouse Maracuja Brigadeiro",
+      "label": "Trufado Ninho Com Nutela Mousse Maracuja Brigadeiro",
       "imageUrl": "/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg",
-      "alt": "Trufado Ninho Com Nutela Mouse Maracuja Brigadeiro"
+      "alt": "Trufado Ninho Com Nutela Mousse Maracuja Brigadeiro"
     }
   ],
   "carousel": [
