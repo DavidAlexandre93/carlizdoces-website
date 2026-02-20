@@ -172,7 +172,7 @@ export function HomePage() {
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
-  const { cart, addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
+  const { addItem, removeItem, selectedItems, totalItems, totalPrice } = useCart(seasonalProducts)
   const {
     ratingsByProductId: easterRatingsByProductId,
     submitRating: submitEasterRating,
@@ -653,8 +653,6 @@ export function HomePage() {
             maxShowcasePrice={maxMenuShowcasePrice}
             setMaxShowcasePrice={setMaxMenuShowcasePrice}
             addItem={addItem}
-            removeItem={removeItem}
-            cart={cart}
             onShareProduct={handleShareProduct}
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
@@ -681,8 +679,6 @@ export function HomePage() {
             maxShowcasePrice={maxOrderShowcasePrice}
             setMaxShowcasePrice={setMaxOrderShowcasePrice}
             addItem={addItem}
-            removeItem={removeItem}
-            cart={cart}
             onShareProduct={handleShareProduct}
             favoriteCounts={favoriteCounts}
             favoriteProductIds={favoriteProductIds}
@@ -711,6 +707,7 @@ export function HomePage() {
               totalPrice={totalPrice}
               totalItems={totalItems}
               whatsappLink={whatsappLink}
+              removeItem={removeItem}
             />
           </MotionDiv>
 
