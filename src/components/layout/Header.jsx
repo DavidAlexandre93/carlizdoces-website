@@ -22,8 +22,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { activeNotification } from '../../data/notifications'
 
-const NOTIFICATION_READ_STORAGE_KEY = 'carlizdoces:notification:pascoa-2026:read'
+const NOTIFICATION_READ_STORAGE_KEY = `carlizdoces:notification:${activeNotification.id}:read`
 
 export function Header({
   navItems,
@@ -39,23 +40,6 @@ export function Header({
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
-
-  const notificationMessage = `Pedidos de Páscoa 2026
-Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍
-
-🎥 Sorteio ao vivo no Instagram: 03/04/2026
-
-🍀 Boa sorte!
-
-🚚 Entrega (com taxa) ou retirada no ponto de referência mais próximo.
-
-🧁 Produção artesanal, sem conservantes.
-
-📸 Marque a gente: @carlizdoces
-
-Queremos ver sua experiência!
-
-Deus abençoe! 🙌`
 
   useEffect(() => {
     if (!isMobileNavigation && isMobileMenuOpen) {
@@ -301,10 +285,10 @@ Deus abençoe! 🙌`
         >
           <Paper elevation={6} sx={{ p: 3, borderRadius: 2 }}>
             <Typography id="notification-modal-title" variant="h6" component="h2" sx={{ mb: 2, fontWeight: 700 }}>
-              Notificação
+              {activeNotification.title}
             </Typography>
             <Typography variant="body1" sx={{ whiteSpace: 'pre-line', mb: 3 }}>
-              {notificationMessage}
+              {activeNotification.message}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button variant="contained" onClick={() => setIsNotificationOpen(false)}>
