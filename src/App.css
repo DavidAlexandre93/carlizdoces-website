@@ -557,6 +557,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 20px;
+  isolation: isolate;
 }
 
 .swipeable-views-root {
@@ -606,6 +607,14 @@
   position: relative;
 }
 
+.top-carousel-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(18, 6, 14, 0.08) 18%, rgba(18, 6, 14, 0.58) 100%);
+  pointer-events: none;
+}
+
 
 .carousel-nav-button,
 .mui-carousel-nav {
@@ -647,15 +656,17 @@
   left: 50%;
   bottom: 32px;
   transform: translateX(-50%);
-  width: min(92%, 900px);
-  background: rgba(30, 14, 24, 0.48);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 16px;
+  width: min(88%, 820px);
+  background: rgba(34, 12, 24, 0.56);
+  backdrop-filter: blur(9px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 20px;
   color: #fff;
   text-align: center;
-  padding: 18px 20px;
+  padding: 22px 26px;
+  box-shadow: 0 20px 45px rgba(20, 5, 15, 0.36);
   animation: pop-in 700ms ease-out 120ms both;
+  z-index: 1;
 }
 
 .top-carousel-slide p {
@@ -690,10 +701,11 @@
 }
 
 .hero-quick-actions {
-  margin-top: 18px;
+  margin-top: 20px;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .hero-quick-actions .MuiButton-root,
@@ -704,7 +716,8 @@
 
 .hero-quick-actions .MuiButton-root {
   border-radius: 999px;
-  padding-inline: 18px;
+  padding-inline: 24px;
+  min-width: 154px;
 }
 
 .contact-quick-actions {
@@ -1762,6 +1775,7 @@
   .top-carousel-slide > div {
     width: min(94%, 820px);
     bottom: 20px;
+    padding: 18px 20px;
   }
 
   .photo-highlight {
@@ -1779,6 +1793,22 @@
 
   .order-summary {
     position: static;
+  }
+}
+
+@media (min-width: 1200px) {
+  .top-carousel-slide > div {
+    width: min(74%, 760px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hero-carousel-arrow-prev {
+    left: 28px;
+  }
+
+  .hero-carousel-arrow-next {
+    right: 28px;
   }
 }
 
