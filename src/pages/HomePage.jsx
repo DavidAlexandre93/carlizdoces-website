@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Alert, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
 import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
@@ -23,6 +23,7 @@ const InstagramSection = lazy(() => import('../components/sections/InstagramSect
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
+const FEATURED_VIDEO_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview'
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
@@ -153,6 +154,7 @@ export function HomePage() {
   const hasInitializedMenuShowcaseRef = useRef(false)
   const hasInitializedOrderShowcaseRef = useRef(false)
   const [introStage, setIntroStage] = useState('message')
+  const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [menuProductStep, setMenuProductStep] = useState(0)
   const [orderProductStep, setOrderProductStep] = useState(0)
@@ -770,6 +772,56 @@ export function HomePage() {
         onGoToOrderSection={handleGoToOrderSection}
         isFooterVisible={showScrollTop}
       />
+
+      <Dialog
+        open={isFeaturedVideoOpen}
+        onClose={() => setIsFeaturedVideoOpen(false)}
+        maxWidth="md"
+        fullWidth
+        aria-labelledby="featured-video-title"
+      >
+        <Box sx={{ position: 'relative', p: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 1 } }}>
+          <IconButton
+            onClick={() => setIsFeaturedVideoOpen(false)}
+            aria-label="Fechar vídeo em destaque"
+            sx={{ position: 'absolute', top: 10, right: 10, color: 'text.primary' }}
+          >
+            ✕
+          </IconButton>
+          <DialogTitle id="featured-video-title" sx={{ p: 0, pr: 5, fontWeight: 700 }}>
+            Vídeo em destaque
+          </DialogTitle>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Assista à nossa apresentação especial e conheça melhor a Carliz Doces.
+          </Typography>
+        </Box>
+        <DialogContent sx={{ pt: 1, pb: 3 }}>
+          <Box
+            sx={{
+              overflow: 'hidden',
+              borderRadius: 3,
+              boxShadow: '0 18px 40px rgba(0, 0, 0, 0.2)',
+              border: '1px solid',
+              borderColor: 'rgba(0,0,0,0.08)',
+              bgcolor: '#000',
+            }}
+          >
+            <Box
+              component="iframe"
+              src={FEATURED_VIDEO_URL}
+              title="Vídeo de apresentação Carliz Doces"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              sx={{
+                width: '100%',
+                aspectRatio: '16 / 9',
+                border: 0,
+                display: 'block',
+              }}
+            />
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isEmailOptionsOpen} onClose={() => setIsEmailOptionsOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>Escolha onde enviar seu e-mail</DialogTitle>
