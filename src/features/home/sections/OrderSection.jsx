@@ -9,6 +9,8 @@ export function OrderSection({
   setCustomizations,
   paymentMethods,
   deliveryMethods,
+  orderPreferences,
+  setOrderPreferences,
   totalPrice,
   totalItems,
   whatsappLink,
@@ -47,42 +49,46 @@ export function OrderSection({
                   ))}
                 </Select>
               </FormControl>
-
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <InputLabel id={`delivery-${item.id}`}>Recebimento</InputLabel>
-                <Select
-                  labelId={`delivery-${item.id}`}
-                  value={customizations[item.id]?.deliveryMethod ?? ''}
-                  label="Recebimento"
-                  onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], deliveryMethod: e.target.value } }))}
-                >
-                  {deliveryMethods.map((method) => (
-                    <MenuItem key={method} value={method}>{method}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <InputLabel id={`offers-${item.id}`}>Deseja receber ofertas no WhatsApp?</InputLabel>
-                <Select
-                  labelId={`offers-${item.id}`}
-                  value={customizations[item.id]?.receiveOffersOnWhatsApp ?? ''}
-                  label="Deseja receber ofertas no WhatsApp?"
-                  onChange={(e) => setCustomizations((current) => ({ ...current, [item.id]: { ...current[item.id], receiveOffersOnWhatsApp: e.target.value } }))}
-                >
-                  <MenuItem value="Sim">Sim</MenuItem>
-                  <MenuItem value="Não">Não</MenuItem>
-                </Select>
-              </FormControl>
             </Box>
-
-            {customizations[item.id]?.deliveryMethod === 'Entrega' ? (
-              <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
-                Será cobrada uma taxa de entrega a definir, conforme a região onde você mora.
-              </Typography>
-            ) : null}
           </Box>
         ))}
+
+        {selectedItems.length > 0 ? (
+          <Box sx={{ mt: 2, display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+            <FormControl size="small" sx={{ minWidth: 220 }}>
+              <InputLabel id="delivery-order">Recebimento</InputLabel>
+              <Select
+                labelId="delivery-order"
+                value={orderPreferences.deliveryMethod}
+                label="Recebimento"
+                onChange={(e) => setOrderPreferences((current) => ({ ...current, deliveryMethod: e.target.value }))}
+              >
+                {deliveryMethods.map((method) => (
+                  <MenuItem key={method} value={method}>{method}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl size="small" sx={{ minWidth: 220 }}>
+              <InputLabel id="offers-order">Deseja receber ofertas no WhatsApp?</InputLabel>
+              <Select
+                labelId="offers-order"
+                value={orderPreferences.receiveOffersOnWhatsApp}
+                label="Deseja receber ofertas no WhatsApp?"
+                onChange={(e) => setOrderPreferences((current) => ({ ...current, receiveOffersOnWhatsApp: e.target.value }))}
+              >
+                <MenuItem value="Sim">Sim</MenuItem>
+                <MenuItem value="Não">Não</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        ) : null}
+
+        {orderPreferences.deliveryMethod === 'Entrega' ? (
+          <Typography variant="caption" sx={{ mt: 1, display: 'block' }}>
+            Será cobrada uma taxa de entrega a definir, conforme a região onde você mora.
+          </Typography>
+        ) : null}
 
         <Typography sx={{ mt: 2 }}><strong>Total:</strong> {BRL.format(totalPrice)} ({totalItems} itens)</Typography>
         {canShowConfirmButton ? (
