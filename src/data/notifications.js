@@ -15,22 +15,29 @@
 export const notificationsCatalog = [
   {
     id: 'pascoa-2026',
-    title: 'Pedidos de Páscoa 2026',
-    message: `Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍
-
-🎥 Sorteio ao vivo no Instagram: 03/04/2026
-
-🍀 Boa sorte!
-
-🚚 Entrega (com taxa) ou retirada no ponto de referência mais próximo.
-
-🧁 Produção artesanal, sem conservantes.
-
-📸 Marque a gente: @carlizdoces
-
-Queremos ver sua experiência!
-
-Deus abençoe! 🙌`,
+    title: 'Notificações',
+    items: [
+      {
+        title: 'Pedidos de Páscoa 2026',
+        lines: [
+          'Faça seu pedido até 25/03/2026 e concorra ao sorteio de um delicioso ovo de colher! 😍',
+          '🎥 Sorteio ao vivo no Instagram: 03/04/2026',
+          '🍀 Boa sorte!',
+        ],
+      },
+      {
+        title: 'Entrega ou retirada',
+        lines: ['🚚 Entrega (com taxa) ou retirada no ponto de referência mais próximo.'],
+      },
+      {
+        title: 'Produção artesanal',
+        lines: ['🧁 Produção artesanal, sem conservantes.'],
+      },
+      {
+        title: 'Marque a gente',
+        lines: ['📸 Marque a gente: @carlizdoces', 'Queremos ver sua experiência!', 'Deus abençoe! 🙌'],
+      },
+    ],
   },
 ]
 
@@ -39,7 +46,7 @@ export const activeNotificationId = 'pascoa-2026'
 const fallbackNotification = notificationsCatalog[0] ?? {
   id: 'geral',
   title: 'Notificação',
-  message: 'Sem notificações no momento.',
+  items: [],
 }
 
 export const activeNotification =
