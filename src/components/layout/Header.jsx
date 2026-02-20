@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   AppBar,
+  Badge,
   Box,
   Button,
   Divider,
@@ -22,6 +23,8 @@ import {
   useTheme,
 } from '@mui/material'
 
+const NOTIFICATION_READ_STORAGE_KEY = 'carlizdoces:notification:pascoa-2026:read'
+
 export function Header({
   navItems,
   isMobileMenuOpen,
@@ -31,6 +34,7 @@ export function Header({
   const theme = useTheme()
   const isMobileNavigation = useMediaQuery(theme.breakpoints.down('lg'))
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(false)
   const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
   const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
   const appBarRef = useRef(null)
@@ -58,6 +62,17 @@ Deus abençoe! 🙌`
       onCloseMobileMenu()
     }
   }, [isMobileMenuOpen, isMobileNavigation, onCloseMobileMenu])
+
+  useEffect(() => {
+    const notificationReadStatus = window.localStorage.getItem(NOTIFICATION_READ_STORAGE_KEY)
+
+    if (notificationReadStatus === 'true') {
+      setHasUnreadNotification(false)
+      return
+    }
+
+    setHasUnreadNotification(true)
+  }, [])
 
   useEffect(() => {
     if (!logoMotion.isFollowing) {
@@ -104,6 +119,15 @@ Deus abençoe! 🙌`
     }
 
     setLogoMotion({ x: 0, y: 0, isFollowing: true })
+  }
+
+  const handleNotificationOpen = () => {
+    setIsNotificationOpen(true)
+
+    if (hasUnreadNotification) {
+      setHasUnreadNotification(false)
+      window.localStorage.setItem(NOTIFICATION_READ_STORAGE_KEY, 'true')
+    }
   }
 
   return (
@@ -190,9 +214,24 @@ Deus abençoe! 🙌`
             <Box className="topbar-actions">
 
               <Tooltip title="Ver notificações" arrow>
-                <IconButton color="inherit" aria-label="Ver notificações" onClick={() => setIsNotificationOpen(true)}>
-                  <Icon>notifications</Icon>
-                </IconButton>
+                <Badge
+                  color="error"
+                  badgeContent="Novo"
+                  invisible={!hasUnreadNotification}
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      fontWeight: 700,
+                      fontSize: '0.62rem',
+                      px: 0.8,
+                      minWidth: 0,
+                      boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.7), 0 0 10px rgba(244, 67, 54, 0.55)',
+                    },
+                  }}
+                >
+                  <IconButton color="inherit" aria-label="Ver notificações" onClick={handleNotificationOpen}>
+                    <Icon>notifications</Icon>
+                  </IconButton>
+                </Badge>
               </Tooltip>
 
               {isMobileNavigation && (
