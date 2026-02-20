@@ -13,6 +13,7 @@ export function useWhatsAppOrderLink({ selectedItems, customizations, orderCusto
               const selectedFlavor = details.flavor?.trim() || item.flavor
               const selectedPayment = details.paymentMethod?.trim() || 'não informado'
               const selectedDeliveryMethod = details.deliveryMethod?.trim() || 'não informado'
+              const selectedOfferPreference = details.receiveOffersOnWhatsApp?.trim() || 'não informado'
               return [
                 `🍬 ${item.name}`,
                 `• Quantidade: ${item.quantity}`,
@@ -21,6 +22,7 @@ export function useWhatsAppOrderLink({ selectedItems, customizations, orderCusto
                 `• Subtotal: ${BRL.format(item.subtotal)}`,
                 `• Forma de pagamento: ${selectedPayment}`,
                 `• Recebimento: ${selectedDeliveryMethod}`,
+                `• Receber ofertas no WhatsApp: ${selectedOfferPreference}`,
               ].join('\n')
             })
             .join('\n\n')
