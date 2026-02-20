@@ -23,7 +23,7 @@ export const productsCatalog = [
     details: 'Pedidos a partir de 50 unidades com alteração nos valores.',
     weight: '15g',
     price: 97,
-    image: '/images/pedidos-de-doces/doces-tradicionais/brigadeiro-tradicional-50%.jpeg',
+    image: '/images/pedidos-de-doces/doces-tradicionais/brigadeiro-tradicional-50-cacau.jpeg',
   },
   {
     id: 'beijinho-tradicional',
@@ -122,7 +122,7 @@ export const productsCatalog = [
     details: 'Pedidos a partir de 20/50 unidades com alteração nos valores.',
     weight: '15g',
     price: 180,
-    image: '/images/pedidos-de-doces/doces-finos/brigadeiro-50%.jpeg',
+    image: '/images/pedidos-de-doces/doces-finos/brigadeiro-50-cacau.jpeg',
   },
   {
     id: 'brigadeiro-de-ninho-nutela-fino',

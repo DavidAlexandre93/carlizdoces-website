@@ -148,62 +148,6 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
   return requestProductLikeToggleFromSupabase(productId, currentDeviceId)
 }
 
-async function requestStoreLikeToggleFromSupabase(currentDeviceId) {
-  const { data: existingRows, error: existingError } = await supabase
-    .from('likes_anon')
-    .select('id')
-    .eq('item_id', STORE_LIKES_ITEM_ID)
-    .eq('device_id', currentDeviceId)
-    .limit(1)
-
-  if (existingError) {
-    throw new Error(existingError.message || 'store-like-toggle-request-failed')
-  }
-
-  const wasLiked = (existingRows?.length || 0) > 0
-
-  if (wasLiked) {
-    const { error: deleteError } = await supabase
-      .from('likes_anon')
-      .delete()
-      .eq('item_id', STORE_LIKES_ITEM_ID)
-      .eq('device_id', currentDeviceId)
-
-    if (deleteError) {
-      throw new Error(deleteError.message || 'store-like-toggle-request-failed')
-    }
-  } else {
-    const { error: insertError } = await supabase
-      .from('likes_anon')
-      .insert({
-        item_id: STORE_LIKES_ITEM_ID,
-        device_id: currentDeviceId,
-      })
-
-    if (insertError) {
-      throw new Error(insertError.message || 'store-like-toggle-request-failed')
-    }
-  }
-
-  const { count, error: countError } = await supabase
-    .from('likes_anon')
-    .select('*', { count: 'exact', head: true })
-    .eq('item_id', STORE_LIKES_ITEM_ID)
-
-  if (countError) {
-    throw new Error(countError.message || 'store-like-toggle-request-failed')
-  }
-
-  return {
-    likes: Number(count || 0),
-    liked: !wasLiked,
-  }
-}
-
-async function requestStoreLikeToggle(currentDeviceId) {
-  return requestStoreLikeToggleFromSupabase(currentDeviceId)
-}
-
 export function HomePage() {
   const wrapperRef = useRef(null)
   const [introStage, setIntroStage] = useState('message')
@@ -227,9 +171,6 @@ export function HomePage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [favoriteProductIds, setFavoriteProductIds] = useState([])
   const [favoriteCounts, setFavoriteCounts] = useState({})
-  const [totalLikes, setTotalLikes] = useState(0)
-  const [hasLikedStore, setHasLikedStore] = useState(false)
-  const [showLikeCelebration, setShowLikeCelebration] = useState(false)
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
@@ -578,8 +519,6 @@ export function HomePage() {
         const likesById = summary?.products?.likesById ?? {}
         const likedByCurrentUserById = summary?.products?.likedByCurrentUserById ?? {}
 
-        setTotalLikes(Number(summary?.store?.likes ?? 0))
-        setHasLikedStore(Boolean(summary?.store?.likedByCurrentUser))
 
         setFavoriteCounts(() => seasonalProducts.reduce((counts, product) => ({
           ...counts,
@@ -599,50 +538,6 @@ export function HomePage() {
       isMounted = false
     }
   }, [])
-
-  const handleToggleLike = async () => {
-    const wasLiked = hasLikedStore
-
-    setHasLikedStore(!wasLiked)
-    setShowLikeCelebration(!wasLiked)
-    setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? -1 : 1)))
-
-    try {
-      const result = await requestStoreLikeToggle(deviceId)
-
-      setHasLikedStore(!wasLiked)
-      setShowLikeCelebration(!wasLiked)
-      setTotalLikes(Number(result.likes ?? Math.max(0, totalLikes + (wasLiked ? -1 : 1))))
-      setSnackbar({
-        open: true,
-        message: !wasLiked
-          ? '🎉 Obrigado pelo carinho! +1 coração registrado para todos verem! 🍫✨'
-          : 'Coração removido. Clique novamente quando quiser apoiar de novo. 💛',
-        severity: 'success',
-      })
-    } catch {
-      setHasLikedStore(wasLiked)
-      setShowLikeCelebration(false)
-      setTotalLikes((currentLikes) => Math.max(0, currentLikes + (wasLiked ? 1 : -1)))
-      setSnackbar({
-        open: true,
-        message: 'Não foi possível atualizar seu coração agora.',
-        severity: 'error',
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (!showLikeCelebration) return undefined
-
-    const timeoutId = window.setTimeout(() => {
-      setShowLikeCelebration(false)
-    }, 1400)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
-  }, [showLikeCelebration])
 
   useEffect(() => {
     const wrapperElement = wrapperRef.current
@@ -858,11 +753,6 @@ export function HomePage() {
         totalItems={totalItems}
         showScrollTop={showScrollTop}
         onScrollTop={handleScrollTop}
-        totalLikes={totalLikes}
-        hasLiked={hasLikedStore}
-        disabled={false}
-        onToggleLike={handleToggleLike}
-        showLikeCelebration={showLikeCelebration}
         onGoToOrderSection={handleGoToOrderSection}
         isFooterVisible={showScrollTop}
       />

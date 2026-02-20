@@ -1166,6 +1166,45 @@
   color: #ad1457 !important;
 }
 
+.like-button-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.like-button-heart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  transition: transform 180ms ease, color 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.like-button-heart.is-not-liked .MuiSvgIcon-root {
+  stroke: rgb(229, 57, 53);
+  stroke-width: 1.1px;
+}
+
+.like-button-heart.is-liked {
+  color: #e53935;
+  filter: drop-shadow(0 4px 8px rgba(229, 57, 53, 0.32));
+}
+
+.like-button-heart:hover:not(:disabled),
+.like-button-heart:focus-visible:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.like-button-heart:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .showcase-arrow {
   position: absolute !important;
   top: 50%;

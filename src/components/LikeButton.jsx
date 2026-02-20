@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase, deviceId, isSupabaseConfigured } from '../supabaseClient'
 import FavoriteIcon from '../mui-icons/Favorite'
-import FavoriteBorderIcon from '../mui-icons/FavoriteBorder'
 
-export default function LikeButton({ itemId }) {
+export default function LikeButton({ itemId, onStateChange, render }) {
   const [liked, setLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(0)
   const [loading, setLoading] = useState(false)
 
   const mountedRef = useRef(true)
@@ -22,6 +22,7 @@ export default function LikeButton({ itemId }) {
       safeSetState(() => {
         setLoading(false)
         setLiked(false)
+        setLikeCount(0)
       })
       return
     }
@@ -29,16 +30,26 @@ export default function LikeButton({ itemId }) {
     safeSetState(() => setLoading(true))
 
     try {
-      const { data, error } = await supabase
-        .from('likes_anon')
-        .select('item_id')
-        .eq('item_id', safeItemId)
-        .eq('device_id', deviceId)
-        .maybeSingle()
+      const [{ data, error }, { count, error: countError }] = await Promise.all([
+        supabase
+          .from('likes_anon')
+          .select('item_id')
+          .eq('item_id', safeItemId)
+          .eq('device_id', deviceId)
+          .maybeSingle(),
+        supabase
+          .from('likes_anon')
+          .select('*', { count: 'exact', head: true })
+          .eq('item_id', safeItemId),
+      ])
 
       if (error) throw error
+      if (countError) throw countError
 
-      safeSetState(() => setLiked(Boolean(data)))
+      safeSetState(() => {
+        setLiked(Boolean(data))
+        setLikeCount(count ?? 0)
+      })
     } catch (err) {
       console.error('LIKE LOAD ERROR:', err)
     } finally {
@@ -66,8 +77,11 @@ export default function LikeButton({ itemId }) {
 
     const previousLiked = liked
     const nextLiked = !previousLiked
+    const previousCount = likeCount
+    const nextCount = Math.max(0, previousCount + (nextLiked ? 1 : -1))
 
     setLiked(nextLiked)
+    setLikeCount(nextCount)
 
     try {
       if (nextLiked) {
@@ -89,38 +103,43 @@ export default function LikeButton({ itemId }) {
       await load()
     } catch (err) {
       setLiked(previousLiked)
+      setLikeCount(previousCount)
       console.error('LIKE ERROR:', err)
       alert('Não foi possível atualizar seu coração agora.')
     } finally {
       inFlightRef.current = false
     }
-  }, [canRun, liked, load, safeItemId])
+  }, [canRun, liked, likeCount, load, safeItemId])
+
+  useEffect(() => {
+    onStateChange?.({
+      liked,
+      likeCount,
+      loading,
+    })
+  }, [liked, likeCount, loading, onStateChange])
+
+  if (typeof render === 'function') {
+    return render({
+      liked,
+      likeCount,
+      loading,
+      toggle,
+    })
+  }
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      disabled={loading}
-      aria-pressed={liked}
-      title={liked ? 'Remover curtida' : 'Curtir'}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 46,
-        height: 46,
-        padding: 0,
-        borderRadius: '50%',
-        border: liked ? '1px solid #fbc5c5' : '1px solid #e3e3e3',
-        background: liked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #ffffff, #f8f8f8)',
-        boxShadow: liked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(0, 0, 0, 0.08)',
-        cursor: loading ? 'not-allowed' : 'pointer',
-        userSelect: 'none',
-        opacity: loading ? 0.65 : 1,
-        transition: 'all 0.2s ease',
-      }}
-    >
-      {liked ? <FavoriteIcon sx={{ fontSize: 24, color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ fontSize: 24, color: '#6b6b6b' }} />}
-    </button>
+    <div className="like-button-wrapper">
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={loading}
+        aria-pressed={liked}
+        title={liked ? 'Remover curtida' : 'Curtir'}
+        className={`like-button-heart ${liked ? 'is-liked' : 'is-not-liked'}`}
+      >
+        <FavoriteIcon sx={{ fontSize: 28 }} />
+      </button>
+    </div>
   )
 }
