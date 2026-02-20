@@ -54,33 +54,35 @@ export function OrderSection({
         ))}
 
         {selectedItems.length > 0 ? (
-          <Box sx={{ mt: 2, display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-            <FormControl size="small" sx={{ minWidth: 220 }}>
-              <InputLabel id="delivery-order">Recebimento</InputLabel>
-              <Select
-                labelId="delivery-order"
-                value={orderPreferences.deliveryMethod}
-                label="Recebimento"
-                onChange={(e) => setOrderPreferences((current) => ({ ...current, deliveryMethod: e.target.value }))}
-              >
-                {deliveryMethods.map((method) => (
-                  <MenuItem key={method} value={method}>{method}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Box sx={{ mt: 2, p: { xs: 1.5, sm: 2 }, border: '1px solid #e3e3e3', borderRadius: 2, bgcolor: '#fafafa' }}>
+            <Box sx={{ display: 'grid', gap: 1.2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel id="delivery-order">Recebimento</InputLabel>
+                <Select
+                  labelId="delivery-order"
+                  value={orderPreferences.deliveryMethod}
+                  label="Recebimento"
+                  onChange={(e) => setOrderPreferences((current) => ({ ...current, deliveryMethod: e.target.value }))}
+                >
+                  {deliveryMethods.map((method) => (
+                    <MenuItem key={method} value={method}>{method}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-            <FormControl size="small" sx={{ minWidth: 220 }}>
-              <InputLabel id="offers-order">Deseja receber ofertas no WhatsApp?</InputLabel>
-              <Select
-                labelId="offers-order"
-                value={orderPreferences.receiveOffersOnWhatsApp}
-                label="Deseja receber ofertas no WhatsApp?"
-                onChange={(e) => setOrderPreferences((current) => ({ ...current, receiveOffersOnWhatsApp: e.target.value }))}
-              >
-                <MenuItem value="Sim">Sim</MenuItem>
-                <MenuItem value="Não">Não</MenuItem>
-              </Select>
-            </FormControl>
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel id="offers-order">Deseja receber ofertas no WhatsApp?</InputLabel>
+                <Select
+                  labelId="offers-order"
+                  value={orderPreferences.receiveOffersOnWhatsApp}
+                  label="Deseja receber ofertas no WhatsApp?"
+                  onChange={(e) => setOrderPreferences((current) => ({ ...current, receiveOffersOnWhatsApp: e.target.value }))}
+                >
+                  <MenuItem value="Sim">Sim</MenuItem>
+                  <MenuItem value="Não">Não</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
           </Box>
         ) : null}
 
