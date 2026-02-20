@@ -27,6 +27,14 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/supabaseClient.js'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+      },
+    },
+  },
+  {
     files: ['webpack.config.js'],
     languageOptions: {
       globals: globals.node,
