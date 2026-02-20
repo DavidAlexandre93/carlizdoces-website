@@ -2,7 +2,7 @@ import { Box, Container, Paper, Typography } from '@mui/material'
 
 export function LocationSection() {
   return (
-    <Container id="onde-estamos" maxWidth="lg" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <Container maxWidth="lg" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
         <Box
           component="iframe"

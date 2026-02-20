@@ -46,7 +46,7 @@ export default function TestimonialsSection({ testimonials }) {
   }, [disqusConfig])
 
   return (
-    <Container id="depoimentos" maxWidth="lg" className="testimonials-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <Container maxWidth="lg" className="testimonials-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
       <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 4, maxWidth: 1080, mx: 'auto' }}>
         <Box sx={{ display: 'grid', gap: 1.5 }}>
           {testimonials.map((item) => (
