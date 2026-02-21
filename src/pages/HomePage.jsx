@@ -23,7 +23,8 @@ const InstagramSection = lazy(() => import('../components/sections/InstagramSect
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
-const FEATURED_VIDEO_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview?autoplay=1'
+const FEATURED_VIDEO_EMBED_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview'
+const FEATURED_VIDEO_FALLBACK_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/view'
 const featuredVideoDecorations = [
   { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
   { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
@@ -247,6 +248,23 @@ export function HomePage() {
 
     setOrderProductStep((currentStep) => Math.min(currentStep, orderShowcaseProducts.length - 1))
   }, [orderShowcaseProducts])
+
+  useEffect(() => {
+    if (!isFeaturedVideoOpen) {
+      return undefined
+    }
+
+    setIsFeaturedVideoLoading(true)
+    setIsFeaturedVideoFallbackVisible(false)
+
+    const fallbackTimer = window.setTimeout(() => {
+      setIsFeaturedVideoFallbackVisible(true)
+    }, 5500)
+
+    return () => {
+      window.clearTimeout(fallbackTimer)
+    }
+  }, [isFeaturedVideoOpen])
 
   const whatsappLink = useWhatsAppOrderLink({
     selectedItems,
@@ -869,6 +887,25 @@ export function HomePage() {
           <Typography variant="body2" sx={{ mt: 1, color: 'rgba(111, 39, 71, 0.8)' }}>
             Assista ao nosso vídeo demonstrativo e veja como preparamos nossos doces com qualidade e segurança.
           </Typography>
+          {isFeaturedVideoFallbackVisible && isFeaturedVideoLoading ? (
+            <Alert
+              severity="info"
+              sx={{ mt: 2, borderRadius: 2 }}
+              action={(
+                <Button
+                  color="inherit"
+                  size="small"
+                  href={FEATURED_VIDEO_FALLBACK_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Abrir vídeo
+                </Button>
+              )}
+            >
+              O vídeo está demorando para carregar no modal. Se preferir, abra em uma nova aba.
+            </Alert>
+          ) : null}
         </Box>
         <DialogContent sx={{ pt: 1, pb: 3 }}>
           <Box
@@ -883,10 +920,17 @@ export function HomePage() {
           >
             <Box
               component="iframe"
-              src={FEATURED_VIDEO_URL}
+              src={FEATURED_VIDEO_EMBED_URL}
               title="Vídeo de apresentação Carliz Doces"
+              loading="eager"
+              referrerPolicy="strict-origin-when-cross-origin"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
+              onLoad={() => setIsFeaturedVideoLoading(false)}
+              onError={() => {
+                setIsFeaturedVideoLoading(true)
+                setIsFeaturedVideoFallbackVisible(true)
+              }}
               sx={{
                 width: '100%',
                 aspectRatio: '16 / 9',
