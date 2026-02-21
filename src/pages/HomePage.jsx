@@ -873,15 +873,21 @@ export function HomePage() {
             aria-label="Fechar vídeo em destaque"
             sx={{
               position: 'absolute',
-              top: 10,
-              right: 10,
+              top: 12,
+              right: 12,
+              width: 40,
+              height: 40,
               color: '#7a294f',
-              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
               backdropFilter: 'blur(4px)',
-              '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.9)' },
+              border: '1px solid rgba(255, 126, 169, 0.4)',
+              boxShadow: '0 8px 16px rgba(122, 41, 79, 0.18)',
+              '&:hover': { backgroundColor: '#fff', transform: 'translateY(-1px)' },
             }}
           >
-            ✕
+            <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.15rem', lineHeight: 1 }}>
+              ✕
+            </Box>
           </IconButton>
           <DialogTitle id="featured-video-title" sx={{ p: 0, pr: 5, fontWeight: 800, color: '#8d285a' }}>
             Nosso cantinho doce
