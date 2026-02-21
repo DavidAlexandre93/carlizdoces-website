@@ -172,7 +172,7 @@ export function HomePage() {
   const hasInitializedMenuShowcaseRef = useRef(false)
   const hasInitializedOrderShowcaseRef = useRef(false)
   const [introStage, setIntroStage] = useState('message')
-  const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(true)
+  const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [menuProductStep, setMenuProductStep] = useState(0)
   const [orderProductStep, setOrderProductStep] = useState(0)
@@ -485,6 +485,12 @@ export function HomePage() {
     return () => {
       document.body.style.overflow = previousOverflow
     }
+  }, [introStage])
+
+  useEffect(() => {
+    if (introStage !== 'hidden') return
+
+    setIsFeaturedVideoOpen(true)
   }, [introStage])
 
   useEffect(() => {
