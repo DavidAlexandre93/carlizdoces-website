@@ -174,6 +174,8 @@ export function HomePage() {
   const hasInitializedOrderShowcaseRef = useRef(false)
   const [introStage, setIntroStage] = useState('message')
   const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(false)
+  const [isFeaturedVideoLoading, setIsFeaturedVideoLoading] = useState(true)
+  const [isFeaturedVideoFallbackVisible, setIsFeaturedVideoFallbackVisible] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [menuProductStep, setMenuProductStep] = useState(0)
   const [orderProductStep, setOrderProductStep] = useState(0)
