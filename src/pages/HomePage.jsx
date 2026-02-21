@@ -23,8 +23,8 @@ const InstagramSection = lazy(() => import('../components/sections/InstagramSect
 const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
-const FEATURED_VIDEO_EMBED_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/preview'
-const FEATURED_VIDEO_FALLBACK_URL = 'https://drive.google.com/file/d/1JFAH4ZdvxujVqGn6zVLAV-lL9XnoFq6d/view'
+const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/kXq-YwNHjqA?autoplay=1&mute=1&playsinline=1&rel=0'
+const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/kXq-YwNHjqA?si=VrFheglFQLDbAzD7'
 const featuredVideoDecorations = [
   { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
   { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
