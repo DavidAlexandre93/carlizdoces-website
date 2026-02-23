@@ -25,6 +25,7 @@ const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
+const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
 const featuredVideoDecorations = [
   { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
   { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
@@ -895,6 +896,43 @@ export function HomePage() {
           <Typography variant="body2" sx={{ mt: 1, color: 'rgba(111, 39, 71, 0.8)' }}>
             Assista ao nosso vídeo demonstrativo e veja como preparamos nossos doces com qualidade e segurança.
           </Typography>
+          <Button
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noreferrer"
+            variant="contained"
+            sx={{
+              mt: 2,
+              alignSelf: 'flex-start',
+              borderRadius: 999,
+              px: 3,
+              py: 1,
+              fontWeight: 800,
+              textTransform: 'none',
+              letterSpacing: 0.2,
+              color: '#fff',
+              background: 'linear-gradient(90deg, #ff0077 0%, #ff3366 50%, #ff5f4b 100%)',
+              boxShadow: '0 10px 20px rgba(255, 0, 119, 0.4)',
+              animation: 'googleReviewBlink 1s ease-in-out infinite',
+              '@keyframes googleReviewBlink': {
+                '0%, 100%': {
+                  transform: 'scale(1)',
+                  boxShadow: '0 10px 20px rgba(255, 0, 119, 0.35)',
+                  filter: 'brightness(1)',
+                },
+                '50%': {
+                  transform: 'scale(1.06)',
+                  boxShadow: '0 0 0 6px rgba(255, 0, 119, 0.22), 0 14px 24px rgba(255, 0, 119, 0.5)',
+                  filter: 'brightness(1.2)',
+                },
+              },
+              '&:hover': {
+                background: 'linear-gradient(90deg, #ff0f81 0%, #ff4170 50%, #ff6d55 100%)',
+              },
+            }}
+          >
+            Avalie-nos no Google.
+          </Button>
           {isFeaturedVideoFallbackVisible && isFeaturedVideoLoading ? (
             <Alert
               severity="info"
