@@ -1,6 +1,6 @@
 import { Box, Container, Paper, Typography } from '@mui/material'
 
-const LOCATION_LINK = 'https://share.google/7x6y8b7zJobYbc5b1'
+const LOCATION_LINK = 'https://www.google.com/maps?q=Carliz+Doces,+São+Paulo&output=embed'
 
 export function LocationSection() {
   return (
