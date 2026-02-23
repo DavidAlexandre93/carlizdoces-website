@@ -1,5 +1,7 @@
 import { Box, Container, Paper, Typography } from '@mui/material'
 
+const LOCATION_LINK = 'https://share.google/7x6y8b7zJobYbc5b1'
+
 export function LocationSection() {
   return (
     <Container maxWidth="lg" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
@@ -7,7 +9,7 @@ export function LocationSection() {
         <Box
           component="iframe"
           title="Localização da Carliz Doces"
-          src="https://www.google.com/maps?q=Estr.%20Louis%20Pasteur%2C%20Embu%20das%20Artes%2C%20S%C3%A3o%20Paulo%2C%2006835-700&output=embed"
+          src={LOCATION_LINK}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           sx={{
