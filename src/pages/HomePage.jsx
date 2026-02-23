@@ -667,7 +667,7 @@ export function HomePage() {
           <Box className="intro-curtain-panel intro-curtain-left" />
           <Box className="intro-curtain-panel intro-curtain-right" />
           <Box className="intro-center-content">
-            <Box component="img" src="/images/logo/logo-carlizdoces.jpg" alt="Logo da Carliz Doces" className="intro-logo" />
+            <Box component="img" src="/images/logo/logo-carlizdoces.png" alt="Logo da Carliz Doces" className="intro-logo" />
             <Box className="intro-clown-wrap">
               <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaços anunciando o espetáculo" className="intro-clown" />
               <Box component="p" className="intro-message">Respeeeitável púúúúblico! 🎪✨
