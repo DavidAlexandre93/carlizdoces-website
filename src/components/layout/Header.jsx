@@ -290,6 +290,48 @@ export function Header({
               {activeNotification.title}
             </Typography>
 
+            <Box
+              sx={{
+                mb: 2.5,
+                p: 1.25,
+                borderRadius: 2,
+                textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(255, 82, 82, 0.12), rgba(255, 193, 7, 0.14))',
+                border: '1px solid rgba(255, 82, 82, 0.35)',
+                '@keyframes blinkAttention': {
+                  '0%, 100%': {
+                    opacity: 1,
+                    transform: 'scale(1)',
+                    boxShadow: '0 0 0 rgba(255, 82, 82, 0)',
+                  },
+                  '50%': {
+                    opacity: 0.45,
+                    transform: 'scale(1.02)',
+                    boxShadow: '0 0 22px rgba(255, 82, 82, 0.6)',
+                  },
+                },
+              }}
+            >
+              <Link
+                href="https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3"
+                target="_blank"
+                rel="noopener noreferrer"
+                underline="none"
+                sx={{
+                  display: 'inline-block',
+                  fontSize: { xs: '1rem', sm: '1.1rem' },
+                  fontWeight: 900,
+                  letterSpacing: '0.02em',
+                  color: '#c62828',
+                  textTransform: 'uppercase',
+                  animation: 'blinkAttention 1s infinite',
+                  textShadow: '0 0 8px rgba(255, 82, 82, 0.4)',
+                }}
+              >
+                Avalie-nos no Google.
+              </Link>
+            </Box>
+
             {notificationItems.length > 0 ? (
               <List sx={{ display: 'grid', gap: 1.5, mb: 3 }}>
                 {notificationItems.map((notificationItem) => (
