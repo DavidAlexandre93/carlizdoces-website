@@ -33,6 +33,83 @@
   transition: background-color 320ms ease, color 320ms ease;
 }
 
+.scroll-sugar-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(5px);
+  z-index: 2200;
+}
+
+.scroll-sugar-progress.is-party {
+  box-shadow: 0 0 20px rgba(255, 0, 119, 0.45);
+}
+
+.scroll-sugar-progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ff006e 0%, #ff4f6d 30%, #ff9f1c 60%, #ffd166 100%);
+  transition: width 160ms linear;
+}
+
+.scroll-party-badge {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #ff4f9a 0%, #ff7e5f 100%);
+  color: #fff;
+  font-weight: 800;
+  z-index: 2200;
+  box-shadow: 0 10px 28px rgba(255, 79, 154, 0.4);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+  pointer-events: none;
+}
+
+.scroll-party-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: party-shake 420ms ease-in-out infinite alternate;
+}
+
+.candy-rain-drop {
+  position: fixed;
+  top: -30px;
+  z-index: 2300;
+  pointer-events: none;
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  animation: candy-rain-fall 5s linear forwards;
+  transform: rotate(var(--drop-rotate, 0deg));
+}
+
+.click-candy-burst {
+  position: fixed;
+  z-index: 2300;
+  pointer-events: none;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+  transform: translate(-50%, -50%);
+  animation: click-burst-pop 850ms ease-out forwards;
+}
+
+@keyframes click-burst-pop {
+  0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -145%) scale(1.45) rotate(20deg); }
+}
+
+@keyframes candy-rain-fall {
+  0% { transform: translateY(-2vh) rotate(var(--drop-rotate, 0deg)); opacity: 1; }
+  100% { transform: translateY(112vh) rotate(calc(var(--drop-rotate, 0deg) + 45deg)); opacity: 0.85; }
+}
+
+@keyframes party-shake {
+  from { transform: translateY(0) rotate(-2deg) scale(1); }
+  to { transform: translateY(-2px) rotate(2deg) scale(1.03); }
+}
+
 .section-alt-pink {
   background-color: #f8f8f3 !important;
 }
