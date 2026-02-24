@@ -243,8 +243,22 @@
   gap: 12px;
 }
 
+.intro-clown-card {
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 28px;
+  background: radial-gradient(circle at 30% 20%, #ffffff 0%, #ffe9f5 70%, #ffd7ec 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.intro-clown-card-left,
+.intro-clown-card-right {
+  transform-origin: center bottom;
+}
+
 .intro-clown {
-  width: min(45vw, 280px);
+  width: min(26vw, 160px);
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
 }
 
@@ -319,7 +333,7 @@
   }
 
   .intro-clown {
-    width: min(65vw, 250px);
+    width: min(50vw, 180px);
   }
 
   .intro-message::before,
