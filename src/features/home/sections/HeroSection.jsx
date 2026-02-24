@@ -5,11 +5,6 @@ import gsap from '../../../lib/gsapCompat'
 import { useGSAP } from '../../../lib/gsapCompat'
 
 gsap.registerPlugin(useGSAP)
-import { useEffect, useState } from 'react'
-import { motion } from 'motion/react'
-import SwipeableViews from 'react-swipeable-views'
-import { Box, Button, Chip, Container, Stack, Typography, useTheme } from '@mui/material'
-const MotionDiv = motion.div
 
 export function HeroSection({ topShowcaseSlides }) {
   const heroRef = useRef(null)
@@ -47,8 +42,6 @@ export function HeroSection({ topShowcaseSlides }) {
 
   return (
     <Container ref={heroRef} maxWidth="xl" className="hero section-alt-pink animate__animated animate__fadeIn page-container hero-inner" style={{ '--animate-duration': '900ms' }}>
-    <MotionDiv initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.9, ease: 'easeOut' }}>
-      <Container maxWidth="xl" className="hero section-alt-pink page-container hero-inner">
       <Box className="top-carousel">
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -77,7 +70,6 @@ export function HeroSection({ topShowcaseSlides }) {
           ))}
         </SwipeableViews>
       </Box>
-      </Container>
-    </MotionDiv>
+    </Container>
   )
 }

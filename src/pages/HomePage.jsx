@@ -27,8 +27,6 @@ const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
 const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
-const FIRST_VISIT_STORAGE_KEY = 'carlizdoces:first-visit-seen'
-const scrollCandyIcons = ['🍬', '🍭', '🍫', '🧁', '🍪', '✨', '💖', '🎉']
 const featuredVideoDecorations = [
   { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
   { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
@@ -173,7 +171,6 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
 }
 
 export function HomePage() {
-  const wrapperRef = useRef(null)
   const introScopeRef = useRef(null)
   const hasInitializedMenuShowcaseRef = useRef(false)
   const hasInitializedOrderShowcaseRef = useRef(false)
@@ -200,12 +197,6 @@ export function HomePage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [favoriteProductIds, setFavoriteProductIds] = useState([])
   const [favoriteCounts, setFavoriteCounts] = useState({})
-  const [scrollProgressPercent, setScrollProgressPercent] = useState(0)
-  const [isScrollPartyMode, setIsScrollPartyMode] = useState(false)
-  const [candyRainDrops, setCandyRainDrops] = useState([])
-  const [clickBursts, setClickBursts] = useState([])
-  const [pointerSparkles, setPointerSparkles] = useState([])
-  const [isSugarRushMode, setIsSugarRushMode] = useState(false)
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
@@ -493,31 +484,6 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
-    const hasSeenWebsite = window.localStorage.getItem(FIRST_VISIT_STORAGE_KEY) === 'yes'
-
-    if (!hasSeenWebsite) {
-      setCandyRainDrops(() => Array.from({ length: 30 }, (_, index) => ({
-        id: `first-visit-${index}`,
-        icon: scrollCandyIcons[index % scrollCandyIcons.length],
-        left: `${Math.random() * 96}%`,
-        duration: `${4 + Math.random() * 2.6}s`,
-        delay: `${Math.random() * 1.3}s`,
-        rotate: `${-28 + Math.random() * 56}deg`,
-      })))
-      window.localStorage.setItem(FIRST_VISIT_STORAGE_KEY, 'yes')
-      const firstVisitTimer = window.setTimeout(() => {
-        setCandyRainDrops([])
-      }, 6000)
-
-      return () => {
-        window.clearTimeout(firstVisitTimer)
-      }
-    }
-
-    return undefined
-  }, [])
-
-  useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
       setIntroStage('opening')
     }, 2200)
@@ -578,194 +544,6 @@ export function HomePage() {
       ease: 'power3.out',
     }, introScopeRef.current)
   }, { scope: introScopeRef, dependencies: [introStage] })
-
-  useEffect(() => {
-    const wrapperElement = wrapperRef.current
-    if (!wrapperElement) return undefined
-
-    const handlePointerMove = (event) => {
-      const { clientX, clientY } = event
-      const normalizedX = clientX / window.innerWidth
-      const normalizedY = clientY / window.innerHeight
-
-      wrapperElement.style.setProperty('--pointer-x', normalizedX.toFixed(3))
-      wrapperElement.style.setProperty('--pointer-y', normalizedY.toFixed(3))
-    }
-
-    window.addEventListener('pointermove', handlePointerMove, { passive: true })
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-    }
-  }, [])
-
-  useEffect(() => {
-    let partyTimerId = 0
-
-    const handleScrollEffects = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = scrollHeight > 0 ? Math.round(((window.scrollY || 0) / scrollHeight) * 100) : 0
-
-      setScrollProgressPercent(progress)
-
-      if (progress > 0 && progress % 25 === 0) {
-        setIsScrollPartyMode(true)
-        window.clearTimeout(partyTimerId)
-        partyTimerId = window.setTimeout(() => {
-          setIsScrollPartyMode(false)
-        }, 1300)
-      }
-    }
-
-    handleScrollEffects()
-    window.addEventListener('scroll', handleScrollEffects, { passive: true })
-    window.addEventListener('resize', handleScrollEffects)
-
-    return () => {
-      window.removeEventListener('scroll', handleScrollEffects)
-      window.removeEventListener('resize', handleScrollEffects)
-      window.clearTimeout(partyTimerId)
-    }
-  }, [])
-
-  useEffect(() => {
-    const handleCelebrateClick = (event) => {
-      const burstId = `burst-${Date.now()}-${Math.random().toString(16).slice(2)}`
-      const burst = {
-        id: burstId,
-        x: event.clientX,
-        y: event.clientY,
-        icon: scrollCandyIcons[Math.floor(Math.random() * scrollCandyIcons.length)],
-      }
-
-      setClickBursts((currentBursts) => [...currentBursts, burst])
-
-      window.setTimeout(() => {
-        setClickBursts((currentBursts) => currentBursts.filter((item) => item.id !== burstId))
-      }, 850)
-    }
-
-    window.addEventListener('click', handleCelebrateClick)
-
-    return () => {
-      window.removeEventListener('click', handleCelebrateClick)
-    }
-  }, [])
-
-  useEffect(() => {
-    let lastSpawn = 0
-
-    const handlePointerSparkle = (event) => {
-      const now = Date.now()
-      if (now - lastSpawn < 90) return
-      lastSpawn = now
-
-      const sparkleId = `sparkle-${now}-${Math.random().toString(16).slice(2)}`
-      const sparkle = {
-        id: sparkleId,
-        x: event.clientX,
-        y: event.clientY,
-        icon: Math.random() > 0.5 ? '✨' : '🍬',
-      }
-
-      setPointerSparkles((currentSparkles) => [...currentSparkles.slice(-24), sparkle])
-
-      window.setTimeout(() => {
-        setPointerSparkles((currentSparkles) => currentSparkles.filter((item) => item.id !== sparkleId))
-      }, 900)
-    }
-
-    window.addEventListener('pointermove', handlePointerSparkle, { passive: true })
-
-    return () => {
-      window.removeEventListener('pointermove', handlePointerSparkle)
-    }
-  }, [])
-
-  useEffect(() => {
-    const interactiveElements = Array.from(document.querySelectorAll('button, a, .MuiCard-root, .MuiPaper-root'))
-
-    const activateBounce = (event) => {
-      event.currentTarget.classList.add('sweet-spot-hit')
-    }
-
-    const removeBounce = (event) => {
-      event.currentTarget.classList.remove('sweet-spot-hit')
-    }
-
-    interactiveElements.forEach((element) => {
-      element.addEventListener('mouseenter', activateBounce)
-      element.addEventListener('mouseleave', removeBounce)
-    })
-
-    return () => {
-      interactiveElements.forEach((element) => {
-        element.removeEventListener('mouseenter', activateBounce)
-        element.removeEventListener('mouseleave', removeBounce)
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    const sections = Array.from(document.querySelectorAll('main section, main article, .section-stack > div'))
-    if (!sections.length) return undefined
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('candy-reveal-in')
-          }
-        })
-      },
-      { threshold: 0.2 },
-    )
-
-    sections.forEach((section) => observer.observe(section))
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    let sugarRushTimerId = 0
-    let typedSequence = ''
-
-    const triggerSugarRush = () => {
-      setIsSugarRushMode(true)
-      setCandyRainDrops(() => Array.from({ length: 26 }, (_, index) => ({
-        id: `sugar-rush-${Date.now()}-${index}`,
-        icon: scrollCandyIcons[index % scrollCandyIcons.length],
-        left: `${Math.random() * 96}%`,
-        duration: `${2.8 + Math.random() * 1.8}s`,
-        delay: `${Math.random() * 0.8}s`,
-        rotate: `${-38 + Math.random() * 76}deg`,
-      })))
-
-      window.clearTimeout(sugarRushTimerId)
-      sugarRushTimerId = window.setTimeout(() => {
-        setIsSugarRushMode(false)
-        setCandyRainDrops([])
-      }, 5000)
-    }
-
-    const handleSecretSequence = (event) => {
-      typedSequence = `${typedSequence}${event.key.toLowerCase()}`.slice(-4)
-      if (typedSequence === 'doce') {
-        triggerSugarRush()
-        typedSequence = ''
-      }
-    }
-
-    window.addEventListener('keydown', handleSecretSequence)
-
-    return () => {
-      window.removeEventListener('keydown', handleSecretSequence)
-      window.clearTimeout(sugarRushTimerId)
-    }
-  }, [])
-
 
   useEffect(() => {
     const footerElement = document.querySelector('.footer')
@@ -830,62 +608,6 @@ export function HomePage() {
     }
   }, [])
 
-  useEffect(() => {
-    const wrapperElement = wrapperRef.current
-    if (!wrapperElement) return undefined
-
-    let animationFrameId = 0
-    let targetScrollTop = 0
-    let currentScrollTop = 0
-
-    const speed = 0.12
-
-    const updateScrollMotion = () => {
-      const distance = targetScrollTop - currentScrollTop
-      currentScrollTop += distance * speed
-
-      if (Math.abs(distance) < 0.35) {
-        currentScrollTop = targetScrollTop
-      }
-
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = scrollHeight > 0 ? currentScrollTop / scrollHeight : 0
-
-      wrapperElement.style.setProperty('--scroll-y', `${currentScrollTop.toFixed(1)}px`)
-      wrapperElement.style.setProperty('--scroll-progress', progress.toFixed(4))
-      wrapperElement.style.setProperty('--scroll-wave', Math.sin(progress * Math.PI * 1.2).toFixed(4))
-      wrapperElement.classList.toggle('is-scrolled', currentScrollTop > 32)
-
-      if (Math.abs(targetScrollTop - currentScrollTop) >= 0.35) {
-        animationFrameId = window.requestAnimationFrame(updateScrollMotion)
-      } else {
-        animationFrameId = 0
-      }
-    }
-
-    const handleScroll = () => {
-      targetScrollTop = window.scrollY || window.pageYOffset || 0
-
-      if (!animationFrameId) {
-        animationFrameId = window.requestAnimationFrame(updateScrollMotion)
-      }
-    }
-
-    targetScrollTop = window.scrollY || window.pageYOffset || 0
-    currentScrollTop = targetScrollTop
-    updateScrollMotion()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll)
-
-    return () => {
-      if (animationFrameId) {
-        window.cancelAnimationFrame(animationFrameId)
-      }
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
-
   const revealAnimation = {
     initial: { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
@@ -894,45 +616,7 @@ export function HomePage() {
   }
 
   return (
-    <Box id="top" ref={wrapperRef} className="site-wrapper">
-      <Box className={`scroll-sugar-progress ${isScrollPartyMode ? 'is-party' : ''}`}>
-        <Box className="scroll-sugar-progress-bar" sx={{ width: `${scrollProgressPercent}%` }} />
-      </Box>
-
-      <Box className={`scroll-party-badge ${isScrollPartyMode ? 'is-visible' : ''}`}>
-        Festa doce ativada! 🎊
-      </Box>
-
-      <Box className={`sugar-rush-badge ${isSugarRushMode ? 'is-visible' : ''}`}>
-        Modo Sugar Rush ativado! 🍭 Digite D O C E
-      </Box>
-
-      {candyRainDrops.map((drop) => (
-        <Box
-          key={drop.id}
-          className="candy-rain-drop"
-          sx={{
-            left: drop.left,
-            animationDuration: drop.duration,
-            animationDelay: drop.delay,
-            '--drop-rotate': drop.rotate,
-          }}
-        >
-          {drop.icon}
-        </Box>
-      ))}
-
-      {clickBursts.map((burst) => (
-        <Box key={burst.id} className="click-candy-burst" sx={{ left: burst.x, top: burst.y }}>
-          {burst.icon}
-        </Box>
-      ))}
-
-      {pointerSparkles.map((sparkle) => (
-        <Box key={sparkle.id} className="pointer-sparkle" sx={{ left: sparkle.x, top: sparkle.y }}>
-          {sparkle.icon}
-        </Box>
-      ))}
+    <Box id="top" className="site-wrapper">
 
       {introStage !== 'hidden' && (
         <Box ref={introScopeRef} className={`intro-curtain intro-curtain-${introStage}`}>

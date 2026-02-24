@@ -1,7 +1,5 @@
 import SwipeableViews from 'react-swipeable-views'
 import { useRef, useState } from 'react'
-import { useState } from 'react'
-import { motion } from 'motion/react'
 import ShareIcon from '../../../mui-icons/Share'
 import LikeButton from '../../../components/LikeButton'
 import {
@@ -25,8 +23,6 @@ import gsap from '../../../lib/gsapCompat'
 import { useGSAP } from '../../../lib/gsapCompat'
 
 gsap.registerPlugin(useGSAP)
-
-const MotionDiv = motion.div
 
 export function ShowcaseSection({
   BRL,
@@ -60,7 +56,7 @@ export function ShowcaseSection({
   const traditionalProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-tradicionais/'))
   const fineProducts = visibleShowcaseProducts.filter((item) => item.image.includes('/pedidos-de-doces/doces-finos/'))
   const otherProducts = visibleShowcaseProducts.filter(
-    (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/')
+    (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/'),
   )
 
   useGSAP((context) => {
@@ -117,8 +113,6 @@ export function ShowcaseSection({
 
   return (
     <Container ref={showcaseRef} maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
-    <MotionDiv initial={{ opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
-      <Container maxWidth="md" className="photo-band section-alt-pink page-container showcase-section-container">
       <header className="photo-band-head">
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
           <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
@@ -212,7 +206,6 @@ export function ShowcaseSection({
                 <span className={`showcase-arrow-icon ${theme.direction === 'rtl' ? 'showcase-arrow-icon-prev' : 'showcase-arrow-icon-next'}`} />
               </IconButton>
             </>
-
           </Box>
           <Typography variant="h5">{selectedShowcaseProduct.name}</Typography>
           <Typography variant="body2">{selectedShowcaseProduct.flavor} • {selectedShowcaseProduct.weight}</Typography>
@@ -257,8 +250,6 @@ export function ShowcaseSection({
       ) : (
         <Alert severity="info" sx={{ mt: 2 }}>Nenhum produto para o filtro atual.</Alert>
       )}
-
-      </Container>
-    </MotionDiv>
+    </Container>
   )
 }
