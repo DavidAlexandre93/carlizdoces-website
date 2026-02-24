@@ -26,6 +26,8 @@ const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
 const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
+const FIRST_VISIT_STORAGE_KEY = 'carlizdoces:first-visit-seen'
+const scrollCandyIcons = ['🍬', '🍭', '🍫', '🧁', '🍪', '✨', '💖', '🎉']
 const featuredVideoDecorations = [
   { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
   { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
@@ -196,6 +198,10 @@ export function HomePage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [favoriteProductIds, setFavoriteProductIds] = useState([])
   const [favoriteCounts, setFavoriteCounts] = useState({})
+  const [scrollProgressPercent, setScrollProgressPercent] = useState(0)
+  const [isScrollPartyMode, setIsScrollPartyMode] = useState(false)
+  const [candyRainDrops, setCandyRainDrops] = useState([])
+  const [clickBursts, setClickBursts] = useState([])
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
@@ -483,6 +489,31 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
+    const hasSeenWebsite = window.localStorage.getItem(FIRST_VISIT_STORAGE_KEY) === 'yes'
+
+    if (!hasSeenWebsite) {
+      setCandyRainDrops(() => Array.from({ length: 30 }, (_, index) => ({
+        id: `first-visit-${index}`,
+        icon: scrollCandyIcons[index % scrollCandyIcons.length],
+        left: `${Math.random() * 96}%`,
+        duration: `${4 + Math.random() * 2.6}s`,
+        delay: `${Math.random() * 1.3}s`,
+        rotate: `${-28 + Math.random() * 56}deg`,
+      })))
+      window.localStorage.setItem(FIRST_VISIT_STORAGE_KEY, 'yes')
+      const firstVisitTimer = window.setTimeout(() => {
+        setCandyRainDrops([])
+      }, 6000)
+
+      return () => {
+        window.clearTimeout(firstVisitTimer)
+      }
+    }
+
+    return undefined
+  }, [])
+
+  useEffect(() => {
     const openingTimerId = window.setTimeout(() => {
       setIntroStage('opening')
     }, 2200)
@@ -531,6 +562,59 @@ export function HomePage() {
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove)
+    }
+  }, [])
+
+  useEffect(() => {
+    let partyTimerId = 0
+
+    const handleScrollEffects = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = scrollHeight > 0 ? Math.round(((window.scrollY || 0) / scrollHeight) * 100) : 0
+
+      setScrollProgressPercent(progress)
+
+      if (progress > 0 && progress % 25 === 0) {
+        setIsScrollPartyMode(true)
+        window.clearTimeout(partyTimerId)
+        partyTimerId = window.setTimeout(() => {
+          setIsScrollPartyMode(false)
+        }, 1300)
+      }
+    }
+
+    handleScrollEffects()
+    window.addEventListener('scroll', handleScrollEffects, { passive: true })
+    window.addEventListener('resize', handleScrollEffects)
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollEffects)
+      window.removeEventListener('resize', handleScrollEffects)
+      window.clearTimeout(partyTimerId)
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleCelebrateClick = (event) => {
+      const burstId = `burst-${Date.now()}-${Math.random().toString(16).slice(2)}`
+      const burst = {
+        id: burstId,
+        x: event.clientX,
+        y: event.clientY,
+        icon: scrollCandyIcons[Math.floor(Math.random() * scrollCandyIcons.length)],
+      }
+
+      setClickBursts((currentBursts) => [...currentBursts, burst])
+
+      window.setTimeout(() => {
+        setClickBursts((currentBursts) => currentBursts.filter((item) => item.id !== burstId))
+      }, 850)
+    }
+
+    window.addEventListener('click', handleCelebrateClick)
+
+    return () => {
+      window.removeEventListener('click', handleCelebrateClick)
     }
   }, [])
 
@@ -663,6 +747,35 @@ export function HomePage() {
 
   return (
     <Box id="top" ref={wrapperRef} className="site-wrapper">
+      <Box className={`scroll-sugar-progress ${isScrollPartyMode ? 'is-party' : ''}`}>
+        <Box className="scroll-sugar-progress-bar" sx={{ width: `${scrollProgressPercent}%` }} />
+      </Box>
+
+      <Box className={`scroll-party-badge ${isScrollPartyMode ? 'is-visible' : ''}`}>
+        Festa doce ativada! 🎊
+      </Box>
+
+      {candyRainDrops.map((drop) => (
+        <Box
+          key={drop.id}
+          className="candy-rain-drop"
+          sx={{
+            left: drop.left,
+            animationDuration: drop.duration,
+            animationDelay: drop.delay,
+            '--drop-rotate': drop.rotate,
+          }}
+        >
+          {drop.icon}
+        </Box>
+      ))}
+
+      {clickBursts.map((burst) => (
+        <Box key={burst.id} className="click-candy-burst" sx={{ left: burst.x, top: burst.y }}>
+          {burst.icon}
+        </Box>
+      ))}
+
       {introStage !== 'hidden' && (
         <Box className={`intro-curtain intro-curtain-${introStage}`}>
           <Box className="intro-curtain-panel intro-curtain-left" />
