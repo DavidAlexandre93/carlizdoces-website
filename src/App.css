@@ -94,10 +94,59 @@
   animation: click-burst-pop 850ms ease-out forwards;
 }
 
+.pointer-sparkle {
+  position: fixed;
+  z-index: 2290;
+  pointer-events: none;
+  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  transform: translate(-50%, -50%);
+  animation: pointer-sparkle-float 900ms ease-out forwards;
+}
+
+.sugar-rush-badge {
+  position: fixed;
+  top: 54px;
+  right: 18px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 2px solid #fff4c4;
+  background: linear-gradient(120deg, #ff4f9a 0%, #ff9f1c 100%);
+  color: #fff;
+  font-weight: 800;
+  z-index: 2200;
+  box-shadow: 0 10px 28px rgba(255, 91, 46, 0.4);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+  pointer-events: none;
+}
+
+.sugar-rush-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: party-shake 360ms ease-in-out infinite alternate;
+}
+
+.sweet-spot-hit {
+  animation: sweet-spot-bounce 520ms ease;
+}
+
+.section-stack > div {
+  transition: transform 380ms ease, filter 380ms ease;
+}
+
+.section-stack > div.candy-reveal-in {
+  animation: candy-section-reveal 700ms ease;
+}
+
 @keyframes click-burst-pop {
   0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); }
   80% { opacity: 1; }
   100% { opacity: 0; transform: translate(-50%, -145%) scale(1.45) rotate(20deg); }
+}
+
+@keyframes pointer-sparkle-float {
+  0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.45) rotate(0deg); }
+  100% { opacity: 0; transform: translate(-50%, -120%) scale(1.25) rotate(16deg); }
 }
 
 @keyframes candy-rain-fall {
@@ -108,6 +157,17 @@
 @keyframes party-shake {
   from { transform: translateY(0) rotate(-2deg) scale(1); }
   to { transform: translateY(-2px) rotate(2deg) scale(1.03); }
+}
+
+@keyframes sweet-spot-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.04) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes candy-section-reveal {
+  0% { transform: translateY(20px) scale(0.98); filter: saturate(0.8); }
+  100% { transform: translateY(0) scale(1); filter: saturate(1); }
 }
 
 .section-alt-pink {
