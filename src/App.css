@@ -2770,3 +2770,82 @@ body {
     min-height: auto;
   }
 }
+
+.hero-inner {
+  --hero-pointer-x: 0.5;
+  --hero-pointer-y: 0.5;
+}
+
+.hero-slide-glass-card {
+  overflow: hidden;
+  transform: perspective(800px)
+    rotateX(calc((var(--hero-pointer-y) - 0.5) * -3deg))
+    rotateY(calc((var(--hero-pointer-x) - 0.5) * 3deg));
+}
+
+.hero-slide-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.18) 35%, transparent 65%);
+  transform: translateX(-120%);
+  animation: hero-shimmer 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero-progress-track {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 8;
+  overflow: hidden;
+}
+
+.hero-progress-value {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffd166 0%, #ff8fab 45%, #ff5d8f 100%);
+}
+
+.showcase-image-stage {
+  --stage-pointer-x: 0.5;
+  --stage-pointer-y: 0.5;
+  transform: perspective(900px)
+    rotateX(calc((var(--stage-pointer-y) - 0.5) * -4deg))
+    rotateY(calc((var(--stage-pointer-x) - 0.5) * 4deg));
+}
+
+.showcase-image-light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at calc(var(--stage-pointer-x) * 100%) calc(var(--stage-pointer-y) * 100%), rgba(255, 255, 255, 0.55), transparent 45%);
+}
+
+.showcase-glow-dot {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+.showcase-glow-dot-left {
+  top: 10px;
+  left: 12px;
+}
+
+.showcase-glow-dot-right {
+  right: 12px;
+  bottom: 10px;
+}
+
+@keyframes hero-shimmer {
+  0% { transform: translateX(-120%); }
+  55%, 100% { transform: translateX(120%); }
+}
