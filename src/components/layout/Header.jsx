@@ -24,6 +24,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { activeNotification } from '../../data/notifications'
+import { useGoogleTranslate } from '../../hooks/useGoogleTranslate'
 
 const NOTIFICATION_READ_STORAGE_KEY = `carlizdoces:notification:${activeNotification.id}:read`
 
@@ -42,6 +43,13 @@ export function Header({
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
   const notificationItems = activeNotification.items ?? []
+  const { selectedLanguage, applyLanguage } = useGoogleTranslate()
+  const languageFlags = [
+    { language: 'en', label: 'English', flag: '🇺🇸' },
+    { language: 'pt', label: 'Português', flag: '🇧🇷' },
+    { language: 'es', label: 'Español', flag: '🇪🇸' },
+    { language: 'fr', label: 'Français', flag: '🇫🇷' },
+  ]
 
   useEffect(() => {
     if (!isMobileNavigation && isMobileMenuOpen) {
@@ -198,6 +206,20 @@ export function Header({
             )}
 
             <Box className="topbar-actions">
+              <Box className="topbar-language-switcher" aria-label="Selecionar idioma">
+                {languageFlags.map((item) => (
+                  <Tooltip key={item.language} title={item.label} arrow>
+                    <IconButton
+                      color="inherit"
+                      className={`language-flag-button ${selectedLanguage === item.language ? 'is-active' : ''}`}
+                      aria-label={`Traduzir para ${item.label}`}
+                      onClick={() => applyLanguage(item.language)}
+                    >
+                      <span aria-hidden="true">{item.flag}</span>
+                    </IconButton>
+                  </Tooltip>
+                ))}
+              </Box>
 
               <Tooltip title="Ver notificações" arrow>
                 <Badge
