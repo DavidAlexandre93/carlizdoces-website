@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './animate.css'
 import './index.css'
 import App from './App.jsx'
 import { AppProviders } from './app/providers/AppProviders'

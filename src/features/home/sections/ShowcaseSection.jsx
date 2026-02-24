@@ -1,5 +1,6 @@
 import SwipeableViews from 'react-swipeable-views'
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import ShareIcon from '../../../mui-icons/Share'
 import LikeButton from '../../../components/LikeButton'
 import {
@@ -19,6 +20,8 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+
+const MotionDiv = motion.div
 
 export function ShowcaseSection({
   BRL,
@@ -83,7 +86,8 @@ export function ShowcaseSection({
   )
 
   return (
-    <Container maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
+      <Container maxWidth="md" className="photo-band section-alt-pink page-container showcase-section-container">
       <header className="photo-band-head">
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
           <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
@@ -223,6 +227,7 @@ export function ShowcaseSection({
         <Alert severity="info" sx={{ mt: 2 }}>Nenhum produto para o filtro atual.</Alert>
       )}
 
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }
