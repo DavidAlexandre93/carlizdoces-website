@@ -1,4 +1,6 @@
 import { Box, Button, Chip, Container, Paper, TextField, Typography } from '@mui/material'
+import { motion } from 'motion/react'
+const MotionDiv = motion.div
 
 export default function ContactSection({
   contactForm,
@@ -12,7 +14,8 @@ export default function ContactSection({
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
   return (
-    <Container maxWidth="lg" className="contact-hero section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="lg" className="contact-hero section-alt-gray">
       <Paper
         component="form"
         onSubmit={onSubmit}
@@ -90,6 +93,7 @@ export default function ContactSection({
           </Typography>
         ) : null}
       </Paper>
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }

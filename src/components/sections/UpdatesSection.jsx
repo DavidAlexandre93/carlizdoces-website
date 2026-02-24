@@ -1,4 +1,6 @@
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
+import { motion } from 'motion/react'
+const MotionDiv = motion.div
 
 const typeStyles = {
   promocao: { label: 'Promoção', color: 'secondary' },
@@ -10,7 +12,8 @@ const typeStyles = {
 
 export default function UpdatesSection({ updates, announcementChannels }) {
   return (
-    <Container maxWidth="xl" className="updates-section section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '700ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="xl" className="updates-section section-alt-pink page-container">
       <Box className="updates-grid">
         {updates.map((item) => {
           const type = typeStyles[item.type] ?? typeStyles.geral
@@ -56,6 +59,7 @@ export default function UpdatesSection({ updates, announcementChannels }) {
           ))}
         </Stack>
       </Paper>
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }

@@ -1,8 +1,11 @@
 import { Box, Button, Container, Link, Paper, Typography } from '@mui/material'
+import { motion } from 'motion/react'
+const MotionDiv = motion.div
 
 export default function InstagramSection({ instagramPosts, instagramProfileLink }) {
   return (
-    <Container maxWidth="xl" className="instagram-section section-alt-pink animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '700ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="xl" className="instagram-section section-alt-pink page-container">
       <header className="instagram-header">
         <Typography component="p" variant="body1">Confira nosso perfil e acompanhe as novidades.</Typography>
         <Button variant="contained" color="secondary" href={instagramProfileLink} target="_blank" rel="noreferrer" sx={{ mt: 1 }}>
@@ -19,6 +22,7 @@ export default function InstagramSection({ instagramPosts, instagramProfileLink 
           </Paper>
         ))}
       </Box>
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }

@@ -1,4 +1,6 @@
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
+import { motion } from 'motion/react'
+const MotionDiv = motion.div
 
 export function OrderSection({
   BRL,
@@ -19,7 +21,8 @@ export function OrderSection({
   const canShowConfirmButton = orderCustomer.name.trim() && orderCustomer.phone.trim() && totalItems > 0
 
   return (
-    <Container maxWidth="lg" className="order-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="lg" className="order-section section-alt-gray">
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
         <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
           <TextField label="Nome" value={orderCustomer.name} onChange={(e) => setOrderCustomer((c) => ({ ...c, name: e.target.value }))} />
@@ -118,6 +121,7 @@ export function OrderSection({
           </Button>
         ) : null}
       </Paper>
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }
