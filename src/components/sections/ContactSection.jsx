@@ -1,5 +1,8 @@
+import { useRef } from 'react'
 import { Box, Button, Chip, Container, Paper, TextField, Typography } from '@mui/material'
 import { motion } from 'motion/react'
+import gsap, { useGSAP } from '../../lib/gsapCompat'
+
 const MotionDiv = motion.div
 
 export default function ContactSection({
@@ -11,14 +14,22 @@ export default function ContactSection({
   contactTipOpen,
   onToggleTip,
 }) {
+  const sectionRef = useRef(null)
   const isSubmitDisabled = !contactForm.name.trim() || !contactForm.message.trim()
 
+  useGSAP((context) => {
+    gsap.from('.contact-chip', { x: -18, opacity: 0, duration: 0.55, ease: 'power2.out' }, context.scope)
+    gsap.from('.contact-input', { y: 18, opacity: 0, duration: 0.6, stagger: 0.06, ease: 'power2.out' }, context.scope)
+    gsap.to('.contact-form-paper', { y: -6, duration: 2.8, repeat: -1, yoyo: true, ease: 'sine.inOut' }, context.scope)
+  }, { scope: sectionRef, dependencies: [contactTipOpen] })
+
   return (
-    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+    <MotionDiv ref={sectionRef} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
       <Container maxWidth="lg" className="contact-hero section-alt-gray">
       <Paper
         component="form"
         onSubmit={onSubmit}
+        className="contact-form-paper"
         sx={{
           p: { xs: 2.5, md: 4 },
           borderRadius: 5,
@@ -33,6 +44,7 @@ export default function ContactSection({
       >
         <Box sx={{ mb: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
           <Chip
+            className="contact-chip"
             label="Atendimento personalizado"
             size="small"
             sx={{
@@ -56,6 +68,7 @@ export default function ContactSection({
             variant="outlined"
             value={contactForm.name}
             onChange={(e) => onChange('name', e.target.value)}
+            className="contact-input"
             slotProps={{ inputLabel: { shrink: true } }}
           />
           <TextField
@@ -65,6 +78,7 @@ export default function ContactSection({
             variant="outlined"
             value={contactForm.email}
             onChange={(e) => onChange('email', e.target.value)}
+            className="contact-input"
             slotProps={{ inputLabel: { shrink: true } }}
           />
           <TextField
@@ -75,6 +89,7 @@ export default function ContactSection({
             onChange={(e) => onChange('message', e.target.value)}
             multiline
             minRows={4}
+            className="contact-input"
             sx={{ gridColumn: '1 / -1' }}
             slotProps={{ inputLabel: { shrink: true } }}
           />
