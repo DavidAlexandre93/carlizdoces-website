@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { Box, Container, Typography } from '@mui/material'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
+import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
 gsap.registerPlugin(useGSAP)
 const MotionDiv = motion.div
@@ -41,6 +42,17 @@ export function AboutSection() {
         <Box className="about-clown-dialog">
           <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço da Carliz Doces" className="about-clown-image" />
           <Box className="about-message-bubble">
+            <TypingEffectText
+              component="h2"
+              className="about-typing-title"
+              phrases={[
+                'Doces com alma de espetáculo',
+                'Carinho, sabor e alegria em cada detalhe',
+              ]}
+              typingSpeed={48}
+              deletingSpeed={30}
+              pauseMs={1900}
+            />
             <Typography component="p" variant="body1" className="about-message-inline">
               “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨
               Nóóós somos a Carliz Doces e fazemos docinhos prontinhos para entrega, para deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”

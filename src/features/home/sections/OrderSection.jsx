@@ -1,5 +1,6 @@
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 import { motion } from 'motion/react'
+import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 const MotionDiv = motion.div
 
 export function OrderSection({
@@ -24,6 +25,17 @@ export function OrderSection({
     <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
       <Container maxWidth="lg" className="order-section section-alt-gray">
       <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
+        <TypingEffectText
+          component="h2"
+          className="order-typing-title"
+          phrases={[
+            'Monte seu pedido com efeito wow ✨',
+            'Preencha os dados e confirme pelo WhatsApp',
+          ]}
+          typingSpeed={50}
+          deletingSpeed={32}
+          pauseMs={2100}
+        />
         <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
           <TextField label="Nome" value={orderCustomer.name} onChange={(e) => setOrderCustomer((c) => ({ ...c, name: e.target.value }))} />
           <TextField label="WhatsApp" value={orderCustomer.phone} onChange={(e) => setOrderCustomer((c) => ({ ...c, phone: e.target.value }))} />
