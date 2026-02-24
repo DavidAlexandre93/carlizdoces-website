@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import SwipeableViews from 'react-swipeable-views'
-import { Box, Button, Chip, Container, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Chip, Container, Stack, useTheme } from '@mui/material'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
+import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
 const MotionDiv = motion.div
 
@@ -56,7 +57,17 @@ export function HeroSection({ topShowcaseSlides }) {
                   <img src={slide.imageUrl} alt={slide.alt} />
                   <div>
                     <Chip label={slide.tag} color="secondary" size="small" />
-                    <Typography component="h1" className="hero-lamp-title">{slide.title}</Typography>
+                    <TypingEffectText
+                      component="h1"
+                      className="hero-lamp-title"
+                      phrases={index === activeStep
+                        ? [slide.title, 'Doces artesanais para momentos inesquecíveis', 'Faça sua encomenda com carinho 🍬']
+                        : [slide.title]}
+                      typingSpeed={46}
+                      deletingSpeed={28}
+                      pauseMs={2200}
+                      loop={index === activeStep}
+                    />
                     <Stack direction="row" spacing={1.5} className="hero-quick-actions">
                       <Button variant="contained" color="secondary" component="a" href="#realizar-pedido">
                         Fazer pedido

@@ -910,6 +910,17 @@ body {
   animation: lamp-blink 1.15s steps(2, end) infinite;
 }
 
+.typing-effect-content {
+  display: inline;
+}
+
+.typing-effect-cursor {
+  display: inline-block;
+  margin-left: 0.08em;
+  color: currentColor;
+  font-weight: 800;
+}
+
 .top-carousel-slide span {
   font-size: clamp(14px, 2.6vw, 19px);
 }
@@ -993,6 +1004,14 @@ body {
   font-size: clamp(20px, 3.9vw, 34px);
 }
 
+
+.about-typing-title {
+  margin: 0 0 10px;
+  display: block;
+  font-size: clamp(22px, 4.1vw, 36px);
+  color: #ad1457;
+  text-align: left;
+}
 
 .about-message-inline {
   margin: 0;
@@ -1509,6 +1528,13 @@ body {
 .order-section h2 {
   font-size: clamp(34px, 5.4vw, 54px);
   margin: 0 0 12px;
+}
+
+.order-typing-title {
+  display: block;
+  margin: 0 0 18px;
+  color: #8a2f5b;
+  text-shadow: 0 2px 8px rgba(212, 76, 141, 0.2);
 }
 
 .order-section p {
