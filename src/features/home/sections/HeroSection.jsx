@@ -1,11 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import { Box, Button, Chip, Container, Stack, Typography, useTheme } from '@mui/material'
+import gsap from '../../../lib/gsapCompat'
+import { useGSAP } from '../../../lib/gsapCompat'
+
+gsap.registerPlugin(useGSAP)
 
 export function HeroSection({ topShowcaseSlides }) {
+  const heroRef = useRef(null)
   const theme = useTheme()
   const [activeStep, setActiveStep] = useState(0)
   const maxSteps = topShowcaseSlides.length
+
+  useGSAP((context) => {
+    const introTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+    introTimeline
+      .from('.hero-lamp-title', { y: 22, opacity: 0, duration: 0.7 }, context.scope)
+      .from('.hero-quick-actions > *', { y: 14, opacity: 0, duration: 0.5, stagger: 0.1 }, context.scope)
+
+    gsap.to('.mui-carousel-stage.is-active img', {
+      scale: 1.04,
+      duration: 6,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    }, context.scope)
+  }, { scope: heroRef, dependencies: [activeStep] })
 
   useEffect(() => {
     if (maxSteps <= 1) {
@@ -20,7 +41,7 @@ export function HeroSection({ topShowcaseSlides }) {
   }, [maxSteps])
 
   return (
-    <Container maxWidth="xl" className="hero section-alt-pink animate__animated animate__fadeIn page-container hero-inner" style={{ '--animate-duration': '900ms' }}>
+    <Container ref={heroRef} maxWidth="xl" className="hero section-alt-pink animate__animated animate__fadeIn page-container hero-inner" style={{ '--animate-duration': '900ms' }}>
       <Box className="top-carousel">
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}

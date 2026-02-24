@@ -1,5 +1,5 @@
 import SwipeableViews from 'react-swipeable-views'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ShareIcon from '../../../mui-icons/Share'
 import LikeButton from '../../../components/LikeButton'
 import {
@@ -19,6 +19,10 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import gsap from '../../../lib/gsapCompat'
+import { useGSAP } from '../../../lib/gsapCompat'
+
+gsap.registerPlugin(useGSAP)
 
 export function ShowcaseSection({
   BRL,
@@ -39,6 +43,7 @@ export function ShowcaseSection({
   isGlobalRatingsActive,
   disablePrevAtLast = false,
 }) {
+  const showcaseRef = useRef(null)
   const [isFlavorSelectOpen, setIsFlavorSelectOpen] = useState(false)
   const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
@@ -53,6 +58,30 @@ export function ShowcaseSection({
   const otherProducts = visibleShowcaseProducts.filter(
     (item) => !item.image.includes('/pedidos-de-doces/doces-tradicionais/') && !item.image.includes('/pedidos-de-doces/doces-finos/')
   )
+
+  useGSAP((context) => {
+    gsap.from('.showcase-card', {
+      y: 36,
+      opacity: 0,
+      duration: 0.85,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.showcase-section-container',
+        start: 'top 78%',
+      },
+    }, context.scope)
+
+    gsap.to('.showcase-image-stage', {
+      yPercent: -6,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.showcase-section-container',
+        scrub: 0.8,
+        start: 'top bottom',
+        end: 'bottom top',
+      },
+    }, context.scope)
+  }, { scope: showcaseRef, dependencies: [activeProductStep] })
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -83,7 +112,7 @@ export function ShowcaseSection({
   )
 
   return (
-    <Container maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
+    <Container ref={showcaseRef} maxWidth="md" className="photo-band section-alt-pink animate__animated animate__fadeInUp page-container showcase-section-container" style={{ '--animate-duration': '750ms' }}>
       <header className="photo-band-head">
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 300 }, mt: 1.5 }}>
           <InputLabel id="showcase-select-label">Selecionar sabor</InputLabel>
