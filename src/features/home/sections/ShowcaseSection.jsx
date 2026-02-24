@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import {
   Alert,
@@ -44,6 +44,7 @@ export function ShowcaseSection({
   disablePrevAtLast = false,
 }) {
   const showcaseRef = useRef(null)
+  const imageStageRef = useRef(null)
   const [isFlavorSelectOpen, setIsFlavorSelectOpen] = useState(false)
   const theme = useTheme()
   const ratingStats = selectedShowcaseProduct ? productRatings?.[selectedShowcaseProduct.id] : null
@@ -62,7 +63,41 @@ export function ShowcaseSection({
     gsap.from('.showcase-card', { y: 34, opacity: 0, duration: 0.8, ease: 'power3.out' }, context.scope)
     gsap.from('.showcase-product-meta > *', { y: 14, opacity: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out' }, context.scope)
     gsap.to('.showcase-image.is-active', { scale: 1.05, duration: 3.8, yoyo: true, repeat: -1, ease: 'sine.inOut' }, context.scope)
+    gsap.to('.showcase-glow-dot', { y: -8, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut', stagger: 0.18 }, context.scope)
   }, { scope: showcaseRef, dependencies: [activeProductStep, selectedShowcaseProduct?.id] })
+
+  useEffect(() => {
+    const stage = imageStageRef.current
+    if (!stage) return undefined
+
+    const handlePointerMove = (event) => {
+      const rect = stage.getBoundingClientRect()
+      const px = (event.clientX - rect.left) / rect.width
+      const py = (event.clientY - rect.top) / rect.height
+
+      stage.style.setProperty('--stage-pointer-x', String(px.toFixed(3)))
+      stage.style.setProperty('--stage-pointer-y', String(py.toFixed(3)))
+
+      gsap.to('.showcase-image.is-active', {
+        x: (px - 0.5) * 10,
+        y: (py - 0.5) * 8,
+        duration: 0.28,
+        ease: 'power2.out',
+      }, stage)
+    }
+
+    const resetStage = () => {
+      gsap.to('.showcase-image.is-active', { x: 0, y: 0, duration: 0.35, ease: 'power2.out' }, stage)
+    }
+
+    stage.addEventListener('pointermove', handlePointerMove)
+    stage.addEventListener('pointerleave', resetStage)
+
+    return () => {
+      stage.removeEventListener('pointermove', handlePointerMove)
+      stage.removeEventListener('pointerleave', resetStage)
+    }
+  }, [activeProductStep])
 
   const handlePreviousProduct = () => {
     if (isPrevArrowDisabled) return
@@ -124,7 +159,10 @@ export function ShowcaseSection({
 
       {selectedShowcaseProduct ? (
         <Paper className="showcase-card" sx={{ p: { xs: 1.25, sm: 1.5 } }}>
-          <Box className="showcase-image-stage">
+          <Box ref={imageStageRef} className="showcase-image-stage">
+            <Box className="showcase-image-light" />
+            <Box className="showcase-glow-dot showcase-glow-dot-left">✨</Box>
+            <Box className="showcase-glow-dot showcase-glow-dot-right">⭐</Box>
             <SwipeableViews axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'} index={activeProductStep} onChangeIndex={setActiveProductStep} enableMouseEvents>
               {visibleShowcaseProducts.map((product, index) => (
                 <motion.img
