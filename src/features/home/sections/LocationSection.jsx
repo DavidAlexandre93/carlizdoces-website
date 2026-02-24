@@ -1,11 +1,14 @@
 import { Box, Container, Paper, Typography } from '@mui/material'
+import { motion } from 'motion/react'
+const MotionDiv = motion.div
 
 const LOCATION_LINK = 'https://www.google.com/maps?q=Carliz+Doces,+São+Paulo&output=embed'
 
 export function LocationSection() {
   return (
-    <Container maxWidth="lg" className="content-block section-alt-pink centered animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
-      <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="lg" className="content-block section-alt-pink centered">
+        <Paper sx={{ p: 3, borderRadius: 3, maxWidth: 1080, mx: 'auto' }}>
         <Box
           component="iframe"
           title="Localização da Carliz Doces"
@@ -31,7 +34,8 @@ export function LocationSection() {
         >
           Atendimento em São Paulo-capital e região metropolitana.
         </Typography>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+    </MotionDiv>
   )
 }

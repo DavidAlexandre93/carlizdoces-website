@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react'
+import { motion } from 'motion/react'
 import { Alert, Box, Container, Link, Paper, Typography } from '@mui/material'
+const MotionDiv = motion.div
 
 const DISQUS_SHORTNAME = import.meta.env.VITE_DISQUS_SHORTNAME || 'zeroreprovacao'
 
@@ -46,7 +48,8 @@ export default function TestimonialsSection({ testimonials }) {
   }, [disqusConfig])
 
   return (
-    <Container maxWidth="lg" className="testimonials-section section-alt-gray animate__animated animate__fadeInUp" style={{ '--animate-duration': '700ms' }}>
+    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+      <Container maxWidth="lg" className="testimonials-section section-alt-gray">
       <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 4, maxWidth: 1080, mx: 'auto' }}>
         <Box sx={{ display: 'grid', gap: 1.5 }}>
           {testimonials.map((item) => (
@@ -84,6 +87,7 @@ export default function TestimonialsSection({ testimonials }) {
           )}
         </Box>
       </Paper>
-    </Container>
+      </Container>
+    </MotionDiv>
   )
 }
