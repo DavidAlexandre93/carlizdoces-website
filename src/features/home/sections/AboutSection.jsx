@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { Box, Container, Typography } from '@mui/material'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
 
+gsap.registerPlugin(useGSAP)
 const MotionDiv = motion.div
 
 gsap.registerPlugin(useGSAP)
@@ -27,6 +28,14 @@ export function AboutSection() {
   }, { scope: aboutRef })
 
   return (
+    <Container ref={aboutRef} maxWidth="lg" className="summary-band section-alt-gray centered animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
+      <Box className="about-clown-dialog">
+        <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço da Carliz Doces" className="about-clown-image" />
+        <Box className="about-message-bubble">
+          <Typography component="p" variant="body1" className="about-message-inline">
+            “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨
+            Nóóós somos a Carliz Doces e fazemos docinhos prontinhos para entrega, para deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
+          </Typography>
     <MotionDiv initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
       <Container ref={aboutRef} maxWidth="lg" className="summary-band section-alt-gray centered animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
         <Box className="about-clown-dialog">
@@ -38,7 +47,7 @@ export function AboutSection() {
             </Typography>
           </Box>
         </Box>
-      </Container>
-    </MotionDiv>
+      </Box>
+    </Container>
   )
 }
