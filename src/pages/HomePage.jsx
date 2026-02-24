@@ -12,6 +12,7 @@ import { FloatingActions } from '../components/layout/FloatingActions'
 import { SectionDivider } from '../components/ui/SectionDivider'
 import { HeroSection } from '../features/home/sections/HeroSection'
 import { AboutSection } from '../features/home/sections/AboutSection'
+import { BakerStorySection } from '../features/home/sections/BakerStorySection'
 import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
@@ -986,6 +987,14 @@ export function HomePage() {
         </MotionDiv>
 
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
+          <SectionDivider label="Confeiteira em ação" sectionId="confeiteira-em-acao" />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.12 }}>
+          <BakerStorySection />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.14 }}>
           <SectionDivider label="Cardápio de Páscoa" sectionId="ovos-de-pascoa" />
         </MotionDiv>
 
