@@ -1,11 +1,11 @@
 import { useRef } from 'react'
+import { motion } from 'motion/react'
 import { Box, Container, Typography } from '@mui/material'
-import gsap from '../../../lib/gsapCompat'
-import { useGSAP } from '../../../lib/gsapCompat'
+import gsap, { useGSAP } from '../../../lib/gsapCompat'
+
+const MotionDiv = motion.div
 
 gsap.registerPlugin(useGSAP)
-import { motion } from 'motion/react'
-const MotionDiv = motion.div
 
 export function AboutSection() {
   const aboutRef = useRef(null)
@@ -16,10 +16,6 @@ export function AboutSection() {
       opacity: 0,
       duration: 0.8,
       ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '.about-clown-dialog',
-        start: 'top 82%',
-      },
     }, context.scope)
 
     gsap.from('.about-message-bubble', {
@@ -27,24 +23,12 @@ export function AboutSection() {
       opacity: 0,
       duration: 0.75,
       ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '.about-clown-dialog',
-        start: 'top 78%',
-      },
     }, context.scope)
   }, { scope: aboutRef })
 
   return (
-    <Container ref={aboutRef} maxWidth="lg" className="summary-band section-alt-gray centered animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
-      <Box className="about-clown-dialog">
-        <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço da Carliz Doces" className="about-clown-image" />
-        <Box className="about-message-bubble">
-          <Typography component="p" variant="body1" className="about-message-inline">
-            “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨
-            Nóóós somos a Carliz Doces e fazemos docinhos prontinhos para entrega, para deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
-          </Typography>
     <MotionDiv initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.75, ease: 'easeOut' }}>
-      <Container maxWidth="lg" className="summary-band section-alt-gray centered page-container">
+      <Container ref={aboutRef} maxWidth="lg" className="summary-band section-alt-gray centered animate__animated animate__fadeInUp page-container" style={{ '--animate-duration': '750ms' }}>
         <Box className="about-clown-dialog">
           <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço da Carliz Doces" className="about-clown-image" />
           <Box className="about-message-bubble">
