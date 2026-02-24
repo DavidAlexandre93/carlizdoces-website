@@ -3,6 +3,8 @@ import { motion } from 'motion/react'
 import { Box, Container, Stack, Typography } from '@mui/material'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
 
+const MotionDiv = motion.div
+
 const bakingSteps = [
   { label: 'Preparando a massa', detail: 'Mistura dos ingredientes com movimentos suaves.' },
   { label: 'Decorando os doces', detail: 'Confeitos, cobertura e pequenos toques de carinho.' },
@@ -51,19 +53,19 @@ export function BakerStorySection() {
       <Box className="baker-story-layout">
         <Box className="baker-story-stage-wrap">
           <Box className="baker-story-stage">
-            <motion.div className="baker-chef" animate={{ y: `${-22 * progress}px` }} transition={{ duration: 0.3 }}>
+            <MotionDiv className="baker-chef" animate={{ y: `${-22 * progress}px` }} transition={{ duration: 0.3 }}>
               👩‍🍳
-            </motion.div>
-            <motion.div className="baker-cream-line" animate={{ scaleX: 0.2 + (0.8 * progress) }} transition={{ duration: 0.3 }} />
-            <motion.div className="baker-cake" animate={{ scale: 0.88 + (0.18 * progress) }} transition={{ duration: 0.3 }}>
+            </MotionDiv>
+            <MotionDiv className="baker-cream-line" animate={{ scaleX: 0.2 + (0.8 * progress) }} transition={{ duration: 0.3 }} />
+            <MotionDiv className="baker-cake" animate={{ scale: 0.88 + (0.18 * progress) }} transition={{ duration: 0.3 }}>
               <span role="img" aria-label="bolo">🎂</span>
-            </motion.div>
-            <motion.div className="baker-sparkles" animate={{ opacity: 0.15 + (0.85 * progress) }} transition={{ duration: 0.35 }}>
+            </MotionDiv>
+            <MotionDiv className="baker-sparkles" animate={{ opacity: 0.15 + (0.85 * progress) }} transition={{ duration: 0.35 }}>
               <span className="baker-floating-sweet">✨</span>
               <span className="baker-floating-sweet">🧁</span>
               <span className="baker-floating-sweet">🍓</span>
               <span className="baker-floating-sweet">🍫</span>
-            </motion.div>
+            </MotionDiv>
           </Box>
         </Box>
 
