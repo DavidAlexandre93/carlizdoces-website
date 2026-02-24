@@ -202,6 +202,8 @@ export function HomePage() {
   const [isScrollPartyMode, setIsScrollPartyMode] = useState(false)
   const [candyRainDrops, setCandyRainDrops] = useState([])
   const [clickBursts, setClickBursts] = useState([])
+  const [pointerSparkles, setPointerSparkles] = useState([])
+  const [isSugarRushMode, setIsSugarRushMode] = useState(false)
   const easterMenuProducts = useMemo(() => seasonalProducts.filter((item) => isEasterMenuProduct(item)), [])
   const candyOrderProducts = useMemo(() => seasonalProducts.filter((item) => isCandyOrderProduct(item)), [])
 
@@ -618,6 +620,120 @@ export function HomePage() {
     }
   }, [])
 
+  useEffect(() => {
+    let lastSpawn = 0
+
+    const handlePointerSparkle = (event) => {
+      const now = Date.now()
+      if (now - lastSpawn < 90) return
+      lastSpawn = now
+
+      const sparkleId = `sparkle-${now}-${Math.random().toString(16).slice(2)}`
+      const sparkle = {
+        id: sparkleId,
+        x: event.clientX,
+        y: event.clientY,
+        icon: Math.random() > 0.5 ? '✨' : '🍬',
+      }
+
+      setPointerSparkles((currentSparkles) => [...currentSparkles.slice(-24), sparkle])
+
+      window.setTimeout(() => {
+        setPointerSparkles((currentSparkles) => currentSparkles.filter((item) => item.id !== sparkleId))
+      }, 900)
+    }
+
+    window.addEventListener('pointermove', handlePointerSparkle, { passive: true })
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerSparkle)
+    }
+  }, [])
+
+  useEffect(() => {
+    const interactiveElements = Array.from(document.querySelectorAll('button, a, .MuiCard-root, .MuiPaper-root'))
+
+    const activateBounce = (event) => {
+      event.currentTarget.classList.add('sweet-spot-hit')
+    }
+
+    const removeBounce = (event) => {
+      event.currentTarget.classList.remove('sweet-spot-hit')
+    }
+
+    interactiveElements.forEach((element) => {
+      element.addEventListener('mouseenter', activateBounce)
+      element.addEventListener('mouseleave', removeBounce)
+    })
+
+    return () => {
+      interactiveElements.forEach((element) => {
+        element.removeEventListener('mouseenter', activateBounce)
+        element.removeEventListener('mouseleave', removeBounce)
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll('main section, main article, .section-stack > div'))
+    if (!sections.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('candy-reveal-in')
+          }
+        })
+      },
+      { threshold: 0.2 },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    let sugarRushTimerId = 0
+    let typedSequence = ''
+
+    const triggerSugarRush = () => {
+      setIsSugarRushMode(true)
+      setCandyRainDrops(() => Array.from({ length: 26 }, (_, index) => ({
+        id: `sugar-rush-${Date.now()}-${index}`,
+        icon: scrollCandyIcons[index % scrollCandyIcons.length],
+        left: `${Math.random() * 96}%`,
+        duration: `${2.8 + Math.random() * 1.8}s`,
+        delay: `${Math.random() * 0.8}s`,
+        rotate: `${-38 + Math.random() * 76}deg`,
+      })))
+
+      window.clearTimeout(sugarRushTimerId)
+      sugarRushTimerId = window.setTimeout(() => {
+        setIsSugarRushMode(false)
+        setCandyRainDrops([])
+      }, 5000)
+    }
+
+    const handleSecretSequence = (event) => {
+      typedSequence = `${typedSequence}${event.key.toLowerCase()}`.slice(-4)
+      if (typedSequence === 'doce') {
+        triggerSugarRush()
+        typedSequence = ''
+      }
+    }
+
+    window.addEventListener('keydown', handleSecretSequence)
+
+    return () => {
+      window.removeEventListener('keydown', handleSecretSequence)
+      window.clearTimeout(sugarRushTimerId)
+    }
+  }, [])
+
 
   useEffect(() => {
     const footerElement = document.querySelector('.footer')
@@ -755,6 +871,10 @@ export function HomePage() {
         Festa doce ativada! 🎊
       </Box>
 
+      <Box className={`sugar-rush-badge ${isSugarRushMode ? 'is-visible' : ''}`}>
+        Modo Sugar Rush ativado! 🍭 Digite D O C E
+      </Box>
+
       {candyRainDrops.map((drop) => (
         <Box
           key={drop.id}
@@ -773,6 +893,12 @@ export function HomePage() {
       {clickBursts.map((burst) => (
         <Box key={burst.id} className="click-candy-burst" sx={{ left: burst.x, top: burst.y }}>
           {burst.icon}
+        </Box>
+      ))}
+
+      {pointerSparkles.map((sparkle) => (
+        <Box key={sparkle.id} className="pointer-sparkle" sx={{ left: sparkle.x, top: sparkle.y }}>
+          {sparkle.icon}
         </Box>
       ))}
 
