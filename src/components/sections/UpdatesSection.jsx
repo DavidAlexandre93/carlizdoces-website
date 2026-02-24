@@ -1,5 +1,8 @@
+import { useRef } from 'react'
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
+import gsap, { useGSAP } from '../../lib/gsapCompat'
+
 const MotionDiv = motion.div
 
 const typeStyles = {
@@ -11,15 +14,24 @@ const typeStyles = {
 }
 
 export default function UpdatesSection({ updates, announcementChannels }) {
+  const sectionRef = useRef(null)
+
+  useGSAP((context) => {
+    gsap.from('.updates-card', { y: 30, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' }, context.scope)
+    gsap.from('.updates-cta', { y: 20, opacity: 0, duration: 0.65, delay: 0.2, ease: 'power2.out' }, context.scope)
+    gsap.to('.updates-media img', { scale: 1.08, duration: 4.2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: 0.18 }, context.scope)
+  }, { scope: sectionRef, dependencies: [updates.length, announcementChannels.length] })
+
   return (
-    <MotionDiv initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+    <MotionDiv ref={sectionRef} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
       <Container maxWidth="xl" className="updates-section section-alt-pink page-container">
       <Box className="updates-grid">
         {updates.map((item) => {
           const type = typeStyles[item.type] ?? typeStyles.geral
 
           return (
-            <Paper key={item.id} component="article" elevation={3} className="updates-card">
+            <MotionDiv key={item.id} initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, ease: 'easeOut' }}>
+              <Paper component="article" elevation={3} className="updates-card">
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ gap: 1.5, mb: 1 }}>
                 <Chip label={type.label} color={type.color} size="small" />
                 <Typography component="span" variant="caption" className="updates-date">{item.dateLabel}</Typography>
@@ -33,7 +45,8 @@ export default function UpdatesSection({ updates, announcementChannels }) {
                 </Box>
               ) : null}
 
-            </Paper>
+              </Paper>
+            </MotionDiv>
           )
         })}
       </Box>
