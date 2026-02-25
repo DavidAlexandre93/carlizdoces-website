@@ -517,24 +517,27 @@
 .topbar-language-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(173, 20, 87, 0.18);
+  gap: 12px;
 }
 
 .language-flag-button {
-  width: 30px;
-  height: 30px;
-  font-size: 1rem !important;
-  border: 1px solid transparent !important;
+  width: 46px;
+  height: 46px;
+  padding: 0 !important;
+  border: 0 !important;
   border-radius: 999px !important;
 }
 
-.language-flag-button.is-active {
-  border-color: rgba(173, 20, 87, 0.55) !important;
-  background: rgba(173, 20, 87, 0.1) !important;
+.language-flag-icon {
+  width: 40px;
+  height: 40px;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .google-translate-hidden,
@@ -558,8 +561,8 @@ body {
 }
 
 .site-wrapper.dark-mode .topbar-language-switcher {
-  background: rgba(48, 47, 47, 0.86);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: transparent;
+  border-color: transparent;
 }
 
 .site-wrapper.dark-mode {
