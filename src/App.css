@@ -517,20 +517,20 @@
 .topbar-language-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .language-flag-button {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 999px !important;
 }
 
 .language-flag-icon {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   display: block;
   border-radius: 50%;
   overflow: hidden;
@@ -538,6 +538,12 @@
   background-position: center;
   background-size: cover;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.language-flag-button[data-active='true'] .language-flag-icon {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 2px #ad1457, 0 0 10px rgba(173, 20, 87, 0.25);
 }
 
 .google-translate-hidden,
