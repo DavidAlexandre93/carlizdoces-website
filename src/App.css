@@ -2662,7 +2662,7 @@ body {
 }
 
 .baker-story-section {
-  min-height: 260vh;
+  min-height: auto;
   margin-bottom: 1.5rem;
 }
 
