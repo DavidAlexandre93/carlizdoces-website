@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { AppProviders } from './app/providers/AppProviders'
 import SplashEnterCircus from './components/SplashEnterCircus'
-import HomeInsideCircus from './components/HomeInsideCircus'
+import { HomePage } from './pages/HomePage'
 
 const MotionDiv = motion.div
 
@@ -16,7 +17,8 @@ export default function App() {
             key="splash"
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
             style={{ height: '100%' }}
           >
             <SplashEnterCircus onEntered={() => setStage('home')} />
@@ -30,7 +32,9 @@ export default function App() {
             transition={{ duration: 0.45 }}
             style={{ height: '100%' }}
           >
-            <HomeInsideCircus />
+            <AppProviders>
+              <HomePage />
+            </AppProviders>
           </MotionDiv>
         )}
       </AnimatePresence>
