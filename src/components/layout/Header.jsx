@@ -315,23 +315,12 @@ export function Header({
             <Box
               sx={{
                 mb: 2.5,
-                p: 1.25,
-                borderRadius: 2,
+                p: { xs: 0.75, sm: 1 },
+                borderRadius: 999,
                 textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(255, 82, 82, 0.12), rgba(255, 193, 7, 0.14))',
-                border: '1px solid rgba(255, 82, 82, 0.35)',
-                '@keyframes blinkAttention': {
-                  '0%, 100%': {
-                    opacity: 1,
-                    transform: 'scale(1)',
-                    boxShadow: '0 0 0 rgba(255, 82, 82, 0)',
-                  },
-                  '50%': {
-                    opacity: 0.45,
-                    transform: 'scale(1.02)',
-                    boxShadow: '0 0 22px rgba(255, 82, 82, 0.6)',
-                  },
-                },
+                background: 'linear-gradient(95deg, rgba(255, 245, 247, 0.95) 0%, rgba(255, 250, 238, 0.98) 100%)',
+                border: '1px solid rgba(226, 93, 113, 0.24)',
+                boxShadow: '0 8px 24px rgba(201, 75, 112, 0.1)',
               }}
             >
               <Link
@@ -340,14 +329,24 @@ export function Header({
                 rel="noopener noreferrer"
                 underline="none"
                 sx={{
-                  display: 'inline-block',
-                  fontSize: { xs: '1rem', sm: '1.1rem' },
-                  fontWeight: 900,
-                  letterSpacing: '0.02em',
-                  color: '#c62828',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  minHeight: { xs: 44, sm: 48 },
+                  px: 3,
+                  borderRadius: 999,
+                  fontSize: { xs: '0.98rem', sm: '1.06rem' },
+                  fontWeight: 700,
+                  letterSpacing: '0.03em',
+                  color: '#cf5f69',
                   textTransform: 'uppercase',
-                  animation: 'blinkAttention 1s infinite',
-                  textShadow: '0 0 8px rgba(255, 82, 82, 0.4)',
+                  transition: 'all 0.25s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.72)',
+                    color: '#b94962',
+                    boxShadow: 'inset 0 0 0 1px rgba(201, 75, 112, 0.22)',
+                  },
                 }}
               >
                 Avalie-nos no Google.
