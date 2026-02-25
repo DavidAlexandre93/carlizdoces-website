@@ -43,12 +43,12 @@ export function Header({
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
   const notificationItems = activeNotification.items ?? []
-  const { selectedLanguage, applyLanguage } = useGoogleTranslate()
+  const { applyLanguage } = useGoogleTranslate()
   const languageFlags = [
-    { language: 'en', label: 'English', flag: '🇺🇸' },
-    { language: 'pt', label: 'Português', flag: '🇧🇷' },
-    { language: 'es', label: 'Español', flag: '🇪🇸' },
-    { language: 'fr', label: 'Français', flag: '🇫🇷' },
+    { language: 'en', label: 'English', iconSrc: '/images/flags/us.svg' },
+    { language: 'pt', label: 'Português', iconSrc: '/images/flags/br.svg' },
+    { language: 'es', label: 'Español', iconSrc: '/images/flags/es.svg' },
+    { language: 'fr', label: 'Français', iconSrc: '/images/flags/fr.svg' },
   ]
 
   useEffect(() => {
@@ -208,16 +208,15 @@ export function Header({
             <Box className="topbar-actions">
               <Box className="topbar-language-switcher" aria-label="Selecionar idioma">
                 {languageFlags.map((item) => (
-                  <Tooltip key={item.language} title={item.label} arrow>
-                    <IconButton
-                      color="inherit"
-                      className={`language-flag-button ${selectedLanguage === item.language ? 'is-active' : ''}`}
-                      aria-label={`Traduzir para ${item.label}`}
-                      onClick={() => applyLanguage(item.language)}
-                    >
-                      <span aria-hidden="true">{item.flag}</span>
-                    </IconButton>
-                  </Tooltip>
+                  <IconButton
+                    key={item.language}
+                    color="inherit"
+                    className="language-flag-button"
+                    aria-label={`Traduzir para ${item.label}`}
+                    onClick={() => applyLanguage(item.language)}
+                  >
+                    <span className="language-flag-icon" aria-hidden="true" style={{ backgroundImage: `url(${item.iconSrc})` }} />
+                  </IconButton>
                 ))}
               </Box>
 
