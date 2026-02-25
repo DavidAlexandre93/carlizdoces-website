@@ -15,6 +15,7 @@ import { AboutSection } from '../features/home/sections/AboutSection'
 import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
+import { ConfeitariaEmAcaoSection } from '../features/home/sections/ConfeitariaEmAcaoSection'
 import { deviceId, supabase } from '../supabaseClient'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
@@ -699,6 +700,14 @@ export function HomePage() {
             isGlobalRatingsActive={isCandyGlobalRatingsActive}
             disablePrevAtLast
           />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
+          <SectionDivider label="Confeitaria em Ação" sectionId="confeitaria-em-acao" />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.21 }}>
+          <ConfeitariaEmAcaoSection />
         </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
