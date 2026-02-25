@@ -43,7 +43,7 @@ export function Header({
   const appBarRef = useRef(null)
   const logoRef = useRef(null)
   const notificationItems = activeNotification.items ?? []
-  const { applyLanguage } = useGoogleTranslate()
+  const { selectedLanguage, applyLanguage } = useGoogleTranslate()
   const languageFlags = [
     { language: 'en', label: 'English', iconSrc: '/images/flags/us.svg' },
     { language: 'pt', label: 'Português', iconSrc: '/images/flags/br.svg' },
@@ -212,7 +212,9 @@ export function Header({
                     key={item.language}
                     color="inherit"
                     className="language-flag-button"
+                    aria-pressed={selectedLanguage === item.language}
                     aria-label={`Traduzir para ${item.label}`}
+                    data-active={selectedLanguage === item.language}
                     onClick={() => applyLanguage(item.language)}
                   >
                     <span className="language-flag-icon" aria-hidden="true" style={{ backgroundImage: `url(${item.iconSrc})` }} />
