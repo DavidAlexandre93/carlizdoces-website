@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
+import gsap, { useGSAP } from '../lib/gsapCompat'
 import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
 import { useCart } from '../hooks/useCart'
 import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
@@ -152,8 +153,10 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
 }
 
 export function HomePage() {
+  const introScopeRef = useRef(null)
   const hasInitializedMenuShowcaseRef = useRef(false)
   const hasInitializedOrderShowcaseRef = useRef(false)
+  const [introStage, setIntroStage] = useState('message')
   const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(false)
   const [isFeaturedVideoLoading, setIsFeaturedVideoLoading] = useState(true)
   const [isFeaturedVideoFallbackVisible, setIsFeaturedVideoFallbackVisible] = useState(false)
@@ -463,8 +466,66 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
-    setIsFeaturedVideoOpen(true)
+    const openingTimerId = window.setTimeout(() => {
+      setIntroStage('opening')
+    }, 2200)
+
+    const finishTimerId = window.setTimeout(() => {
+      setIntroStage('hidden')
+    }, 4200)
+
+    return () => {
+      window.clearTimeout(openingTimerId)
+      window.clearTimeout(finishTimerId)
+    }
   }, [])
+
+  useEffect(() => {
+    if (introStage === 'hidden') return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [introStage])
+
+  useEffect(() => {
+    if (introStage !== 'hidden') return
+
+    setIsFeaturedVideoOpen(true)
+  }, [introStage])
+
+  useGSAP(() => {
+    if (!introScopeRef.current || introStage === 'hidden') return
+
+    gsap.from('.intro-logo', {
+      y: -34,
+      scale: 0.88,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    }, introScopeRef.current)
+
+    gsap.from('.intro-message', {
+      y: 28,
+      opacity: 0,
+      delay: 0.2,
+      duration: 0.75,
+      ease: 'power2.out',
+    }, introScopeRef.current)
+
+    gsap.from('.intro-clown-card', {
+      y: 44,
+      scale: 0.82,
+      opacity: 0,
+      delay: 0.25,
+      duration: 0.9,
+      stagger: 0.14,
+      ease: 'power3.out',
+    }, introScopeRef.current)
+  }, { scope: introScopeRef, dependencies: [introStage] })
 
   useEffect(() => {
     const footerElement = document.querySelector('.footer')
@@ -538,6 +599,36 @@ export function HomePage() {
 
   return (
     <Box id="top" className="site-wrapper">
+
+      {introStage !== 'hidden' && (
+        <Box ref={introScopeRef} className={`intro-curtain intro-curtain-${introStage}`}>
+          <Box className="intro-curtain-panel intro-curtain-left" />
+          <Box className="intro-curtain-panel intro-curtain-right" />
+          <Box className="intro-center-content">
+            <Box component="img" src="/images/logo/logo-carlizdoces.png" alt="Logo da Carliz Doces" className="intro-logo" />
+            <Box className="intro-clown-wrap">
+              <motion.div
+                className="intro-clown-card intro-clown-card-left"
+                animate={{ y: [0, -26, 0], rotate: [0, -12, 0, 360] }}
+                transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+              >
+                <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço saltando de alegria" className="intro-clown" />
+              </motion.div>
+              <motion.div
+                className="intro-clown-card intro-clown-card-right"
+                animate={{ y: [0, -22, 0], rotate: [0, 12, 0, -360] }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 0.2 }}
+              >
+                <Box component="img" src="/images/tela-apresentacao/palhaco.png" alt="Palhaço fazendo cambalhota" className="intro-clown" />
+              </motion.div>
+              <Box component="p" className="intro-message">Respeeeitável púúúúblico! 🎪✨
+              Com muita alegria, muito brilho e uma pitadinha de travessura, apresentaaamos… Carliz Doces! 🍭🍬🤡</Box>
+            </Box>
+          </Box>
+        </Box>
+      )}
+
+
       <Header
         navItems={navItems}
         isMobileMenuOpen={isMobileMenuOpen}

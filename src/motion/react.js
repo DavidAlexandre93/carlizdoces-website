@@ -5,30 +5,10 @@ function toCssValue(value) {
 }
 
 function buildStyleFromState(baseStyle = {}, animationState = {}) {
-  if (!animationState || typeof animationState !== 'object') {
-    return { ...baseStyle }
-  }
-
   const nextStyle = { ...baseStyle }
 
   if (animationState.opacity !== undefined) {
     nextStyle.opacity = animationState.opacity
-  }
-
-  if (animationState.filter !== undefined) {
-    nextStyle.filter = animationState.filter
-  }
-
-  if (animationState.width !== undefined) {
-    nextStyle.width = toCssValue(animationState.width)
-  }
-
-  if (animationState.height !== undefined) {
-    nextStyle.height = toCssValue(animationState.height)
-  }
-
-  if (animationState.borderRadius !== undefined) {
-    nextStyle.borderRadius = toCssValue(animationState.borderRadius)
   }
 
   const transforms = []
@@ -49,19 +29,7 @@ function buildStyleFromState(baseStyle = {}, animationState = {}) {
 }
 
 function createMotionComponent(component) {
-  return forwardRef(function MotionComponent(
-    {
-      children,
-      initial,
-      animate,
-      whileInView,
-      viewport,
-      transition,
-      style,
-      ...rest
-    },
-    forwardedRef,
-  ) {
+  return forwardRef(function MotionComponent({ children, initial, whileInView, viewport, transition, style, ...rest }, forwardedRef) {
     const localRef = useRef(null)
     const [inView, setInView] = useState(false)
     const hasRevealedRef = useRef(false)
@@ -92,43 +60,28 @@ function createMotionComponent(component) {
     }, [viewport, whileInView])
 
     const mergedStyle = useMemo(() => {
-      let activeState = animate
-      if (!activeState) {
-        activeState = inView || hasRevealedRef.current ? whileInView : initial
-      }
-
-      const baseState = initial === false ? {} : initial
-      const baseStyle = buildStyleFromState(style, baseState)
-      const animationStyle = buildStyleFromState(baseStyle, activeState)
+      const activeState = inView || hasRevealedRef.current ? whileInView : initial
+      const animationStyle = buildStyleFromState(style, activeState)
       const duration = transition?.duration ?? 0.45
-      const easing = Array.isArray(transition?.ease) ? 'ease' : transition?.ease ?? 'ease'
+      const easing = transition?.ease ?? 'ease'
       const delay = transition?.delay ?? 0
 
       return {
         ...animationStyle,
-        transition: `all ${duration}s ${easing} ${delay}s`,
-        willChange: 'opacity, transform, filter',
+        transition: `opacity ${duration}s ${easing} ${delay}s, transform ${duration}s ${easing} ${delay}s`,
+        willChange: 'opacity, transform',
       }
-    }, [animate, inView, initial, style, transition, whileInView])
+    }, [inView, initial, whileInView, style, transition])
 
-    const domProps = { ...rest }
-    delete domProps.whileTap
-    delete domProps.whileHover
-    delete domProps.exit
-
-    return React.createElement(
-      component,
-      {
-        ...domProps,
-        ref: (node) => {
-          localRef.current = node
-          if (typeof forwardedRef === 'function') forwardedRef(node)
-          else if (forwardedRef && typeof forwardedRef === 'object') forwardedRef.current = node
-        },
-        style: mergedStyle,
+    return React.createElement(component, {
+      ...rest,
+      ref: (node) => {
+        localRef.current = node
+        if (typeof forwardedRef === 'function') forwardedRef(node)
+        else if (forwardedRef && typeof forwardedRef === 'object') forwardedRef.current = node
       },
-      children,
-    )
+      style: mergedStyle,
+    }, children)
   })
 }
 
@@ -140,21 +93,3 @@ export const motion = new Proxy(motionFactory, {
   apply: (_target, _thisArg, [component]) => createMotionComponent(component),
   get: (_target, tagName) => createMotionComponent(tagName),
 })
-
-export function AnimatePresence({ children }) {
-  return <>{children}</>
-}
-
-export function useReducedMotion() {
-  const [reduced, setReduced] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduced(media.matches)
-    const handler = (event) => setReduced(event.matches)
-    media.addEventListener('change', handler)
-    return () => media.removeEventListener('change', handler)
-  }, [])
-
-  return reduced
-}

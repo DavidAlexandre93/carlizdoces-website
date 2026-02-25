@@ -871,7 +871,7 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y))) var(--hero-card-tilt, none);
   width: min(88%, 820px);
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
@@ -891,7 +891,7 @@ body {
 .mui-carousel-stage.is-active .top-carousel-slide > div {
   opacity: 1;
   --hero-card-offset-y: 0px;
-  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y))) var(--hero-card-tilt, none);
 }
 
 .top-carousel-slide p {
@@ -918,6 +918,7 @@ body {
     0 0 14px rgba(255, 226, 138, 0.9),
     0 0 28px rgba(255, 170, 64, 0.78),
     0 2px 0 rgba(73, 20, 6, 0.44);
+  animation: lamp-blink 1.15s steps(2, end) infinite;
 }
 
 .typing-effect-content {
@@ -2784,10 +2785,13 @@ body {
 .hero-inner {
   --hero-pointer-x: 0.5;
   --hero-pointer-y: 0.5;
+  --hero-card-tilt: perspective(800px)
+    rotateX(calc((var(--hero-pointer-y) - 0.5) * -3deg))
+    rotateY(calc((var(--hero-pointer-x) - 0.5) * 3deg));
 }
 
 .hero-slide-glass-card {
-  overflow: visible;
+  overflow: hidden;
 }
 
 .hero-slide-shimmer {
@@ -2795,6 +2799,7 @@ body {
   inset: 0;
   background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.18) 35%, transparent 65%);
   transform: translateX(-120%);
+  animation: hero-shimmer 3.8s ease-in-out infinite;
   pointer-events: none;
 }
 

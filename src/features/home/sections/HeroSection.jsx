@@ -3,6 +3,7 @@ import { Box, Button, Chip, Container, Stack, useTheme } from '@mui/material'
 import { motion } from 'motion/react'
 import SwipeableViews from 'react-swipeable-views'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
+import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
 const MotionImg = motion.img
 const MotionSpan = motion.span
@@ -38,6 +39,40 @@ export function HeroSection({ topShowcaseSlides }) {
   }, { scope: heroRef, dependencies: [activeStep] })
 
   useEffect(() => {
+    const wrapper = heroRef.current
+    if (!wrapper) return undefined
+
+    const handlePointerMove = (event) => {
+      const rect = wrapper.getBoundingClientRect()
+      const px = (event.clientX - rect.left) / rect.width
+      const py = (event.clientY - rect.top) / rect.height
+
+      wrapper.style.setProperty('--hero-pointer-x', String(px.toFixed(3)))
+      wrapper.style.setProperty('--hero-pointer-y', String(py.toFixed(3)))
+
+      gsap.to('.hero-media-image.is-active', {
+        x: (px - 0.5) * 14,
+        y: (py - 0.5) * 10,
+        duration: 0.35,
+        ease: 'power2.out',
+      }, wrapper)
+
+    }
+
+    const resetCard = () => {
+      gsap.to('.hero-media-image.is-active', { x: 0, y: 0, duration: 0.4, ease: 'power2.out' }, wrapper)
+    }
+
+    wrapper.addEventListener('pointermove', handlePointerMove)
+    wrapper.addEventListener('pointerleave', resetCard)
+
+    return () => {
+      wrapper.removeEventListener('pointermove', handlePointerMove)
+      wrapper.removeEventListener('pointerleave', resetCard)
+    }
+  }, [activeStep])
+
+  useEffect(() => {
     if (maxSteps <= 1) return undefined
     const timer = window.setInterval(() => {
       setActiveStep((current) => (current + 1) % maxSteps)
@@ -64,9 +99,19 @@ export function HeroSection({ topShowcaseSlides }) {
                 <div className="hero-slide-content hero-slide-glass-card">
                   <Box className="hero-slide-shimmer" />
                   <Chip label={slide.tag} color="secondary" size="small" />
-                  <Box component="h1" className="hero-lamp-title">
-                    {slide.title}
-                  </Box>
+                  <TypingEffectText
+                    component="h1"
+                    className="hero-lamp-title"
+                    phrases={
+                      index === activeStep
+                        ? [slide.title, 'Doces artesanais com toque de cinema', 'Pedidos personalizados com visual realista ✨']
+                        : [slide.title]
+                    }
+                    typingSpeed={46}
+                    deletingSpeed={30}
+                    pauseMs={1800}
+                    loop={index === activeStep}
+                  />
                   <Stack direction="row" spacing={1.5} className="hero-quick-actions">
                     <Button variant="contained" color="secondary" component="a" href="#realizar-pedido">
                       Fazer pedido

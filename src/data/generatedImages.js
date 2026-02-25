@@ -118,40 +118,6 @@ export const imageCollections = {
       "alt": "Coracao De Brilho"
     }
   ],
-  "flags": [
-    {
-      "id": "flags-br",
-      "slug": "br",
-      "fileName": "br.svg",
-      "label": "Br",
-      "imageUrl": "/images/flags/br.svg",
-      "alt": "Br"
-    },
-    {
-      "id": "flags-es",
-      "slug": "es",
-      "fileName": "es.svg",
-      "label": "Es",
-      "imageUrl": "/images/flags/es.svg",
-      "alt": "Es"
-    },
-    {
-      "id": "flags-fr",
-      "slug": "fr",
-      "fileName": "fr.svg",
-      "label": "Fr",
-      "imageUrl": "/images/flags/fr.svg",
-      "alt": "Fr"
-    },
-    {
-      "id": "flags-us",
-      "slug": "us",
-      "fileName": "us.svg",
-      "label": "Us",
-      "imageUrl": "/images/flags/us.svg",
-      "alt": "Us"
-    }
-  ],
   "instagram": [
     {
       "id": "instagram-brigadeiro",
