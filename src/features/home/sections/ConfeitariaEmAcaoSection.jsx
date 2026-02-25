@@ -18,6 +18,15 @@ const pastel = [
   '#f1c0ff',
 ]
 
+const colors = {
+  textPrimary: '#4f1f35',
+  textSecondary: '#7a5063',
+  panelBg: 'rgba(255,255,255,0.78)',
+  panelBorder: 'rgba(255, 113, 160, 0.2)',
+  panelSoft: 'rgba(255, 241, 248, 0.85)',
+  accentGradient: 'linear-gradient(90deg, #ff4f9a, #ff9f1c)',
+}
+
 function readableRecipe({ sweet, cocoa, vanilla }) {
   const total = sweet + cocoa + vanilla
   const sweetRatio = sweet / total
@@ -42,8 +51,8 @@ function SliderRow({ label, value, onChange }) {
   return (
     <div style={{ display: 'grid', gap: 10 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <span style={{ color: 'rgba(245,243,255,0.75)', fontSize: 12 }}>{label}</span>
-        <span style={{ color: 'rgba(245,243,255,0.95)', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ color: colors.textSecondary, fontSize: 12 }}>{label}</span>
+        <span style={{ color: colors.textPrimary, fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
           {pct(value)}
         </span>
       </div>
@@ -53,7 +62,7 @@ function SliderRow({ label, value, onChange }) {
           style={{
             height: 10,
             borderRadius: 999,
-            background: 'rgba(255,255,255,0.08)',
+            background: 'rgba(255, 142, 180, 0.2)',
             overflow: 'hidden',
           }}
         />
@@ -65,7 +74,7 @@ function SliderRow({ label, value, onChange }) {
             height: 10,
             width: `${value}%`,
             borderRadius: 999,
-            background: 'linear-gradient(90deg, rgba(124,58,237,0.95), rgba(168,85,247,0.95))',
+            background: colors.accentGradient,
           }}
         />
         <input
@@ -99,9 +108,9 @@ function Pill({ children }) {
         gap: 8,
         padding: '6px 10px',
         borderRadius: 999,
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        color: 'rgba(245,243,255,0.85)',
+        background: 'rgba(255, 234, 244, 0.9)',
+        border: `1px solid ${colors.panelBorder}`,
+        color: colors.textPrimary,
         fontSize: 12,
       }}
     >
@@ -117,18 +126,18 @@ function Button({ variant = 'primary', children, ...props }) {
     fontSize: 13,
     border: '1px solid transparent',
     cursor: 'pointer',
-    color: 'rgba(255,255,255,0.95)',
+    color: variant === 'primary' ? '#fff' : colors.textPrimary,
     transition: 'transform 120ms ease, filter 120ms ease',
   }
 
   const styles = variant === 'primary'
     ? {
-      background: 'linear-gradient(135deg, rgba(124,58,237,0.95), rgba(168,85,247,0.95))',
-      boxShadow: '0 10px 30px rgba(124,58,237,0.22)',
+      background: 'linear-gradient(135deg, #ff4f9a, #ff9f1c)',
+      boxShadow: '0 10px 30px rgba(255, 79, 154, 0.28)',
     }
     : {
-      background: 'rgba(17,17,26,0.9)',
-      borderColor: 'rgba(255,255,255,0.10)',
+      background: 'rgba(255, 242, 247, 0.95)',
+      borderColor: 'rgba(255, 113, 160, 0.25)',
     }
 
   return (
@@ -253,7 +262,7 @@ export function ConfeitariaEmAcaoSection() {
   const wrapper = {
     width: '100%',
     padding: '64px 16px',
-    background: 'radial-gradient(1200px 700px at 25% 20%, rgba(124,58,237,0.18), transparent 60%), #0b0b10',
+    background: 'radial-gradient(1100px 650px at 18% 15%, rgba(255, 94, 162, 0.26), transparent 62%), linear-gradient(160deg, #fff9ef 0%, #fff3fb 100%)',
     borderRadius: 32,
   }
 
@@ -262,9 +271,9 @@ export function ConfeitariaEmAcaoSection() {
     margin: '0 auto',
     padding: 24,
     borderRadius: 28,
-    background: 'rgba(17,17,26,0.88)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+    background: 'rgba(255,255,255,0.7)',
+    border: `1px solid ${colors.panelBorder}`,
+    boxShadow: '0 24px 70px rgba(153, 56, 96, 0.16)',
     backdropFilter: 'blur(12px)',
   }
 
@@ -276,20 +285,20 @@ export function ConfeitariaEmAcaoSection() {
 
   const panel = {
     borderRadius: 22,
-    background: 'rgba(15,15,23,0.9)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: colors.panelBg,
+    border: `1px solid ${colors.panelBorder}`,
     padding: 20,
   }
 
   const title = {
-    color: 'rgba(245,243,255,0.98)',
+    color: colors.textPrimary,
     fontSize: 40,
     margin: 0,
     letterSpacing: -0.6,
   }
 
   const subtitle = {
-    color: 'rgba(199,196,214,0.9)',
+    color: colors.textSecondary,
     marginTop: 8,
     marginBottom: 0,
     fontSize: 14,
@@ -297,7 +306,7 @@ export function ConfeitariaEmAcaoSection() {
   }
 
   const smallTitle = {
-    color: 'rgba(245,243,255,0.98)',
+    color: colors.textPrimary,
     fontSize: 16,
     margin: 0,
     marginBottom: 12,
@@ -312,6 +321,7 @@ export function ConfeitariaEmAcaoSection() {
             <div style={panel}>
               <h2 style={title}>Confeitaria em ação</h2>
               <p style={subtitle}>Misture, decore e compartilhe em tempo real. Ajuste os sabores, bata a massa e crie seu cupcake do jeitinho que você gosta.</p>
+              <p style={{ ...subtitle, fontSize: 12, marginTop: 6 }}>Dica: use as bandeiras no topo para ver esta seção em outros idiomas.</p>
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
                 <Pill>⚡ Interativo</Pill>
@@ -326,8 +336,8 @@ export function ConfeitariaEmAcaoSection() {
                     placeItems: 'center',
                     padding: 18,
                     borderRadius: 22,
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: colors.panelSoft,
+                    border: `1px solid ${colors.panelBorder}`,
                   }}
                 >
                   <MotionDiv
@@ -338,9 +348,9 @@ export function ConfeitariaEmAcaoSection() {
                       width: 280,
                       height: 280,
                       borderRadius: '50%',
-                      border: '1px solid rgba(255,255,255,0.10)',
-                      background: 'radial-gradient(circle at 30% 25%, rgba(124,58,237,0.18), rgba(15,15,23,0.9) 60%)',
-                      boxShadow: 'inset 0 0 0 22px rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255, 113, 160, 0.2)',
+                      background: 'radial-gradient(circle at 30% 25%, rgba(255, 95, 166, 0.26), rgba(255, 223, 237, 0.95) 62%)',
+                      boxShadow: 'inset 0 0 0 22px rgba(255,255,255,0.28)',
                       position: 'relative',
                     }}
                     aria-label="Tigela de mistura"
@@ -391,15 +401,15 @@ export function ConfeitariaEmAcaoSection() {
                 <div
                   style={{
                     borderRadius: 18,
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: colors.panelSoft,
+                    border: `1px solid ${colors.panelBorder}`,
                     padding: 16,
                     display: 'grid',
                     gap: 10,
                   }}
                 >
-                  <div style={{ color: 'rgba(245,243,255,0.95)', fontSize: 14, fontWeight: 600 }}>{recipe.title}</div>
-                  <ul style={{ margin: 0, paddingLeft: 18, color: 'rgba(199,196,214,0.92)', fontSize: 13, lineHeight: 1.55 }}>
+                  <div style={{ color: colors.textPrimary, fontSize: 14, fontWeight: 600 }}>{recipe.title}</div>
+                  <ul style={{ margin: 0, paddingLeft: 18, color: colors.textSecondary, fontSize: 13, lineHeight: 1.55 }}>
                     {recipe.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
                   </ul>
                 </div>
@@ -415,12 +425,12 @@ export function ConfeitariaEmAcaoSection() {
                       <button
                         key={color}
                         onClick={() => setFrosting(color)}
-                        title="Cor do frosting"
+                        title="Cor da cobertura"
                         style={{
                           width: 26,
                           height: 26,
                           borderRadius: 999,
-                          border: frosting === color ? '2px solid rgba(245,243,255,0.85)' : '1px solid rgba(255,255,255,0.10)',
+                          border: frosting === color ? '2px solid #5e2540' : '1px solid rgba(94, 37, 64, 0.22)',
                           background: color,
                           cursor: 'pointer',
                           boxShadow: frosting === color ? '0 8px 20px rgba(0,0,0,0.35)' : 'none',
@@ -437,15 +447,15 @@ export function ConfeitariaEmAcaoSection() {
                     marginTop: 14,
                     borderRadius: 18,
                     padding: 18,
-                    background: 'rgba(17,17,26,0.9)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: colors.panelSoft,
+                    border: `1px solid ${colors.panelBorder}`,
                     cursor: 'crosshair',
                     position: 'relative',
                     overflow: 'hidden',
                     minHeight: 250,
                   }}
                   role="button"
-                  aria-label="Área para adicionar sprinkles clicando"
+                  aria-label="Área para adicionar confeitos clicando"
                 >
                   <div
                     style={{
@@ -456,7 +466,7 @@ export function ConfeitariaEmAcaoSection() {
                       width: 220,
                       height: 110,
                       borderRadius: 22,
-                      background: 'linear-gradient(180deg, rgba(42,42,54,0.95), rgba(25,25,35,0.95))',
+                      background: 'linear-gradient(180deg, rgba(255, 197, 221, 0.95), rgba(255, 171, 205, 0.95))',
                     }}
                   />
                   <div
@@ -485,7 +495,7 @@ export function ConfeitariaEmAcaoSection() {
                       borderRadius: 999,
                       border: '18px solid transparent',
                       borderTop: `18px solid ${frosting}`,
-                      filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.35))',
+                      filter: 'drop-shadow(0 14px 20px rgba(153, 56, 96, 0.22))',
                     }}
                   />
 
@@ -518,18 +528,18 @@ export function ConfeitariaEmAcaoSection() {
                     ))}
                   </AnimatePresence>
 
-                  <div style={{ position: 'absolute', left: 18, top: 14, color: 'rgba(199,196,214,0.9)', fontSize: 12 }}>
-                    Clique para adicionar sprinkles • clique em um sprinkle para remover
+                  <div style={{ position: 'absolute', left: 18, top: 14, color: colors.textSecondary, fontSize: 12 }}>
+                    Clique para adicionar confeitos • clique em um confeito para remover
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, gap: 12, flexWrap: 'wrap' }}>
                   <Pill>
-                    🎨 Frosting:
+                    🎨 Cobertura:
                     <span style={{ fontWeight: 600 }}>{frosting}</span>
                   </Pill>
                   <Pill>
-                    🍬 Sprinkles:
+                    🍬 Confeitos:
                     <span style={{ fontWeight: 600 }}>{sprinkles.length}</span>
                   </Pill>
                 </div>
@@ -574,8 +584,8 @@ export function ConfeitariaEmAcaoSection() {
                           alignItems: 'center',
                           padding: 14,
                           borderRadius: 16,
-                          background: 'rgba(15,15,23,0.9)',
-                          border: '1px solid rgba(255,255,255,0.08)',
+                          background: colors.panelSoft,
+                          border: `1px solid ${colors.panelBorder}`,
                         }}
                       >
                         <div
@@ -584,18 +594,18 @@ export function ConfeitariaEmAcaoSection() {
                             height: 38,
                             borderRadius: 999,
                             background: item.color,
-                            boxShadow: '0 12px 26px rgba(0,0,0,0.35)',
+                            boxShadow: '0 10px 20px rgba(153, 56, 96, 0.2)',
                           }}
                           aria-hidden
                         />
                         <div style={{ display: 'grid', gap: 4 }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                            <div style={{ color: 'rgba(199,196,214,0.95)', fontSize: 12 }}>
-                              <span style={{ color: 'rgba(245,243,255,0.95)', fontWeight: 600 }}>{item.user}</span>
+                            <div style={{ color: colors.textSecondary, fontSize: 12 }}>
+                              <span style={{ color: colors.textPrimary, fontWeight: 600 }}>{item.user}</span>
                               <span style={{ opacity: 0.9 }}> • {formatAgo(item.t)}</span>
                             </div>
                           </div>
-                          <div style={{ color: 'rgba(245,243,255,0.95)', fontSize: 13 }}>“{item.msg}”</div>
+                          <div style={{ color: colors.textPrimary, fontSize: 13 }}>“{item.msg}”</div>
                         </div>
                       </MotionDiv>
                     ))}
