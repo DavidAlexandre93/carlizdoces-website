@@ -10,7 +10,7 @@ export default function SplashEnterCircus() {
   const navigate = useNavigate()
   const enterDuration = reduceMotion ? 0.25 : 1.8
 
-  const doorHotspot = useMemo(() => ({ x: 50, y: 58 }), [])
+  const doorHotspot = useMemo(() => ({ x: 50, y: 62 }), [])
 
   const handleEnter = () => {
     if (entering) return
@@ -32,15 +32,14 @@ export default function SplashEnterCircus() {
         animate={
           entering
             ? {
-                scale: reduceMotion ? 1.08 : 3.4,
-                y: reduceMotion ? 0 : '6%',
-                filter: reduceMotion ? 'brightness(0.95)' : 'brightness(0.82) blur(2.4px)',
+                scale: reduceMotion ? 1.08 : 2.25,
+                filter: reduceMotion ? 'brightness(0.95)' : 'brightness(0.9) blur(1.5px)',
               }
-            : { scale: 1, y: 0, filter: 'brightness(0.98)' }
+            : { scale: 1, filter: 'brightness(0.98)' }
         }
         transition={{
-          duration: enterDuration,
-          ease: [0.15, 0.78, 0.2, 1],
+          duration: reduceMotion ? 0.2 : 1.45,
+          ease: [0.2, 0.8, 0.2, 1],
         }}
       />
 
@@ -120,7 +119,7 @@ export default function SplashEnterCircus() {
         animate={entering ? { opacity: 1 } : { opacity: 0 }}
         transition={{
           duration: reduceMotion ? 0.2 : 0.5,
-          delay: reduceMotion ? 0 : enterDuration * 0.68,
+          delay: reduceMotion ? 0 : 1.05,
         }}
       />
     </div>
