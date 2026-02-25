@@ -315,23 +315,11 @@ export function Header({
             <Box
               sx={{
                 mb: 2.5,
-                p: 1.25,
-                borderRadius: 2,
+                p: { xs: 0.5, sm: 0.75 },
+                borderRadius: 999,
                 textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(255, 82, 82, 0.12), rgba(255, 193, 7, 0.14))',
-                border: '1px solid rgba(255, 82, 82, 0.35)',
-                '@keyframes blinkAttention': {
-                  '0%, 100%': {
-                    opacity: 1,
-                    transform: 'scale(1)',
-                    boxShadow: '0 0 0 rgba(255, 82, 82, 0)',
-                  },
-                  '50%': {
-                    opacity: 0.45,
-                    transform: 'scale(1.02)',
-                    boxShadow: '0 0 22px rgba(255, 82, 82, 0.6)',
-                  },
-                },
+                background: 'linear-gradient(95deg, rgba(255, 247, 249, 0.96) 0%, rgba(255, 250, 240, 0.96) 100%)',
+                border: '1px solid rgba(231, 135, 150, 0.42)',
               }}
             >
               <Link
@@ -340,14 +328,27 @@ export function Header({
                 rel="noopener noreferrer"
                 underline="none"
                 sx={{
-                  display: 'inline-block',
-                  fontSize: { xs: '1rem', sm: '1.1rem' },
-                  fontWeight: 900,
-                  letterSpacing: '0.02em',
-                  color: '#c62828',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  minHeight: { xs: 42, sm: 46 },
+                  px: 3,
+                  borderRadius: 999,
+                  fontSize: { xs: '0.96rem', sm: '1.04rem' },
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  color: '#df7a80',
                   textTransform: 'uppercase',
-                  animation: 'blinkAttention 1s infinite',
-                  textShadow: '0 0 8px rgba(255, 82, 82, 0.4)',
+                  textDecoration: 'underline',
+                  textDecorationColor: 'rgba(223, 122, 128, 0.55)',
+                  textUnderlineOffset: '0.22em',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.68)',
+                    color: '#c96572',
+                    textDecorationColor: 'rgba(201, 101, 114, 0.85)',
+                  },
                 }}
               >
                 Avalie-nos no Google.
