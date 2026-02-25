@@ -151,11 +151,11 @@ async function requestProductLikeToggle(productId, currentDeviceId) {
   return requestProductLikeToggleFromSupabase(productId, currentDeviceId)
 }
 
-export function HomePage() {
+export function HomePage({ skipIntroCurtain = false }) {
   const introScopeRef = useRef(null)
   const hasInitializedMenuShowcaseRef = useRef(false)
   const hasInitializedOrderShowcaseRef = useRef(false)
-  const [introStage, setIntroStage] = useState('message')
+  const [introStage, setIntroStage] = useState(() => (skipIntroCurtain ? 'hidden' : 'message'))
   const [isFeaturedVideoOpen, setIsFeaturedVideoOpen] = useState(false)
   const [isFeaturedVideoLoading, setIsFeaturedVideoLoading] = useState(true)
   const [isFeaturedVideoFallbackVisible, setIsFeaturedVideoFallbackVisible] = useState(false)
@@ -465,6 +465,10 @@ export function HomePage() {
   }, [])
 
   useEffect(() => {
+    if (skipIntroCurtain) {
+      return undefined
+    }
+
     const openingTimerId = window.setTimeout(() => {
       setIntroStage('opening')
     }, 2200)
@@ -477,7 +481,7 @@ export function HomePage() {
       window.clearTimeout(openingTimerId)
       window.clearTimeout(finishTimerId)
     }
-  }, [])
+  }, [skipIntroCurtain])
 
   useEffect(() => {
     if (introStage === 'hidden') return undefined

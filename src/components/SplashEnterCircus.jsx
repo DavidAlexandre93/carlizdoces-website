@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 
+const Motion = motion
+
 export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
   const [entering, setEntering] = useState(false)
 
@@ -17,7 +19,7 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
 
   return (
     <div className="sceneRoot">
-      <motion.div
+      <Motion.div
         className="splashBg"
         style={{
           backgroundImage: 'url(/images/circus-outside.png)',
@@ -37,13 +39,13 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
         }}
       />
 
-      <motion.div
+      <Motion.div
         className="vignette"
         animate={entering ? { opacity: 0.75 } : { opacity: 0.35 }}
         transition={{ duration: reduceMotion ? 0.15 : 0.55 }}
       />
 
-      <motion.div
+      <Motion.div
         className="doorPortal"
         style={{ left: `${doorHotspot.x}%`, top: `${doorHotspot.y}%` }}
         initial={false}
@@ -69,7 +71,7 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
       />
 
       <div className="splashContent">
-        <motion.div
+        <Motion.div
           className="brandBadge"
           initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -77,9 +79,9 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
         >
           <div className="brandTitle">Carliz Doces</div>
           <div className="brandSubtitle">Bem-vindo ao Circo 🍭🎪</div>
-        </motion.div>
+        </Motion.div>
 
-        <motion.button
+        <Motion.button
           className="enterBtn"
           whileTap={{ scale: 0.98 }}
           whileHover={{ scale: 1.02 }}
@@ -87,10 +89,10 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
           disabled={entering}
         >
           {entering ? 'Entrando...' : 'Entrar no circo'}
-        </motion.button>
+        </Motion.button>
       </div>
 
-      <motion.div
+      <Motion.div
         className="fadeCurtain"
         initial={false}
         animate={entering ? { opacity: 1 } : { opacity: 0 }}

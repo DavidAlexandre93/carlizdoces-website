@@ -23,5 +23,5 @@ export function AppRouter() {
     setPathname('/home')
   }
 
-  return pathname === '/home' ? <HomePage /> : <SplashEnterCircus onEntered={goToHome} />
+  return pathname === '/home' ? <HomePage skipIntroCurtain /> : <SplashEnterCircus onEntered={goToHome} />
 }
