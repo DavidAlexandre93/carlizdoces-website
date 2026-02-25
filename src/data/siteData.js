@@ -128,7 +128,6 @@ const dynamicUpdatesCatalog = [...autoUpdates, ...extraManualUpdates]
 
 export const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
-  { label: 'Confeitaria em Ação', sectionId: 'confeitaria-em-acao' },
   { label: 'Novidades', sectionId: 'novidades' },
   { label: 'Instagram', sectionId: 'instagram' },
   { label: 'Depoimentos', sectionId: 'depoimentos' },
