@@ -315,12 +315,11 @@ export function Header({
             <Box
               sx={{
                 mb: 2.5,
-                p: { xs: 0.75, sm: 1 },
+                p: { xs: 0.5, sm: 0.75 },
                 borderRadius: 999,
                 textAlign: 'center',
-                background: 'linear-gradient(95deg, rgba(255, 245, 247, 0.95) 0%, rgba(255, 250, 238, 0.98) 100%)',
-                border: '1px solid rgba(226, 93, 113, 0.24)',
-                boxShadow: '0 8px 24px rgba(201, 75, 112, 0.1)',
+                background: 'linear-gradient(95deg, rgba(255, 247, 249, 0.96) 0%, rgba(255, 250, 240, 0.96) 100%)',
+                border: '1px solid rgba(231, 135, 150, 0.42)',
               }}
             >
               <Link
@@ -333,19 +332,22 @@ export function Header({
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: '100%',
-                  minHeight: { xs: 44, sm: 48 },
+                  minHeight: { xs: 42, sm: 46 },
                   px: 3,
                   borderRadius: 999,
-                  fontSize: { xs: '0.98rem', sm: '1.06rem' },
-                  fontWeight: 700,
-                  letterSpacing: '0.03em',
-                  color: '#cf5f69',
+                  fontSize: { xs: '0.96rem', sm: '1.04rem' },
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  color: '#df7a80',
                   textTransform: 'uppercase',
-                  transition: 'all 0.25s ease',
+                  textDecoration: 'underline',
+                  textDecorationColor: 'rgba(223, 122, 128, 0.55)',
+                  textUnderlineOffset: '0.22em',
+                  transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.72)',
-                    color: '#b94962',
-                    boxShadow: 'inset 0 0 0 1px rgba(201, 75, 112, 0.22)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.68)',
+                    color: '#c96572',
+                    textDecorationColor: 'rgba(201, 101, 114, 0.85)',
                   },
                 }}
               >
