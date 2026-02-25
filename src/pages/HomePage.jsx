@@ -16,7 +16,6 @@ import { BakerStorySection } from '../features/home/sections/BakerStorySection'
 import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
 import { OrderSection } from '../features/home/sections/OrderSection'
 import { LocationSection } from '../features/home/sections/LocationSection'
-import { ParticlesBackground } from '../components/ui/ParticlesBackground'
 import { deviceId, supabase } from '../supabaseClient'
 
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
@@ -28,24 +27,6 @@ const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
 const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
-const featuredVideoDecorations = [
-  { icon: '🍬', top: -34, left: 20, delay: '0s', duration: '4.5s', size: { xs: '1.8rem', sm: '2.1rem' } },
-  { icon: '🍭', top: -36, left: '24%', delay: '0.5s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '🍫', top: -34, right: '24%', delay: '0.9s', duration: '4.8s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '🧁', top: -36, right: 20, delay: '1.3s', duration: '5.4s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '✨', top: 72, left: -28, delay: '0.3s', duration: '3.6s', size: { xs: '1.75rem', sm: '2rem' } },
-  { icon: '⭐', top: 142, left: -30, delay: '0.8s', duration: '3.4s', size: { xs: '1.65rem', sm: '1.9rem' } },
-  { icon: '🍪', top: '34%', left: -34, delay: '1.4s', duration: '4.9s', size: { xs: '1.8rem', sm: '2.1rem' } },
-  { icon: '🍡', top: '58%', left: -32, delay: '1.9s', duration: '5.1s', size: { xs: '1.8rem', sm: '2.1rem' } },
-  { icon: '✨', top: 80, right: -28, delay: '0.6s', duration: '3.3s', size: { xs: '1.75rem', sm: '2rem' } },
-  { icon: '⭐', top: 150, right: -30, delay: '1.1s', duration: '3.1s', size: { xs: '1.65rem', sm: '1.9rem' } },
-  { icon: '🍩', top: '35%', right: -36, delay: '1.6s', duration: '4.7s', size: { xs: '1.8rem', sm: '2.1rem' } },
-  { icon: '🍬', top: '60%', right: -34, delay: '2.1s', duration: '4.6s', size: { xs: '1.8rem', sm: '2.1rem' } },
-  { icon: '🍫', bottom: -34, left: 28, delay: '1.2s', duration: '4.8s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '🍭', bottom: -36, left: '28%', delay: '1.7s', duration: '5.3s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '🧁', bottom: -34, right: '28%', delay: '2.2s', duration: '5.2s', size: { xs: '1.9rem', sm: '2.2rem' } },
-  { icon: '🍡', bottom: -36, right: 28, delay: '2.5s', duration: '5.4s', size: { xs: '1.9rem', sm: '2.2rem' } },
-]
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
 
@@ -647,7 +628,6 @@ export function HomePage() {
         </Box>
       )}
 
-      <ParticlesBackground />
 
       <Header
         navItems={navItems}
@@ -816,36 +796,8 @@ export function HomePage() {
             position: 'relative',
             p: { xs: 2, sm: 3 },
             pb: { xs: 2, sm: 1 },
-            '@keyframes candyFloat': {
-              '0%': { transform: 'translateY(0px) scale(1) rotate(0deg)' },
-              '50%': { transform: 'translateY(-8px) scale(1.08) rotate(-6deg)' },
-              '100%': { transform: 'translateY(0px) scale(1) rotate(0deg)' },
-            },
-            '@keyframes candyTwinkle': {
-              '0%, 100%': { opacity: 0.6, transform: 'scale(0.95) rotate(0deg)' },
-              '50%': { opacity: 1, transform: 'scale(1.15) rotate(14deg)' },
-            },
           }}
         >
-          {featuredVideoDecorations.map((item) => (
-            <Box
-              key={`${item.icon}-${item.top ?? item.bottom}-${item.left ?? item.right}`}
-              aria-hidden
-              sx={{
-                position: 'absolute',
-                fontSize: item.size ?? { xs: '1.45rem', sm: '1.7rem' },
-                lineHeight: 1,
-                pointerEvents: 'none',
-                zIndex: 2,
-                filter: 'drop-shadow(0 5px 7px rgba(0, 0, 0, 0.18))',
-                animation: `${item.icon === '✨' || item.icon === '⭐' ? 'candyTwinkle' : 'candyFloat'} ${item.duration} ease-in-out infinite`,
-                animationDelay: item.delay,
-                ...item,
-              }}
-            >
-              {item.icon}
-            </Box>
-          ))}
           <IconButton
             onClick={() => setIsFeaturedVideoOpen(false)}
             aria-label="Fechar vídeo em destaque"

@@ -5,8 +5,8 @@ import SwipeableViews from 'react-swipeable-views'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
 import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
-const MotionBox = motion(Box)
-const floatEmojis = ['🍬', '🍭', '🍫', '🧁', '✨', '🍓']
+const MotionImg = motion.img
+const MotionSpan = motion.span
 
 export function HeroSection({ topShowcaseSlides }) {
   const heroRef = useRef(null)
@@ -27,15 +27,6 @@ export function HeroSection({ topShowcaseSlides }) {
       repeat: -1,
       yoyo: true,
       ease: 'sine.inOut',
-    }, context.scope)
-
-    gsap.to('.hero-float-item', {
-      y: -14,
-      duration: 2.8,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      stagger: 0.12,
     }, context.scope)
 
     gsap.to('.hero-quick-actions .MuiButton-root', {
@@ -102,30 +93,11 @@ export function HeroSection({ topShowcaseSlides }) {
   return (
     <Container ref={heroRef} maxWidth="xl" className="hero section-alt-pink page-container hero-inner">
       <Box className="top-carousel" sx={{ position: 'relative', overflow: 'hidden' }}>
-        {floatEmojis.map((emoji, index) => (
-          <MotionBox
-            key={`${emoji}-${index}`}
-            className="hero-float-item"
-            sx={{
-              position: 'absolute',
-              zIndex: 2,
-              top: `${8 + ((index * 12) % 76)}%`,
-              left: `${3 + ((index * 17) % 90)}%`,
-              fontSize: { xs: '1rem', sm: '1.25rem' },
-              pointerEvents: 'none',
-            }}
-            animate={{ opacity: [0.2, 0.95, 0.2], rotate: [-8, 8, -8] }}
-            transition={{ duration: 3 + (index * 0.22), repeat: Infinity, ease: 'easeInOut' }}
-          >
-            {emoji}
-          </MotionBox>
-        ))}
-
         <SwipeableViews axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'} index={activeStep} onChangeIndex={setActiveStep} enableMouseEvents>
           {topShowcaseSlides.map((slide, index) => (
             <Box key={slide.id} className={`mui-carousel-stage${index === activeStep ? ' is-active' : ''}`}>
               <article className="top-carousel-slide">
-                <motion.img
+                <MotionImg
                   src={slide.imageUrl}
                   alt={slide.alt}
                   className={`hero-media-image${index === activeStep ? ' is-active' : ''}`}
@@ -171,7 +143,7 @@ export function HeroSection({ topShowcaseSlides }) {
         </SwipeableViews>
 
         <Box className="hero-progress-track" aria-hidden="true">
-          <motion.span
+          <MotionSpan
             className="hero-progress-value"
             animate={{ width: progressWidth }}
             transition={{ duration: 0.45, ease: 'easeOut' }}

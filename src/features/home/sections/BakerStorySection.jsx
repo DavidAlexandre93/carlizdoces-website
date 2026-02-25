@@ -45,7 +45,6 @@ export function BakerStorySection() {
 
   useGSAP((context) => {
     gsap.from('.baker-step-card.is-active', { y: 16, opacity: 0, duration: 0.5, ease: 'power2.out' }, context.scope)
-    gsap.from('.baker-floating-sweet', { y: 18, opacity: 0, duration: 0.55, stagger: 0.08, ease: 'power1.out' }, context.scope)
   }, { scope: sectionRef, dependencies: [activeStep] })
 
   return (
@@ -59,12 +58,6 @@ export function BakerStorySection() {
             <MotionDiv className="baker-cream-line" animate={{ scaleX: 0.2 + (0.8 * progress) }} transition={{ duration: 0.3 }} />
             <MotionDiv className="baker-cake" animate={{ scale: 0.88 + (0.18 * progress) }} transition={{ duration: 0.3 }}>
               <span role="img" aria-label="bolo">🎂</span>
-            </MotionDiv>
-            <MotionDiv className="baker-sparkles" animate={{ opacity: 0.15 + (0.85 * progress) }} transition={{ duration: 0.35 }}>
-              <span className="baker-floating-sweet">✨</span>
-              <span className="baker-floating-sweet">🧁</span>
-              <span className="baker-floating-sweet">🍓</span>
-              <span className="baker-floating-sweet">🍫</span>
             </MotionDiv>
           </Box>
         </Box>
