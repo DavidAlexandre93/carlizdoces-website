@@ -1,23 +1,27 @@
 import { useEffect, useState } from 'react'
+import SplashEnterCircus from '../../components/SplashEnterCircus'
 import { HomePage } from '../../pages/HomePage'
 
 export function AppRouter() {
-  const [pathname, setPathname] = useState(window.location.pathname)
+  const [pathname, setPathname] = useState(() => window.location.pathname || '/')
 
   useEffect(() => {
-    if (window.location.pathname !== '/') {
+    const onPopState = () => setPathname(window.location.pathname || '/')
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  useEffect(() => {
+    if (pathname !== '/' && pathname !== '/home') {
       window.history.replaceState({}, '', '/')
       setPathname('/')
     }
+  }, [pathname])
 
-    const handleNavigation = () => setPathname(window.location.pathname)
-    window.addEventListener('popstate', handleNavigation)
-    return () => window.removeEventListener('popstate', handleNavigation)
-  }, [])
-
-  if (pathname !== '/') {
-    return null
+  const goToHome = () => {
+    window.history.pushState({}, '', '/home')
+    setPathname('/home')
   }
 
-  return <HomePage />
+  return pathname === '/home' ? <HomePage /> : <SplashEnterCircus onEntered={goToHome} />
 }
