@@ -28,7 +28,7 @@ function buildStyleFromState(baseStyle = {}, animationState = {}) {
   return nextStyle
 }
 
-function createMotionComponent(tagName) {
+function createMotionComponent(component) {
   return forwardRef(function MotionComponent({ children, initial, whileInView, viewport, transition, style, ...rest }, forwardedRef) {
     const localRef = useRef(null)
     const [inView, setInView] = useState(false)
@@ -73,7 +73,7 @@ function createMotionComponent(tagName) {
       }
     }, [inView, initial, whileInView, style, transition])
 
-    return React.createElement(tagName, {
+    return React.createElement(component, {
       ...rest,
       ref: (node) => {
         localRef.current = node
@@ -85,4 +85,11 @@ function createMotionComponent(tagName) {
   })
 }
 
-export const motion = new Proxy({}, { get: (_target, tagName) => createMotionComponent(tagName) })
+function motionFactory(component) {
+  return createMotionComponent(component)
+}
+
+export const motion = new Proxy(motionFactory, {
+  apply: (_target, _thisArg, [component]) => createMotionComponent(component),
+  get: (_target, tagName) => createMotionComponent(tagName),
+})
