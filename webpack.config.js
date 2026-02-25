@@ -100,7 +100,9 @@ module.exports = (_, argv = {}) => {
         '@mui/icons-material/KeyboardArrowRight': path.resolve(__dirname, 'src/mui-icons/KeyboardArrowRight.jsx'),
         'material-ui-carousel': path.resolve(__dirname, 'src/mui-components/material-ui-carousel.jsx'),
         'react-swipeable-views': path.resolve(__dirname, 'src/mui-components/react-swipeable-views.jsx'),
-        'motion/react': path.resolve(__dirname, 'src/motion/react.js')
+        'motion/react': path.resolve(__dirname, 'src/motion/react.js'),
+        'framer-motion': path.resolve(__dirname, 'src/framer-motion.js'),
+        'react-router-dom': path.resolve(__dirname, 'src/react-router-dom.js')
       }
     },
     plugins: [
