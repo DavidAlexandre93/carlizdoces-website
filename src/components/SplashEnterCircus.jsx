@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,6 +16,17 @@ export default function SplashEnterCircus() {
     setEntering(true)
   }
 
+  useEffect(() => {
+    if (!entering) return undefined
+
+    const fallbackMs = prefersReducedMotion ? 380 : 1450
+    const timer = window.setTimeout(() => {
+      navigate('/home')
+    }, fallbackMs)
+
+    return () => window.clearTimeout(timer)
+  }, [entering, navigate, prefersReducedMotion])
+
   return (
     <div className="sceneRoot">
       <Motion.img
@@ -29,11 +40,12 @@ export default function SplashEnterCircus() {
           entering
             ? {
                 scale: prefersReducedMotion ? 1.6 : 2.4,
+                y: prefersReducedMotion ? 6 : 14,
                 filter: prefersReducedMotion
                   ? 'brightness(0.95)'
                   : 'brightness(0.9) blur(1.2px)',
               }
-            : { scale: 1, filter: 'brightness(0.98)' }
+            : { scale: 1, y: 0, filter: 'brightness(0.98)' }
         }
         transition={{ duration: prefersReducedMotion ? 0.35 : 1.35, ease: [0.2, 0.8, 0.2, 1] }}
       />
