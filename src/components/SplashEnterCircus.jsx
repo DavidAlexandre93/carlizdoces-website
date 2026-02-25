@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from 'react'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const Motion = motion
 
-export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
+export default function SplashEnterCircus() {
+  const reduceMotion = useReducedMotion()
   const [entering, setEntering] = useState(false)
+  const navigate = useNavigate()
 
   const doorHotspot = useMemo(() => ({ x: 50, y: 58 }), [])
 
@@ -13,7 +16,7 @@ export default function SplashEnterCircus({ onEntered, reduceMotion = false }) {
     setEntering(true)
 
     window.setTimeout(() => {
-      onEntered?.()
+      navigate('/home')
     }, reduceMotion ? 200 : 1550)
   }
 
