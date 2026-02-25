@@ -10,7 +10,6 @@ const MotionSpan = motion.span
 
 export function HeroSection({ topShowcaseSlides }) {
   const heroRef = useRef(null)
-  const heroCardRef = useRef(null)
   const theme = useTheme()
   const [activeStep, setActiveStep] = useState(0)
   const maxSteps = topShowcaseSlides.length
@@ -41,8 +40,7 @@ export function HeroSection({ topShowcaseSlides }) {
 
   useEffect(() => {
     const wrapper = heroRef.current
-    const card = heroCardRef.current
-    if (!wrapper || !card) return undefined
+    if (!wrapper) return undefined
 
     const handlePointerMove = (event) => {
       const rect = wrapper.getBoundingClientRect()
@@ -59,17 +57,10 @@ export function HeroSection({ topShowcaseSlides }) {
         ease: 'power2.out',
       }, wrapper)
 
-      gsap.to(card, {
-        x: (px - 0.5) * -8,
-        y: (py - 0.5) * -6,
-        duration: 0.35,
-        ease: 'power2.out',
-      }, wrapper)
     }
 
     const resetCard = () => {
       gsap.to('.hero-media-image.is-active', { x: 0, y: 0, duration: 0.4, ease: 'power2.out' }, wrapper)
-      gsap.to(card, { x: 0, y: 0, duration: 0.4, ease: 'power2.out' }, wrapper)
     }
 
     wrapper.addEventListener('pointermove', handlePointerMove)
@@ -105,14 +96,7 @@ export function HeroSection({ topShowcaseSlides }) {
                   animate={{ scale: index === activeStep ? 1.02 : 1, filter: index === activeStep ? 'saturate(1)' : 'saturate(0.9)' }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
                 />
-                <div
-                  ref={(node) => {
-                    if (index === activeStep) {
-                      heroCardRef.current = node
-                    }
-                  }}
-                  className="hero-slide-content hero-slide-glass-card"
-                >
+                <div className="hero-slide-content hero-slide-glass-card">
                   <Box className="hero-slide-shimmer" />
                   <Chip label={slide.tag} color="secondary" size="small" />
                   <TypingEffectText
