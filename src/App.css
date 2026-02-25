@@ -858,10 +858,11 @@ body {
 }
 
 .top-carousel-slide > div {
+  --hero-card-offset-y: 20px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translateX(-50%) translateY(calc(-50% + 20px));
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
   width: min(88%, 820px);
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
@@ -880,7 +881,8 @@ body {
 
 .mui-carousel-stage.is-active .top-carousel-slide > div {
   opacity: 1;
-  transform: translateX(-50%) translateY(-50%);
+  --hero-card-offset-y: 0px;
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
 }
 
 .top-carousel-slide p {
@@ -2778,9 +2780,16 @@ body {
 
 .hero-slide-glass-card {
   overflow: hidden;
-  transform: perspective(800px)
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y, 0px)))
+    perspective(800px)
     rotateX(calc((var(--hero-pointer-y) - 0.5) * -3deg))
     rotateY(calc((var(--hero-pointer-x) - 0.5) * 3deg));
+}
+
+@media (max-width: 768px) {
+  .hero-slide-glass-card {
+    transform: none;
+  }
 }
 
 .hero-slide-shimmer {
