@@ -104,7 +104,7 @@ export function ConfeitariaEmAcaoSection() {
   const [recheioId, setRecheioId] = useState('recheio_brigadeiro')
   const [coberturaId, setCoberturaId] = useState('cob_ganache')
   const [selectedDecos, setSelectedDecos] = useState(['deco_flores', 'deco_topper'])
-  const [birthdayName, setBirthdayName] = useState('Parabéns!')
+  const [birthdayName, setBirthdayName] = useState('Carla Geovanna')
   const [pulseKey, setPulseKey] = useState(0)
 
   const ingredientes = useMemo(() => ({

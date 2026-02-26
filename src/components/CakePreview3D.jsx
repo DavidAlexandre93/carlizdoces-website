@@ -13,7 +13,7 @@ export default function CakePreview3D({
   ingredientes,
   restrictionOk,
   pulseKey,
-  birthdayName = 'Parabéns!',
+  birthdayName = 'Carla Geovanna',
   quality = 'high',
 }) {
   const dpr = quality === 'high' ? [1, 2] : [1, 1.25]
