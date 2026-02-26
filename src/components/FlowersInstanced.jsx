@@ -54,11 +54,14 @@ export default function FlowersInstanced({
 
   useFrame((state) => {
     if (!enabled) return
+    if (posRef.current.length < count) return
+
     const t = state.clock.elapsedTime
 
     if (coreRef.current) {
       for (let i = 0; i < count; i += 1) {
         const p = posRef.current[i]
+        if (!p) continue
         const bob = 0.004 * Math.sin(t * 2 + p.wob)
 
         dummy.position.set(p.x, p.y + bob, p.z)
@@ -73,6 +76,7 @@ export default function FlowersInstanced({
       let idx = 0
       for (let i = 0; i < count; i += 1) {
         const p = posRef.current[i]
+        if (!p) continue
         const bob = 0.004 * Math.sin(t * 2 + p.wob)
         for (let k = 0; k < 5; k += 1) {
           const ang = (k / 5) * Math.PI * 2
