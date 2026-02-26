@@ -728,11 +728,6 @@ body {
 .hero-inner {
   position: relative;
   z-index: 1;
-  transform: perspective(1000px)
-    rotateX(calc((var(--pointer-y) - 0.5) * -2deg))
-    rotateY(calc((var(--pointer-x) - 0.5) * 2deg))
-    translateY(calc(var(--scroll-progress) * -24px));
-  transition: transform 220ms ease;
 }
 
 .section-divider-wrap {
@@ -808,13 +803,6 @@ body {
   height: clamp(340px, 62vw, 620px);
   object-fit: cover;
   display: block;
-  animation: zoom-in 900ms ease-out both;
-  transition: transform 380ms ease, filter 380ms ease;
-}
-
-.top-carousel-slide:hover img {
-  transform: scale(1.04);
-  filter: saturate(1.05);
 }
 
 .top-carousel-slide {
@@ -871,7 +859,7 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y))) var(--hero-card-tilt, none);
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
   width: min(88%, 820px);
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
@@ -891,7 +879,7 @@ body {
 .mui-carousel-stage.is-active .top-carousel-slide > div {
   opacity: 1;
   --hero-card-offset-y: 0px;
-  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y))) var(--hero-card-tilt, none);
+  transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
 }
 
 .top-carousel-slide p {
@@ -2051,7 +2039,7 @@ body {
   .top-carousel-slide > div {
     width: min(74%, 760px);
     left: 50%;
-    transform: translateX(-50%) translateY(calc(-50% + 20px)) var(--hero-card-tilt, none);
+    transform: translateX(-50%) translateY(calc(-50% + 20px));
   }
 
   .hero-carousel-arrow-prev {
@@ -2780,14 +2768,6 @@ body {
   .baker-story-section {
     min-height: auto;
   }
-}
-
-.hero-inner {
-  --hero-pointer-x: 0.5;
-  --hero-pointer-y: 0.5;
-  --hero-card-tilt: perspective(800px)
-    rotateX(calc((var(--hero-pointer-y) - 0.5) * -3deg))
-    rotateY(calc((var(--hero-pointer-x) - 0.5) * 3deg));
 }
 
 .hero-slide-glass-card {
