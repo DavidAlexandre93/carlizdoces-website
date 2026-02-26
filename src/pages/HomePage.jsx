@@ -715,15 +715,6 @@ export function HomePage({ skipIntroCurtain = false }) {
           />
         </MotionDiv>
 
-  
-          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
-            <SectionDivider label="Confeitaria em ação" sectionId="confeitaria-em-acao" />
-          </MotionDiv>
-
-          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.21 }}>
-            <ConfeitariaEmAcaoSection />
-          </MotionDiv>
-
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.2 }}>
             <SectionDivider label="Realizar pedido" sectionId="realizar-pedido" />
           </MotionDiv>
@@ -747,11 +738,19 @@ export function HomePage({ skipIntroCurtain = false }) {
             />
           </MotionDiv>
 
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.23 }}>
+            <SectionDivider label="Confeitaria em ação" sectionId="confeitaria-em-acao" />
+          </MotionDiv>
+
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.24 }}>
+            <ConfeitariaEmAcaoSection />
+          </MotionDiv>
+
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>
             <SectionDivider label="Onde estamos" sectionId="onde-estamos" />
           </MotionDiv>
 
-          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.26 }}>
+          <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.27 }}>
             <LocationSection />
           </MotionDiv>
 
