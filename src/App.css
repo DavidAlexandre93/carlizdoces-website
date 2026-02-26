@@ -850,9 +850,11 @@ body {
   --hero-card-offset-y: 20px;
   position: absolute;
   left: 50%;
+  right: auto;
   top: 50%;
   transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
   width: min(88%, 820px);
+  margin-inline: auto;
   background: rgba(34, 12, 24, 0.56);
   backdrop-filter: blur(9px);
   border: 1px solid rgba(255, 255, 255, 0.28);
