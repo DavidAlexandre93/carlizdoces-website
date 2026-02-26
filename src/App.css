@@ -380,12 +380,14 @@
   align-items: center;
   justify-content: space-between;
   min-height: 72px;
+  gap: 12px;
 }
 
 .topbar-brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .brand-logo {
@@ -512,6 +514,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .topbar-language-switcher {
@@ -656,6 +659,9 @@ body {
 
 .mobile-nav-list {
   margin-top: 8px !important;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .mobile-nav-list .MuiListItemButton-root {
@@ -684,6 +690,16 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e6bfd2;
+}
+
+.mobile-nav-language-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-bottom: 4px;
+  flex-wrap: wrap;
 }
 
 .topbar-brand,
@@ -2129,6 +2145,15 @@ body {
 
   .topbar-inner {
     min-height: 64px;
+    flex-wrap: nowrap;
+  }
+
+  .topbar-brand {
+    flex: 1;
+  }
+
+  .topbar-actions {
+    margin-left: auto;
   }
 
   .top-carousel {
@@ -2359,7 +2384,7 @@ body {
   }
 
   .topbar-language-switcher {
-    gap: 4px;
+    display: none;
   }
 
   .language-flag-button {
@@ -2476,10 +2501,6 @@ body {
 
   .brand-name {
     max-width: 140px;
-  }
-
-  .topbar-language-switcher {
-    display: none;
   }
 
   .scroll-party-badge,

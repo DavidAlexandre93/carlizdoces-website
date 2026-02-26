@@ -294,6 +294,24 @@ export function Header({
               </ListItemButton>
             ))}
           </List>
+
+          <Divider className="mobile-nav-divider" />
+
+          <Box className="mobile-nav-language-switcher" aria-label="Selecionar idioma">
+            {languageFlags.map((item) => (
+              <IconButton
+                key={item.language}
+                color="inherit"
+                className="language-flag-button"
+                aria-pressed={selectedLanguage === item.language}
+                aria-label={`Traduzir para ${item.label}`}
+                data-active={selectedLanguage === item.language}
+                onClick={() => applyLanguage(item.language)}
+              >
+                <span className="language-flag-icon" aria-hidden="true" style={{ backgroundImage: `url(${item.iconSrc})` }} />
+              </IconButton>
+            ))}
+          </Box>
         </Box>
       </Drawer>
 
