@@ -67,11 +67,6 @@ export default function SplashEnterCircus() {
       />
 
       <div className="splashContent">
-        <div className="brandBadge">
-          <div className="brandTitle">Carliz Doces</div>
-          <div className="brandSubtitle">Bem-vindo ao Circo 🍭🎪</div>
-        </div>
-
         <button
           className="enterBtn"
           onClick={handleEnter}
