@@ -7,7 +7,7 @@ export default function SplashEnterCircus() {
   const [entering, setEntering] = useState(false)
   const navigate = useNavigate()
 
-  const doorHotspot = useMemo(() => ({ x: 50, y: 58 }), [])
+  const doorHotspot = useMemo(() => ({ x: 50, y: 72 }), [])
 
   const handleEnter = () => {
     if (entering) return
@@ -34,7 +34,7 @@ export default function SplashEnterCircus() {
         style={{
           transformOrigin: `${doorHotspot.x}% ${doorHotspot.y}%`,
           transform: entering
-            ? `translate3d(0, ${prefersReducedMotion ? 6 : 14}px, 0) scale(${prefersReducedMotion ? 1.6 : 2.4})`
+            ? `translate3d(0, ${prefersReducedMotion ? -8 : -20}px, 0) scale(${prefersReducedMotion ? 1.6 : 2.4})`
             : 'translate3d(0, 0, 0) scale(1)',
           filter: entering
             ? prefersReducedMotion
