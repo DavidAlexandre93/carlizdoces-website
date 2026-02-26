@@ -31,6 +31,7 @@ export function FloatingActions({
           color="inherit"
           size="small"
           aria-label="Voltar ao topo"
+          href="#top"
           onClick={onScrollTop}
           sx={{
             ...commonPositionSx,

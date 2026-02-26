@@ -549,7 +549,16 @@ export function HomePage({ skipIntroCurtain = false }) {
   }, [])
 
   const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const topAnchor = document.getElementById('top')
+
+    if (topAnchor) {
+      topAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
   }
 
   const handleGoToOrderSection = (event) => {
