@@ -66,37 +66,37 @@ export function ConfeitariaEmAcaoSection() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }} className="acao-grid">
           <div style={{ display: 'grid', gap: 12 }}>
-            <label>
+            <label className="acao-field">
               Nome do aniversariante
-              <input value={birthdayName} onChange={(event) => setBirthdayName(event.target.value)} style={{ width: '100%', marginTop: 6 }} />
+              <input className="acao-input" value={birthdayName} onChange={(event) => setBirthdayName(event.target.value)} />
             </label>
 
-            <label>
+            <label className="acao-field">
               Estrutura
-              <select value={structure} onChange={(event) => { setStructure(event.target.value); setPulseKey((current) => current + 1) }} style={{ width: '100%', marginTop: 6 }}>
+              <select className="acao-select" value={structure} onChange={(event) => { setStructure(event.target.value); setPulseKey((current) => current + 1) }}>
                 <option value="redondo">Redondo</option>
                 <option value="quadrado">Quadrado</option>
                 <option value="2andares">2 andares</option>
               </select>
             </label>
 
-            <label>
+            <label className="acao-field">
               Massa
-              <select value={massaId} onChange={(event) => setMassaId(event.target.value)} style={{ width: '100%', marginTop: 6 }}>
+              <select className="acao-select" value={massaId} onChange={(event) => setMassaId(event.target.value)}>
                 {massas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
               </select>
             </label>
 
-            <label>
+            <label className="acao-field">
               Recheio
-              <select value={recheioId} onChange={(event) => setRecheioId(event.target.value)} style={{ width: '100%', marginTop: 6 }}>
+              <select className="acao-select" value={recheioId} onChange={(event) => setRecheioId(event.target.value)}>
                 {recheios.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
               </select>
             </label>
 
-            <label>
+            <label className="acao-field">
               Cobertura
-              <select value={coberturaId} onChange={(event) => { setCoberturaId(event.target.value); setPulseKey((current) => current + 1) }} style={{ width: '100%', marginTop: 6 }}>
+              <select className="acao-select" value={coberturaId} onChange={(event) => { setCoberturaId(event.target.value); setPulseKey((current) => current + 1) }}>
                 {coberturas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
               </select>
             </label>
@@ -138,6 +138,50 @@ export function ConfeitariaEmAcaoSection() {
 
         <style>{`
           .acao-grid { grid-template-columns: 1fr 1.2fr; }
+          .acao-field {
+            display: grid;
+            gap: 6px;
+            font-weight: 600;
+            color: #5f2345;
+          }
+          .acao-input,
+          .acao-select {
+            width: 100%;
+            min-height: 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(95, 35, 69, 0.2);
+            background: linear-gradient(180deg, #fff 0%, #fff8fb 100%);
+            color: #2f1022;
+            box-shadow: 0 6px 18px rgba(95, 35, 69, 0.08);
+            transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+            outline: none;
+          }
+          .acao-input {
+            padding: 0 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+          }
+          .acao-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 0 38px 0 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            background-image: linear-gradient(180deg, #fff 0%, #fff8fb 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6.5L8 10.5L12 6.5' stroke='%23a34d7f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-position: 0 0, calc(100% - 12px) 50%;
+          }
+          .acao-input:hover,
+          .acao-select:hover {
+            border-color: rgba(163, 77, 127, 0.45);
+          }
+          .acao-input:focus,
+          .acao-select:focus {
+            border-color: rgba(163, 77, 127, 0.75);
+            box-shadow: 0 0 0 4px rgba(227, 158, 189, 0.22), 0 10px 20px rgba(95, 35, 69, 0.1);
+            transform: translateY(-1px);
+          }
           @media (max-width: 980px) {
             .acao-grid { grid-template-columns: 1fr; }
           }
