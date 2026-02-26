@@ -810,14 +810,6 @@ body {
   width: 100%;
 }
 
-.top-carousel-slide::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(18, 6, 14, 0.08) 18%, rgba(18, 6, 14, 0.58) 100%);
-  pointer-events: none;
-}
-
 
 .carousel-nav-button,
 .mui-carousel-nav {
@@ -2781,26 +2773,6 @@ body {
   transform: translateX(-120%);
   animation: hero-shimmer 3.8s ease-in-out infinite;
   pointer-events: none;
-}
-
-.hero-progress-track {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.35);
-  z-index: 8;
-  overflow: hidden;
-}
-
-.hero-progress-value {
-  display: block;
-  height: 100%;
-  width: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #ffd166 0%, #ff8fab 45%, #ff5d8f 100%);
 }
 
 .showcase-image-stage {
