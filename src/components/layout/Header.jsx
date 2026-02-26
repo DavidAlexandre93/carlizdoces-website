@@ -46,9 +46,10 @@ export function Header({
   const { selectedLanguage, applyLanguage } = useGoogleTranslate()
   const languageFlags = [
     { language: 'en', label: 'English', iconSrc: '/images/flags/us.svg' },
-    { language: 'pt', label: 'Português', iconSrc: '/images/flags/br.svg' },
+    { language: 'pt', label: 'Português (Brasil)', iconSrc: '/images/flags/br.svg' },
     { language: 'es', label: 'Español', iconSrc: '/images/flags/es.svg' },
     { language: 'fr', label: 'Français', iconSrc: '/images/flags/fr.svg' },
+    { language: 'ja', label: '日本語', iconSrc: '/images/flags/jp.svg' },
   ]
 
   useEffect(() => {

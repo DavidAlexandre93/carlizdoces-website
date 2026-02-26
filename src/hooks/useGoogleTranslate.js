@@ -6,15 +6,44 @@ const GEO_API_URL = 'https://ipapi.co/json/'
 const COUNTRY_LANGUAGE_MAP = {
   BR: 'pt',
   US: 'en',
-  ES: 'es',
   FR: 'fr',
+  JP: 'ja',
 }
 
-const SUPPORTED_LANGUAGES = ['pt', 'en', 'es', 'fr']
+const SUPPORTED_LANGUAGES = ['pt', 'en', 'es', 'fr', 'ja', 'de', 'it']
+
+function normalizeLanguageCode(language) {
+  const normalized = (language ?? '').trim().toLowerCase()
+
+  if (!normalized) {
+    return null
+  }
+
+  const shortCode = normalized.split(/[-_]/)[0]
+  return SUPPORTED_LANGUAGES.includes(shortCode) ? shortCode : null
+}
 
 function getLanguageFromNavigator() {
-  const browserLanguage = window.navigator.language?.slice(0, 2).toLowerCase()
-  return SUPPORTED_LANGUAGES.includes(browserLanguage) ? browserLanguage : 'pt'
+  return normalizeLanguageCode(window.navigator.language) ?? 'en'
+}
+
+function getLanguageFromApiPayload(payload) {
+  const languageByCountry = COUNTRY_LANGUAGE_MAP[payload?.country_code]
+
+  if (languageByCountry) {
+    return languageByCountry
+  }
+
+  const apiLanguages = String(payload?.languages ?? '')
+    .split(',')
+    .map((language) => normalizeLanguageCode(language))
+    .filter(Boolean)
+
+  if (apiLanguages.length > 0) {
+    return apiLanguages[0]
+  }
+
+  return getLanguageFromNavigator()
 }
 
 async function getLanguageFromGeolocation() {
@@ -26,7 +55,7 @@ async function getLanguageFromGeolocation() {
     }
 
     const payload = await response.json()
-    return COUNTRY_LANGUAGE_MAP[payload.country_code] ?? getLanguageFromNavigator()
+    return getLanguageFromApiPayload(payload)
   } catch {
     return getLanguageFromNavigator()
   }
@@ -102,7 +131,7 @@ export function useGoogleTranslate() {
 
     const initializeLanguage = async () => {
       const savedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
-      const nextLanguage = savedLanguage || await getLanguageFromGeolocation()
+      const nextLanguage = normalizeLanguageCode(savedLanguage) || await getLanguageFromGeolocation()
       applyLanguage(nextLanguage)
     }
 
