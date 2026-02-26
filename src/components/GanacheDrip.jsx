@@ -55,6 +55,12 @@ export default function GanacheDrip({
 
   useFrame((state) => {
     if (!enabled || !dropsRef.current) return
+
+    if (drops.current.length !== dripCount) {
+      resetDrops()
+      return
+    }
+
     const t = state.clock.elapsedTime
 
     for (let i = 0; i < dripCount; i += 1) {
