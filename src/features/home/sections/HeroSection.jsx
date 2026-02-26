@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Box, Button, Chip, Container, Stack, useTheme } from '@mui/material'
 import { motion } from 'motion/react'
 import SwipeableViews from 'react-swipeable-views'
@@ -6,14 +6,12 @@ import gsap, { useGSAP } from '../../../lib/gsapCompat'
 import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
 const MotionImg = motion.img
-const MotionSpan = motion.span
 
 export function HeroSection({ topShowcaseSlides }) {
   const heroRef = useRef(null)
   const theme = useTheme()
   const [activeStep, setActiveStep] = useState(0)
   const maxSteps = topShowcaseSlides.length
-  const progressWidth = useMemo(() => `${((activeStep + 1) / Math.max(maxSteps, 1)) * 100}%`, [activeStep, maxSteps])
 
   useGSAP((context) => {
     gsap.timeline({ defaults: { ease: 'power3.out' } })
@@ -74,14 +72,6 @@ export function HeroSection({ topShowcaseSlides }) {
             </Box>
           ))}
         </SwipeableViews>
-
-        <Box className="hero-progress-track" aria-hidden="true">
-          <MotionSpan
-            className="hero-progress-value"
-            animate={{ width: progressWidth }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-          />
-        </Box>
       </Box>
     </Container>
   )
