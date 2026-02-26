@@ -849,9 +849,9 @@ body {
 .top-carousel-slide > div {
   --hero-card-offset-y: 20px;
   position: absolute;
-  left: 50%;
+  left: 46%;
   right: auto;
-  top: 50%;
+  top: 46%;
   transform: translate(-50%, calc(-50% + var(--hero-card-offset-y)));
   width: min(88%, 820px);
   margin-inline: auto;
@@ -2032,7 +2032,7 @@ body {
 @media (min-width: 1200px) {
   .top-carousel-slide > div {
     width: min(74%, 760px);
-    left: 50%;
+    left: 46%;
     transform: translateX(-50%) translateY(calc(-50% + 20px));
   }
 
