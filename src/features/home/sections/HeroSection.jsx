@@ -19,58 +19,7 @@ export function HeroSection({ topShowcaseSlides }) {
     gsap.timeline({ defaults: { ease: 'power3.out' } })
       .from('.hero-slide-content', { y: 24, opacity: 0, duration: 0.65 }, context.scope)
       .from('.hero-quick-actions > *', { y: 16, opacity: 0, duration: 0.45, stagger: 0.1 }, context.scope)
-
-    gsap.to('.hero-media-image.is-active', {
-      scale: 1.06,
-      duration: 4.8,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    }, context.scope)
-
-    gsap.to('.hero-quick-actions .MuiButton-root', {
-      y: -4,
-      duration: 1.6,
-      yoyo: true,
-      repeat: -1,
-      ease: 'sine.inOut',
-      stagger: 0.2,
-    }, context.scope)
   }, { scope: heroRef, dependencies: [activeStep] })
-
-  useEffect(() => {
-    const wrapper = heroRef.current
-    if (!wrapper) return undefined
-
-    const handlePointerMove = (event) => {
-      const rect = wrapper.getBoundingClientRect()
-      const px = (event.clientX - rect.left) / rect.width
-      const py = (event.clientY - rect.top) / rect.height
-
-      wrapper.style.setProperty('--hero-pointer-x', String(px.toFixed(3)))
-      wrapper.style.setProperty('--hero-pointer-y', String(py.toFixed(3)))
-
-      gsap.to('.hero-media-image.is-active', {
-        x: (px - 0.5) * 14,
-        y: (py - 0.5) * 10,
-        duration: 0.35,
-        ease: 'power2.out',
-      }, wrapper)
-
-    }
-
-    const resetCard = () => {
-      gsap.to('.hero-media-image.is-active', { x: 0, y: 0, duration: 0.4, ease: 'power2.out' }, wrapper)
-    }
-
-    wrapper.addEventListener('pointermove', handlePointerMove)
-    wrapper.addEventListener('pointerleave', resetCard)
-
-    return () => {
-      wrapper.removeEventListener('pointermove', handlePointerMove)
-      wrapper.removeEventListener('pointerleave', resetCard)
-    }
-  }, [activeStep])
 
   useEffect(() => {
     if (maxSteps <= 1) return undefined
