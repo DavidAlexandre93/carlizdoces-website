@@ -35,7 +35,8 @@ body {
 
 .sceneRoot {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   overflow: hidden;
   background: #07030a;
@@ -78,7 +79,7 @@ body {
 .splashContent {
   position: absolute;
   left: 50%;
-  bottom: 8%;
+  bottom: max(16px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
   width: min(680px, 92vw);
   display: flex;
@@ -110,6 +111,7 @@ body {
 
 .enterBtn {
   width: min(360px, 92vw);
+  min-height: 48px;
   padding: 14px 18px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -138,6 +140,55 @@ body {
   opacity: 0;
   pointer-events: none;
   z-index: 4;
+}
+
+@media (max-width: 1024px) {
+  .splashContent {
+    bottom: max(20px, env(safe-area-inset-bottom));
+    width: min(560px, calc(100vw - 28px));
+  }
+
+  .enterBtn {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .splashImg {
+    object-position: center 38%;
+  }
+
+  .splashContent {
+    bottom: max(18px, env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+    gap: 10px;
+  }
+
+  .enterBtn {
+    font-size: 15px;
+    padding: 13px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sceneRoot {
+    min-height: 100svh;
+  }
+
+  .splashImg {
+    object-position: center 34%;
+  }
+
+  .splashContent {
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: calc(100vw - 20px);
+  }
+
+  .enterBtn {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
 }
 
 .insideRoot {

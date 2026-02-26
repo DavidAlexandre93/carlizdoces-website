@@ -8,6 +8,19 @@ export default function SplashEnterCircus() {
   const navigate = useNavigate()
 
   const doorHotspot = useMemo(() => ({ x: 50, y: 72 }), [])
+  const portalSize = useMemo(
+    () => ({
+      idleWidth: 'clamp(160px, 34vw, 220px)',
+      idleHeight: 'clamp(200px, 42vh, 280px)',
+      enterWidth: prefersReducedMotion
+        ? 'clamp(280px, 72vw, 420px)'
+        : 'clamp(420px, 140vw, 980px)',
+      enterHeight: prefersReducedMotion
+        ? 'clamp(360px, 85vh, 520px)'
+        : 'clamp(560px, 175vh, 1300px)',
+    }),
+    [prefersReducedMotion],
+  )
 
   const handleEnter = () => {
     if (entering) return
@@ -58,8 +71,8 @@ export default function SplashEnterCircus() {
         style={{
           left: `${doorHotspot.x}%`,
           top: `${doorHotspot.y}%`,
-          width: entering ? (prefersReducedMotion ? 420 : 980) : 220,
-          height: entering ? (prefersReducedMotion ? 520 : 1300) : 280,
+          width: entering ? portalSize.enterWidth : portalSize.idleWidth,
+          height: entering ? portalSize.enterHeight : portalSize.idleHeight,
           opacity: entering ? 1 : 0,
           borderRadius: entering ? (prefersReducedMotion ? 22 : 0) : 26,
           transition: `width ${prefersReducedMotion ? 0.35 : 1.1}s cubic-bezier(0.2, 0.8, 0.2, 1), height ${prefersReducedMotion ? 0.35 : 1.1}s cubic-bezier(0.2, 0.8, 0.2, 1), opacity ${prefersReducedMotion ? 0.35 : 1.1}s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius ${prefersReducedMotion ? 0.35 : 1.1}s cubic-bezier(0.2, 0.8, 0.2, 1)`,
