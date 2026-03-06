@@ -228,11 +228,13 @@
 
 .intro-logo {
   width: min(50vw, 320px);
-  aspect-ratio: 1 / 1;
+  height: min(50vw, 320px);
   object-fit: cover;
   object-position: center;
+  display: block;
   background: #fff8fb;
   border-radius: 50%;
+  overflow: hidden;
   border: 6px solid #ffd2e8;
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
 }
@@ -325,6 +327,7 @@
 @media (max-width: 680px) {
   .intro-logo {
     width: min(74vw, 260px);
+    height: min(74vw, 260px);
   }
 
   .intro-clown-wrap {
@@ -392,8 +395,10 @@
 
 .brand-logo {
   width: clamp(112px, 13vw, 144px);
-  aspect-ratio: 1 / 1;
+  height: clamp(112px, 13vw, 144px);
   border-radius: 50%;
+  display: block;
+  overflow: hidden;
   object-fit: cover;
   border: 2px solid #e6bfd2;
   box-shadow: 0 6px 14px rgba(173, 20, 87, 0.15);
@@ -1998,9 +2003,11 @@ body {
 
 .footer .brand-logo {
   width: clamp(112px, 13vw, 144px);
-  aspect-ratio: 1 / 1;
+  height: clamp(112px, 13vw, 144px);
   object-fit: cover;
   border-radius: 50%;
+  display: block;
+  overflow: hidden;
   box-shadow: 0 10px 24px rgb(0 0 0 / 18%);
 }
 
@@ -2373,6 +2380,7 @@ body {
 
   .brand-logo {
     width: clamp(66px, 19vw, 88px);
+    height: clamp(66px, 19vw, 88px);
   }
 
   .brand-name {
