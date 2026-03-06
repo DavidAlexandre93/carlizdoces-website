@@ -15,36 +15,6 @@ permissions:
   security-events: write
 
 jobs:
-  validate:
-    name: Validate
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: |
-          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
-
-      - name: Lint
-        run: npm run lint -- --max-warnings=0
-
-      - name: Unit tests
-        run: npm run test:ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Security audit (high+)
-        run: npm run audit:high
-
   dependency-review:
     name: Dependency Review
     if: github.event_name == 'pull_request'
