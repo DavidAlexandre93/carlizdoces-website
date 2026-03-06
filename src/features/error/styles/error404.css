@@ -1,0 +1,217 @@
+.error404-page {
+  --error-bg-start: #ff8cc6;
+  --error-bg-mid: #a06dff;
+  --error-bg-end: #63c7ff;
+  --error-pink: #ff4b9d;
+  --error-pink-soft: #ffbfdc;
+  --error-lilac: #d8b5ff;
+  --error-cream: #fff9fe;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.2rem, 3.2vw, 2.5rem);
+  overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 15% 8%, rgba(255, 238, 146, 0.64) 0%, transparent 60%),
+    radial-gradient(850px 460px at 84% 95%, rgba(118, 247, 209, 0.4) 0%, transparent 65%),
+    linear-gradient(160deg, var(--error-bg-start) 0%, var(--error-bg-mid) 48%, var(--error-bg-end) 100%);
+}
+
+.error404-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.28) 0 7px, transparent 8px),
+    radial-gradient(circle at 77% 14%, rgba(255, 255, 255, 0.25) 0 6px, transparent 7px),
+    radial-gradient(circle at 12% 84%, rgba(255, 255, 255, 0.22) 0 6px, transparent 7px),
+    radial-gradient(circle at 88% 76%, rgba(255, 255, 255, 0.24) 0 7px, transparent 8px);
+  pointer-events: none;
+}
+
+.error404-glow {
+  position: absolute;
+  width: 52vw;
+  height: 52vw;
+  max-width: 520px;
+  max-height: 520px;
+  border-radius: 50%;
+  filter: blur(88px);
+  opacity: 0.34;
+  pointer-events: none;
+  z-index: -2;
+}
+
+.error404-glow--top {
+  top: -18%;
+  right: -8%;
+  background: #ff77be;
+}
+
+.error404-glow--bottom {
+  bottom: -28%;
+  left: -11%;
+  background: #8ce2ff;
+}
+
+.error404-sprinkle {
+  position: absolute;
+  width: 14px;
+  height: 42px;
+  border-radius: 20px;
+  opacity: 0.72;
+  transform: rotate(24deg);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.24);
+  z-index: -1;
+}
+
+.error404-sprinkle--one {
+  top: 14%;
+  left: 8%;
+  background: linear-gradient(180deg, #ffe97b, #ffb248);
+}
+
+.error404-sprinkle--two {
+  top: 20%;
+  right: 12%;
+  background: linear-gradient(180deg, #a2f6ff, #54caff);
+  transform: rotate(-20deg);
+}
+
+.error404-sprinkle--three {
+  bottom: 18%;
+  left: 14%;
+  background: linear-gradient(180deg, #d6ffae, #7ce781);
+  transform: rotate(-34deg);
+}
+
+.error404-card {
+  width: min(720px, 100%);
+  padding: clamp(1.7rem, 4.4vw, 3.2rem);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  text-align: center;
+  color: var(--error-cream);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.15)),
+    linear-gradient(175deg, rgba(166, 80, 212, 0.74), rgba(88, 78, 215, 0.7));
+  box-shadow: 0 28px 70px rgba(78, 39, 133, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(9px);
+}
+
+.error404-label {
+  margin: 0;
+  color: rgba(255, 249, 254, 0.98);
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.error404-candy-row {
+  margin-top: 0.65rem;
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.35rem 0.62rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.error404-candy-row span {
+  font-size: 1.08rem;
+}
+
+.error404-code {
+  margin: 0.65rem 0 0;
+  font-size: clamp(3.9rem, 15vw, 7rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  background: linear-gradient(180deg, #fffef7 0%, var(--error-pink-soft) 42%, var(--error-pink) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 24px rgba(255, 87, 168, 0.23);
+}
+
+.error404-card h1 {
+  margin: 0.72rem auto 0;
+  max-width: 25ch;
+  color: #fff;
+  font-size: clamp(1.36rem, 3vw, 2rem);
+  line-height: 1.32;
+}
+
+.error404-message {
+  margin: 0.95rem auto 0;
+  max-width: 48ch;
+  color: rgba(255, 244, 252, 0.98);
+  line-height: 1.62;
+}
+
+.error404-message span {
+  display: block;
+  margin-top: 0.24rem;
+  color: rgba(244, 235, 255, 0.96);
+}
+
+.error404-actions {
+  margin-top: 1.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+.error404-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-size: 0.94rem;
+  font-weight: 700;
+  transition: transform 180ms ease, filter 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.error404-link:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.error404-link--primary {
+  color: #fff;
+  background: linear-gradient(130deg, #ff4b9d, #ff4f84 56%, #ff9fcf);
+  box-shadow: 0 12px 24px rgba(250, 67, 153, 0.38);
+}
+
+.error404-link--secondary {
+  color: rgba(255, 247, 252, 1);
+  border-color: rgba(255, 245, 251, 0.7);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 600px) {
+  .error404-card {
+    border-radius: 24px;
+  }
+
+  .error404-actions {
+    flex-direction: column;
+  }
+
+  .error404-link {
+    width: 100%;
+  }
+
+  .error404-sprinkle {
+    opacity: 0.52;
+  }
+}
