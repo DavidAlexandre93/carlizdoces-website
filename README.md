@@ -72,6 +72,7 @@ O app é uma SPA com:
 
 - Funções Node/CommonJS executadas na Vercel;
 - Endpoint de contato integrando com **Resend API**;
+- Logs estruturados com `requestId` e endpoint de métricas `/api/metrics`;
 - Endpoints de likes e ratings em memória (fallback/local API);
 - Utilitário para leitura/validação de credenciais de conta de serviço Firebase (`api/firebaseServiceAccount.js`).
 
@@ -203,6 +204,11 @@ CONTACT_TO_EMAIL=carlizdoces@gmail.com
 ---
 
 ## 🔌 APIs serverless
+
+
+### `GET /api/metrics`
+
+Retorna snapshot em memória com métricas operacionais por rota e por dependência externa (latência p50/p95/p99, taxa de erro, falhas de integração). Útil para baseline/local troubleshooting.
 
 ### `POST /api/contact-email`
 

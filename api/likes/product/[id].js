@@ -1,11 +1,28 @@
 /* global module, require */
 const { toggleProductLikeForUser } = require('../../likesStore')
-const { allowMethods, sendError, withRequestContext } = require('../../_lib/http')
+const { allowMethods, applyRateLimit, sendError, withRequestContext } = require('../../_lib/http')
 
 module.exports = withRequestContext(async function handler(req, res, context) {
   const { requestId } = context
 
   if (!allowMethods(req, res, ['POST'], requestId)) {
+    return
+  }
+
+
+  const rateLimitResult = applyRateLimit({
+    key: `likes:product:${context.clientIp}`,
+    windowMs: 60 * 1000,
+    limit: 50,
+  })
+
+  if (!rateLimitResult.allowed) {
+    res.setHeader('Retry-After', Math.ceil((rateLimitResult.retryAfterMs || 0) / 1000))
+    sendError(res, 429, {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Muitas tentativas de curtida de produto. Tente novamente em instantes.',
+      requestId,
+    })
     return
   }
 
