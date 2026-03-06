@@ -34,7 +34,7 @@ export default function SplashEnterCircus() {
 
     const fallbackMs = prefersReducedMotion ? 380 : 1450
     const timer = window.setTimeout(() => {
-      navigate('/')
+      navigate('/home')
     }, fallbackMs)
 
     return () => window.clearTimeout(timer)
@@ -109,7 +109,7 @@ export default function SplashEnterCircus() {
           transition: `opacity ${prefersReducedMotion ? 0.25 : 0.45}s ease ${prefersReducedMotion ? 0 : 0.95}s`,
         }}
         onTransitionEnd={() => {
-          if (entering) navigate('/')
+          if (entering) navigate('/home')
         }}
       />
       </div>
