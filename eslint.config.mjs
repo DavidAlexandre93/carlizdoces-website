@@ -27,6 +27,17 @@ export default defineConfig([
     },
   },
   {
+    files: ['api/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+      parserOptions: {
+        sourceType: 'commonjs',
+      },
+    },
+  },
+  {
     files: ['src/supabaseClient.js'],
     languageOptions: {
       globals: {
