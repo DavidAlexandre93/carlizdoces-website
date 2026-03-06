@@ -1,11 +1,11 @@
 import { useRef } from 'react'
 import { Box, Button, Container, Link, Paper, Typography } from '@mui/material'
 import { motion } from 'motion/react'
-import gsap, { useGSAP } from '../../lib/gsapCompat'
+import gsap, { useGSAP } from '../../../lib/gsapCompat'
 
 const MotionDiv = motion.div
 
-export default function InstagramSection({ instagramPosts, instagramProfileLink }) {
+export default function InstagramFeedSection({ instagramPosts, instagramProfileLink }) {
   const sectionRef = useRef(null)
 
   useGSAP((context) => {

@@ -1,27 +1,27 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
-import gsap, { useGSAP } from '../lib/gsapCompat'
-import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../data/siteData'
-import { useCart } from '../hooks/useCart'
-import { useWhatsAppOrderLink } from '../hooks/useWhatsAppOrderLink'
-import { useProductRatings } from '../hooks/useProductRatings'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
-import { FloatingActions } from '../components/layout/FloatingActions'
-import { SectionDivider } from '../components/ui/SectionDivider'
-import { HeroSection } from '../features/home/sections/HeroSection'
-import { AboutSection } from '../features/home/sections/AboutSection'
-import { ShowcaseSection } from '../features/home/sections/ShowcaseSection'
-import { OrderSection } from '../features/home/sections/OrderSection'
-import { LocationSection } from '../features/home/sections/LocationSection'
-import { ConfeitariaEmAcaoSection } from '../features/home/sections/ConfeitariaEmAcaoSection'
-import { deviceId, supabase } from '../supabaseClient'
+import gsap, { useGSAP } from '../../../lib/gsapCompat'
+import { BRL, announcementChannels, instagramPosts, instagramProfileLink, manualTestimonials, metrics, navItems, paymentMethods, seasonalProducts, topShowcaseSlides, updates, whatsappNumber } from '../../../data/siteData'
+import { useCart } from '../../../hooks/useCart'
+import { useWhatsAppOrderLink } from '../../../hooks/useWhatsAppOrderLink'
+import { useProductRatings } from '../../../hooks/useProductRatings'
+import { Header } from '../../../components/layout/Header'
+import { Footer } from '../../../components/layout/Footer'
+import { FloatingActions } from '../../../components/layout/FloatingActions'
+import { SectionDivider } from '../../../components/ui/SectionDivider'
+import { HeroSection } from '../sections/HeroSection'
+import { AboutSection } from '../sections/AboutSection'
+import { ShowcaseSection } from '../sections/ShowcaseSection'
+import { OrderSection } from '../sections/OrderSection'
+import { LocationSection } from '../sections/LocationSection'
+import { ConfeitariaEmAcaoSection } from '../sections/ConfeitariaEmAcaoSection'
+import { deviceId, supabase } from '../../../supabaseClient'
 
-const ContactSection = lazy(() => import('../components/sections/ContactSection'))
-const TestimonialsSection = lazy(() => import('../components/sections/TestimonialsSection'))
-const InstagramSection = lazy(() => import('../components/sections/InstagramSection'))
-const UpdatesSection = lazy(() => import('../components/sections/UpdatesSection'))
+const ContatoSection = lazy(() => import('../sections/ContatoSection'))
+const DepoimentosSection = lazy(() => import('../sections/DepoimentosSection'))
+const InstagramFeedSection = lazy(() => import('../sections/InstagramFeedSection'))
+const NovidadesSection = lazy(() => import('../sections/NovidadesSection'))
 const MotionDiv = motion.div
 const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
@@ -757,12 +757,12 @@ export function HomePage({ skipIntroCurtain = false }) {
         <Suspense fallback={<Container><Alert severity="info">Carregando seção...</Alert></Container>}>
           <Container disableGutters className="section-stack">
             <MotionDiv {...revealAnimation}><SectionDivider label="Depoimentos" sectionId="depoimentos" /></MotionDiv>
-            <MotionDiv {...revealAnimation}><TestimonialsSection testimonials={communityTestimonials} /></MotionDiv>
+            <MotionDiv {...revealAnimation}><DepoimentosSection testimonials={communityTestimonials} /></MotionDiv>
             <MotionDiv {...revealAnimation}><SectionDivider label="Novidades" sectionId="novidades" /></MotionDiv>
-            <MotionDiv {...revealAnimation}><UpdatesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
+            <MotionDiv {...revealAnimation}><NovidadesSection updates={updates} announcementChannels={announcementChannels} /></MotionDiv>
             <MotionDiv {...revealAnimation}><SectionDivider label="Contato" sectionId="contato" /></MotionDiv>
             <MotionDiv {...revealAnimation}>
-              <ContactSection
+              <ContatoSection
                 contactForm={contactForm}
                 onChange={(field, value) => setContactForm((current) => ({ ...current, [field]: value }))}
                 onSubmit={handleContactSubmit}
@@ -773,7 +773,7 @@ export function HomePage({ skipIntroCurtain = false }) {
               />
             </MotionDiv>
             <MotionDiv {...revealAnimation}><SectionDivider label="Instagram" sectionId="instagram" /></MotionDiv>
-            <MotionDiv {...revealAnimation}><InstagramSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
+            <MotionDiv {...revealAnimation}><InstagramFeedSection instagramPosts={instagramPosts} instagramProfileLink={instagramProfileLink} /></MotionDiv>
           </Container>
         </Suspense>
         </Container>

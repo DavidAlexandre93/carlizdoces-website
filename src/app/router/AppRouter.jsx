@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import SplashEnterCircus from '../../components/SplashEnterCircus'
-import { HomePage } from '../../pages/HomePage'
+import { HomePage } from '../../features/home/pages/HomePage'
 
 export function AppRouter() {
   return (
