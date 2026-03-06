@@ -3,28 +3,35 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "08:00"
+      interval: "daily"
+      time: "07:00"
       timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
     labels:
       - "dependencies"
+      - "security"
       - "ci/cd"
     commit-message:
       prefix: "chore"
       include: "scope"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
+    allow:
+      - dependency-type: "all"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "08:30"
+      interval: "daily"
+      time: "07:30"
       timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
+      - "security"
       - "ci/cd"
     commit-message:
       prefix: "chore"
