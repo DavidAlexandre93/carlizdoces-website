@@ -296,6 +296,36 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
+### `npm install` retorna erro 403
+
+Esse cenário costuma acontecer em rede corporativa/proxy restritivo, com mensagens como `403 Forbidden - GET https://registry.npmjs.org/...`.
+
+```bash
+npm config get registry
+npm config set registry https://registry.npmjs.org/
+npm config delete proxy
+npm config delete https-proxy
+npm config delete http-proxy
+npm install
+```
+
+Se o bloqueio persistir, solicite liberação do domínio `registry.npmjs.org` para sua máquina/rede.
+
+### `npm audit` reporta vulnerabilidades
+
+```bash
+npm audit
+npm audit fix
+```
+
+Para CI, use o script:
+
+```bash
+npm run audit:high
+```
+
+Ele reprova apenas quando existir vulnerabilidade `high`/`critical`.
+
 ### Likes/Ratings não persistem
 
 - Verifique `REACT_APP_SUPABASE_URL` e `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY`.
