@@ -92,10 +92,10 @@ const gsap = {
   },
 }
 
-export function useGSAP(callback, { scope, dependencies = [] } = {}) {
+export function useGSAP(callback, { scope } = {}) {
   useLayoutEffect(() => {
     callback({ scope: scope?.current || scope || document })
-  }, [callback, scope, ...dependencies])
+  }, [callback, scope])
 }
 
 export default gsap

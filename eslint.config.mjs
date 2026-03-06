@@ -31,7 +31,6 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.commonjs,
       },
       parserOptions: {
         sourceType: 'commonjs',
