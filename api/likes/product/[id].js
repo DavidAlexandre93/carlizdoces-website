@@ -1,16 +1,22 @@
 /* global module, require */
 const { toggleProductLikeForUser } = require('../../likesStore')
+const { allowMethods, sendError, withRequestContext } = require('../../_lib/http')
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST'])
-    res.status(405).json({ error: 'Method not allowed' })
+module.exports = withRequestContext(async function handler(req, res, context) {
+  const { requestId } = context
+
+  if (!allowMethods(req, res, ['POST'], requestId)) {
     return
   }
 
   const productId = req.query?.id
   if (!productId || typeof productId !== 'string') {
-    res.status(400).json({ error: 'id do produto inválido' })
+    sendError(res, 400, {
+      code: 'VALIDATION_ERROR',
+      message: 'Campo id inválido.',
+      details: [{ field: 'id', reason: 'required_string' }],
+      requestId,
+    })
     return
   }
 
@@ -18,9 +24,14 @@ module.exports = async function handler(req, res) {
   const result = toggleProductLikeForUser(productId, userId)
 
   if (!result.ok) {
-    res.status(400).json({ error: result.error })
+    sendError(res, 400, {
+      code: 'VALIDATION_ERROR',
+      message: 'Campo userId inválido.',
+      details: [{ field: 'userId', reason: 'required_string' }],
+      requestId,
+    })
     return
   }
 
-  res.status(200).json(result)
-}
+  res.status(200).json({ data: result, requestId })
+})
