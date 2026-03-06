@@ -1,5 +1,5 @@
 /* global module */
-const { allowMethods, sendError, withRequestContext } = require('./_lib/http')
+const { allowMethods, applyRateLimit, sendError, withRequestContext } = require('./_lib/http')
 
 const globalStore = globalThis.__carlizRatingsStore ?? {
   data: {},
@@ -20,6 +20,23 @@ module.exports = withRequestContext(async function handler(req, res, context) {
   const { requestId, clientIp } = context
 
   if (!allowMethods(req, res, ['GET', 'POST'], requestId)) {
+    return
+  }
+
+
+  const rateLimitResult = applyRateLimit({
+    key: `ratings:${clientIp}:${req.method}`,
+    windowMs: 60 * 1000,
+    limit: req.method === 'GET' ? 120 : 40,
+  })
+
+  if (!rateLimitResult.allowed) {
+    res.setHeader('Retry-After', Math.ceil((rateLimitResult.retryAfterMs || 0) / 1000))
+    sendError(res, 429, {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Muitas requisições para avaliações. Tente novamente em instantes.',
+      requestId,
+    })
     return
   }
 
