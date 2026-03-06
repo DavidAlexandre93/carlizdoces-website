@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { SeoHead } from '../../../components/seo/SeoHead'
 import { absoluteUrl } from '../../../lib/seo'
 import '../styles/error404.css'
@@ -38,12 +37,12 @@ export function Error404Page() {
         </p>
 
         <div className="error404-actions">
-          <Link className="error404-link error404-link--primary" to="/">
+          <a className="error404-link error404-link--primary" href="/">
             Ver vitrine de doces
-          </Link>
-          <Link className="error404-link error404-link--secondary" to="/entrada">
+          </a>
+          <a className="error404-link error404-link--secondary" href="/entrada">
             Voltar para entrada
-          </Link>
+          </a>
         </div>
       </section>
       </main>
