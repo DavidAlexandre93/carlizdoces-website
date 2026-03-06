@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
         'react-swipeable-views': path.resolve('src/mui-components/react-swipeable-views.jsx'),
         'motion/react': path.resolve('src/motion/react.js'),
         'framer-motion': path.resolve('src/framer-motion.js'),
-        'react-router-dom': path.resolve('src/react-router-dom.js'),
+        'react-router-dom': path.resolve('src/react-router-dom.jsx'),
       },
     },
     define: {
