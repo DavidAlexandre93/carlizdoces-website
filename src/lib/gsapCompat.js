@@ -95,7 +95,7 @@ const gsap = {
 export function useGSAP(callback, { scope, dependencies = [] } = {}) {
   useLayoutEffect(() => {
     callback({ scope: scope?.current || scope || document })
-  }, dependencies)
+  }, [callback, scope, ...dependencies])
 }
 
 export default gsap
