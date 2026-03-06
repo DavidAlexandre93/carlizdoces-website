@@ -136,6 +136,10 @@ export function Header({
                 src="/images/logo/logo-carlizdoces.png"
                 alt="Logo da Carliz Doces"
                 className={`brand-logo ${logoMotion.isFollowing ? 'is-following' : ''}`}
+                width={200}
+                height={200}
+                loading="eager"
+                fetchPriority="high"
                 ref={logoRef}
                 style={{
                   '--logo-follow-x': `${logoMotion.x}px`,

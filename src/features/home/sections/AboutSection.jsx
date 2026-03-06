@@ -23,6 +23,9 @@ export function AboutSection() {
           src="/images/tela-apresentacao/palhaco.png"
           alt="Palhaço da Carliz Doces"
           className="about-clown-image"
+          loading="lazy"
+          width="480"
+          height="480"
           whileHover={{ rotate: [-1, 1, -1], scale: 1.03 }}
           transition={{ duration: 0.7 }}
         />
