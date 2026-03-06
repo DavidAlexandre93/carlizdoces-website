@@ -91,11 +91,11 @@ O app é uma SPA com:
 ├── scripts/generate-image-data.mjs
 ├── src/
 │   ├── app/                     # Providers e roteamento
-│   ├── components/              # Componentes de layout/UI/seções
-│   ├── features/home/sections/  # Seções principais da home
+│   ├── components/              # Componentes compartilhados de layout/UI
+│   ├── features/home/pages/     # Página(s) da experiência Home
+│   ├── features/home/sections/  # Blocos visuais da Home (hero, novidades, contato etc.)
 │   ├── data/                    # Conteúdo editável + agregação
 │   ├── hooks/                   # Regras de negócio (carrinho, ratings, WhatsApp)
-│   ├── pages/HomePage.jsx
 │   ├── supabaseClient.js
 │   └── index.js                 # Entry usado no Webpack
 ├── webpack.config.js

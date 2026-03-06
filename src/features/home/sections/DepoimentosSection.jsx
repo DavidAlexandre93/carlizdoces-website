@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { motion } from 'motion/react'
 import { Alert, Box, Container, Link, Paper, Typography } from '@mui/material'
-import gsap, { useGSAP } from '../../lib/gsapCompat'
+import gsap, { useGSAP } from '../../../lib/gsapCompat'
 
 const MotionDiv = motion.div
 
 const DISQUS_SHORTNAME = import.meta.env.VITE_DISQUS_SHORTNAME || 'zeroreprovacao'
 
-export default function TestimonialsSection({ testimonials }) {
+export default function DepoimentosSection({ testimonials }) {
   const sectionRef = useRef(null)
   const disqusConfig = useMemo(() => {
     const pageUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}#depoimentos` : 'https://carlizdoces.com/#depoimentos'

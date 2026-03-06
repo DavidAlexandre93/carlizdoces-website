@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 import { motion } from 'motion/react'
-import gsap, { useGSAP } from '../../lib/gsapCompat'
+import gsap, { useGSAP } from '../../../lib/gsapCompat'
 
 const MotionDiv = motion.div
 
@@ -13,7 +13,7 @@ const typeStyles = {
   geral: { label: 'Aviso', color: 'warning' },
 }
 
-export default function UpdatesSection({ updates, announcementChannels }) {
+export default function NovidadesSection({ updates, announcementChannels }) {
   const sectionRef = useRef(null)
 
   useGSAP((context) => {
