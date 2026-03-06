@@ -17,6 +17,8 @@ import { OrderSection } from '../sections/OrderSection'
 import { LocationSection } from '../sections/LocationSection'
 import { ConfeitariaEmAcaoSection } from '../sections/ConfeitariaEmAcaoSection'
 import { deviceId, supabase } from '../../../supabaseClient'
+import { SeoHead } from '../../../components/seo/SeoHead'
+import { DEFAULT_OG_IMAGE, absoluteUrl } from '../../../lib/seo'
 
 const ContatoSection = lazy(() => import('../sections/ContatoSection'))
 const DepoimentosSection = lazy(() => import('../sections/DepoimentosSection'))
@@ -29,6 +31,28 @@ const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feat
 const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
 const isEasterMenuProduct = (product) => product.image?.includes('/images/cardapio-de-pascoa/')
 const isCandyOrderProduct = (product) => product.image?.includes('/images/pedidos-de-doces/')
+const HOME_SEO = {
+  title: 'Carliz Doces | Doces artesanais para festas e encomendas',
+  description: 'Encomende brigadeiros, doces finos e cardápio especial da Carliz Doces. Atendimento rápido no WhatsApp e produção artesanal em São Paulo.',
+  canonical: absoluteUrl('/'),
+  image: DEFAULT_OG_IMAGE,
+  schema: {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Carliz Doces',
+    url: absoluteUrl('/'),
+    logo: DEFAULT_OG_IMAGE,
+    sameAs: [instagramProfileLink],
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        telephone: '+55 11 99217-5496',
+        contactType: 'customer service',
+        availableLanguage: ['Portuguese', 'English', 'Spanish'],
+      },
+    ],
+  },
+}
 
 async function requestLikesSummaryFromSupabase(currentDeviceId, productIds) {
   const itemIds = [STORE_LIKES_ITEM_ID, ...productIds]
@@ -611,7 +635,16 @@ export function HomePage({ skipIntroCurtain = false }) {
   }
 
   return (
-    <Box id="top" className="site-wrapper">
+    <>
+      <SeoHead
+        title={HOME_SEO.title}
+        description={HOME_SEO.description}
+        canonical={HOME_SEO.canonical}
+        image={HOME_SEO.image}
+        schema={HOME_SEO.schema}
+      />
+      <Box id="top"
+ className="site-wrapper">
 
       {introStage !== 'hidden' && (
         <Box ref={introScopeRef} className={`intro-curtain intro-curtain-${introStage}`}>
@@ -958,6 +991,7 @@ export function HomePage({ skipIntroCurtain = false }) {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+      </Box>
+    </>
   )
 }

@@ -41,7 +41,7 @@ export default function NovidadesSection({ updates, announcementChannels }) {
 
               {item.imageUrl ? (
                 <Box className="updates-media">
-                  <img src={item.imageUrl} alt={item.imageAlt || item.title} loading="lazy" />
+                  <img src={item.imageUrl} alt={item.imageAlt || item.title} loading="lazy" decoding="async" width="900" height="900" />
                 </Box>
               ) : null}
 

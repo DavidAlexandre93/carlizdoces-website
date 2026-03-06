@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { SeoHead } from './seo/SeoHead'
+import { DEFAULT_OG_IMAGE, absoluteUrl } from '../lib/seo'
 
 export default function SplashEnterCircus() {
   const prefersReducedMotion = useReducedMotion()
@@ -32,18 +34,29 @@ export default function SplashEnterCircus() {
 
     const fallbackMs = prefersReducedMotion ? 380 : 1450
     const timer = window.setTimeout(() => {
-      navigate('/home')
+      navigate('/')
     }, fallbackMs)
 
     return () => window.clearTimeout(timer)
   }, [entering, navigate, prefersReducedMotion])
 
   return (
-    <div className="sceneRoot">
+    <>
+      <SeoHead
+        title="Entrada | Carliz Doces"
+        description="Entre na experiência da Carliz Doces e descubra nosso catálogo artesanal."
+        canonical={absoluteUrl('/entrada')}
+        image={DEFAULT_OG_IMAGE}
+      />
+      <div className="sceneRoot">
       <img
         src="/images/circus-outside.png"
         alt="Circo"
         className="splashImg"
+        width="1920"
+        height="1080"
+        loading="eager"
+        fetchPriority="high"
         style={{
           transformOrigin: `${doorHotspot.x}% ${doorHotspot.y}%`,
           transform: entering
@@ -96,9 +109,10 @@ export default function SplashEnterCircus() {
           transition: `opacity ${prefersReducedMotion ? 0.25 : 0.45}s ease ${prefersReducedMotion ? 0 : 0.95}s`,
         }}
         onTransitionEnd={() => {
-          if (entering) navigate('/home')
+          if (entering) navigate('/')
         }}
       />
-    </div>
+      </div>
+    </>
   )
 }

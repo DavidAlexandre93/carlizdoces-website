@@ -35,7 +35,7 @@ export default function InstagramFeedSection({ instagramPosts, instagramProfileL
           <MotionDiv key={post.id} initial={{ opacity: 0, y: 24, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.55, ease: 'easeOut' }}>
             <Paper component="article" elevation={3} className="instagram-card">
             <Link href={instagramProfileLink} target="_blank" rel="noreferrer" aria-label="Abrir Instagram da Carliz Doces" underline="none">
-              <img src={post.imageUrl} alt={post.alt} loading="lazy" />
+              <img src={post.imageUrl} alt={post.alt} loading="lazy" decoding="async" width="640" height="640" />
             </Link>
             </Paper>
           </MotionDiv>

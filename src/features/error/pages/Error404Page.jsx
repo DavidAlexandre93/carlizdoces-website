@@ -1,11 +1,20 @@
 import { Link } from 'react-router-dom'
+import { SeoHead } from '../../../components/seo/SeoHead'
+import { absoluteUrl } from '../../../lib/seo'
 import '../styles/error404.css'
 
 const candyIcons = ['🍬', '🍭', '🧁', '🍫', '🍩']
 
 export function Error404Page() {
   return (
-    <main className="error404-page" role="main">
+    <>
+      <SeoHead
+        title="Página não encontrada | Carliz Doces"
+        description="A página que você tentou acessar não foi encontrada. Continue navegando pela vitrine oficial da Carliz Doces."
+        canonical={absoluteUrl('/404')}
+        noindex
+      />
+      <main className="error404-page" role="main">
       <div className="error404-glow error404-glow--top" aria-hidden="true" />
       <div className="error404-glow error404-glow--bottom" aria-hidden="true" />
       <div className="error404-sprinkle error404-sprinkle--one" aria-hidden="true" />
@@ -29,14 +38,15 @@ export function Error404Page() {
         </p>
 
         <div className="error404-actions">
-          <Link className="error404-link error404-link--primary" to="/home">
+          <Link className="error404-link error404-link--primary" to="/">
             Ver vitrine de doces
           </Link>
-          <Link className="error404-link error404-link--secondary" to="/">
+          <Link className="error404-link error404-link--secondary" to="/entrada">
             Voltar para entrada
           </Link>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   )
 }
