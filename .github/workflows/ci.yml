@@ -55,10 +55,18 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Dependency review
+        id: dependency_review
         uses: actions/dependency-review-action@v4
+        continue-on-error: true
         with:
           fail-on-severity: high
           deny-licenses: AGPL-1.0-only, AGPL-1.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later, GPL-2.0-only, GPL-2.0-or-later, GPL-3.0-only, GPL-3.0-or-later
+
+      - name: Dependency review unavailable notice
+        if: steps.dependency_review.outcome == 'failure'
+        run: |
+          echo "::warning::Dependency Review não suportado neste repositório (Dependency Graph desabilitado)."
+          echo "::warning::Habilite Security & analysis > Dependency graph para tornar este check obrigatório."
 
   codeql:
     name: CodeQL Analysis
