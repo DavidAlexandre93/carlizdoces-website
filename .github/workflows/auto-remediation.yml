@@ -42,7 +42,7 @@ jobs:
           npm run audit:high
 
       - name: Create PR for dependency remediation
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "chore(security): automated dependency remediation"
           branch: chore/auto-dependency-remediation
@@ -93,7 +93,7 @@ jobs:
           npm run test:ci
 
       - name: Create PR for quality remediation
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "chore(ci): automated quality remediation"
           branch: chore/auto-quality-remediation
