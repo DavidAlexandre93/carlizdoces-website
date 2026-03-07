@@ -24,7 +24,8 @@ export default defineConfig(({ mode }) => {
       'process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT || ''),
     },
     server: {
-      port: 3000,
+      port: 5173,
+      strictPort: false,
       open: true,
     },
   }
