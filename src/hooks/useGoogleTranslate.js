@@ -1,16 +1,108 @@
 import { useCallback, useEffect, useState } from 'react'
 
 const LANGUAGE_STORAGE_KEY = 'carlizdoces:selected-language'
-const GEO_API_URL = 'https://ipapi.co/json/'
+const GEO_API_ENDPOINTS = [
+  'https://ipapi.co/json/',
+  'https://ipwho.is/',
+]
+
+const SUPPORTED_LANGUAGES = [
+  'pt',
+  'en',
+  'es',
+  'fr',
+  'ja',
+  'de',
+  'it',
+  'ar',
+  'ru',
+  'ko',
+  'zh-CN',
+  'zh-TW',
+  'hi',
+  'nl',
+  'tr',
+  'pl',
+  'sv',
+  'no',
+  'da',
+  'fi',
+]
+
+const LANGUAGE_ALIASES = {
+  'zh': 'zh-CN',
+  'zh-cn': 'zh-CN',
+  'zh-sg': 'zh-CN',
+  'zh-hans': 'zh-CN',
+  'zh-tw': 'zh-TW',
+  'zh-hk': 'zh-TW',
+  'zh-mo': 'zh-TW',
+  'zh-hant': 'zh-TW',
+  'pt-br': 'pt',
+  'pt-pt': 'pt',
+  'en-us': 'en',
+  'en-gb': 'en',
+  'es-es': 'es',
+  'es-mx': 'es',
+  'fr-fr': 'fr',
+  'ja-jp': 'ja',
+  'de-de': 'de',
+  'it-it': 'it',
+  'ar-sa': 'ar',
+  'ru-ru': 'ru',
+  'ko-kr': 'ko',
+  'hi-in': 'hi',
+}
 
 const COUNTRY_LANGUAGE_MAP = {
   BR: 'pt',
+  PT: 'pt',
   US: 'en',
+  CA: 'en',
+  GB: 'en',
+  IE: 'en',
+  AU: 'en',
+  NZ: 'en',
+  ZA: 'en',
+  IN: 'hi',
+  MX: 'es',
+  ES: 'es',
+  AR: 'es',
+  CL: 'es',
+  CO: 'es',
+  PE: 'es',
+  UY: 'es',
+  PY: 'es',
+  BO: 'es',
+  EC: 'es',
+  VE: 'es',
   FR: 'fr',
+  BE: 'fr',
+  CH: 'fr',
   JP: 'ja',
+  DE: 'de',
+  AT: 'de',
+  IT: 'it',
+  RU: 'ru',
+  UA: 'ru',
+  SA: 'ar',
+  AE: 'ar',
+  EG: 'ar',
+  DZ: 'ar',
+  MA: 'ar',
+  KR: 'ko',
+  CN: 'zh-CN',
+  SG: 'zh-CN',
+  TW: 'zh-TW',
+  HK: 'zh-TW',
+  NL: 'nl',
+  TR: 'tr',
+  PL: 'pl',
+  SE: 'sv',
+  NO: 'no',
+  DK: 'da',
+  FI: 'fi',
 }
-
-const SUPPORTED_LANGUAGES = ['pt', 'en', 'es', 'fr', 'ja', 'de', 'it']
 
 function normalizeLanguageCode(language) {
   const normalized = (language ?? '').trim().toLowerCase()
@@ -19,22 +111,52 @@ function normalizeLanguageCode(language) {
     return null
   }
 
+  if (LANGUAGE_ALIASES[normalized]) {
+    return LANGUAGE_ALIASES[normalized]
+  }
+
   const shortCode = normalized.split(/[-_]/)[0]
-  return SUPPORTED_LANGUAGES.includes(shortCode) ? shortCode : null
+
+  if (SUPPORTED_LANGUAGES.includes(shortCode)) {
+    return shortCode
+  }
+
+  return null
 }
 
 function getLanguageFromNavigator() {
+  const preferredLanguages = window.navigator.languages ?? [window.navigator.language]
+
+  for (const language of preferredLanguages) {
+    const normalized = normalizeLanguageCode(language)
+
+    if (normalized) {
+      return normalized
+    }
+  }
+
   return normalizeLanguageCode(window.navigator.language) ?? 'en'
 }
 
+function normalizeGeolocationPayload(payload) {
+  const countryCode = String(payload?.country_code ?? payload?.country_code2 ?? '').toUpperCase()
+  const languages = String(payload?.languages ?? payload?.language ?? '')
+
+  return {
+    countryCode,
+    languages,
+  }
+}
+
 function getLanguageFromApiPayload(payload) {
-  const languageByCountry = COUNTRY_LANGUAGE_MAP[payload?.country_code]
+  const { countryCode, languages } = normalizeGeolocationPayload(payload)
+  const languageByCountry = COUNTRY_LANGUAGE_MAP[countryCode]
 
   if (languageByCountry) {
     return languageByCountry
   }
 
-  const apiLanguages = String(payload?.languages ?? '')
+  const apiLanguages = languages
     .split(',')
     .map((language) => normalizeLanguageCode(language))
     .filter(Boolean)
@@ -46,19 +168,35 @@ function getLanguageFromApiPayload(payload) {
   return getLanguageFromNavigator()
 }
 
-async function getLanguageFromGeolocation() {
+async function fetchJsonWithTimeout(url, timeoutMs = 2500) {
+  const controller = new AbortController()
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+
   try {
-    const response = await fetch(GEO_API_URL)
+    const response = await fetch(url, { signal: controller.signal })
 
     if (!response.ok) {
-      return getLanguageFromNavigator()
+      return null
     }
 
-    const payload = await response.json()
-    return getLanguageFromApiPayload(payload)
+    return await response.json()
   } catch {
-    return getLanguageFromNavigator()
+    return null
+  } finally {
+    window.clearTimeout(timer)
   }
+}
+
+async function getLanguageFromGeolocation() {
+  for (const endpoint of GEO_API_ENDPOINTS) {
+    const payload = await fetchJsonWithTimeout(endpoint)
+
+    if (payload) {
+      return getLanguageFromApiPayload(payload)
+    }
+  }
+
+  return getLanguageFromNavigator()
 }
 
 function persistGoogleTranslateCookie(language) {
@@ -81,6 +219,18 @@ function triggerGoogleTranslateChange(language) {
   return true
 }
 
+function applyLanguageWithRetry(language, retriesLeft = 12) {
+  const translated = triggerGoogleTranslateChange(language)
+
+  if (translated || retriesLeft <= 0) {
+    return
+  }
+
+  window.setTimeout(() => {
+    applyLanguageWithRetry(language, retriesLeft - 1)
+  }, 300)
+}
+
 function loadTranslateScript() {
   if (document.getElementById('google-translate-script')) {
     return
@@ -97,18 +247,13 @@ export function useGoogleTranslate() {
   const [selectedLanguage, setSelectedLanguage] = useState('pt')
 
   const applyLanguage = useCallback((language) => {
-    persistGoogleTranslateCookie(language)
+    const normalizedLanguage = normalizeLanguageCode(language) ?? 'en'
 
-    const translated = triggerGoogleTranslateChange(language)
+    persistGoogleTranslateCookie(normalizedLanguage)
+    applyLanguageWithRetry(normalizedLanguage)
 
-    if (!translated) {
-      window.setTimeout(() => {
-        triggerGoogleTranslateChange(language)
-      }, 650)
-    }
-
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
-    setSelectedLanguage(language)
+    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, normalizedLanguage)
+    setSelectedLanguage(normalizedLanguage)
   }, [])
 
   useEffect(() => {
