@@ -14,7 +14,10 @@
     "prestart": "npm run generate:image-data",
     "prebuild": "npm run generate:image-data",
     "postbuild": "cp -r public/* dist/",
-    "audit:responsive": "node scripts/responsive-audit.mjs"
+    "audit:responsive": "node scripts/responsive-audit.mjs",
+    "format": "npx --yes prettier --write .github package.json README.md",
+    "format:check": "npx --yes prettier --check .github package.json README.md",
+    "test:coverage": "node --test --experimental-test-coverage tests/**/*.test.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
