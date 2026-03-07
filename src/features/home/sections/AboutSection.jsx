@@ -2,7 +2,6 @@ import { useRef } from 'react'
 import { Box, Container, Typography } from '@mui/material'
 import { motion } from 'motion/react'
 import gsap, { useGSAP } from '../../../lib/gsapCompat'
-import { TypingEffectText } from '../../../components/ui/TypingEffectText'
 
 const MotionBox = motion(Box)
 
@@ -31,14 +30,13 @@ export function AboutSection() {
         />
 
         <Box className="about-message-bubble">
-          <TypingEffectText
+          <Typography
             component="h2"
+            variant="h2"
             className="about-typing-title"
-            phrases={['Doces com alma de espetáculo', 'Realismo, brilho e sabor em cada detalhe']}
-            typingSpeed={46}
-            deletingSpeed={29}
-            pauseMs={2000}
-          />
+          >
+            Doces com alma de espetáculo
+          </Typography>
           <Typography component="p" variant="body1" className="about-message-inline">
             “Siiim, siiim, respeitável púúúúblico! 🎪🤡✨ Nóóós somos a Carliz Doces e fazemos docinhos prontinhos para entrega,
             para deixar sua festa um show: festas, casamentos, aniversários e até ovos de Páscoa… ô coisa boooa! 🍬🍫🥚🎉”
