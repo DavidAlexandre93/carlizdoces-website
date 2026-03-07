@@ -16,16 +16,16 @@ import { ShowcaseSection } from '../sections/ShowcaseSection'
 import { OrderSection } from '../sections/OrderSection'
 import { LocationSection } from '../sections/LocationSection'
 import { ConfeitariaEmAcaoSection } from '../sections/ConfeitariaEmAcaoSection'
-import { deviceId, supabase } from '../../../supabaseClient'
+import { deviceId } from '../../../supabaseClient'
 import { SeoHead } from '../../../components/seo/SeoHead'
 import { DEFAULT_OG_IMAGE, absoluteUrl } from '../../../lib/seo'
+import { requestLikesSummary, requestProductLikeToggle } from '../services/likesService'
 
 const ContatoSection = lazy(() => import('../sections/ContatoSection'))
 const DepoimentosSection = lazy(() => import('../sections/DepoimentosSection'))
 const InstagramFeedSection = lazy(() => import('../sections/InstagramFeedSection'))
 const NovidadesSection = lazy(() => import('../sections/NovidadesSection'))
 const MotionDiv = motion.div
-const STORE_LIKES_ITEM_ID = 'store'
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
 const GOOGLE_REVIEW_URL = 'https://www.google.com/search?client=ms-android-americamovil-br-rvc2&sca_esv=f38932f2222aa1fa&hl=pt-BR&cs=0&sxsrf=ANbL-n6eXaKkpWWQXc0A67jfppfGLihclw:1771820305411&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOTwjoCD7BxipWzOF2nT8iw9KDHG4AhXS8s14-d9nXSzfaMjBE1mGcMJuwFiunILPS4BDq1ElAn6V_IuetbG9SdLVXtbTnp7pbmXy2ttsfoz7hveC0Q%3D%3D&q=Carliz+Doces+Coment%C3%A1rios&sa=X&ved=2ahUKEwidtKP_4O6SAxUxlJUCHX1ABMUQ0bkNegQIHhAH&cshid=1771820443188835&biw=1920&bih=911&dpr=1#lrd=0x94cfad949b66f5ab:0xc198d0c4a896d55a,3'
@@ -54,128 +54,6 @@ const HOME_SEO = {
   },
 }
 
-async function requestLikesSummaryFromSupabase(currentDeviceId, productIds) {
-  const itemIds = [STORE_LIKES_ITEM_ID, ...productIds]
-
-  const { data: rows, error: rowsError } = await supabase
-    .from('likes_anon')
-    .select('item_id')
-    .in('item_id', itemIds)
-
-  if (rowsError) {
-    throw new Error(rowsError.message || 'likes-summary-request-failed')
-  }
-
-  const { data: userRows, error: userRowsError } = await supabase
-    .from('likes_anon')
-    .select('item_id')
-    .eq('device_id', currentDeviceId)
-    .in('item_id', itemIds)
-
-  if (userRowsError) {
-    throw new Error(userRowsError.message || 'likes-summary-request-failed')
-  }
-
-  const likesById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: 0 }), {})
-  let storeLikes = 0
-
-  ;(rows || []).forEach((row) => {
-    if (row.item_id === STORE_LIKES_ITEM_ID) {
-      storeLikes += 1
-      return
-    }
-
-    if (Object.prototype.hasOwnProperty.call(likesById, row.item_id)) {
-      likesById[row.item_id] += 1
-    }
-  })
-
-  const likedByCurrentUserById = productIds.reduce((acc, productId) => ({ ...acc, [productId]: false }), {})
-  let storeLikedByCurrentUser = false
-
-  ;(userRows || []).forEach((row) => {
-    if (row.item_id === STORE_LIKES_ITEM_ID) {
-      storeLikedByCurrentUser = true
-      return
-    }
-
-    if (Object.prototype.hasOwnProperty.call(likedByCurrentUserById, row.item_id)) {
-      likedByCurrentUserById[row.item_id] = true
-    }
-  })
-
-  return {
-    store: {
-      likes: storeLikes,
-      likedByCurrentUser: storeLikedByCurrentUser,
-    },
-    products: {
-      likesById,
-      likedByCurrentUserById,
-    },
-  }
-}
-
-async function requestLikesSummary(currentDeviceId, productIds) {
-  return requestLikesSummaryFromSupabase(currentDeviceId, productIds)
-}
-
-async function requestProductLikeToggleFromSupabase(productId, currentDeviceId) {
-  const { data: existingRows, error: existingError } = await supabase
-    .from('likes_anon')
-    .select('id')
-    .eq('item_id', productId)
-    .eq('device_id', currentDeviceId)
-    .limit(1)
-
-  if (existingError) {
-    throw new Error(existingError.message || 'product-like-toggle-request-failed')
-  }
-
-  const wasLiked = (existingRows?.length || 0) > 0
-
-  if (wasLiked) {
-    const { error: deleteError } = await supabase
-      .from('likes_anon')
-      .delete()
-      .eq('item_id', productId)
-      .eq('device_id', currentDeviceId)
-
-    if (deleteError) {
-      throw new Error(deleteError.message || 'product-like-toggle-request-failed')
-    }
-  } else {
-    const { error: insertError } = await supabase
-      .from('likes_anon')
-      .insert({
-        item_id: productId,
-        device_id: currentDeviceId,
-      })
-
-    if (insertError) {
-      throw new Error(insertError.message || 'product-like-toggle-request-failed')
-    }
-  }
-
-  const { count, error: countError } = await supabase
-    .from('likes_anon')
-    .select('*', { count: 'exact', head: true })
-    .eq('item_id', productId)
-
-  if (countError) {
-    throw new Error(countError.message || 'product-like-toggle-request-failed')
-  }
-
-  return {
-    likes: Number(count || 0),
-    liked: !wasLiked,
-  }
-}
-
-async function requestProductLikeToggle(productId, currentDeviceId) {
-  return requestProductLikeToggleFromSupabase(productId, currentDeviceId)
-}
-
 export function HomePage({ skipIntroCurtain = false }) {
   const introScopeRef = useRef(null)
   const hasInitializedMenuShowcaseRef = useRef(false)
@@ -193,12 +71,12 @@ export function HomePage({ skipIntroCurtain = false }) {
   const [orderPreferences, setOrderPreferences] = useState({ deliveryMethod: '', receiveOffersOnWhatsApp: '' })
   const [orderCustomer, setOrderCustomer] = useState({ name: '', phone: '' })
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
-  const [isSendingContactEmail] = useState(false)
+  const isSendingContactEmail = false
   const [isEmailOptionsOpen, setIsEmailOptionsOpen] = useState(false)
   const [emailProviderLinks, setEmailProviderLinks] = useState(null)
   const [emailComposeData, setEmailComposeData] = useState(null)
   const [contactTipOpen, setContactTipOpen] = useState(false)
-  const [communityTestimonials] = useState(manualTestimonials)
+  const communityTestimonials = manualTestimonials
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [favoriteProductIds, setFavoriteProductIds] = useState([])
