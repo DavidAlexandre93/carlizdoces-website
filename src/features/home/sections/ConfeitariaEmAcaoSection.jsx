@@ -126,56 +126,58 @@ export function ConfeitariaEmAcaoSection() {
 
   return (
     <section id="confeitaria-em-acao" style={{ marginTop: 24 }}>
-      <div style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr', background: '#fff', borderRadius: 20, border: '1px solid rgba(0,0,0,0.08)', padding: 16 }}>
-        <div>
+      <div className="acao-shell">
+        <div className="acao-header">
           <h2 style={{ margin: 0, fontSize: 32 }}>Confeitaria em ação</h2>
           <p style={{ margin: '8px 0 0', opacity: 0.75 }}>
             Monte o bolo em tempo real, personalize decoração e veja o resultado no preview 3D.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }} className="acao-grid">
-          <div style={{ display: 'grid', gap: 12 }}>
+        <div className="acao-grid">
+          <div className="acao-controls">
             <label className="acao-field">
               Nome do aniversariante
               <input className="acao-input" value={birthdayName} onChange={(event) => setBirthdayName(event.target.value)} />
             </label>
 
-            <label className="acao-field">
-              Estrutura
-              <select className="acao-select" value={structure} onChange={(event) => { setStructure(event.target.value); setPulseKey((current) => current + 1) }}>
-                <option value="redondo">Redondo</option>
-                <option value="quadrado">Quadrado</option>
-                <option value="2andares">2 andares</option>
-              </select>
-            </label>
+            <div className="acao-group">
+              <label className="acao-field">
+                Estrutura
+                <select className="acao-select" value={structure} onChange={(event) => { setStructure(event.target.value); setPulseKey((current) => current + 1) }}>
+                  <option value="redondo">Redondo</option>
+                  <option value="quadrado">Quadrado</option>
+                  <option value="2andares">2 andares</option>
+                </select>
+              </label>
 
-            <label className="acao-field">
-              Massa
-              <select className="acao-select" value={massaId} onChange={(event) => setMassaId(event.target.value)}>
-                {massas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
-              </select>
-            </label>
+              <label className="acao-field">
+                Massa
+                <select className="acao-select" value={massaId} onChange={(event) => setMassaId(event.target.value)}>
+                  {massas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                </select>
+              </label>
 
-            <label className="acao-field">
-              Recheio
-              <select className="acao-select" value={recheioId} onChange={(event) => setRecheioId(event.target.value)}>
-                {recheios.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
-              </select>
-            </label>
+              <label className="acao-field">
+                Recheio
+                <select className="acao-select" value={recheioId} onChange={(event) => setRecheioId(event.target.value)}>
+                  {recheios.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                </select>
+              </label>
 
-            <label className="acao-field">
-              Cobertura
-              <select className="acao-select" value={coberturaId} onChange={(event) => { setCoberturaId(event.target.value); setPulseKey((current) => current + 1) }}>
-                {coberturas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
-              </select>
-            </label>
+              <label className="acao-field">
+                Cobertura
+                <select className="acao-select" value={coberturaId} onChange={(event) => { setCoberturaId(event.target.value); setPulseKey((current) => current + 1) }}>
+                  {coberturas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                </select>
+              </label>
+            </div>
 
-            <div>
-              <div>Decorações</div>
-              <div style={{ display: 'grid', gap: 6, marginTop: 6 }}>
+            <div className="acao-decoracoes">
+              <div className="acao-decoracoes-title">Decorações</div>
+              <div className="acao-decoracoes-grid">
                 {decoracoes.map((item) => (
-                  <label key={item.id} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <label key={item.id} className="acao-decoracao-item">
                     <input type="checkbox" checked={selectedDecos.includes(item.id)} onChange={() => toggleDeco(item.id)} />
                     {item.icon} {item.label}
                   </label>
@@ -183,12 +185,12 @@ export function ConfeitariaEmAcaoSection() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 8 }}>
-              <label style={{ display: 'grid' }}>
+            <div className="acao-colors">
+              <label className="acao-color-field">
                 Cor principal
                 <input type="color" value={mainHex} onChange={(event) => setMainHex(event.target.value)} />
               </label>
-              <label style={{ display: 'grid' }}>
+              <label className="acao-color-field">
                 Cor destaque
                 <input type="color" value={accentHex} onChange={(event) => setAccentHex(event.target.value)} />
               </label>
@@ -207,12 +209,93 @@ export function ConfeitariaEmAcaoSection() {
         </div>
 
         <style>{`
-          .acao-grid { grid-template-columns: 1fr 1.2fr; }
+          .acao-shell {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 1fr;
+            background: linear-gradient(145deg, #fff 0%, #fff5fa 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(163, 77, 127, 0.18);
+            padding: 18px;
+            box-shadow: 0 16px 35px rgba(95, 35, 69, 0.08);
+          }
+          .acao-header {
+            padding: 2px 4px;
+          }
+          .acao-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 16px;
+          }
+          .acao-controls {
+            display: grid;
+            gap: 12px;
+            align-content: start;
+          }
+          .acao-group {
+            display: grid;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(163, 77, 127, 0.22);
+            background: rgba(255, 250, 253, 0.82);
+          }
           .acao-field {
             display: grid;
             gap: 6px;
             font-weight: 600;
             color: #5f2345;
+          }
+          .acao-decoracoes {
+            border-radius: 16px;
+            border: 1px solid rgba(163, 77, 127, 0.22);
+            background: rgba(255, 250, 253, 0.82);
+            padding: 12px;
+          }
+          .acao-decoracoes-title {
+            font-weight: 700;
+            color: #5f2345;
+          }
+          .acao-decoracoes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+            max-height: 220px;
+            overflow: auto;
+            padding-right: 4px;
+          }
+          .acao-decoracao-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 6px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.78);
+          }
+          .acao-decoracao-item input {
+            accent-color: #b75289;
+          }
+          .acao-colors {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+          }
+          .acao-color-field {
+            display: grid;
+            gap: 6px;
+            font-weight: 600;
+            color: #5f2345;
+          }
+          .acao-color-field input {
+            width: 100%;
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid rgba(163, 77, 127, 0.26);
+            background: #fff;
+            cursor: pointer;
+            padding: 4px;
           }
           .acao-input,
           .acao-select {
@@ -254,6 +337,7 @@ export function ConfeitariaEmAcaoSection() {
           }
           @media (max-width: 980px) {
             .acao-grid { grid-template-columns: 1fr; }
+            .acao-decoracoes-grid { grid-template-columns: 1fr; }
           }
         `}</style>
       </div>
