@@ -2579,21 +2579,25 @@ body {
 
 .testimonials-header h2 {
   margin: 0;
-  font-size: 52px;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
 }
 
 .testimonials-header p {
   margin: 10px auto 0;
   max-width: 900px;
   color: #5a3851;
-  font-size: 21px;
+  font-size: clamp(1rem, 2.1vw, 1.3125rem);
 }
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   align-items: start;
+}
+
+.testimonials-grid > * {
+  min-width: 0;
 }
 
 .testimonial-form-card,
@@ -2677,19 +2681,19 @@ body {
 
 .updates-header h2 {
   margin: 0;
-  font-size: 52px;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
 }
 
 .updates-header p {
   margin: 10px auto 0;
   max-width: 920px;
   color: #5a3851;
-  font-size: 21px;
+  font-size: clamp(1rem, 2.1vw, 1.3125rem);
 }
 
 .updates-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
 }
 
@@ -2778,18 +2782,18 @@ body {
 
 .instagram-header h2 {
   margin: 0;
-  font-size: 52px;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
 }
 
 .instagram-header p {
   margin: 10px 0 0;
-  font-size: 22px;
+  font-size: clamp(1rem, 2.2vw, 1.375rem);
   color: #5a3851;
 }
 
 .instagram-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   align-items: start;
 }
@@ -2831,18 +2835,6 @@ body {
 }
 
 @media (max-width: 960px) {
-  .instagram-header h2,
-  .testimonials-header h2,
-  .updates-header h2 {
-    font-size: 44px;
-  }
-
-  .instagram-header p,
-  .testimonials-header p,
-  .updates-header p {
-    font-size: 20px;
-  }
-
   .instagram-grid,
   .testimonials-grid,
   .updates-grid {
