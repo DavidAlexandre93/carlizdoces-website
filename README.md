@@ -145,6 +145,9 @@ http://localhost:3000
 - `npm start` → sobe o `webpack-dev-server` (modo desenvolvimento);
 - `npm run build` → gera build de produção em `dist/`;
 - `npm run lint` → executa ESLint;
+- `npm run format` → aplica formatação com Prettier;
+- `npm run format:check` → valida formatação sem alterar arquivos;
+- `npm run test:coverage` → executa testes unitários com relatório de cobertura;
 - `npm run generate:image-data` → atualiza `src/data/generatedImages.js` com base em `public/images`;
 - `npm run deploy:firebase` → build + deploy de hosting no Firebase.
 
@@ -173,22 +176,22 @@ Assim é possível cadastrar novos itens rapidamente mantendo fallback automáti
 
 ### Front-end / build
 
-| Variável | Obrigatória | Uso |
-|---|---:|---|
-| `REACT_APP_SUPABASE_URL` | Recomendada | URL do projeto Supabase para likes/ratings. |
-| `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY` (ou `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT`) | Recomendada | Chave pública (anon) do Supabase. |
-| `VITE_DISQUS_SHORTNAME` | Opcional | Habilita comentários Disqus na seção de depoimentos. |
-| `VITE_RATINGS_API_URL` | Opcional | URL alternativa para endpoint de ratings (quando não usar rota local). |
+| Variável                                                                                   | Obrigatória | Uso                                                                    |
+| ------------------------------------------------------------------------------------------ | ----------: | ---------------------------------------------------------------------- |
+| `REACT_APP_SUPABASE_URL`                                                                   | Recomendada | URL do projeto Supabase para likes/ratings.                            |
+| `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY` (ou `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT`) | Recomendada | Chave pública (anon) do Supabase.                                      |
+| `VITE_DISQUS_SHORTNAME`                                                                    |    Opcional | Habilita comentários Disqus na seção de depoimentos.                   |
+| `VITE_RATINGS_API_URL`                                                                     |    Opcional | URL alternativa para endpoint de ratings (quando não usar rota local). |
 
 ### Serverless (`api/`)
 
-| Variável | Obrigatória | Uso |
-|---|---:|---|
-| `RESEND_API_KEY` | Obrigatória para `/api/contact-email` | Token da API Resend para envio de e-mails. |
-| `CONTACT_TO_EMAIL` | Opcional | Destinatário dos contatos (default: `carlizdoces@gmail.com`). |
-| `CONTACT_FROM_EMAIL` | Opcional | Remetente dos e-mails (default: `Carliz Doces <onboarding@resend.dev>`). |
-| `FIREBASE_SERVICE_ACCOUNT_KEY` | Opcional | JSON completo de conta de serviço Firebase (uso server-side). |
-| `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | Opcional | Alternativa em campos separados para conta de serviço Firebase. |
+| Variável                                                                 |                           Obrigatória | Uso                                                                      |
+| ------------------------------------------------------------------------ | ------------------------------------: | ------------------------------------------------------------------------ |
+| `RESEND_API_KEY`                                                         | Obrigatória para `/api/contact-email` | Token da API Resend para envio de e-mails.                               |
+| `CONTACT_TO_EMAIL`                                                       |                              Opcional | Destinatário dos contatos (default: `carlizdoces@gmail.com`).            |
+| `CONTACT_FROM_EMAIL`                                                     |                              Opcional | Remetente dos e-mails (default: `Carliz Doces <onboarding@resend.dev>`). |
+| `FIREBASE_SERVICE_ACCOUNT_KEY`                                           |                              Opcional | JSON completo de conta de serviço Firebase (uso server-side).            |
+| `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` |                              Opcional | Alternativa em campos separados para conta de serviço Firebase.          |
 
 Exemplo mínimo (`.env.local`):
 
@@ -204,7 +207,6 @@ CONTACT_TO_EMAIL=carlizdoces@gmail.com
 ---
 
 ## 🔌 APIs serverless
-
 
 ### `GET /api/metrics`
 
@@ -280,6 +282,52 @@ npm run deploy:firebase
 Com `firebase.json` configurado para servir `dist/` com rewrite SPA.
 
 ---
+
+## 🔁 CI/CD (GitHub Actions)
+
+O repositório possui pipeline completo para entrega contínua do frontend:
+
+### CI (`.github/workflows/ci.yml`)
+
+Executado em `pull_request` e `push` para `main` com as etapas:
+
+1. Instalação reprodutível (`npm ci`);
+2. Lint (`npm run lint`);
+3. Validação de formatação (`npm run format:check`);
+4. Testes unitários (`npm run test:ci`);
+5. Testes de cobertura com quality gate (`npm run test:coverage`);
+6. Validação de build (`npm run build`);
+7. Auditoria de vulnerabilidades de dependências (`npm run audit:high`);
+8. Upload de artefatos (`dist/` e relatórios de cobertura).
+
+Checks complementares de segurança/qualidade:
+
+- Dependency Review (licenças e severidade);
+- CodeQL (SAST para JavaScript);
+- Gitleaks (detecção de segredos);
+- Quality Gate final agregando status dos jobs críticos.
+
+### Security Hardening (`.github/workflows/security-hardening.yml`)
+
+Execução agendada/manual para:
+
+- gerar SBOM CycloneDX;
+- escanear filesystem com Trivy (`HIGH`/`CRITICAL`);
+- publicar resultado SARIF em Security tab.
+
+### CD (`.github/workflows/cd.yml`)
+
+Fluxo de deploy por ambiente com promoção para produção:
+
+- `push` em `main`: build + deploy automático em **staging** (Firebase Hosting channel `staging`);
+- `workflow_dispatch` com `deploy_production=true`: promove o mesmo fluxo para **production**, dependente do sucesso prévio do job de staging no workflow.
+
+A promoção para produção usa `environment: production`, permitindo aplicar regras de aprovação/manual review no GitHub Environments.
+
+### Segredos necessários
+
+- `FIREBASE_TOKEN` → token de deploy do Firebase CLI;
+- `GITHUB_TOKEN` é fornecido automaticamente para jobs nativos do GitHub.
 
 ## 🛠️ Troubleshooting
 

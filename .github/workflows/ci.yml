@@ -15,8 +15,8 @@ permissions:
   security-events: write
 
 jobs:
-  quality:
-    name: Quality (test, build)
+  frontend-quality:
+    name: Frontend Quality Pipeline
     runs-on: ubuntu-latest
 
     steps:
@@ -29,15 +29,42 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: |
-          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+      - name: Install dependencies (reproducible)
+        run: npm ci --no-audit --no-fund
 
-      - name: Test
+      - name: Lint
+        run: npm run lint
+
+      - name: Formatting check
+        run: npm run format:check
+
+      - name: Unit tests
         run: npm run test:ci
 
-      - name: Build
+      - name: Coverage tests (quality gate)
+        run: npm run test:coverage
+
+      - name: Build validation
         run: npm run build
+
+      - name: NPM vulnerability audit (high+)
+        run: npm run audit:high
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-dist
+          path: dist
+          if-no-files-found: error
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage
+          path: |
+            coverage
+            coverage/lcov.info
+          if-no-files-found: error
 
   dependency-review:
     name: Dependency Review
@@ -98,3 +125,29 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    needs:
+      - frontend-quality
+      - codeql
+      - secret-scan
+      - dependency-review
+    if: always()
+
+    steps:
+      - name: Enforce quality gate
+        run: |
+          if [ "${{ needs.frontend-quality.result }}" != "success" ] || \
+             [ "${{ needs.codeql.result }}" != "success" ] || \
+             [ "${{ needs.secret-scan.result }}" != "success" ] || \
+             [ "${{ needs.dependency-review.result }}" != "success" -a "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Quality gate failed."
+            echo "frontend-quality=${{ needs.frontend-quality.result }}"
+            echo "codeql=${{ needs.codeql.result }}"
+            echo "secret-scan=${{ needs.secret-scan.result }}"
+            echo "dependency-review=${{ needs.dependency-review.result }}"
+            exit 1
+          fi
+          echo "Quality gate approved."
