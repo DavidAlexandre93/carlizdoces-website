@@ -68,7 +68,7 @@ module.exports = (_, argv = {}) => {
   const getEnvValueAny = (...names) => names.map((name) => getEnvValue(name)).find(Boolean) || '';
 
   return {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'bundle.[contenthash].js',
@@ -102,7 +102,7 @@ module.exports = (_, argv = {}) => {
         'react-swipeable-views': path.resolve(__dirname, 'src/mui-components/react-swipeable-views.jsx'),
         'motion/react': path.resolve(__dirname, 'src/motion/react.js'),
         'framer-motion': path.resolve(__dirname, 'src/framer-motion.js'),
-        'react-router-dom': path.resolve(__dirname, 'src/react-router-dom.js')
+        'react-router-dom': path.resolve(__dirname, 'src/react-router-dom.jsx')
       }
     },
     plugins: [
