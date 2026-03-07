@@ -128,10 +128,11 @@ export function ConfeitariaEmAcaoSection() {
     <section id="confeitaria-em-acao" style={{ marginTop: 24 }}>
       <div className="acao-shell">
         <div className="acao-header">
-          <h2 style={{ margin: 0, fontSize: 32 }}>Confeitaria em ação</h2>
+          <h2 style={{ margin: 0, fontSize: 32, color: '#ad1457' }}>Confeitaria em ação</h2>
           <p style={{ margin: '8px 0 0', opacity: 0.75 }}>
             Monte o bolo em tempo real, personalize decoração e veja o resultado no preview 3D.
           </p>
+          <span className="acao-highlight">Mais sabor com mais personalidade 💗</span>
         </div>
 
         <div className="acao-grid">
@@ -222,6 +223,17 @@ export function ConfeitariaEmAcaoSection() {
           .acao-header {
             padding: 2px 4px;
           }
+          .acao-highlight {
+            display: inline-flex;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ad1457;
+            background: rgba(173, 20, 87, 0.12);
+            border: 1px solid rgba(173, 20, 87, 0.3);
+            border-radius: 999px;
+            padding: 4px 10px;
+          }
           .acao-grid {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -244,7 +256,7 @@ export function ConfeitariaEmAcaoSection() {
             display: grid;
             gap: 6px;
             font-weight: 600;
-            color: #5f2345;
+            color: #ad1457;
           }
           .acao-decoracoes {
             border-radius: 16px;
@@ -254,7 +266,7 @@ export function ConfeitariaEmAcaoSection() {
           }
           .acao-decoracoes-title {
             font-weight: 700;
-            color: #5f2345;
+            color: #ad1457;
           }
           .acao-decoracoes-grid {
             display: grid;
@@ -275,7 +287,7 @@ export function ConfeitariaEmAcaoSection() {
             background: rgba(255, 255, 255, 0.78);
           }
           .acao-decoracao-item input {
-            accent-color: #b75289;
+            accent-color: #ad1457;
           }
           .acao-colors {
             display: grid;
@@ -286,7 +298,7 @@ export function ConfeitariaEmAcaoSection() {
             display: grid;
             gap: 6px;
             font-weight: 600;
-            color: #5f2345;
+            color: #ad1457;
           }
           .acao-color-field input {
             width: 100%;
@@ -331,8 +343,8 @@ export function ConfeitariaEmAcaoSection() {
           }
           .acao-input:focus,
           .acao-select:focus {
-            border-color: rgba(163, 77, 127, 0.75);
-            box-shadow: 0 0 0 4px rgba(227, 158, 189, 0.22), 0 10px 20px rgba(95, 35, 69, 0.1);
+            border-color: rgba(173, 20, 87, 0.72);
+            box-shadow: 0 0 0 4px rgba(173, 20, 87, 0.2), 0 10px 20px rgba(95, 35, 69, 0.1);
             transform: translateY(-1px);
           }
           @media (max-width: 980px) {
