@@ -1,0 +1,50 @@
+[
+  {
+    "id": "brigadeiro-tradicional-50-cacau",
+    "name": "Brigadeiro tradicional 50% cacau",
+    "tier": "economical",
+    "tags": ["traditional", "chocolate"]
+  },
+  {
+    "id": "beijinho-tradicional",
+    "name": "Beijinho",
+    "tier": "economical",
+    "tags": ["traditional"]
+  },
+  {
+    "id": "brigadeiro-de-morango-tradicional",
+    "name": "Brigadeiro de morango",
+    "tier": "balanced",
+    "tags": ["traditional", "fruity"]
+  },
+  {
+    "id": "brigadeiro-de-pacoca-tradicional",
+    "name": "Brigadeiro de paçoca",
+    "tier": "balanced",
+    "tags": ["traditional", "nuts"]
+  },
+  {
+    "id": "brigadeiro-de-ninho-nutela-fino",
+    "name": "Brigadeiro de ninho com Nutella",
+    "tier": "premium",
+    "tags": ["premium", "chocolate", "nuts"]
+  },
+  {
+    "id": "coracao-de-brilho-fino",
+    "name": "Coração de brilho",
+    "tier": "premium",
+    "tags": ["premium", "chocolate"]
+  },
+  {
+    "id": "trufa-flor-fino",
+    "name": "Trufa flor",
+    "tier": "premium",
+    "tags": ["premium", "chocolate"]
+  },
+  {
+    "id": "fino-geleia-de-frutas-vermelhas",
+    "name": "Fino de geleia de frutas vermelhas",
+    "tier": "balanced",
+    "tags": ["premium", "fruity"]
+  }
+]

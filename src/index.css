@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Inter, 'Avenir Next', 'Segoe UI', sans-serif;
   line-height: 1.4;
   font-weight: 400;
   font-synthesis: none;
@@ -26,7 +26,7 @@ html {
 
 body {
   margin: 0;
-  background: #e9e9e9;
+  background: #fffafc;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;

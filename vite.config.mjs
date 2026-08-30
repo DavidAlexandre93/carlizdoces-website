@@ -1,6 +1,6 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
 import path from 'node:path'
+import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from 'vite'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: {
+        '@': path.resolve('src'),
         '@mui/icons-material/Share': path.resolve('src/mui-icons/Share.jsx'),
         '@mui/icons-material/KeyboardArrowLeft': path.resolve('src/mui-icons/KeyboardArrowLeft.jsx'),
         '@mui/icons-material/KeyboardArrowRight': path.resolve('src/mui-icons/KeyboardArrowRight.jsx'),
@@ -25,8 +26,17 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 5173,
-      strictPort: false,
-      open: true,
+      strictPort: true,
+      open: false,
+    },
+    preview: {
+      port: 4173,
+      strictPort: true,
+    },
+    build: {
+      target: 'es2022',
+      sourcemap: true,
+      cssCodeSplit: true,
     },
   }
 })

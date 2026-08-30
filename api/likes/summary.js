@@ -1,33 +1,24 @@
-/* global module, require */
-const { getLikesSummary } = require('../likesStore')
-const { allowMethods, applyRateLimit, sendError, withRequestContext } = require('../_lib/http')
+/* global module */
+const { ErrorCode } = require('../_lib/contracts');
+const { allowMethods, enforceRateLimit, hashClientIdentity, sendError, sendSuccess, withRequestContext } = require('../_lib/http');
+const { getLikesSummary } = require('../_lib/likesStore');
 
 module.exports = withRequestContext(async function handler(req, res, context) {
-  const { requestId } = context
+  const { requestId } = context;
+  if (!allowMethods(req, res, ['GET'], requestId)) return;
+  if (!enforceRateLimit(req, res, context, { scope: 'likes-summary', limit: 120 })) return;
 
-  if (!allowMethods(req, res, ['GET'], requestId)) {
-    return
-  }
-
-
-  const rateLimitResult = applyRateLimit({
-    key: `likes:summary:${context.clientIp}`,
-    windowMs: 60 * 1000,
-    limit: 120,
-  })
-
-  if (!rateLimitResult.allowed) {
-    res.setHeader('Retry-After', Math.ceil((rateLimitResult.retryAfterMs || 0) / 1000))
-    sendError(res, 429, {
-      code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Muitas requisições para resumo de curtidas. Tente novamente em instantes.',
+  const userId = typeof req.query?.userId === 'string' ? req.query.userId.trim() : '';
+  if (userId && (!/^[A-Za-z0-9:_-]+$/.test(userId) || userId.length < 8 || userId.length > 128)) {
+    sendError(res, 400, {
+      code: ErrorCode.VALIDATION,
+      message: 'O identificador do dispositivo é inválido.',
+      details: [{ field: 'userId', reason: 'invalid_format' }],
       requestId,
-    })
-    return
+    });
+    return;
   }
 
-  const userId = typeof req.query?.userId === 'string' ? req.query.userId : ''
-  const summary = getLikesSummary(userId)
-
-  res.status(200).json({ data: summary, requestId })
-})
+  const summary = getLikesSummary(userId ? hashClientIdentity(userId) : '');
+  sendSuccess(res, 200, { ...summary, storage: 'memory-best-effort' }, requestId);
+});

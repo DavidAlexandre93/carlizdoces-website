@@ -1,0 +1,31 @@
+schema: spec-driven
+context: |
+  Produto: site comercial da Carliz Doces, em português do Brasil, com foco em descoberta do catálogo e conversão por WhatsApp.
+  Stack atual: React 19, Vite, Material UI, TanStack Query, Vercel Functions e Supabase REST.
+  Arquitetura: modular por features no frontend e adaptadores/serviços compartilhados nas APIs; evitar camadas sem benefício mensurável.
+  Qualidade: TypeScript progressivo, Zod nos limites da aplicação, ESLint, Prettier, testes unitários/integração e commits convencionais.
+  Segurança: nunca expor segredos ou PII; logs estruturados devem ser redigidos e correlacionados por request/trace id.
+  Experiência: preservar a identidade alegre e artesanal da marca, elevando-a com acabamento elegante, responsivo e acessível.
+
+rules:
+  proposal:
+    - Incluir objetivos mensuráveis e não objetivos para impedir expansão especulativa.
+    - Registrar explicitamente dependências externas e limitações operacionais.
+  specs:
+    - Escrever requisitos verificáveis com cenários GIVEN/WHEN/THEN.
+    - Incluir estados de carregamento, vazio, sucesso, degradação e erro quando aplicável.
+  design:
+    - Justificar padrões arquiteturais e bibliotecas por necessidade concreta, seguindo KISS e YAGNI.
+    - Documentar privacidade, observabilidade, idempotência e estratégia de testes.
+  tasks:
+    - Relacionar cada grupo de implementação a uma validação automatizada.
+    - Não marcar tarefas como concluídas sem evidência executável.
+
+operations:
+  apply:
+    guidance:
+      - Preservar alterações locais preexistentes e evitar mudanças fora do escopo.
+      - Executar gates incrementais de lint, testes, cobertura, build e segurança.
+  archive:
+    guidance:
+      - Sincronizar as especificações principais somente após todos os gates passarem.

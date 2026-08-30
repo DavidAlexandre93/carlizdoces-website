@@ -73,53 +73,16 @@ export async function requestLikesSummary(currentDeviceId, productIds) {
 }
 
 export async function requestProductLikeToggle(productId, currentDeviceId) {
-  const { data: existingRows, error: existingError } = await supabase
-    .from('likes_anon')
-    .select('id')
-    .eq('item_id', productId)
-    .eq('device_id', currentDeviceId)
-    .limit(1)
+  const { data, error } = await supabase.rpc('toggle_like_anon', {
+    p_item_id: productId,
+    p_device_id: currentDeviceId,
+  })
 
-  if (existingError) {
-    throw new Error(existingError.message || 'product-like-toggle-request-failed')
-  }
-
-  const wasLiked = (existingRows?.length || 0) > 0
-
-  if (wasLiked) {
-    const { error: deleteError } = await supabase
-      .from('likes_anon')
-      .delete()
-      .eq('item_id', productId)
-      .eq('device_id', currentDeviceId)
-
-    if (deleteError) {
-      throw new Error(deleteError.message || 'product-like-toggle-request-failed')
-    }
-  } else {
-    const { error: insertError } = await supabase
-      .from('likes_anon')
-      .insert({
-        item_id: productId,
-        device_id: currentDeviceId,
-      })
-
-    if (insertError) {
-      throw new Error(insertError.message || 'product-like-toggle-request-failed')
-    }
-  }
-
-  const { count, error: countError } = await supabase
-    .from('likes_anon')
-    .select('*', { count: 'exact', head: true })
-    .eq('item_id', productId)
-
-  if (countError) {
-    throw new Error(countError.message || 'product-like-toggle-request-failed')
-  }
+  if (error) throw new Error(error.message || 'product-like-toggle-request-failed')
+  const result = Array.isArray(data) ? data[0] : data
 
   return {
-    likes: Number(count || 0),
-    liked: !wasLiked,
+    likes: Number(result?.likes || 0),
+    liked: result?.liked === true,
   }
 }

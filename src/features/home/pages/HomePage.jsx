@@ -15,7 +15,6 @@ import { AboutSection } from '../sections/AboutSection'
 import { ShowcaseSection } from '../sections/ShowcaseSection'
 import { OrderSection } from '../sections/OrderSection'
 import { LocationSection } from '../sections/LocationSection'
-import { ConfeitariaEmAcaoSection } from '../sections/ConfeitariaEmAcaoSection'
 import { deviceId } from '../../../supabaseClient'
 import { SeoHead } from '../../../components/seo/SeoHead'
 import { DEFAULT_OG_IMAGE, absoluteUrl } from '../../../lib/seo'
@@ -25,6 +24,10 @@ const ContatoSection = lazy(() => import('../sections/ContatoSection'))
 const DepoimentosSection = lazy(() => import('../sections/DepoimentosSection'))
 const InstagramFeedSection = lazy(() => import('../sections/InstagramFeedSection'))
 const NovidadesSection = lazy(() => import('../sections/NovidadesSection'))
+const ConfeitariaEmAcaoSection = lazy(() =>
+  import('../sections/ConfeitariaEmAcaoSection').then((module) => ({ default: module.ConfeitariaEmAcaoSection })),
+)
+const AiConciergeSection = lazy(() => import('../../ai/components/AiConciergeSection'))
 const MotionDiv = motion.div
 const FEATURED_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/FezN9hhSSxw'
 const FEATURED_VIDEO_FALLBACK_URL = 'https://youtube.com/shorts/FezN9hhSSxw?feature=share'
@@ -574,6 +577,16 @@ export function HomePage({ skipIntroCurtain = false }) {
           <AboutSection />
         </MotionDiv>
 
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.1 }}>
+          <SectionDivider label="Planeje com inteligência" sectionId="doce-concierge" />
+        </MotionDiv>
+
+        <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.12 }}>
+          <Suspense fallback={<Alert severity="info">Preparando o Doce Concierge…</Alert>}>
+            <AiConciergeSection whatsappNumber={whatsappNumber} />
+          </Suspense>
+        </MotionDiv>
+
         <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.14 }}>
           <SectionDivider label="Cardápio de Páscoa" sectionId="ovos-de-pascoa" />
         </MotionDiv>
@@ -654,7 +667,9 @@ export function HomePage({ skipIntroCurtain = false }) {
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.24 }}>
-            <ConfeitariaEmAcaoSection />
+            <Suspense fallback={<Alert severity="info">Carregando experiência interativa…</Alert>}>
+              <ConfeitariaEmAcaoSection />
+            </Suspense>
           </MotionDiv>
 
           <MotionDiv {...revealAnimation} transition={{ ...revealAnimation.transition, delay: 0.25 }}>

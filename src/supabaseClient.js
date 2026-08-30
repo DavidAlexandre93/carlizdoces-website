@@ -109,7 +109,7 @@ function createClient(url, key, options = {}) {
           count: null,
           error: {
             message:
-              'Supabase não configurado. Defina REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY.',
+              'Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.',
           },
         };
       }
@@ -204,6 +204,35 @@ function createClient(url, key, options = {}) {
     from(table) {
       return new PostgrestQuery(table);
     },
+    async rpc(functionName, payload = {}) {
+      if (!supabaseUrl || !supabaseAnonKey) {
+        return {
+          data: null,
+          error: { message: 'Supabase não configurado.' },
+        };
+      }
+
+      if (!/^[a-z0-9_]+$/.test(functionName)) {
+        return { data: null, error: { message: 'Nome de função inválido.' } };
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/rpc/${functionName}`, {
+        method: 'POST',
+        headers: {
+          ...buildHeaders(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: response.statusText }));
+        return { data: null, error };
+      }
+
+      if (response.status === 204) return { data: null, error: null };
+      return { data: await response.json(), error: null };
+    },
   };
 }
 
@@ -224,13 +253,12 @@ function getOrCreateDeviceId() {
 
 export const deviceId = getOrCreateDeviceId();
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-// Ajuda a diagnosticar env vars faltando no deploy
 if (!isSupabaseConfigured) {
-  console.error('Supabase env vars missing:', { supabaseUrl, hasKey: !!supabaseAnonKey });
+  console.warn({ event: 'supabase.not_configured', configured: false });
 }
 
 // IMPORTANTÍSSIMO para sua RLS:

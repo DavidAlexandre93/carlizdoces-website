@@ -1,0 +1,203 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Carliz Doces API",
+    "version": "1.0.0",
+    "description": "Contratos das funções serverless da Carliz Doces. Todas as respostas usam envelopes discriminados e incluem X-Request-Id. Dados pessoais, tokens e detalhes internos nunca são retornados em erros."
+  },
+  "servers": [
+    { "url": "https://carlizdoces.com", "description": "Produção" },
+    { "url": "http://localhost:3000", "description": "Desenvolvimento serverless" }
+  ],
+  "tags": [
+    { "name": "Operação" },
+    { "name": "Contato" },
+    { "name": "Engajamento" },
+    { "name": "IA" }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["Operação"],
+        "summary": "Saúde e prontidão",
+        "operationId": "getHealth",
+        "parameters": [
+          { "name": "deep", "in": "query", "schema": { "type": "boolean", "default": false }, "description": "Inclui somente o estado configurado das dependências, nunca credenciais." }
+        ],
+        "responses": {
+          "200": { "description": "Aplicação pronta", "headers": { "X-Request-Id": { "$ref": "#/components/headers/RequestId" } }, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HealthSuccess" } } } },
+          "503": { "description": "Dependência marcada como obrigatória está ausente", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HealthSuccess" } } } },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "tags": ["Operação"],
+        "summary": "Snapshot operacional em memória",
+        "operationId": "getMetrics",
+        "security": [{ "MetricsToken": [] }],
+        "responses": {
+          "200": { "description": "Métricas agregadas sem labels de usuário", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MetricsSuccess" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "405": { "$ref": "#/components/responses/MethodNotAllowed" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/contact-email": {
+      "post": {
+        "tags": ["Contato"],
+        "summary": "Envia uma mensagem de contato pelo Resend",
+        "operationId": "sendContactEmail",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ContactRequest" }, "example": { "name": "Visitante", "email": "visitante@example.com", "message": "Gostaria de informações sobre uma encomenda." } } } },
+        "responses": {
+          "202": { "description": "Mensagem aceita", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ContactSuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "409": { "$ref": "#/components/responses/IdempotencyConflict" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" },
+          "503": { "$ref": "#/components/responses/ServiceUnavailable" }
+        }
+      }
+    },
+    "/api/ratings": {
+      "get": {
+        "tags": ["Engajamento"],
+        "summary": "Lista avaliações agregadas do fallback em memória",
+        "operationId": "getRatings",
+        "responses": {
+          "200": { "description": "Avaliações", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RatingsSummarySuccess" } } } },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+      "post": {
+        "tags": ["Engajamento"],
+        "summary": "Registra ou substitui uma avaliação no fallback em memória",
+        "operationId": "upsertRating",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RatingRequest" } } } },
+        "responses": {
+          "200": { "description": "Avaliação registrada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RatingSuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "409": { "$ref": "#/components/responses/IdempotencyConflict" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/likes/summary": {
+      "get": {
+        "tags": ["Engajamento"],
+        "summary": "Resume curtidas da loja e dos produtos",
+        "operationId": "getLikesSummary",
+        "parameters": [{ "name": "userId", "in": "query", "schema": { "$ref": "#/components/schemas/DeviceId" }, "description": "Identificador aleatório do dispositivo; armazenado apenas como hash no fallback." }],
+        "responses": {
+          "200": { "description": "Resumo de curtidas", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikesSummarySuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/likes/store": {
+      "post": {
+        "tags": ["Engajamento"],
+        "summary": "Alterna curtida da loja no fallback em memória",
+        "operationId": "toggleStoreLike",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": { "$ref": "#/components/requestBodies/LikeRequest" },
+        "responses": {
+          "200": { "description": "Estado da curtida", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikeSuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "409": { "$ref": "#/components/responses/IdempotencyConflict" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/likes/product/{id}": {
+      "post": {
+        "tags": ["Engajamento"],
+        "summary": "Alterna curtida de um produto no fallback em memória",
+        "operationId": "toggleProductLike",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 120 } },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": { "$ref": "#/components/requestBodies/LikeRequest" },
+        "responses": {
+          "200": { "description": "Estado da curtida", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikeSuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "409": { "$ref": "#/components/responses/IdempotencyConflict" },
+          "429": { "$ref": "#/components/responses/RateLimited" }
+        }
+      }
+    },
+    "/api/ai/recommend": {
+      "post": {
+        "tags": ["IA"],
+        "summary": "Gera uma recomendação de doces com IA ou fallback determinístico",
+        "description": "O endpoint modera a entrada, usa Structured Outputs com store=false quando OPENAI_API_KEY está configurada e sempre valida a saída contra o catálogo. A navegação básica não depende da OpenAI.",
+        "operationId": "recommendSweets",
+        "parameters": [{ "$ref": "#/components/parameters/IdempotencyKey" }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AiBrief" } } } },
+        "responses": {
+          "200": { "description": "Recomendação estruturada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AiRecommendationSuccess" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "409": { "$ref": "#/components/responses/IdempotencyConflict" },
+          "422": { "description": "Conteúdo bloqueado pela moderação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "MetricsToken": { "type": "apiKey", "in": "header", "name": "X-Metrics-Token", "description": "Obrigatório em produção; definido por METRICS_TOKEN." }
+    },
+    "headers": {
+      "RequestId": { "description": "Identificador de correlação seguro", "schema": { "type": "string" } }
+    },
+    "parameters": {
+      "IdempotencyKey": { "name": "Idempotency-Key", "in": "header", "required": false, "description": "8 a 128 caracteres. Repetições equivalentes retornam o primeiro resultado; reuso com outro payload retorna 409.", "schema": { "type": "string", "pattern": "^[A-Za-z0-9:_-]{8,128}$" } }
+    },
+    "requestBodies": {
+      "LikeRequest": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LikeRequest" } } } }
+    },
+    "responses": {
+      "ValidationError": { "description": "DTO inválido", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "MethodNotAllowed": { "description": "Método não permitido", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "IdempotencyConflict": { "description": "Chave reutilizada com payload diferente", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "RateLimited": { "description": "Limite excedido", "headers": { "Retry-After": { "schema": { "type": "integer", "minimum": 1 } } }, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "Unauthorized": { "description": "Credencial operacional ausente ou inválida", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "UpstreamError": { "description": "Dependência respondeu com falha", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "ServiceUnavailable": { "description": "Serviço não configurado ou temporariamente indisponível", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } },
+      "InternalError": { "description": "Erro inesperado; detalhes técnicos ficam apenas nos logs", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } } }
+    },
+    "schemas": {
+      "RequestId": { "type": "string", "minLength": 8, "maxLength": 120 },
+      "DeviceId": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^[A-Za-z0-9:_-]+$" },
+      "ValidationDetail": { "type": "object", "additionalProperties": false, "required": ["field", "reason"], "properties": { "field": { "type": "string" }, "reason": { "type": "string" } } },
+      "ApiError": { "type": "object", "additionalProperties": false, "required": ["code", "message"], "properties": { "code": { "type": "string", "enum": ["UPSTREAM_CIRCUIT_OPEN", "IDEMPOTENCY_CONFLICT", "CONTENT_BLOCKED", "INTERNAL_ERROR", "INVALID_IDEMPOTENCY_KEY", "METHOD_NOT_ALLOWED", "SERVICE_NOT_CONFIGURED", "NOT_FOUND", "RATE_LIMIT_EXCEEDED", "UNAUTHORIZED", "UPSTREAM_ERROR", "UPSTREAM_TIMEOUT", "UPSTREAM_UNAVAILABLE", "VALIDATION_ERROR"] }, "message": { "type": "string" }, "details": { "type": ["array", "null"], "items": { "$ref": "#/components/schemas/ValidationDetail" } } } },
+      "ErrorEnvelope": { "type": "object", "additionalProperties": false, "required": ["ok", "requestId", "error"], "properties": { "ok": { "const": false }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "error": { "$ref": "#/components/schemas/ApiError" } } },
+      "HealthSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["status", "service", "version", "timestamp", "uptimeSeconds"], "properties": { "status": { "enum": ["ready", "degraded"] }, "service": { "type": "string" }, "version": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" }, "uptimeSeconds": { "type": "integer", "minimum": 0 }, "dependencies": { "type": "object", "additionalProperties": { "type": "object", "properties": { "configured": { "type": "boolean" } } } }, "missingRequiredDependencies": { "type": "array", "items": { "type": "string" } } } } } },
+      "MetricsSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["timestamp", "metrics"], "properties": { "timestamp": { "type": "string", "format": "date-time" }, "metrics": { "type": "object", "additionalProperties": true } } } } },
+      "ContactRequest": { "type": "object", "additionalProperties": false, "required": ["name", "message"], "properties": { "name": { "type": "string", "minLength": 2, "maxLength": 120 }, "email": { "type": "string", "format": "email", "maxLength": 180 }, "message": { "type": "string", "minLength": 5, "maxLength": 3000 } } },
+      "ContactSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["accepted"], "properties": { "accepted": { "const": true } } }, "meta": { "$ref": "#/components/schemas/IdempotencyMeta" } } },
+      "RatingRequest": { "type": "object", "additionalProperties": false, "required": ["productId", "rating"], "properties": { "productId": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 120 }, "rating": { "type": "integer", "minimum": 1, "maximum": 5 } } },
+      "RatingSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["votes", "total", "average"], "properties": { "votes": { "type": "integer", "minimum": 1 }, "total": { "type": "number", "minimum": 1 }, "average": { "type": "number", "minimum": 1, "maximum": 5 } } }, "meta": { "$ref": "#/components/schemas/IdempotencyMeta" } } },
+      "RatingsSummarySuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["ratingsByProductId", "storage"], "properties": { "ratingsByProductId": { "type": "object", "additionalProperties": { "type": "object", "properties": { "votes": { "type": "integer" }, "total": { "type": "number" } } }, "storage": { "const": "memory-best-effort" } } } } },
+      "LikeRequest": { "type": "object", "additionalProperties": false, "required": ["userId"], "properties": { "userId": { "$ref": "#/components/schemas/DeviceId" } } },
+      "LikeSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["ok", "liked", "likes"], "properties": { "ok": { "const": true }, "liked": { "type": "boolean" }, "likes": { "type": "integer", "minimum": 0 } }, "meta": { "$ref": "#/components/schemas/IdempotencyMeta" } } },
+      "LikesSummarySuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "type": "object", "required": ["store", "products", "storage"], "properties": { "store": { "type": "object", "required": ["likes", "likedByCurrentUser"], "properties": { "likes": { "type": "integer" }, "likedByCurrentUser": { "type": "boolean" } } }, "products": { "type": "object", "required": ["likesById", "likedByCurrentUserById"], "properties": { "likesById": { "type": "object", "additionalProperties": { "type": "integer" } }, "likedByCurrentUserById": { "type": "object", "additionalProperties": { "type": "boolean" } } } }, "storage": { "const": "memory-best-effort" } } } } },
+      "AiBrief": { "type": "object", "additionalProperties": false, "required": ["eventType", "guests"], "properties": { "eventType": { "enum": ["birthday", "wedding", "corporate", "baby_shower", "celebration", "other"] }, "guests": { "type": "integer", "minimum": 5, "maximum": 5000 }, "budget": { "enum": ["economical", "balanced", "premium"], "default": "balanced" }, "preferences": { "type": "array", "maxItems": 6, "uniqueItems": true, "items": { "enum": ["traditional", "premium", "chocolate", "fruity", "no_nuts", "lactose_free"] } }, "notes": { "type": "string", "maxLength": 240, "description": "Não informe nome, e-mail, telefone ou endereço." } } },
+      "RecommendationItem": { "type": "object", "additionalProperties": false, "required": ["productId", "name", "quantity", "reason"], "properties": { "productId": { "type": "string" }, "name": { "type": "string" }, "quantity": { "type": "integer", "minimum": 1 }, "reason": { "type": "string" } } },
+      "AiRecommendation": { "type": "object", "additionalProperties": false, "required": ["source", "headline", "summary", "estimatedSweets", "items", "tips", "whatsappMessage"], "properties": { "source": { "enum": ["ai", "fallback"] }, "headline": { "type": "string" }, "summary": { "type": "string" }, "estimatedSweets": { "type": "integer", "minimum": 1 }, "items": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "$ref": "#/components/schemas/RecommendationItem" } }, "tips": { "type": "array", "items": { "type": "string" } }, "whatsappMessage": { "type": "string" } } },
+      "AiRecommendationSuccess": { "type": "object", "required": ["ok", "requestId", "data"], "properties": { "ok": { "const": true }, "requestId": { "$ref": "#/components/schemas/RequestId" }, "data": { "$ref": "#/components/schemas/AiRecommendation" }, "meta": { "$ref": "#/components/schemas/IdempotencyMeta" } } },
+      "IdempotencyMeta": { "type": "object", "properties": { "idempotency": { "enum": ["fresh", "replay"] }, "storage": { "type": "string" } } }
+    }
+  }
+}

@@ -145,31 +145,14 @@ export function useProductRatings(products) {
     }
 
     try {
-      if (isRemoving) {
-        const { error: removeError } = await supabase
-          .from('ratings_anon')
-          .delete()
-          .eq('item_id', productId)
-          .eq('device_id', deviceId)
+      const functionName = isRemoving ? 'remove_rating_anon' : 'upsert_rating_anon'
+      const { error } = await supabase.rpc(functionName, {
+        p_item_id: productId,
+        p_device_id: deviceId,
+        ...(!isRemoving ? { p_stars: nextStars } : {}),
+      })
 
-        if (removeError) {
-          throw new Error(removeError.message || 'rating-remove-failed')
-        }
-      } else {
-        const { error: upsertError } = await supabase
-          .from('ratings_anon')
-          .upsert({
-            item_id: productId,
-            device_id: deviceId,
-            stars: nextStars,
-          }, {
-            onConflict: 'item_id,device_id',
-          })
-
-        if (upsertError) {
-          throw new Error(upsertError.message || 'rating-save-failed')
-        }
-      }
+      if (error) throw new Error(error.message || 'rating-save-failed')
 
       await loadRatings()
 

@@ -3,3 +3,7 @@ dist
 coverage
 package-lock.json
 *.min.js
+public/images
+src/data/generatedImages.js
+.agents
+openspec/changes/archive
