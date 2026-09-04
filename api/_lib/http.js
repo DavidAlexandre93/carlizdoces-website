@@ -24,7 +24,9 @@ const CIRCUIT_STORE = globalThis.__carlizCircuitStore ?? {};
 globalThis.__carlizCircuitStore = CIRCUIT_STORE;
 
 const PRIVACY_HASH_SALT =
-  process.env.PRIVACY_HASH_SALT || globalThis.__carlizPrivacyHashSalt || randomBytes(32).toString('hex');
+  process.env.PRIVACY_HASH_SALT ||
+  globalThis.__carlizPrivacyHashSalt ||
+  randomBytes(32).toString('hex');
 globalThis.__carlizPrivacyHashSalt = PRIVACY_HASH_SALT;
 
 class AppError extends Error {
@@ -49,17 +51,25 @@ function getRequestId(req) {
   if (typeof candidate === 'string' && /^[A-Za-z0-9:_-]{8,120}$/.test(candidate.trim())) {
     return candidate.trim();
   }
-  return globalThis.crypto?.randomUUID?.() || `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ||
+    `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+  );
 }
 
 function getClientIp(req) {
   const forwarded = req.headers?.['x-forwarded-for'];
   const candidate = Array.isArray(forwarded) ? forwarded[0] : forwarded;
-  return String(candidate || req.socket?.remoteAddress || 'anon').split(',')[0].trim();
+  return String(candidate || req.socket?.remoteAddress || 'anon')
+    .split(',')[0]
+    .trim();
 }
 
 function hashClientIdentity(clientIp) {
-  return createHmac('sha256', PRIVACY_HASH_SALT).update(String(clientIp || 'anon')).digest('hex').slice(0, 32);
+  return createHmac('sha256', PRIVACY_HASH_SALT)
+    .update(String(clientIp || 'anon'))
+    .digest('hex')
+    .slice(0, 32);
 }
 
 function sendSuccess(res, statusCode, data, requestId, meta) {
@@ -84,7 +94,10 @@ function toRouteKey(req) {
 
 function percentile(sortedNumbers, targetPercentile) {
   if (sortedNumbers.length === 0) return 0;
-  const index = Math.min(sortedNumbers.length - 1, Math.floor(sortedNumbers.length * targetPercentile));
+  const index = Math.min(
+    sortedNumbers.length - 1,
+    Math.floor(sortedNumbers.length * targetPercentile)
+  );
   return sortedNumbers[index];
 }
 
@@ -144,18 +157,21 @@ function getMetricsSnapshot() {
     return acc;
   }, {});
 
-  const dependencies = Object.entries(METRICS_STORE.dependenciesByName).reduce((acc, [name, metric]) => {
-    const sorted = [...metric.latencyMsWindow].sort((a, b) => a - b);
-    acc[name] = {
-      calls: metric.calls,
-      failures: metric.failures,
-      errorRate: metric.calls > 0 ? Number((metric.failures / metric.calls).toFixed(4)) : 0,
-      p95Ms: percentile(sorted, 0.95),
-      lastLatencyMs: metric.lastLatencyMs,
-      lastFailureAt: metric.lastFailureAt,
-    };
-    return acc;
-  }, {});
+  const dependencies = Object.entries(METRICS_STORE.dependenciesByName).reduce(
+    (acc, [name, metric]) => {
+      const sorted = [...metric.latencyMsWindow].sort((a, b) => a - b);
+      acc[name] = {
+        calls: metric.calls,
+        failures: metric.failures,
+        errorRate: metric.calls > 0 ? Number((metric.failures / metric.calls).toFixed(4)) : 0,
+        p95Ms: percentile(sorted, 0.95),
+        lastLatencyMs: metric.lastLatencyMs,
+        lastFailureAt: metric.lastFailureAt,
+      };
+      return acc;
+    },
+    {}
+  );
 
   return { routes, dependencies, sampledWindowSize: 500 };
 }
@@ -187,7 +203,9 @@ function withRequestContext(handler) {
           if (!res.headersSent) {
             sendError(res, appError?.statusCode || 500, {
               code: appError?.code || ErrorCode.INTERNAL,
-              message: appError?.message || 'Não foi possível concluir a solicitação. Tente novamente mais tarde.',
+              message:
+                appError?.message ||
+                'Não foi possível concluir a solicitação. Tente novamente mais tarde.',
               details: appError?.details || null,
               requestId,
             });
@@ -204,7 +222,7 @@ function withRequestContext(handler) {
             latencyMs: elapsedMs,
           });
         }
-      },
+      }
     );
   };
 }
@@ -308,7 +326,7 @@ async function fetchWithResilience(url, options, resilienceOptions = {}) {
       const response = await withSpan(
         'http.client.request',
         { 'server.address': dependencyName, 'http.request.method': options?.method || 'GET' },
-        () => fetch(url, { ...options, signal: abortController.signal }),
+        () => fetch(url, { ...options, signal: abortController.signal })
       );
       const elapsedMs = Math.max(0, nowMs() - attemptStart);
       recordDependencyMetric(dependencyName, elapsedMs, response.ok);
@@ -328,8 +346,14 @@ async function fetchWithResilience(url, options, resilienceOptions = {}) {
       const elapsedMs = Math.max(0, nowMs() - attemptStart);
       recordDependencyMetric(dependencyName, elapsedMs, false);
       circuit.consecutiveFailures += 1;
-      logError('dependency.failed', error, { requestId, dependency: dependencyName, attempt, latencyMs: elapsedMs });
-      if (circuit.consecutiveFailures >= circuitFailureThreshold) circuit.openUntil = Date.now() + circuitOpenMs;
+      logError('dependency.failed', error, {
+        requestId,
+        dependency: dependencyName,
+        attempt,
+        latencyMs: elapsedMs,
+      });
+      if (circuit.consecutiveFailures >= circuitFailureThreshold)
+        circuit.openUntil = Date.now() + circuitOpenMs;
       if (attempt < retries) {
         await wait(jitterDelayMs(baseDelayMs * 2 ** attempt));
         continue;

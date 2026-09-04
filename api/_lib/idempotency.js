@@ -18,7 +18,9 @@ function stableValue(value) {
 }
 
 function fingerprint(payload) {
-  return createHash('sha256').update(JSON.stringify(stableValue(payload))).digest('hex');
+  return createHash('sha256')
+    .update(JSON.stringify(stableValue(payload)))
+    .digest('hex');
 }
 
 function getIdempotencyKey(req) {

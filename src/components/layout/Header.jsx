@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
 import {
   AppBar,
   Badge,
@@ -22,115 +22,123 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from '@mui/material'
-import { activeNotification } from '../../data/notifications'
-import { useGoogleTranslate } from '../../hooks/useGoogleTranslate'
+} from '@mui/material';
+import { activeNotification } from '../../data/notifications';
+import { useGoogleTranslate } from '../../hooks/useGoogleTranslate';
 
-const NOTIFICATION_READ_STORAGE_KEY = `carlizdoces:notification:${activeNotification.id}:read`
+const NOTIFICATION_READ_STORAGE_KEY = `carlizdoces:notification:${activeNotification.id}:read`;
 
-export function Header({
-  navItems,
-  isMobileMenuOpen,
-  onOpenMobileMenu,
-  onCloseMobileMenu,
-}) {
-  const theme = useTheme()
-  const isMobileNavigation = useMediaQuery(theme.breakpoints.down('lg'))
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const [hasUnreadNotification, setHasUnreadNotification] = useState(false)
-  const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false })
-  const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 })
-  const appBarRef = useRef(null)
-  const logoRef = useRef(null)
-  const notificationItems = activeNotification.items ?? []
-  const { selectedLanguage, applyLanguage } = useGoogleTranslate()
+export function Header({ navItems, isMobileMenuOpen, onOpenMobileMenu, onCloseMobileMenu }) {
+  const theme = useTheme();
+  const isMobileNavigation = useMediaQuery(theme.breakpoints.down('lg'));
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(false);
+  const [logoMotion, setLogoMotion] = useState({ x: 0, y: 0, isFollowing: false });
+  const logoOriginRef = useRef({ left: 0, top: 0, width: 0, height: 0 });
+  const appBarRef = useRef(null);
+  const logoRef = useRef(null);
+  const notificationItems = activeNotification.items ?? [];
+  const { selectedLanguage, applyLanguage } = useGoogleTranslate();
   const languageFlags = [
     { language: 'en', label: 'English', iconSrc: '/images/flags/us.svg' },
     { language: 'pt', label: 'Português (Brasil)', iconSrc: '/images/flags/br.svg' },
     { language: 'es', label: 'Español', iconSrc: '/images/flags/es.svg' },
     { language: 'fr', label: 'Français', iconSrc: '/images/flags/fr.svg' },
     { language: 'ja', label: '日本語', iconSrc: '/images/flags/jp.svg' },
-  ]
+  ];
 
   useEffect(() => {
     if (!isMobileNavigation && isMobileMenuOpen) {
-      onCloseMobileMenu()
+      onCloseMobileMenu();
     }
-  }, [isMobileMenuOpen, isMobileNavigation, onCloseMobileMenu])
+  }, [isMobileMenuOpen, isMobileNavigation, onCloseMobileMenu]);
 
   useEffect(() => {
-    const notificationReadStatus = window.localStorage.getItem(NOTIFICATION_READ_STORAGE_KEY)
+    const notificationReadStatus = window.localStorage.getItem(NOTIFICATION_READ_STORAGE_KEY);
 
     if (notificationReadStatus === 'true') {
-      setHasUnreadNotification(false)
-      return
+      setHasUnreadNotification(false);
+      return;
     }
 
-    setHasUnreadNotification(true)
-  }, [])
+    setHasUnreadNotification(true);
+  }, []);
 
   useEffect(() => {
     if (!logoMotion.isFollowing) {
-      return undefined
+      return undefined;
     }
 
     const handlePointerMove = (event) => {
-      const { left, top, width, height } = logoOriginRef.current
-      const moveX = event.clientX - (left + (width / 2))
-      const moveY = event.clientY - (top + (height / 2))
+      const { left, top, width, height } = logoOriginRef.current;
+      const moveX = event.clientX - (left + width / 2);
+      const moveY = event.clientY - (top + height / 2);
 
       setLogoMotion((prevState) => ({
         ...prevState,
         x: moveX,
         y: moveY,
-      }))
-    }
+      }));
+    };
 
-    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointermove', handlePointerMove);
 
     return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-    }
-  }, [logoMotion.isFollowing])
+      window.removeEventListener('pointermove', handlePointerMove);
+    };
+  }, [logoMotion.isFollowing]);
 
   const handleLogoClick = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (!logoRef.current) {
-      return
+      return;
     }
 
     if (logoMotion.isFollowing) {
-      setLogoMotion({ x: 0, y: 0, isFollowing: false })
-      return
+      setLogoMotion({ x: 0, y: 0, isFollowing: false });
+      return;
     }
 
-    const logoRect = logoRef.current.getBoundingClientRect()
+    const logoRect = logoRef.current.getBoundingClientRect();
     logoOriginRef.current = {
       left: logoRect.left,
       top: logoRect.top,
       width: logoRect.width,
       height: logoRect.height,
-    }
+    };
 
-    setLogoMotion({ x: 0, y: 0, isFollowing: true })
-  }
+    setLogoMotion({ x: 0, y: 0, isFollowing: true });
+  };
 
   const handleNotificationOpen = () => {
-    setIsNotificationOpen(true)
+    setIsNotificationOpen(true);
 
     if (hasUnreadNotification) {
-      setHasUnreadNotification(false)
-      window.localStorage.setItem(NOTIFICATION_READ_STORAGE_KEY, 'true')
+      setHasUnreadNotification(false);
+      window.localStorage.setItem(NOTIFICATION_READ_STORAGE_KEY, 'true');
     }
-  }
+  };
 
   return (
     <>
-      <AppBar component="header" position="sticky" color="transparent" elevation={0} className="topbar" ref={appBarRef}>
+      <AppBar
+        component="header"
+        position="sticky"
+        color="transparent"
+        elevation={0}
+        className="topbar"
+        ref={appBarRef}
+      >
         <Container maxWidth="xl" className="page-container">
           <Toolbar disableGutters className="topbar-inner">
-            <Link href="#top" underline="none" color="inherit" className="topbar-brand" onClick={handleLogoClick}>
+            <Link
+              href="#top"
+              underline="none"
+              color="inherit"
+              className="topbar-brand"
+              onClick={handleLogoClick}
+            >
               <Box
                 component="img"
                 src="/images/logo/logo-carlizdoces.png"
@@ -149,12 +157,20 @@ export function Header({
               <Typography component="span" className="brand-name" aria-label="Carliz Doces">
                 <span className="brand-word">
                   Carl
-                  <span className="brand-candy brand-candy-lollipop" role="img" aria-label="Pirulito">🍭</span>
+                  <span
+                    className="brand-candy brand-candy-lollipop"
+                    role="img"
+                    aria-label="Pirulito"
+                  >
+                    🍭
+                  </span>
                   z
                 </span>
                 <span className="brand-word brand-word-doces">
                   D
-                  <span className="brand-candy brand-candy-donut" role="img" aria-label="Rosquinha">🍩</span>
+                  <span className="brand-candy brand-candy-donut" role="img" aria-label="Rosquinha">
+                    🍩
+                  </span>
                   ces
                 </span>
               </Typography>
@@ -222,7 +238,11 @@ export function Header({
                     data-active={selectedLanguage === item.language}
                     onClick={() => applyLanguage(item.language)}
                   >
-                    <span className="language-flag-icon" aria-hidden="true" style={{ backgroundImage: `url(${item.iconSrc})` }} />
+                    <span
+                      className="language-flag-icon"
+                      aria-hidden="true"
+                      style={{ backgroundImage: `url(${item.iconSrc})` }}
+                    />
                   </IconButton>
                 ))}
               </Box>
@@ -238,18 +258,29 @@ export function Header({
                       fontSize: '0.62rem',
                       px: 0.8,
                       minWidth: 0,
-                      boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.7), 0 0 10px rgba(244, 67, 54, 0.55)',
+                      boxShadow:
+                        '0 0 0 2px rgba(255, 255, 255, 0.7), 0 0 10px rgba(244, 67, 54, 0.55)',
                     },
                   }}
                 >
-                  <IconButton color="inherit" aria-label="Ver notificações" onClick={handleNotificationOpen}>
+                  <IconButton
+                    color="inherit"
+                    aria-label="Ver notificações"
+                    onClick={handleNotificationOpen}
+                  >
                     <Icon>notifications</Icon>
                   </IconButton>
                 </Badge>
               </Tooltip>
 
               {isMobileNavigation && (
-                <IconButton color="inherit" aria-label="Abrir menu" edge="end" onClick={onOpenMobileMenu} className="topbar-menu-button">
+                <IconButton
+                  color="inherit"
+                  aria-label="Abrir menu"
+                  edge="end"
+                  onClick={onOpenMobileMenu}
+                  className="topbar-menu-button"
+                >
                   <Icon>menu</Icon>
                 </IconButton>
               )}
@@ -293,7 +324,12 @@ export function Header({
 
           <List className="mobile-nav-list">
             {navItems.map((item) => (
-              <ListItemButton key={item.sectionId} component="a" href={`#${item.sectionId}`} onClick={onCloseMobileMenu}>
+              <ListItemButton
+                key={item.sectionId}
+                component="a"
+                href={`#${item.sectionId}`}
+                onClick={onCloseMobileMenu}
+              >
                 <ListItemText primary={item.label} />
               </ListItemButton>
             ))}
@@ -312,14 +348,22 @@ export function Header({
                 data-active={selectedLanguage === item.language}
                 onClick={() => applyLanguage(item.language)}
               >
-                <span className="language-flag-icon" aria-hidden="true" style={{ backgroundImage: `url(${item.iconSrc})` }} />
+                <span
+                  className="language-flag-icon"
+                  aria-hidden="true"
+                  style={{ backgroundImage: `url(${item.iconSrc})` }}
+                />
               </IconButton>
             ))}
           </Box>
         </Box>
       </Drawer>
 
-      <Modal open={isNotificationOpen} onClose={() => setIsNotificationOpen(false)} aria-labelledby="notification-modal-title">
+      <Modal
+        open={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+        aria-labelledby="notification-modal-title"
+      >
         <Box
           sx={{
             position: 'fixed',
@@ -332,7 +376,12 @@ export function Header({
           }}
         >
           <Paper elevation={6} sx={{ p: 3, borderRadius: 2 }}>
-            <Typography id="notification-modal-title" variant="h6" component="h2" sx={{ mb: 2, fontWeight: 700 }}>
+            <Typography
+              id="notification-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ mb: 2, fontWeight: 700 }}
+            >
               {activeNotification.title}
             </Typography>
 
@@ -342,7 +391,8 @@ export function Header({
                 p: { xs: 0.5, sm: 0.75 },
                 borderRadius: 999,
                 textAlign: 'center',
-                background: 'linear-gradient(95deg, rgba(255, 247, 249, 0.96) 0%, rgba(255, 250, 240, 0.96) 100%)',
+                background:
+                  'linear-gradient(95deg, rgba(255, 247, 249, 0.96) 0%, rgba(255, 250, 240, 0.96) 100%)',
                 border: '1px solid rgba(231, 135, 150, 0.42)',
               }}
             >
@@ -419,5 +469,5 @@ export function Header({
         </Box>
       </Modal>
     </>
-  )
+  );
 }

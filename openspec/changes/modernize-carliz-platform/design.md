@@ -58,6 +58,8 @@ O cliente envia um briefing mínimo e enumerado. O servidor modera a entrada, ch
 
 Tokens de cor, tipografia, raio, sombra, espaçamento e movimento são consolidados no topo dos estilos. O hero recebe hierarquia mais editorial; o concierge vira uma seção reconhecível e carregada sob demanda; feedback remoto usa um componente reutilizável; Error Boundary recebe uma tela de recuperação da marca. Efeitos Three/partículas permanecem opcionais e preguiçosos.
 
+A direção visual implementada usa tipografia editorial para títulos, sans humanista para leitura, superfícies creme, berry e teal para contraste de marca, raios menores para controles e foco visível com redução global de movimento. A paleta evita depender de roxo e mantém a identidade artesanal sem transformar a interface em uma sequência de cartões arredondados.
+
 ### 8. Estratégia de testes orientada a risco
 
 Vitest + Testing Library cobrem domínio, componentes e hooks; testes Node/HTTP cobrem handlers e contratos; validação OpenAPI e OpenSpec entram no CI; uma jornada Playwright futura cobre descoberta → IA/fallback → WhatsApp. O plano em `docs/test-plan.md` mapeia cada requisito a suites e registra a trajetória para 100% de statements, branches, functions e lines.

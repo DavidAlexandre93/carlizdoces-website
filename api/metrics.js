@@ -25,6 +25,6 @@ module.exports = withRequestContext(async function handler(req, res, context) {
     res,
     200,
     { timestamp: new Date().toISOString(), metrics: getMetricsSnapshot() },
-    requestId,
+    requestId
   );
 });

@@ -41,11 +41,23 @@ jobs:
       - name: Unit tests
         run: npm run test:ci
 
+      - name: API integration tests
+        run: npm run test:api
+
       - name: Coverage tests (quality gate)
         run: npm run test:coverage
 
       - name: Build validation
         run: npm run build
+
+      - name: OpenAPI contract
+        run: npm run openapi:check
+
+      - name: OpenSpec validation
+        run: npm run openspec:check
+
+      - name: Claude artifact audit
+        run: npm run audit:claude
 
       - name: NPM vulnerability audit (high+)
         run: npm run audit:high

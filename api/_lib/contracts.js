@@ -61,21 +61,34 @@ const ApiErrorSchema = z
 const ContactRequestSchema = z
   .object({
     name: z.string().trim().min(2).max(120),
-    email: z.union([z.email().max(180), z.literal('')]).optional().default(''),
+    email: z
+      .union([z.email().max(180), z.literal('')])
+      .optional()
+      .default(''),
     message: z.string().trim().min(5).max(3000),
   })
   .strict();
 
 const RatingRequestSchema = z
   .object({
-    productId: z.string().trim().min(1).max(120).regex(/^[a-z0-9-]+$/),
+    productId: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .regex(/^[a-z0-9-]+$/),
     rating: z.coerce.number().int().min(1).max(5),
   })
   .strict();
 
 const LikeRequestSchema = z
   .object({
-    userId: z.string().trim().min(8).max(128).regex(/^[a-zA-Z0-9:_-]+$/),
+    userId: z
+      .string()
+      .trim()
+      .min(8)
+      .max(128)
+      .regex(/^[a-zA-Z0-9:_-]+$/),
   })
   .strict();
 
@@ -84,7 +97,10 @@ const AiBriefSchema = z
     eventType: z.enum(Object.values(EventType)),
     guests: z.coerce.number().int().min(5).max(5000),
     budget: z.enum(Object.values(BudgetTier)).default(BudgetTier.BALANCED),
-    preferences: z.array(z.enum(Object.values(Preference))).max(6).default([]),
+    preferences: z
+      .array(z.enum(Object.values(Preference)))
+      .max(6)
+      .default([]),
     notes: z.string().trim().max(240).optional().default(''),
   })
   .strict();

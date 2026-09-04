@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --exclude tests/**/*.test.cjs",
+    "test:api": "node --test tests/api-http.test.cjs",
     "test:watch": "vitest",
     "test:ci": "vitest run --reporter=verbose",
     "audit:high": "npm audit --audit-level=high",
@@ -26,7 +27,7 @@
     "format:check": "prettier --check . --cache",
     "test:coverage": "vitest run --coverage",
     "commitlint": "commitlint",
-    "quality": "npm run lint && npm run format:check && npm run typecheck && npm run test:coverage && npm run openapi:check && npm run openspec:check && npm run audit:claude && npm run build"
+    "quality": "npm run lint && npm run format:check && npm run typecheck && npm run test:api && npm run test:coverage && npm run openapi:check && npm run openspec:check && npm run audit:claude && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

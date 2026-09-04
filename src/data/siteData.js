@@ -1,16 +1,16 @@
-import { imageCollections } from './generatedImages'
-import { productsCatalog, updatesCatalog } from './editableContent'
+import { imageCollections } from './generatedImages';
+import { productsCatalog, updatesCatalog } from './editableContent';
 
 const toTitleFromSlug = (value) =>
   value
     .replace(/[-_]+/g, ' ')
     .trim()
-    .replace(/\b\w/g, (letter) => letter.toUpperCase())
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 
-const normalizeKey = (value = '') => String(value).trim().toLowerCase()
+const normalizeKey = (value = '') => String(value).trim().toLowerCase();
 
 const toProductFallback = (image, index) => {
-  const baseName = toTitleFromSlug(image.slug || image.label || `Doce ${index + 1}`)
+  const baseName = toTitleFromSlug(image.slug || image.label || `Doce ${index + 1}`);
 
   return {
     id: image.id || `produto-${index + 1}`,
@@ -22,61 +22,65 @@ const toProductFallback = (image, index) => {
     image: image.imageUrl,
     rating: 5,
     reviewCount: 0,
-  }
-}
+  };
+};
 
 const mapProductOverrides = () => {
-  const mapByImage = new Map()
-  const mapById = new Map()
+  const mapByImage = new Map();
+  const mapById = new Map();
 
   productsCatalog.forEach((product) => {
     if (product.image) {
-      mapByImage.set(normalizeKey(product.image), product)
+      mapByImage.set(normalizeKey(product.image), product);
     }
 
     if (product.id) {
-      mapById.set(normalizeKey(product.id), product)
+      mapById.set(normalizeKey(product.id), product);
     }
-  })
+  });
 
-  return { mapByImage, mapById }
-}
+  return { mapByImage, mapById };
+};
 
 const productImages = [
   ...(imageCollections['pedidos-de-doces'] ?? []),
   ...(imageCollections['cardapio-de-pascoa'] ?? []),
-]
+];
 
-const { mapByImage: productOverridesByImage, mapById: productOverridesById } = mapProductOverrides()
+const { mapByImage: productOverridesByImage, mapById: productOverridesById } =
+  mapProductOverrides();
 
 const autoProducts = productImages.map((image, index) => {
   const override =
     productOverridesByImage.get(normalizeKey(image.imageUrl)) ||
-    productOverridesById.get(normalizeKey(image.id))
+    productOverridesById.get(normalizeKey(image.id));
 
   return {
     ...toProductFallback(image, index),
     ...override,
     image: image.imageUrl,
     id: override?.id || image.id || `produto-${index + 1}`,
-  }
-})
+  };
+});
 
-const usedProductKeys = new Set(autoProducts.map((product) => normalizeKey(product.image)))
+const usedProductKeys = new Set(autoProducts.map((product) => normalizeKey(product.image)));
 
-const extraManualProducts = productsCatalog.filter((product) => !usedProductKeys.has(normalizeKey(product.image)))
+const extraManualProducts = productsCatalog.filter(
+  (product) => !usedProductKeys.has(normalizeKey(product.image))
+);
 
-const dynamicProductsCatalog = [...autoProducts, ...extraManualProducts]
+const dynamicProductsCatalog = [...autoProducts, ...extraManualProducts];
 
 const updateTypeFromSlug = (slug = '') => {
-  if (slug.includes('promo') || slug.includes('desconto') || slug.includes('combo')) return 'promocao'
-  if (slug.includes('lancamento') || slug.includes('novo')) return 'lancamento'
-  if (slug.includes('agenda') || slug.includes('encomenda')) return 'comunicado'
-  return 'geral'
-}
+  if (slug.includes('promo') || slug.includes('desconto') || slug.includes('combo'))
+    return 'promocao';
+  if (slug.includes('lancamento') || slug.includes('novo')) return 'lancamento';
+  if (slug.includes('agenda') || slug.includes('encomenda')) return 'comunicado';
+  return 'geral';
+};
 
 const toUpdateFallback = (image, index) => {
-  const title = toTitleFromSlug(image.slug || image.label || `Novidade ${index + 1}`)
+  const title = toTitleFromSlug(image.slug || image.label || `Novidade ${index + 1}`);
 
   return {
     id: image.id || `novidade-${index + 1}`,
@@ -88,43 +92,46 @@ const toUpdateFallback = (image, index) => {
     mediaDescription: 'Imagem adicionada na pasta de novidades.',
     description: `Confira a novidade ${title} e peça pelo WhatsApp.`,
     status: 'Consulte disponibilidade.',
-  }
-}
+  };
+};
 
 const mapUpdateOverrides = () => {
-  const mapByImage = new Map()
-  const mapById = new Map()
+  const mapByImage = new Map();
+  const mapById = new Map();
 
   updatesCatalog.forEach((item) => {
     if (item.imageUrl) {
-      mapByImage.set(normalizeKey(item.imageUrl), item)
+      mapByImage.set(normalizeKey(item.imageUrl), item);
     }
 
     if (item.id) {
-      mapById.set(normalizeKey(item.id), item)
+      mapById.set(normalizeKey(item.id), item);
     }
-  })
+  });
 
-  return { mapByImage, mapById }
-}
+  return { mapByImage, mapById };
+};
 
-const novidadesImages = imageCollections.novidades ?? []
-const { mapByImage: updatesByImage, mapById: updatesById } = mapUpdateOverrides()
+const novidadesImages = imageCollections.novidades ?? [];
+const { mapByImage: updatesByImage, mapById: updatesById } = mapUpdateOverrides();
 
 const autoUpdates = novidadesImages.map((image, index) => {
-  const override = updatesByImage.get(normalizeKey(image.imageUrl)) || updatesById.get(normalizeKey(image.id))
+  const override =
+    updatesByImage.get(normalizeKey(image.imageUrl)) || updatesById.get(normalizeKey(image.id));
 
   return {
     ...toUpdateFallback(image, index),
     ...override,
     imageUrl: image.imageUrl,
     id: override?.id || image.id || `novidade-${index + 1}`,
-  }
-})
+  };
+});
 
-const usedUpdateImageKeys = new Set(autoUpdates.map((item) => normalizeKey(item.imageUrl)))
-const extraManualUpdates = updatesCatalog.filter((item) => !usedUpdateImageKeys.has(normalizeKey(item.imageUrl)))
-const dynamicUpdatesCatalog = [...autoUpdates, ...extraManualUpdates]
+const usedUpdateImageKeys = new Set(autoUpdates.map((item) => normalizeKey(item.imageUrl)));
+const extraManualUpdates = updatesCatalog.filter(
+  (item) => !usedUpdateImageKeys.has(normalizeKey(item.imageUrl))
+);
+const dynamicUpdatesCatalog = [...autoUpdates, ...extraManualUpdates];
 
 export const navItems = [
   { label: 'Quem somos', sectionId: 'quem-somos' },
@@ -135,7 +142,7 @@ export const navItems = [
   { label: 'Realizar pedido', sectionId: 'realizar-pedido' },
   { label: 'Ovos de Páscoa', sectionId: 'ovos-de-pascoa' },
   { label: 'Contato', sectionId: 'contato' },
-]
+];
 
 export const seasonalProducts = dynamicProductsCatalog.map((product, index) => ({
   id: product.id || `produto-${index + 1}`,
@@ -148,7 +155,7 @@ export const seasonalProducts = dynamicProductsCatalog.map((product, index) => (
   rating: product.rating ?? 5,
   reviewCount: product.reviewCount ?? 0,
   quantities: product.quantities ?? [],
-}))
+}));
 
 export const updates = dynamicUpdatesCatalog.map((item, index) => ({
   id: item.id || `novidade-${index + 1}`,
@@ -160,32 +167,83 @@ export const updates = dynamicUpdatesCatalog.map((item, index) => ({
   mediaDescription: item.mediaDescription,
   description: item.description,
   status: item.status,
-}))
+}));
 
 export const announcementChannels = [
-  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/_carlizdoces/', variant: 'contained', external: true },
-  { id: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/5511992175496?text=Oi%2C%20quero%20receber%20as%20novidades%20da%20Carliz%20Doces%21', variant: 'outlined', external: true },
-  { id: 'contato', label: 'Falar com a equipe', href: '#contato', variant: 'text', external: false },
-]
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/_carlizdoces/',
+    variant: 'contained',
+    external: true,
+  },
+  {
+    id: 'whatsapp',
+    label: 'WhatsApp',
+    href: 'https://wa.me/5511992175496?text=Oi%2C%20quero%20receber%20as%20novidades%20da%20Carliz%20Doces%21',
+    variant: 'outlined',
+    external: true,
+  },
+  {
+    id: 'contato',
+    label: 'Falar com a equipe',
+    href: '#contato',
+    variant: 'text',
+    external: false,
+  },
+];
 
 export const manualTestimonials = [
-  { id: 'manual-1', author: 'Abner Ramos', channel: 'WhatsApp', message: 'Oiii, muito obrigado pelo empenho. Os doces e o bolo estavam uma delícia, amamos. Você sabe que arrasa muito.' },
-  { id: 'manual-2', author: 'Maria', channel: 'WhatsApp', message: 'Carla, amei os doces! Muito obrigada! Lindos; seu trabalho é impecável. Parabéns!' },
-  { id: 'manual-3', author: 'Raysa', channel: 'WhatsApp', message: 'Eu e o William já somos fãs dos seus doces.' },
-  { id: 'manual-4', author: 'Andreia', channel: 'WhatsApp', message: 'Boaaa, e é difícil achar alguém que faz bem feito. Todo mundo gostou muito do bolo e dos docinhos.' },
-  { id: 'manual-5', author: 'Nil', channel: 'WhatsApp', message: 'Obrigada, Carla! Tudo maravilhoso. Que Deus te abençoe grandemente; você está de parabéns!' },
-  { id: 'manual-6', author: 'Luziana', channel: 'WhatsApp', message: 'Tava muito lindo, parabéns! Todo mundo elogiou.' },
+  {
+    id: 'manual-1',
+    author: 'Abner Ramos',
+    channel: 'WhatsApp',
+    message:
+      'Oiii, muito obrigado pelo empenho. Os doces e o bolo estavam uma delícia, amamos. Você sabe que arrasa muito.',
+  },
+  {
+    id: 'manual-2',
+    author: 'Maria',
+    channel: 'WhatsApp',
+    message: 'Carla, amei os doces! Muito obrigada! Lindos; seu trabalho é impecável. Parabéns!',
+  },
+  {
+    id: 'manual-3',
+    author: 'Raysa',
+    channel: 'WhatsApp',
+    message: 'Eu e o William já somos fãs dos seus doces.',
+  },
+  {
+    id: 'manual-4',
+    author: 'Andreia',
+    channel: 'WhatsApp',
+    message:
+      'Boaaa, e é difícil achar alguém que faz bem feito. Todo mundo gostou muito do bolo e dos docinhos.',
+  },
+  {
+    id: 'manual-5',
+    author: 'Nil',
+    channel: 'WhatsApp',
+    message:
+      'Obrigada, Carla! Tudo maravilhoso. Que Deus te abençoe grandemente; você está de parabéns!',
+  },
+  {
+    id: 'manual-6',
+    author: 'Luziana',
+    channel: 'WhatsApp',
+    message: 'Tava muito lindo, parabéns! Todo mundo elogiou.',
+  },
   { id: 'manual-7', author: 'Luziana', channel: 'WhatsApp', message: 'Ficaram lindos, docinhos!' },
-]
+];
 
 export const instagramPosts = (imageCollections.instagram ?? []).map((image, index) => ({
   id: image.id || `insta-${index + 1}`,
   imageUrl: image.imageUrl,
   alt: `${toTitleFromSlug(image.slug || image.fileName || image.label)} da Carliz Doces`,
-}))
+}));
 
 export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, index) => {
-  const title = toTitleFromSlug(image.slug || image.label)
+  const title = toTitleFromSlug(image.slug || image.label);
 
   return {
     id: image.id || `carousel-${index + 1}`,
@@ -194,16 +252,16 @@ export const topShowcaseSlides = (imageCollections.carousel ?? []).map((image, i
     title,
     description: `Destaque especial: ${title}.`,
     tag: index === 0 ? 'Mais pedido' : 'Novidade',
-  }
-})
+  };
+});
 
 export const metrics = [
   ['Pedidos por semana', '4+'],
   ['Sabores disponíveis', '30+'],
   ['Eventos atendidos', '40+'],
-]
+];
 
-export const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito']
-export const instagramProfileLink = 'https://www.instagram.com/_carlizdoces/'
-export const whatsappNumber = '5511992175496'
-export const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+export const paymentMethods = ['Pix', 'Dinheiro', 'Cartão de débito', 'Cartão de crédito'];
+export const instagramProfileLink = 'https://www.instagram.com/_carlizdoces/';
+export const whatsappNumber = '5511992175496';
+export const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });

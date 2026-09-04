@@ -1,8 +1,8 @@
-import { SeoHead } from '../../../components/seo/SeoHead'
-import { absoluteUrl } from '../../../lib/seo'
-import '../styles/error404.css'
+import { SeoHead } from '../../../components/seo/SeoHead';
+import { absoluteUrl } from '../../../lib/seo';
+import '../styles/error404.css';
 
-const candyIcons = ['🍬', '🍭', '🧁', '🍫', '🍩']
+const candyIcons = ['🍬', '🍭', '🧁', '🍫', '🍩'];
 
 export function Error404Page() {
   return (
@@ -14,38 +14,41 @@ export function Error404Page() {
         noindex
       />
       <main className="error404-page" role="main">
-      <div className="error404-glow error404-glow--top" aria-hidden="true" />
-      <div className="error404-glow error404-glow--bottom" aria-hidden="true" />
-      <div className="error404-sprinkle error404-sprinkle--one" aria-hidden="true" />
-      <div className="error404-sprinkle error404-sprinkle--two" aria-hidden="true" />
-      <div className="error404-sprinkle error404-sprinkle--three" aria-hidden="true" />
+        <div className="error404-glow error404-glow--top" aria-hidden="true" />
+        <div className="error404-glow error404-glow--bottom" aria-hidden="true" />
+        <div className="error404-sprinkle error404-sprinkle--one" aria-hidden="true" />
+        <div className="error404-sprinkle error404-sprinkle--two" aria-hidden="true" />
+        <div className="error404-sprinkle error404-sprinkle--three" aria-hidden="true" />
 
-      <section className="error404-card" aria-labelledby="error404-title">
-        <p className="error404-label">Carliz Doces</p>
+        <section className="error404-card" aria-labelledby="error404-title">
+          <p className="error404-label">Carliz Doces</p>
 
-        <div className="error404-candy-row" aria-hidden="true">
-          {candyIcons.map((icon) => (
-            <span key={icon}>{icon}</span>
-          ))}
-        </div>
+          <div className="error404-candy-row" aria-hidden="true">
+            {candyIcons.map((icon) => (
+              <span key={icon}>{icon}</span>
+            ))}
+          </div>
 
-        <p className="error404-code">404</p>
-        <h1 id="error404-title">Oops! Essa página se perdeu entre sabores e guloseimas 🍰</h1>
-        <p className="error404-message">
-          Tente novamente mais tarde.
-          <span> Enquanto isso, escolha uma opção abaixo para continuar navegando com tranquilidade.</span>
-        </p>
+          <p className="error404-code">404</p>
+          <h1 id="error404-title">Oops! Essa página se perdeu entre sabores e guloseimas 🍰</h1>
+          <p className="error404-message">
+            Tente novamente mais tarde.
+            <span>
+              {' '}
+              Enquanto isso, escolha uma opção abaixo para continuar navegando com tranquilidade.
+            </span>
+          </p>
 
-        <div className="error404-actions">
-          <a className="error404-link error404-link--primary" href="/">
-            Ver vitrine de doces
-          </a>
-          <a className="error404-link error404-link--secondary" href="/entrada">
-            Voltar para entrada
-          </a>
-        </div>
-      </section>
+          <div className="error404-actions">
+            <a className="error404-link error404-link--primary" href="/">
+              Ver vitrine de doces
+            </a>
+            <a className="error404-link error404-link--secondary" href="/entrada">
+              Voltar para entrada
+            </a>
+          </div>
+        </section>
       </main>
     </>
-  )
+  );
 }

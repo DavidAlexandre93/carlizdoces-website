@@ -1,6 +1,6 @@
-import { AppRouter } from './app/router/AppRouter'
-import './App.css'
-import './styles/globals.css'
+import { AppRouter } from './app/router/AppRouter';
+import './App.css';
+import './styles/globals.css';
 
 export default function App() {
   return (
@@ -8,5 +8,5 @@ export default function App() {
       <div id="google_translate_element" className="google-translate-hidden" />
       <AppRouter />
     </>
-  )
+  );
 }

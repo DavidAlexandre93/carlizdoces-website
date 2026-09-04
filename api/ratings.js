@@ -26,16 +26,31 @@ function upsertRating(productId, rating, clientFingerprint) {
   else stats.votes += 1;
   stats.total += rating;
   globalStore.votesByUser[voteKey] = rating;
-  return { votes: stats.votes, total: stats.total, average: Number((stats.total / stats.votes).toFixed(2)) };
+  return {
+    votes: stats.votes,
+    total: stats.total,
+    average: Number((stats.total / stats.votes).toFixed(2)),
+  };
 }
 
 module.exports = withRequestContext(async function handler(req, res, context) {
   const { requestId, clientFingerprint } = context;
   if (!allowMethods(req, res, ['GET', 'POST'], requestId)) return;
-  if (!enforceRateLimit(req, res, context, { scope: 'ratings', limit: req.method === 'GET' ? 120 : 40 })) return;
+  if (
+    !enforceRateLimit(req, res, context, {
+      scope: 'ratings',
+      limit: req.method === 'GET' ? 120 : 40,
+    })
+  )
+    return;
 
   if (req.method === 'GET') {
-    sendSuccess(res, 200, { ratingsByProductId: globalStore.data, storage: 'memory-best-effort' }, requestId);
+    sendSuccess(
+      res,
+      200,
+      { ratingsByProductId: globalStore.data, storage: 'memory-best-effort' },
+      requestId
+    );
     return;
   }
 

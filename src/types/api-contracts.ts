@@ -40,64 +40,63 @@ export enum Preference {
 }
 
 export interface ValidationDetailDto {
-  field: string
-  reason: string
+  field: string;
+  reason: string;
 }
 
 export interface ApiErrorDto {
-  code: ErrorCode
-  message: string
-  details?: ValidationDetailDto[] | null
+  code: ErrorCode;
+  message: string;
+  details?: ValidationDetailDto[] | null;
 }
 
 export interface SuccessEnvelopeDto<TData, TMeta = never> {
-  ok: true
-  requestId: string
-  data: TData
-  meta?: TMeta
+  ok: true;
+  requestId: string;
+  data: TData;
+  meta?: TMeta;
 }
 
 export interface ErrorEnvelopeDto {
-  ok: false
-  requestId: string
-  error: ApiErrorDto
+  ok: false;
+  requestId: string;
+  error: ApiErrorDto;
 }
 
 export type ApiEnvelopeDto<TData, TMeta = never> =
-  | SuccessEnvelopeDto<TData, TMeta>
-  | ErrorEnvelopeDto
+  SuccessEnvelopeDto<TData, TMeta> | ErrorEnvelopeDto;
 
 export interface AiBriefRequestDto {
-  eventType: EventType
-  guests: number
-  budget: BudgetTier
-  preferences: Preference[]
-  notes?: string
+  eventType: EventType;
+  guests: number;
+  budget: BudgetTier;
+  preferences: Preference[];
+  notes?: string;
 }
 
 export interface RecommendationItemDto {
-  productId: string
-  name: string
-  quantity: number
-  reason: string
+  productId: string;
+  name: string;
+  quantity: number;
+  reason: string;
 }
 
 export interface AiRecommendationResponseDto {
-  source: 'ai' | 'fallback'
-  headline: string
-  summary: string
-  estimatedSweets: number
-  items: RecommendationItemDto[]
-  tips: string[]
-  whatsappMessage: string
+  source: 'ai' | 'fallback';
+  headline: string;
+  summary: string;
+  estimatedSweets: number;
+  items: RecommendationItemDto[];
+  tips: string[];
+  whatsappMessage: string;
 }
 
 export interface HealthResponseDto {
-  status: 'ready' | 'degraded'
-  service: string
-  version: string
-  timestamp: string
-  uptimeSeconds: number
-  dependencies?: Record<string, { configured: boolean }>
-  missingRequiredDependencies?: string[]
+  status: 'ready' | 'degraded';
+  service: string;
+  version: string;
+  timestamp: string;
+  uptimeSeconds: number;
+  dependencies?: Record<string, { configured: boolean }>;
+  missingRequiredDependencies?: string[];
 }

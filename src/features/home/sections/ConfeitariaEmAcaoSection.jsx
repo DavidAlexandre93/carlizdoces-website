@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import CakePreview3D from '../../../components/CakePreview3D'
+import { useMemo, useState } from 'react';
+import CakePreview3D from '../../../components/CakePreview3D';
 
 const massas = [
   { id: 'massa_baunilha', label: 'Baunilha', icon: '🍰' },
@@ -20,7 +20,7 @@ const massas = [
   { id: 'massa_formigueiro', label: 'Formigueiro', icon: '⚪' },
   { id: 'massa_bem_casado', label: 'Bem-casado', icon: '💛' },
   { id: 'massa_frutas_vermelhas', label: 'Frutas Vermelhas', icon: '🍓' },
-]
+];
 
 const recheios = [
   { id: 'recheio_brigadeiro', label: 'Brigadeiro', icon: '🍮' },
@@ -49,7 +49,7 @@ const recheios = [
   { id: 'recheio_frutas_vermelhas', label: 'Geleia de Frutas Vermelhas', icon: '🫐' },
   { id: 'recheio_limao_siciliano', label: 'Curd de Limão Siciliano', icon: '🍋' },
   { id: 'recheio_caramelo_salgado', label: 'Caramelo Salgado', icon: '🍯' },
-]
+];
 
 const coberturas = [
   { id: 'cob_buttercream', label: 'Buttercream', icon: '🧁' },
@@ -66,7 +66,7 @@ const coberturas = [
   { id: 'cob_cream_cheese', label: 'Cream Cheese', icon: '🧀' },
   { id: 'cob_chocolate_branco', label: 'Ganache de Chocolate Branco', icon: '🤍' },
   { id: 'cob_espelhada', label: 'Cobertura Espelhada', icon: '🪞' },
-]
+];
 
 const decoracoes = [
   { id: 'deco_flores', label: 'Flores', icon: '🌸' },
@@ -90,39 +90,44 @@ const decoracoes = [
   { id: 'deco_papel_arroz', label: 'Papel de Arroz', icon: '🖼️' },
   { id: 'deco_velas', label: 'Velas', icon: '🕯️' },
   { id: 'deco_topo_personalizado', label: 'Topo Personalizado', icon: '👑' },
-]
+];
 
 function findById(list, id) {
-  return list.find((item) => item.id === id)
+  return list.find((item) => item.id === id);
 }
 
 export function ConfeitariaEmAcaoSection() {
-  const [structure, setStructure] = useState('redondo')
-  const [mainHex, setMainHex] = useState('#f7d1dc')
-  const [accentHex, setAccentHex] = useState('#ea9eb0')
-  const [massaId, setMassaId] = useState('massa_baunilha')
-  const [recheioId, setRecheioId] = useState('recheio_brigadeiro')
-  const [coberturaId, setCoberturaId] = useState('cob_ganache')
-  const [selectedDecos, setSelectedDecos] = useState(['deco_flores', 'deco_topper'])
-  const [birthdayName, setBirthdayName] = useState('Carla Geovanna')
-  const [pulseKey, setPulseKey] = useState(0)
+  const [structure, setStructure] = useState('redondo');
+  const [mainHex, setMainHex] = useState('#f7d1dc');
+  const [accentHex, setAccentHex] = useState('#ea9eb0');
+  const [massaId, setMassaId] = useState('massa_baunilha');
+  const [recheioId, setRecheioId] = useState('recheio_brigadeiro');
+  const [coberturaId, setCoberturaId] = useState('cob_ganache');
+  const [selectedDecos, setSelectedDecos] = useState(['deco_flores', 'deco_topper']);
+  const [birthdayName, setBirthdayName] = useState('Carla Geovanna');
+  const [pulseKey, setPulseKey] = useState(0);
 
-  const ingredientes = useMemo(() => ({
-    massa: findById(massas, massaId),
-    recheio: findById(recheios, recheioId),
-    cobertura: findById(coberturas, coberturaId),
-    decoracao: selectedDecos.map((id) => findById(decoracoes, id)).filter(Boolean),
-  }), [massaId, recheioId, coberturaId, selectedDecos])
+  const ingredientes = useMemo(
+    () => ({
+      massa: findById(massas, massaId),
+      recheio: findById(recheios, recheioId),
+      cobertura: findById(coberturas, coberturaId),
+      decoracao: selectedDecos.map((id) => findById(decoracoes, id)).filter(Boolean),
+    }),
+    [massaId, recheioId, coberturaId, selectedDecos]
+  );
 
-  const restrictionOk = Boolean(ingredientes.massa && ingredientes.recheio && ingredientes.cobertura)
+  const restrictionOk = Boolean(
+    ingredientes.massa && ingredientes.recheio && ingredientes.cobertura
+  );
 
   const toggleDeco = (id) => {
     setSelectedDecos((current) => {
-      if (current.includes(id)) return current.filter((item) => item !== id)
-      return [...current, id]
-    })
-    setPulseKey((current) => current + 1)
-  }
+      if (current.includes(id)) return current.filter((item) => item !== id);
+      return [...current, id];
+    });
+    setPulseKey((current) => current + 1);
+  };
 
   return (
     <section id="confeitaria-em-acao" style={{ marginTop: 24 }}>
@@ -139,13 +144,24 @@ export function ConfeitariaEmAcaoSection() {
           <div className="acao-controls">
             <label className="acao-field">
               Nome do aniversariante
-              <input className="acao-input" value={birthdayName} onChange={(event) => setBirthdayName(event.target.value)} />
+              <input
+                className="acao-input"
+                value={birthdayName}
+                onChange={(event) => setBirthdayName(event.target.value)}
+              />
             </label>
 
             <div className="acao-group">
               <label className="acao-field">
                 Estrutura
-                <select className="acao-select" value={structure} onChange={(event) => { setStructure(event.target.value); setPulseKey((current) => current + 1) }}>
+                <select
+                  className="acao-select"
+                  value={structure}
+                  onChange={(event) => {
+                    setStructure(event.target.value);
+                    setPulseKey((current) => current + 1);
+                  }}
+                >
                   <option value="redondo">Redondo</option>
                   <option value="quadrado">Quadrado</option>
                   <option value="2andares">2 andares</option>
@@ -154,22 +170,49 @@ export function ConfeitariaEmAcaoSection() {
 
               <label className="acao-field">
                 Massa
-                <select className="acao-select" value={massaId} onChange={(event) => setMassaId(event.target.value)}>
-                  {massas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                <select
+                  className="acao-select"
+                  value={massaId}
+                  onChange={(event) => setMassaId(event.target.value)}
+                >
+                  {massas.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.icon} {item.label}
+                    </option>
+                  ))}
                 </select>
               </label>
 
               <label className="acao-field">
                 Recheio
-                <select className="acao-select" value={recheioId} onChange={(event) => setRecheioId(event.target.value)}>
-                  {recheios.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                <select
+                  className="acao-select"
+                  value={recheioId}
+                  onChange={(event) => setRecheioId(event.target.value)}
+                >
+                  {recheios.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.icon} {item.label}
+                    </option>
+                  ))}
                 </select>
               </label>
 
               <label className="acao-field">
                 Cobertura
-                <select className="acao-select" value={coberturaId} onChange={(event) => { setCoberturaId(event.target.value); setPulseKey((current) => current + 1) }}>
-                  {coberturas.map((item) => <option key={item.id} value={item.id}>{item.icon} {item.label}</option>)}
+                <select
+                  className="acao-select"
+                  value={coberturaId}
+                  onChange={(event) => {
+                    setCoberturaId(event.target.value);
+                    setPulseKey((current) => current + 1);
+                  }}
+                >
+                  {coberturas.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.icon} {item.label}
+                    </option>
+                  ))}
                 </select>
               </label>
             </div>
@@ -179,7 +222,11 @@ export function ConfeitariaEmAcaoSection() {
               <div className="acao-decoracoes-grid">
                 {decoracoes.map((item) => (
                   <label key={item.id} className="acao-decoracao-item">
-                    <input type="checkbox" checked={selectedDecos.includes(item.id)} onChange={() => toggleDeco(item.id)} />
+                    <input
+                      type="checkbox"
+                      checked={selectedDecos.includes(item.id)}
+                      onChange={() => toggleDeco(item.id)}
+                    />
                     {item.icon} {item.label}
                   </label>
                 ))}
@@ -189,11 +236,19 @@ export function ConfeitariaEmAcaoSection() {
             <div className="acao-colors">
               <label className="acao-color-field">
                 Cor principal
-                <input type="color" value={mainHex} onChange={(event) => setMainHex(event.target.value)} />
+                <input
+                  type="color"
+                  value={mainHex}
+                  onChange={(event) => setMainHex(event.target.value)}
+                />
               </label>
               <label className="acao-color-field">
                 Cor destaque
-                <input type="color" value={accentHex} onChange={(event) => setAccentHex(event.target.value)} />
+                <input
+                  type="color"
+                  value={accentHex}
+                  onChange={(event) => setAccentHex(event.target.value)}
+                />
               </label>
             </div>
           </div>
@@ -354,5 +409,5 @@ export function ConfeitariaEmAcaoSection() {
         `}</style>
       </div>
     </section>
-  )
+  );
 }

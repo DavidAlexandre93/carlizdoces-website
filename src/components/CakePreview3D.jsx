@@ -1,10 +1,17 @@
-import { useEffect, useMemo, useRef } from 'react'
-import * as THREE from 'three'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Environment, ContactShadows, Float, RoundedBox, Text } from '@react-three/drei'
-import SprinklesPhysics from './SprinklesPhysics'
-import FlowersInstanced from './FlowersInstanced'
-import GanacheDrip from './GanacheDrip'
+import { useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
+import { Canvas, useFrame } from '@react-three/fiber';
+import {
+  OrbitControls,
+  Environment,
+  ContactShadows,
+  Float,
+  RoundedBox,
+  Text,
+} from '@react-three/drei';
+import SprinklesPhysics from './SprinklesPhysics';
+import FlowersInstanced from './FlowersInstanced';
+import GanacheDrip from './GanacheDrip';
 
 export default function CakePreview3D({
   structure,
@@ -16,32 +23,55 @@ export default function CakePreview3D({
   birthdayName = 'Carla Geovanna',
   quality = 'high',
 }) {
-  const dpr = quality === 'high' ? [1, 2] : [1, 1.25]
+  const dpr = quality === 'high' ? [1, 2] : [1, 1.25];
 
   const decoIds = useMemo(
     () => (ingredientes?.decoracao || []).map((item) => item?.id).filter(Boolean),
-    [ingredientes],
-  )
+    [ingredientes]
+  );
 
-  const hasFlowers = decoIds.includes('deco_flores')
-  const hasTopper = decoIds.includes('deco_topper') || decoIds.includes('deco_escrita')
-  const hasGanache = (ingredientes?.cobertura?.id || '').includes('ganache')
+  const hasFlowers = decoIds.includes('deco_flores');
+  const hasTopper = decoIds.includes('deco_topper') || decoIds.includes('deco_escrita');
+  const hasGanache = (ingredientes?.cobertura?.id || '').includes('ganache');
 
   const sprinkleCount = useMemo(() => {
-    const decoCount = ingredientes?.decoracao?.length || 0
-    return Math.min(260, 90 + decoCount * 35)
-  }, [ingredientes])
+    const decoCount = ingredientes?.decoracao?.length || 0;
+    return Math.min(260, 90 + decoCount * 35);
+  }, [ingredientes]);
 
   return (
-    <div style={{ borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)', background: '#fff', padding: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+    <div
+      style={{
+        borderRadius: 16,
+        border: '1px solid rgba(0,0,0,0.08)',
+        background: '#fff',
+        padding: 16,
+      }}
+    >
+      <div
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}
+      >
         <div style={{ fontSize: 16, fontWeight: 600 }}>Preview 3D</div>
         <div style={{ fontSize: 12, opacity: 0.75 }}>
-          {restrictionOk ? <span style={{ color: '#15803d' }}>✅ Restrição OK</span> : <span style={{ color: '#b91c1c' }}>⚠️ Restrição violada</span>}
+          {restrictionOk ? (
+            <span style={{ color: '#15803d' }}>✅ Restrição OK</span>
+          ) : (
+            <span style={{ color: '#b91c1c' }}>⚠️ Restrição violada</span>
+          )}
         </div>
       </div>
 
-      <div style={{ marginTop: 12, height: 320, width: '100%', borderRadius: 14, border: '1px solid rgba(0,0,0,0.08)', overflow: 'hidden', background: '#f7f7f7' }}>
+      <div
+        style={{
+          marginTop: 12,
+          height: 320,
+          width: '100%',
+          borderRadius: 14,
+          border: '1px solid rgba(0,0,0,0.08)',
+          overflow: 'hidden',
+          background: '#f7f7f7',
+        }}
+      >
         <Canvas
           dpr={dpr}
           shadows
@@ -109,76 +139,88 @@ export default function CakePreview3D({
         </Canvas>
       </div>
 
-      <div style={{ marginTop: 12, borderRadius: 12, background: 'rgba(0,0,0,0.05)', padding: 12, fontSize: 14 }}>
+      <div
+        style={{
+          marginTop: 12,
+          borderRadius: 12,
+          background: 'rgba(0,0,0,0.05)',
+          padding: 12,
+          fontSize: 14,
+        }}
+      >
         <div style={{ fontWeight: 600 }}>Ingredientes</div>
         <div style={{ marginTop: 4, opacity: 0.8, lineHeight: 1.5, wordBreak: 'break-word' }}>
           • Massa: {ingredientes?.massa?.icon} {ingredientes?.massa?.label || '—'}
-          <br />
-          • Recheio: {ingredientes?.recheio?.icon} {ingredientes?.recheio?.label || '—'}
-          <br />
-          • Cobertura: {ingredientes?.cobertura?.icon} {ingredientes?.cobertura?.label || '—'}
-          <br />
-          • Decoração:{' '}
+          <br />• Recheio: {ingredientes?.recheio?.icon} {ingredientes?.recheio?.label || '—'}
+          <br />• Cobertura: {ingredientes?.cobertura?.icon} {ingredientes?.cobertura?.label || '—'}
+          <br />• Decoração:{' '}
           {ingredientes?.decoracao?.length
             ? ingredientes.decoracao.map((item) => `${item.icon} ${item.label}`).join(', ')
             : '—'}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function CakeModel({ structure, mainHex, accentHex, pulseKey, birthdayName, showTopper }) {
-  const groupRef = useRef()
-  const pulseRef = useRef({ t: 0 })
+  const groupRef = useRef();
+  const pulseRef = useRef({ t: 0 });
 
   const mainMat = useMemo(
-    () => new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(mainHex),
-      roughness: 0.35,
-      metalness: 0,
-      clearcoat: 0.75,
-      clearcoatRoughness: 0.2,
-    }),
-    [mainHex],
-  )
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        color: new THREE.Color(mainHex),
+        roughness: 0.35,
+        metalness: 0,
+        clearcoat: 0.75,
+        clearcoatRoughness: 0.2,
+      }),
+    [mainHex]
+  );
 
   const accentMat = useMemo(
-    () => new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(accentHex),
-      roughness: 0.28,
-      metalness: 0,
-      clearcoat: 0.85,
-      clearcoatRoughness: 0.18,
-    }),
-    [accentHex],
-  )
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        color: new THREE.Color(accentHex),
+        roughness: 0.28,
+        metalness: 0,
+        clearcoat: 0.85,
+        clearcoatRoughness: 0.18,
+      }),
+    [accentHex]
+  );
 
   useEffect(() => {
-    pulseRef.current.t = 1
-  }, [pulseKey])
+    pulseRef.current.t = 1;
+  }, [pulseKey]);
 
   useFrame((_, delta) => {
-    if (!groupRef.current) return
+    if (!groupRef.current) return;
 
     if (pulseRef.current.t > 0) {
-      pulseRef.current.t = Math.max(0, pulseRef.current.t - delta * 2.2)
-      const k = pulseRef.current.t
-      const scale = 1 + 0.06 * Math.sin((1 - k) * Math.PI) * k
-      groupRef.current.scale.setScalar(scale)
-      groupRef.current.rotation.y += 0.02 * k
+      pulseRef.current.t = Math.max(0, pulseRef.current.t - delta * 2.2);
+      const k = pulseRef.current.t;
+      const scale = 1 + 0.06 * Math.sin((1 - k) * Math.PI) * k;
+      groupRef.current.scale.setScalar(scale);
+      groupRef.current.rotation.y += 0.02 * k;
     } else {
-      groupRef.current.scale.setScalar(1)
+      groupRef.current.scale.setScalar(1);
     }
-  })
+  });
 
-  const isTwo = structure === '2andares'
-  const isSquare = structure === 'quadrado'
+  const isTwo = structure === '2andares';
+  const isSquare = structure === 'quadrado';
 
   const plateMat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: new THREE.Color('#ffffff'), roughness: 0.6, metalness: 0.05 }),
-    [],
-  )
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#ffffff'),
+        roughness: 0.6,
+        metalness: 0.05,
+      }),
+    []
+  );
 
   return (
     <group ref={groupRef} position={[0, -0.2, 0]}>
@@ -188,17 +230,38 @@ function CakeModel({ structure, mainHex, accentHex, pulseKey, birthdayName, show
       </mesh>
 
       {isSquare ? (
-        <RoundedBox args={[1.7, 0.9, 1.7]} radius={0.25} smoothness={8} position={[0, -0.05, 0]} castShadow receiveShadow>
+        <RoundedBox
+          args={[1.7, 0.9, 1.7]}
+          radius={0.25}
+          smoothness={8}
+          position={[0, -0.05, 0]}
+          castShadow
+          receiveShadow
+        >
           <primitive object={mainMat} attach="material" />
         </RoundedBox>
       ) : (
-        <RoundedBox args={[1.9, 0.9, 1.9]} radius={0.32} smoothness={10} position={[0, -0.05, 0]} castShadow receiveShadow>
+        <RoundedBox
+          args={[1.9, 0.9, 1.9]}
+          radius={0.32}
+          smoothness={10}
+          position={[0, -0.05, 0]}
+          castShadow
+          receiveShadow
+        >
           <primitive object={mainMat} attach="material" />
         </RoundedBox>
       )}
 
       {isTwo ? (
-        <RoundedBox args={[1.2, 0.7, 1.2]} radius={0.28} smoothness={10} position={[0, 0.65, 0]} castShadow receiveShadow>
+        <RoundedBox
+          args={[1.2, 0.7, 1.2]}
+          radius={0.28}
+          smoothness={10}
+          position={[0, 0.65, 0]}
+          castShadow
+          receiveShadow
+        >
           <primitive object={accentMat} attach="material" />
         </RoundedBox>
       ) : null}
@@ -210,11 +273,14 @@ function CakeModel({ structure, mainHex, accentHex, pulseKey, birthdayName, show
         <meshStandardMaterial color={accentHex} roughness={0.35} />
       </mesh>
     </group>
-  )
+  );
 }
 
 function Topper({ birthdayName, accentHex }) {
-  const poleMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.5 }), [])
+  const poleMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.5 }),
+    []
+  );
 
   return (
     <group position={[0, 1.3, 0]}>
@@ -225,7 +291,12 @@ function Topper({ birthdayName, accentHex }) {
 
       <mesh castShadow position={[0, 0.25, 0]}>
         <boxGeometry args={[1, 0.32, 0.06]} />
-        <meshPhysicalMaterial color={accentHex} roughness={0.25} clearcoat={0.8} clearcoatRoughness={0.15} />
+        <meshPhysicalMaterial
+          color={accentHex}
+          roughness={0.25}
+          clearcoat={0.8}
+          clearcoatRoughness={0.15}
+        />
       </mesh>
 
       <Text
@@ -239,5 +310,5 @@ function Topper({ birthdayName, accentHex }) {
         {birthdayName}
       </Text>
     </group>
-  )
+  );
 }

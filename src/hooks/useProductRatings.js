@@ -1,179 +1,182 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { deviceId, isSupabaseConfigured, supabase } from '../supabaseClient'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { deviceId, isSupabaseConfigured, supabase } from '../supabaseClient';
 
 const clampStars = (value) => {
-  const numberValue = Number(value)
+  const numberValue = Number(value);
 
-  if (!Number.isFinite(numberValue)) return 0
-  return Math.min(5, Math.max(0, numberValue))
-}
+  if (!Number.isFinite(numberValue)) return 0;
+  return Math.min(5, Math.max(0, numberValue));
+};
 
 const toStats = (summaryRow) => ({
   average: Number(summaryRow?.avg_stars ?? 0),
   votes: Number(summaryRow?.ratings_count ?? 0),
-})
+});
 
 export function useProductRatings(products) {
-  const [summaryByProductId, setSummaryByProductId] = useState({})
-  const [myRatingsByProductId, setMyRatingsByProductId] = useState({})
-  const [isGlobalRatingsActive, setIsGlobalRatingsActive] = useState(false)
+  const [summaryByProductId, setSummaryByProductId] = useState({});
+  const [myRatingsByProductId, setMyRatingsByProductId] = useState({});
+  const [isGlobalRatingsActive, setIsGlobalRatingsActive] = useState(false);
 
-  const productIds = useMemo(() => products.map((product) => product.id), [products])
+  const productIds = useMemo(() => products.map((product) => product.id), [products]);
 
   const loadRatings = useCallback(async () => {
     if (productIds.length === 0) {
-      setSummaryByProductId({})
-      setMyRatingsByProductId({})
-      setIsGlobalRatingsActive(false)
-      return
+      setSummaryByProductId({});
+      setMyRatingsByProductId({});
+      setIsGlobalRatingsActive(false);
+      return;
     }
 
     if (!isSupabaseConfigured) {
-      setSummaryByProductId({})
+      setSummaryByProductId({});
       setMyRatingsByProductId((current) => {
-        const next = {}
+        const next = {};
         productIds.forEach((productId) => {
-          next[productId] = clampStars(current[productId] || 0)
-        })
-        return next
-      })
-      setIsGlobalRatingsActive(false)
-      return
+          next[productId] = clampStars(current[productId] || 0);
+        });
+        return next;
+      });
+      setIsGlobalRatingsActive(false);
+      return;
     }
 
     const { data: summaryRows, error: summaryError } = await supabase
       .from('ratings_summary')
       .select('item_id, avg_stars, ratings_count')
-      .in('item_id', productIds)
+      .in('item_id', productIds);
 
     if (summaryError) {
-      throw new Error(summaryError.message || 'ratings-summary-load-failed')
+      throw new Error(summaryError.message || 'ratings-summary-load-failed');
     }
 
     const { data: myRows, error: myRowsError } = await supabase
       .from('ratings_anon')
       .select('item_id, stars')
       .eq('device_id', deviceId)
-      .in('item_id', productIds)
+      .in('item_id', productIds);
 
     if (myRowsError) {
-      throw new Error(myRowsError.message || 'ratings-my-load-failed')
+      throw new Error(myRowsError.message || 'ratings-my-load-failed');
     }
 
     const nextSummaryByProductId = productIds.reduce((acc, productId) => {
-      acc[productId] = { average: 0, votes: 0 }
-      return acc
-    }, {})
+      acc[productId] = { average: 0, votes: 0 };
+      return acc;
+    }, {});
 
-    ;(summaryRows || []).forEach((row) => {
-      nextSummaryByProductId[row.item_id] = toStats(row)
-    })
+    (summaryRows || []).forEach((row) => {
+      nextSummaryByProductId[row.item_id] = toStats(row);
+    });
 
     const nextMyRatingsByProductId = productIds.reduce((acc, productId) => {
-      acc[productId] = 0
-      return acc
-    }, {})
+      acc[productId] = 0;
+      return acc;
+    }, {});
 
-    ;(myRows || []).forEach((row) => {
-      nextMyRatingsByProductId[row.item_id] = clampStars(row.stars)
-    })
+    (myRows || []).forEach((row) => {
+      nextMyRatingsByProductId[row.item_id] = clampStars(row.stars);
+    });
 
-    setSummaryByProductId(nextSummaryByProductId)
-    setMyRatingsByProductId(nextMyRatingsByProductId)
-    setIsGlobalRatingsActive(true)
-  }, [productIds])
+    setSummaryByProductId(nextSummaryByProductId);
+    setMyRatingsByProductId(nextMyRatingsByProductId);
+    setIsGlobalRatingsActive(true);
+  }, [productIds]);
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
     const run = async () => {
-      setIsGlobalRatingsActive(false)
+      setIsGlobalRatingsActive(false);
       try {
-        await loadRatings()
+        await loadRatings();
       } catch {
-        if (!isMounted) return
-        setSummaryByProductId({})
-        setMyRatingsByProductId({})
-        setIsGlobalRatingsActive(false)
+        if (!isMounted) return;
+        setSummaryByProductId({});
+        setMyRatingsByProductId({});
+        setIsGlobalRatingsActive(false);
       }
-    }
+    };
 
-    run()
+    run();
 
     return () => {
-      isMounted = false
-    }
-  }, [loadRatings])
+      isMounted = false;
+    };
+  }, [loadRatings]);
 
   const ratingsByProductId = useMemo(() => {
     return productIds.reduce((acc, productId) => {
-      const stats = summaryByProductId[productId] || { average: 0, votes: 0 }
-      const userRating = myRatingsByProductId[productId] || 0
+      const stats = summaryByProductId[productId] || { average: 0, votes: 0 };
+      const userRating = myRatingsByProductId[productId] || 0;
 
       acc[productId] = {
         average: clampStars(stats.average),
         votes: Math.max(0, Number(stats.votes || 0)),
         userRating,
+      };
+
+      return acc;
+    }, {});
+  }, [myRatingsByProductId, productIds, summaryByProductId]);
+
+  const submitRating = useCallback(
+    async (productId, starsClicked) => {
+      const nextStars = clampStars(starsClicked);
+
+      if (nextStars < 1 || nextStars > 5) {
+        return { ok: false, reason: 'invalid-rating' };
       }
 
-      return acc
-    }, {})
-  }, [myRatingsByProductId, productIds, summaryByProductId])
+      const previousStars = clampStars(myRatingsByProductId[productId] || 0);
+      const isRemoving = previousStars === nextStars;
+      const nextMyStars = isRemoving ? 0 : nextStars;
 
-  const submitRating = useCallback(async (productId, starsClicked) => {
-    const nextStars = clampStars(starsClicked)
+      setMyRatingsByProductId((current) => ({
+        ...current,
+        [productId]: nextMyStars,
+      }));
 
-    if (nextStars < 1 || nextStars > 5) {
-      return { ok: false, reason: 'invalid-rating' }
-    }
-
-    const previousStars = clampStars(myRatingsByProductId[productId] || 0)
-    const isRemoving = previousStars === nextStars
-    const nextMyStars = isRemoving ? 0 : nextStars
-
-    setMyRatingsByProductId((current) => ({
-      ...current,
-      [productId]: nextMyStars,
-    }))
-
-    if (!isSupabaseConfigured) {
-      return {
-        ok: true,
-        removed: isRemoving,
-        isRemote: false,
+      if (!isSupabaseConfigured) {
+        return {
+          ok: true,
+          removed: isRemoving,
+          isRemote: false,
+        };
       }
-    }
 
-    try {
-      const functionName = isRemoving ? 'remove_rating_anon' : 'upsert_rating_anon'
-      const { error } = await supabase.rpc(functionName, {
-        p_item_id: productId,
-        p_device_id: deviceId,
-        ...(!isRemoving ? { p_stars: nextStars } : {}),
-      })
-
-      if (error) throw new Error(error.message || 'rating-save-failed')
-
-      await loadRatings()
-
-      return {
-        ok: true,
-        removed: isRemoving,
-        isRemote: true,
-      }
-    } catch {
       try {
-        await loadRatings()
+        const functionName = isRemoving ? 'remove_rating_anon' : 'upsert_rating_anon';
+        const { error } = await supabase.rpc(functionName, {
+          p_item_id: productId,
+          p_device_id: deviceId,
+          ...(!isRemoving ? { p_stars: nextStars } : {}),
+        });
+
+        if (error) throw new Error(error.message || 'rating-save-failed');
+
+        await loadRatings();
+
+        return {
+          ok: true,
+          removed: isRemoving,
+          isRemote: true,
+        };
       } catch {
-        // Mantém a UI funcional localmente quando não for possível sincronizar com Supabase.
+        try {
+          await loadRatings();
+        } catch {
+          // Mantém a UI funcional localmente quando não for possível sincronizar com Supabase.
+        }
+        return { ok: false, reason: 'request-failed' };
       }
-      return { ok: false, reason: 'request-failed' }
-    }
-  }, [loadRatings, myRatingsByProductId])
+    },
+    [loadRatings, myRatingsByProductId]
+  );
 
   return {
     ratingsByProductId,
     submitRating,
     isGlobalRatingsActive,
-  }
+  };
 }

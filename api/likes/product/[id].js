@@ -55,5 +55,8 @@ module.exports = withRequestContext(async function handler(req, res, context) {
     });
     return;
   }
-  sendSuccess(res, 200, result.value, requestId, { idempotency: result.state, storage: 'memory-best-effort' });
+  sendSuccess(res, 200, result.value, requestId, {
+    idempotency: result.state,
+    storage: 'memory-best-effort',
+  });
 });

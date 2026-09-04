@@ -43,7 +43,8 @@ module.exports = withRequestContext(async function handler(req, res, context) {
       if (!resendApiKey) {
         throw new AppError({
           code: ErrorCode.NOT_CONFIGURED,
-          message: 'O envio direto está temporariamente indisponível. Use o WhatsApp para falar conosco.',
+          message:
+            'O envio direto está temporariamente indisponível. Use o WhatsApp para falar conosco.',
           statusCode: 503,
         });
       }
@@ -73,13 +74,14 @@ module.exports = withRequestContext(async function handler(req, res, context) {
             reply_to: input.email || undefined,
           }),
         },
-        { requestId, dependencyName: 'resend', timeoutMs: 8000, retries: 2 },
+        { requestId, dependencyName: 'resend', timeoutMs: 8000, retries: 2 }
       );
 
       if (!response.ok) {
         throw new AppError({
           code: ErrorCode.UPSTREAM,
-          message: 'O envio direto está temporariamente indisponível. Use o WhatsApp para falar conosco.',
+          message:
+            'O envio direto está temporariamente indisponível. Use o WhatsApp para falar conosco.',
           statusCode: 502,
         });
       }

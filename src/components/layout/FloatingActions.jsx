@@ -1,7 +1,7 @@
-import { Badge, Box, Fab, Icon, IconButton, Tooltip } from '@mui/material'
-import FavoriteIcon from '../../mui-icons/Favorite'
-import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder'
-import LikeButton from '../LikeButton'
+import { Badge, Box, Fab, Icon, IconButton, Tooltip } from '@mui/material';
+import FavoriteIcon from '../../mui-icons/Favorite';
+import FavoriteBorderIcon from '../../mui-icons/FavoriteBorder';
+import LikeButton from '../LikeButton';
 
 export function FloatingActions({
   totalItems,
@@ -11,18 +11,18 @@ export function FloatingActions({
   onGoToOrderSection,
   isFooterVisible,
 }) {
-  const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3'
-  const scrollTopBackground = '#ddb2c7'
-  const floatingGap = { xs: 14, md: 16 }
-  const actionSize = { xs: 60, md: 66 }
-  const actionBottom = { xs: 16, md: 24 }
+  const neutralBackground = isFooterVisible ? '#e6bfd2' : '#f8f8f3';
+  const scrollTopBackground = '#ddb2c7';
+  const floatingGap = { xs: 14, md: 16 };
+  const actionSize = { xs: 60, md: 66 };
+  const actionBottom = { xs: 16, md: 24 };
 
   const commonPositionSx = {
     position: 'fixed',
     left: { xs: 12, md: 24 },
     transition: 'background-color 220ms ease, transform 220ms ease',
     zIndex: 1100,
-  }
+  };
 
   return (
     <>
@@ -134,19 +134,29 @@ export function FloatingActions({
                   height: { xs: 46, md: 50 },
                   borderRadius: '50%',
                   border: liked ? '1px solid #fbc5c5' : '1px solid #f3b6c5',
-                  background: liked ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)' : 'linear-gradient(145deg, #fffafa, #ffeef2)',
-                  boxShadow: liked ? '0 8px 18px rgba(255, 72, 101, 0.25)' : '0 6px 14px rgba(229, 57, 53, 0.16)',
+                  background: liked
+                    ? 'linear-gradient(145deg, #fff3f3, #ffe4e7)'
+                    : 'linear-gradient(145deg, #fffafa, #ffeef2)',
+                  boxShadow: liked
+                    ? '0 8px 18px rgba(255, 72, 101, 0.25)'
+                    : '0 6px 14px rgba(229, 57, 53, 0.16)',
                   '&:hover': {
-                    background: liked ? 'linear-gradient(145deg, #fff3f3, #ffd9de)' : 'linear-gradient(145deg, #fffafa, #ffe3ec)',
+                    background: liked
+                      ? 'linear-gradient(145deg, #fff3f3, #ffd9de)'
+                      : 'linear-gradient(145deg, #fffafa, #ffe3ec)',
                   },
                 }}
               >
-                {liked ? <FavoriteIcon sx={{ color: '#e53935' }} /> : <FavoriteBorderIcon sx={{ color: '#e53935' }} />}
+                {liked ? (
+                  <FavoriteIcon sx={{ color: '#e53935' }} />
+                ) : (
+                  <FavoriteBorderIcon sx={{ color: '#e53935' }} />
+                )}
               </IconButton>
             </Badge>
           </Box>
         )}
       />
     </>
-  )
+  );
 }

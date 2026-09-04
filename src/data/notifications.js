@@ -35,19 +35,23 @@ export const notificationsCatalog = [
       },
       {
         title: 'Marque a gente',
-        lines: ['📸 Marque a gente: @carlizdoces', 'Queremos ver sua experiência!', 'Deus abençoe! 🙌'],
+        lines: [
+          '📸 Marque a gente: @carlizdoces',
+          'Queremos ver sua experiência!',
+          'Deus abençoe! 🙌',
+        ],
       },
     ],
   },
-]
+];
 
-export const activeNotificationId = 'pascoa-2026'
+export const activeNotificationId = 'pascoa-2026';
 
 const fallbackNotification = notificationsCatalog[0] ?? {
   id: 'geral',
   title: 'Notificação',
   items: [],
-}
+};
 
 export const activeNotification =
-  notificationsCatalog.find((item) => item.id === activeNotificationId) ?? fallbackNotification
+  notificationsCatalog.find((item) => item.id === activeNotificationId) ?? fallbackNotification;

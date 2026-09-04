@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export function Carousel({
   children,
@@ -9,59 +9,69 @@ export function Carousel({
   className = '',
   swipeThreshold = 40,
 }) {
-  const slides = useMemo(() => (Array.isArray(children) ? children : [children]).filter(Boolean), [children])
-  const [activeIndex, setActiveIndex] = useState(0)
-  const touchStartX = useRef(null)
+  const slides = useMemo(
+    () => (Array.isArray(children) ? children : [children]).filter(Boolean),
+    [children]
+  );
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     if (!autoPlay || slides.length <= 1) {
-      return undefined
+      return undefined;
     }
 
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % slides.length)
-    }, interval)
+      setActiveIndex((current) => (current + 1) % slides.length);
+    }, interval);
 
-    return () => window.clearInterval(timer)
-  }, [autoPlay, interval, slides.length])
+    return () => window.clearInterval(timer);
+  }, [autoPlay, interval, slides.length]);
 
-  const goPrev = () => setActiveIndex((current) => (current - 1 + slides.length) % slides.length)
-  const goNext = () => setActiveIndex((current) => (current + 1) % slides.length)
+  const goPrev = () => setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
+  const goNext = () => setActiveIndex((current) => (current + 1) % slides.length);
 
   const onTouchStart = (event) => {
-    touchStartX.current = event.touches[0]?.clientX ?? null
-  }
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
 
   const onTouchEnd = (event) => {
-    const startX = touchStartX.current
-    const endX = event.changedTouches[0]?.clientX
+    const startX = touchStartX.current;
+    const endX = event.changedTouches[0]?.clientX;
 
-    touchStartX.current = null
+    touchStartX.current = null;
 
     if (startX == null || endX == null) {
-      return
+      return;
     }
 
-    const distance = endX - startX
+    const distance = endX - startX;
     if (Math.abs(distance) < swipeThreshold) {
-      return
+      return;
     }
 
     if (distance > 0) {
-      goPrev()
-      return
+      goPrev();
+      return;
     }
 
-    goNext()
-  }
+    goNext();
+  };
 
   if (slides.length === 0) {
-    return null
+    return null;
   }
 
   return (
-    <div className={`mui-carousel ${className}`.trim()} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-      <div className="mui-carousel-track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+    <div
+      className={`mui-carousel ${className}`.trim()}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div
+        className="mui-carousel-track"
+        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+      >
         {slides.map((slide, index) => (
           <div
             key={`slide-${index}`}
@@ -75,10 +85,20 @@ export function Carousel({
 
       {slides.length > 1 && navButtonsAlwaysVisible ? (
         <>
-          <button type="button" className="mui-carousel-nav mui-carousel-prev" onClick={goPrev} aria-label="Slide anterior">
+          <button
+            type="button"
+            className="mui-carousel-nav mui-carousel-prev"
+            onClick={goPrev}
+            aria-label="Slide anterior"
+          >
             ‹
           </button>
-          <button type="button" className="mui-carousel-nav mui-carousel-next" onClick={goNext} aria-label="Próximo slide">
+          <button
+            type="button"
+            className="mui-carousel-nav mui-carousel-next"
+            onClick={goNext}
+            aria-label="Próximo slide"
+          >
             ›
           </button>
         </>
@@ -98,9 +118,9 @@ export function Carousel({
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 
 export function CarouselSlide({ children }) {
-  return <div className="mui-carousel-slide">{children}</div>
+  return <div className="mui-carousel-slide">{children}</div>;
 }

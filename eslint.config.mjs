@@ -6,7 +6,13 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage', 'node_modules', 'src/data/generatedImages.js']),
+  globalIgnores([
+    'dist',
+    'coverage',
+    'node_modules',
+    'webpack.config.js',
+    'src/data/generatedImages.js',
+  ]),
   js.configs.recommended,
   {
     files: ['src/**/*.{js,jsx}', 'scripts/**/*.mjs'],

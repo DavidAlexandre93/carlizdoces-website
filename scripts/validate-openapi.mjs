@@ -27,7 +27,9 @@ async function collectHandlers(directory, prefix = '/api') {
 
 const handlers = new Set(await collectHandlers(apiRoot));
 const missingDocs = [...handlers].filter((route) => !documented.has(route));
-const missingHandlers = [...documented].filter((route) => route.startsWith('/api/') && !handlers.has(route));
+const missingHandlers = [...documented].filter(
+  (route) => route.startsWith('/api/') && !handlers.has(route)
+);
 
 if (missingDocs.length || missingHandlers.length) {
   if (missingDocs.length) console.error(`Handlers sem OpenAPI: ${missingDocs.join(', ')}`);

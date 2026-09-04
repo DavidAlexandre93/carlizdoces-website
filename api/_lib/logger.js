@@ -2,11 +2,13 @@
 const { getTraceContext, SERVICE_NAME } = require('./observability');
 
 const REDACTED = '[REDACTED]';
-const SENSITIVE_KEY = /authorization|cookie|token|secret|password|private.?key|api.?key|email|phone|address|client.?ip|user.?id|message|notes|prompt/i;
+const SENSITIVE_KEY =
+  /authorization|cookie|token|secret|password|private.?key|api.?key|email|phone|address|client.?ip|user.?id|message|notes|prompt/i;
 const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
 const PHONE_PATTERN = /(?<!\d)(?:\+?55\s*)?(?:\(?\d{2}\)?\s*)?(?:9\s*)?\d{4}[-\s]?\d{4}(?!\d)/g;
 const BEARER_PATTERN = /Bearer\s+[A-Za-z0-9._~+/=-]+/gi;
-const PRIVATE_KEY_PATTERN = /-----BEGIN[\s\S]*?PRIVATE KEY-----[\s\S]*?-----END[\s\S]*?PRIVATE KEY-----/g;
+const PRIVATE_KEY_PATTERN =
+  /-----BEGIN[\s\S]*?PRIVATE KEY-----[\s\S]*?-----END[\s\S]*?PRIVATE KEY-----/g;
 const IPV4_PATTERN = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
 const WINDOWS_USER_PATTERN = /[A-Za-z]:\\Users\\[^\\\s]+/g;
 
@@ -44,7 +46,9 @@ function normalizeError(error) {
   const source = error instanceof Error ? error : new Error(String(error));
   const stack = redactString(source.stack || '');
   const firstFrame = stack.split('\n').find((line) => /:\d+:\d+/.test(line)) || '';
-  const location = firstFrame.match(/(?<file>(?:[A-Za-z]:)?[^()\s]+):(?<line>\d+):(?<column>\d+)/)?.groups;
+  const location = firstFrame.match(
+    /(?<file>(?:[A-Za-z]:)?[^()\s]+):(?<line>\d+):(?<column>\d+)/
+  )?.groups;
 
   return {
     class: source.constructor?.name || 'Error',

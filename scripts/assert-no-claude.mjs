@@ -10,7 +10,8 @@ async function walk(directory) {
   for (const entry of entries) {
     if (ignored.has(entry.name)) continue;
     const absolutePath = path.join(directory, entry.name);
-    if (forbiddenNames.has(entry.name.toLowerCase())) matches.push(path.relative(process.cwd(), absolutePath));
+    if (forbiddenNames.has(entry.name.toLowerCase()))
+      matches.push(path.relative(process.cwd(), absolutePath));
     if (entry.isDirectory()) await walk(absolutePath);
   }
 }

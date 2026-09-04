@@ -10,7 +10,8 @@ globalThis.__carlizLikesStore = globalLikesStore;
 const sanitizeUserId = (userId) => (typeof userId === 'string' ? userId.trim() : '');
 
 function getProductLikesCount(productId) {
-  if (!globalLikesStore.productLikesCountById[productId]) globalLikesStore.productLikesCountById[productId] = 0;
+  if (!globalLikesStore.productLikesCountById[productId])
+    globalLikesStore.productLikesCountById[productId] = 0;
   return globalLikesStore.productLikesCountById[productId];
 }
 
@@ -21,7 +22,8 @@ function hasUserLikedProduct(productId, userId) {
 function toggleProductLikeForUser(productId, userId) {
   const safeUserId = sanitizeUserId(userId);
   if (!safeUserId) return { ok: false, error: 'invalid_user_id' };
-  if (!globalLikesStore.productLikedUsersById[productId]) globalLikesStore.productLikedUsersById[productId] = {};
+  if (!globalLikesStore.productLikedUsersById[productId])
+    globalLikesStore.productLikedUsersById[productId] = {};
   const alreadyLiked = hasUserLikedProduct(productId, safeUserId);
   globalLikesStore.productLikedUsersById[productId][safeUserId] = !alreadyLiked;
   globalLikesStore.productLikesCountById[productId] = alreadyLiked
@@ -48,12 +50,14 @@ function getLikesSummary(userId) {
       accumulator[productId] = hasUserLikedProduct(productId, safeUserId);
       return accumulator;
     },
-    {},
+    {}
   );
   return {
     store: {
       likes: globalLikesStore.storeLikesCount,
-      likedByCurrentUser: safeUserId ? globalLikesStore.storeLikedUsers[safeUserId] === true : false,
+      likedByCurrentUser: safeUserId
+        ? globalLikesStore.storeLikedUsers[safeUserId] === true
+        : false,
     },
     products: {
       likesById: globalLikesStore.productLikesCountById,

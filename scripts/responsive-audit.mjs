@@ -29,7 +29,10 @@ for (const file of files) {
       const [, prop, px] = declMatch;
       const val = Number(px);
       const guardedByMobile = mediaStack.some((m) => m.type === 'max' && m.value <= 960);
-      if ((prop === 'min-width' && val >= 320) || ((prop === 'width' || prop === 'height') && val >= 600)) {
+      if (
+        (prop === 'min-width' && val >= 320) ||
+        ((prop === 'width' || prop === 'height') && val >= 600)
+      ) {
         risky.push({ file, line: i + 1, prop, val, guardedByMobile });
       }
     }
@@ -46,7 +49,10 @@ console.log('Detected breakpoints:', uniqueBps.join(', ') || 'none');
 console.log('Total media queries:', breakpoints.length);
 
 const riskyUnguarded = risky.filter((r) => !r.guardedByMobile);
-console.log('Potentially risky fixed dimensions (not under <=960px max-width query):', riskyUnguarded.length);
+console.log(
+  'Potentially risky fixed dimensions (not under <=960px max-width query):',
+  riskyUnguarded.length
+);
 for (const item of riskyUnguarded.slice(0, 30)) {
   console.log(`- ${item.file}:${item.line} ${item.prop}: ${item.val}px`);
 }

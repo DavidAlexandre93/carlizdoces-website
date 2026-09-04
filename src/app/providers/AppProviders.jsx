@@ -1,27 +1,33 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   cssVariables: true,
   palette: {
-    primary: { main: '#a51c5d', dark: '#751040', light: '#d75b92' },
-    secondary: { main: '#5b2a86', dark: '#3d185e', light: '#8a5caf' },
-    background: { default: '#fffafc', paper: '#ffffff' },
+    primary: { main: '#b13d5b', dark: '#7f233d', light: '#d8778b' },
+    secondary: { main: '#216d68', dark: '#164b48', light: '#62a39b' },
+    background: { default: '#fbf7f1', paper: '#fffdf9' },
+    text: { primary: '#2f2525', secondary: '#685b59' },
   },
-  shape: { borderRadius: 18 },
+  shape: { borderRadius: 12 },
   typography: {
-    fontFamily: ['Inter', 'Avenir Next', 'Segoe UI', 'sans-serif'].join(','),
-    h1: { fontWeight: 850, letterSpacing: '-0.035em' },
-    h2: { fontWeight: 820, letterSpacing: '-0.03em' },
-    h3: { fontWeight: 800, letterSpacing: '-0.025em' },
-    button: { fontWeight: 750, textTransform: 'none' },
+    fontFamily: ['Avenir Next', 'Trebuchet MS', 'sans-serif'].join(','),
+    h1: { fontFamily: ['Bodoni 72', 'Didot', 'Baskerville', 'serif'].join(','), fontWeight: 700 },
+    h2: { fontFamily: ['Bodoni 72', 'Didot', 'Baskerville', 'serif'].join(','), fontWeight: 700 },
+    h3: { fontFamily: ['Bodoni 72', 'Didot', 'Baskerville', 'serif'].join(','), fontWeight: 700 },
+    button: { fontWeight: 700, textTransform: 'none' },
   },
   components: {
     MuiButton: {
       styleOverrides: {
-        root: { borderRadius: 999, minHeight: 44 },
+        root: { borderRadius: 10, minHeight: 44 },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: { borderRadius: 10 },
       },
     },
     MuiPaper: {
@@ -29,8 +35,24 @@ const theme = createTheme({
         root: { backgroundImage: 'none' },
       },
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        ':focus-visible': {
+          outline: '3px solid #d69237',
+          outlineOffset: 3,
+        },
+        '@media (prefers-reduced-motion: reduce)': {
+          '*, *::before, *::after': {
+            animationDuration: '0.01ms !important',
+            animationIterationCount: '1 !important',
+            scrollBehavior: 'auto !important',
+            transitionDuration: '0.01ms !important',
+          },
+        },
+      },
+    },
   },
-})
+});
 
 export function AppProviders({ children }) {
   return (
@@ -40,5 +62,5 @@ export function AppProviders({ children }) {
         {children}
       </ThemeProvider>
     </QueryClientProvider>
-  )
+  );
 }

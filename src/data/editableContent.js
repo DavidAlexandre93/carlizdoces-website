@@ -203,7 +203,8 @@ export const productsCatalog = [
     details: 'Pedidos a partir de 20/50 unidades com alteração nos valores.',
     weight: '15g',
     price: 155,
-    image: '/images/pedidos-de-doces/doces-finos/fino-casquinha-de-chocolate-maracuja-morango-limao-uva.jpeg',
+    image:
+      '/images/pedidos-de-doces/doces-finos/fino-casquinha-de-chocolate-maracuja-morango-limao-uva.jpeg',
   },
   {
     id: 'fino-de-cereja',
@@ -340,7 +341,8 @@ export const productsCatalog = [
     details: 'Peso: 150g • Valor: R$ 34,00.',
     weight: '150g',
     price: 34,
-    image: '/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg?versao=brigadeiro',
+    image:
+      '/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg?versao=brigadeiro',
     rating: 5,
     reviewCount: 0,
   },
@@ -351,7 +353,8 @@ export const productsCatalog = [
     details: 'Peso: 150g • Valor: R$ 30,00.',
     weight: '150g',
     price: 30,
-    image: '/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg?versao=maracuja',
+    image:
+      '/images/cardapio-de-pascoa/trufado-ninho-com-nutela-mouse-maracuja-brigadeiro.jpeg?versao=maracuja',
     rating: 5,
     reviewCount: 0,
   },
@@ -366,8 +369,7 @@ export const productsCatalog = [
     rating: 5,
     reviewCount: 0,
   },
-]
-
+];
 
 export const updatesCatalog = [
   {
@@ -400,7 +402,8 @@ export const updatesCatalog = [
     imageUrl: '/images/novidades/sorteio-ovo-pascoa.jpeg',
     imageAlt: 'Sorteio de ovo de Páscoa da Carliz Doces',
     mediaDescription: 'Participe do sorteio acompanhando os canais oficiais da Carliz Doces.',
-    description: 'Confira as regras do sorteio e participe para concorrer a um ovo de Páscoa especial.',
+    description:
+      'Confira as regras do sorteio e participe para concorrer a um ovo de Páscoa especial.',
     status: 'Veja o regulamento nas redes sociais.',
   },
-]
+];

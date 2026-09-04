@@ -1,9 +1,9 @@
-import { useRef } from 'react'
-import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
-import { motion } from 'motion/react'
-import gsap, { useGSAP } from '../../../lib/gsapCompat'
+import { useRef } from 'react';
+import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material';
+import { motion } from 'motion/react';
+import gsap, { useGSAP } from '../../../lib/gsapCompat';
 
-const MotionDiv = motion.div
+const MotionDiv = motion.div;
 
 const typeStyles = {
   promocao: { label: 'Promoção', color: 'secondary' },
@@ -11,68 +11,117 @@ const typeStyles = {
   comunicado: { label: 'Comunicado', color: 'info' },
   sorteio: { label: 'Sorteio', color: 'error' },
   geral: { label: 'Aviso', color: 'warning' },
-}
+};
 
 export default function NovidadesSection({ updates, announcementChannels }) {
-  const sectionRef = useRef(null)
+  const sectionRef = useRef(null);
 
-  useGSAP((context) => {
-    gsap.from('.updates-card', { y: 30, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' }, context.scope)
-    gsap.from('.updates-cta', { y: 20, opacity: 0, duration: 0.65, delay: 0.2, ease: 'power2.out' }, context.scope)
-    gsap.to('.updates-media img', { scale: 1.08, duration: 4.2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: 0.18 }, context.scope)
-  }, { scope: sectionRef, dependencies: [updates.length, announcementChannels.length] })
+  useGSAP(
+    (context) => {
+      gsap.from(
+        '.updates-card',
+        { y: 30, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' },
+        context.scope
+      );
+      gsap.from(
+        '.updates-cta',
+        { y: 20, opacity: 0, duration: 0.65, delay: 0.2, ease: 'power2.out' },
+        context.scope
+      );
+      gsap.to(
+        '.updates-media img',
+        { scale: 1.08, duration: 4.2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: 0.18 },
+        context.scope
+      );
+    },
+    { scope: sectionRef, dependencies: [updates.length, announcementChannels.length] }
+  );
 
   return (
-    <MotionDiv ref={sectionRef} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: 'easeOut' }}>
+    <MotionDiv
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: 'easeOut' }}
+    >
       <Container maxWidth="xl" className="updates-section section-alt-pink page-container">
-      <Box className="updates-grid">
-        {updates.map((item) => {
-          const type = typeStyles[item.type] ?? typeStyles.geral
+        <Box className="updates-grid">
+          {updates.map((item) => {
+            const type = typeStyles[item.type] ?? typeStyles.geral;
 
-          return (
-            <MotionDiv key={item.id} initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, ease: 'easeOut' }}>
-              <Paper component="article" elevation={3} className="updates-card">
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ gap: 1.5, mb: 1 }}>
-                <Chip label={type.label} color={type.color} size="small" />
-                <Typography component="span" variant="caption" className="updates-date">{item.dateLabel}</Typography>
-              </Stack>
+            return (
+              <MotionDiv
+                key={item.id}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, ease: 'easeOut' }}
+              >
+                <Paper component="article" elevation={3} className="updates-card">
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ gap: 1.5, mb: 1 }}
+                  >
+                    <Chip label={type.label} color={type.color} size="small" />
+                    <Typography component="span" variant="caption" className="updates-date">
+                      {item.dateLabel}
+                    </Typography>
+                  </Stack>
 
-              <Typography component="h3" variant="h6" sx={{ fontWeight: 700 }}>{item.title}</Typography>
+                  <Typography component="h3" variant="h6" sx={{ fontWeight: 700 }}>
+                    {item.title}
+                  </Typography>
 
-              {item.imageUrl ? (
-                <Box className="updates-media">
-                  <img src={item.imageUrl} alt={item.imageAlt || item.title} loading="lazy" decoding="async" width="900" height="900" />
-                </Box>
-              ) : null}
+                  {item.imageUrl ? (
+                    <Box className="updates-media">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.imageAlt || item.title}
+                        loading="lazy"
+                        decoding="async"
+                        width="900"
+                        height="900"
+                      />
+                    </Box>
+                  ) : null}
+                </Paper>
+              </MotionDiv>
+            );
+          })}
+        </Box>
 
-              </Paper>
-            </MotionDiv>
-          )
-        })}
-      </Box>
+        <Paper elevation={0} className="updates-cta">
+          <Typography component="h3" variant="h6">
+            Receba as divulgações em primeira mão
+          </Typography>
+          <Typography component="p" variant="body2">
+            Salve os canais abaixo para não perder nenhum aviso de campanha, regulamento de sorteio
+            ou publicação de ganhadores.
+          </Typography>
 
-      <Paper elevation={0} className="updates-cta">
-        <Typography component="h3" variant="h6">Receba as divulgações em primeira mão</Typography>
-        <Typography component="p" variant="body2">
-          Salve os canais abaixo para não perder nenhum aviso de campanha, regulamento de sorteio ou publicação de ganhadores.
-        </Typography>
-
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 2, flexWrap: 'wrap' }}>
-          {announcementChannels.map((channel) => (
-            <Button
-              key={channel.id}
-              variant={channel.variant}
-              color="secondary"
-              href={channel.href}
-              target={channel.external ? '_blank' : undefined}
-              rel={channel.external ? 'noreferrer' : undefined}
-            >
-              {channel.label}
-            </Button>
-          ))}
-        </Stack>
-      </Paper>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={1.5}
+            sx={{ mt: 2, flexWrap: 'wrap' }}
+          >
+            {announcementChannels.map((channel) => (
+              <Button
+                key={channel.id}
+                variant={channel.variant}
+                color="secondary"
+                href={channel.href}
+                target={channel.external ? '_blank' : undefined}
+                rel={channel.external ? 'noreferrer' : undefined}
+              >
+                {channel.label}
+              </Button>
+            ))}
+          </Stack>
+        </Paper>
       </Container>
     </MotionDiv>
-  )
+  );
 }

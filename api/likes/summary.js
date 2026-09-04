@@ -1,6 +1,13 @@
 /* global module */
 const { ErrorCode } = require('../_lib/contracts');
-const { allowMethods, enforceRateLimit, hashClientIdentity, sendError, sendSuccess, withRequestContext } = require('../_lib/http');
+const {
+  allowMethods,
+  enforceRateLimit,
+  hashClientIdentity,
+  sendError,
+  sendSuccess,
+  withRequestContext,
+} = require('../_lib/http');
 const { getLikesSummary } = require('../_lib/likesStore');
 
 module.exports = withRequestContext(async function handler(req, res, context) {

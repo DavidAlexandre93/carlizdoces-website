@@ -1,9 +1,9 @@
-import path from 'node:path'
-import react from '@vitejs/plugin-react'
-import { defineConfig, loadEnv } from 'vite'
+import path from 'node:path';
+import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react()],
@@ -11,8 +11,12 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve('src'),
         '@mui/icons-material/Share': path.resolve('src/mui-icons/Share.jsx'),
-        '@mui/icons-material/KeyboardArrowLeft': path.resolve('src/mui-icons/KeyboardArrowLeft.jsx'),
-        '@mui/icons-material/KeyboardArrowRight': path.resolve('src/mui-icons/KeyboardArrowRight.jsx'),
+        '@mui/icons-material/KeyboardArrowLeft': path.resolve(
+          'src/mui-icons/KeyboardArrowLeft.jsx'
+        ),
+        '@mui/icons-material/KeyboardArrowRight': path.resolve(
+          'src/mui-icons/KeyboardArrowRight.jsx'
+        ),
         'material-ui-carousel': path.resolve('src/mui-components/material-ui-carousel.jsx'),
         'react-swipeable-views': path.resolve('src/mui-components/react-swipeable-views.jsx'),
         'motion/react': path.resolve('src/motion/react.js'),
@@ -22,7 +26,11 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       'process.env.REACT_APP_SUPABASE_URL': JSON.stringify(env.REACT_APP_SUPABASE_URL || ''),
-      'process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT || ''),
+      'process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY': JSON.stringify(
+        env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+          env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT ||
+          ''
+      ),
     },
     server: {
       port: 5173,
@@ -38,5 +46,5 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
       cssCodeSplit: true,
     },
-  }
-})
+  };
+});

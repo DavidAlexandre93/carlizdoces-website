@@ -1,5 +1,14 @@
 :root {
-  font-family: Inter, 'Avenir Next', 'Segoe UI', sans-serif;
+  --ink: #2f2525;
+  --ink-muted: #685b59;
+  --berry: #b13d5b;
+  --berry-deep: #7f233d;
+  --teal: #216d68;
+  --teal-deep: #164b48;
+  --saffron: #d69237;
+  --cream: #fbf7f1;
+  --surface: #fffdf9;
+  font-family: 'Avenir Next', 'Trebuchet MS', sans-serif;
   line-height: 1.4;
   font-weight: 400;
   font-synthesis: none;
@@ -26,7 +35,8 @@ html {
 
 body {
   margin: 0;
-  background: #fffafc;
+  background: var(--cream);
+  color: var(--ink);
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;

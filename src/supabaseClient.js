@@ -80,9 +80,7 @@ function createClient(url, key, options = {}) {
 
     in(column, values = []) {
       // PostgREST: in.(a,b,c) — precisa escapar vírgula dentro de valores
-      const encoded = values
-        .map((v) => String(v).replace(/,/g, '\\,'))
-        .join(',');
+      const encoded = values.map((v) => String(v).replace(/,/g, '\\,')).join(',');
       this.filters.push([column, `in.(${encoded})`]);
       return this;
     }
@@ -108,8 +106,7 @@ function createClient(url, key, options = {}) {
           data: null,
           count: null,
           error: {
-            message:
-              'Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.',
+            message: 'Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.',
           },
         };
       }
@@ -269,7 +266,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       'x-device-id': deviceId,
       'x-device_id': deviceId,
       'device-id': deviceId,
-      'device_id': deviceId,
+      device_id: deviceId,
     },
   },
 });

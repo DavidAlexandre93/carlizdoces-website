@@ -1,7 +1,7 @@
-import React from 'react'
-import { motion } from 'motion/react'
+import React from 'react';
+import { motion } from 'motion/react';
 
-const MotionDiv = motion.div
+const MotionDiv = motion.div;
 
 export default function HomeInsideCircus() {
   return (
@@ -84,5 +84,5 @@ export default function HomeInsideCircus() {
 
       <div className="floor" />
     </div>
-  )
+  );
 }

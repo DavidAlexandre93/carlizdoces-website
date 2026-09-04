@@ -1,33 +1,33 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { supabase, deviceId, isSupabaseConfigured } from '../supabaseClient'
-import FavoriteIcon from '../mui-icons/Favorite'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { supabase, deviceId, isSupabaseConfigured } from '../supabaseClient';
+import FavoriteIcon from '../mui-icons/Favorite';
 
 export default function LikeButton({ itemId, onStateChange, render }) {
-  const [liked, setLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const mountedRef = useRef(true)
-  const inFlightRef = useRef(false)
+  const mountedRef = useRef(true);
+  const inFlightRef = useRef(false);
 
-  const safeItemId = useMemo(() => String(itemId ?? '').trim(), [itemId])
-  const canRun = isSupabaseConfigured && safeItemId.length > 0 && String(deviceId ?? '').length > 0
+  const safeItemId = useMemo(() => String(itemId ?? '').trim(), [itemId]);
+  const canRun = isSupabaseConfigured && safeItemId.length > 0 && String(deviceId ?? '').length > 0;
 
   const safeSetState = useCallback((fn) => {
-    if (mountedRef.current) fn()
-  }, [])
+    if (mountedRef.current) fn();
+  }, []);
 
   const load = useCallback(async () => {
     if (!canRun) {
       safeSetState(() => {
-        setLoading(false)
-        setLiked(false)
-        setLikeCount(0)
-      })
-      return
+        setLoading(false);
+        setLiked(false);
+        setLikeCount(0);
+      });
+      return;
     }
 
-    safeSetState(() => setLoading(true))
+    safeSetState(() => setLoading(true));
 
     try {
       const [{ data, error }, { count, error: countError }] = await Promise.all([
@@ -41,83 +41,86 @@ export default function LikeButton({ itemId, onStateChange, render }) {
           .from('likes_anon')
           .select('*', { count: 'exact', head: true })
           .eq('item_id', safeItemId),
-      ])
+      ]);
 
-      if (error) throw error
-      if (countError) throw countError
+      if (error) throw error;
+      if (countError) throw countError;
 
       safeSetState(() => {
-        setLiked(Boolean(data))
-        setLikeCount(count ?? 0)
-      })
+        setLiked(Boolean(data));
+        setLikeCount(count ?? 0);
+      });
     } catch (err) {
-      console.error('LIKE LOAD ERROR:', err)
+      console.error('LIKE LOAD ERROR:', err);
     } finally {
-      safeSetState(() => setLoading(false))
+      safeSetState(() => setLoading(false));
     }
-  }, [canRun, safeItemId, safeSetState])
+  }, [canRun, safeItemId, safeSetState]);
 
   useEffect(() => {
-    mountedRef.current = true
-    load()
+    mountedRef.current = true;
+    load();
 
     return () => {
-      mountedRef.current = false
-    }
-  }, [load])
+      mountedRef.current = false;
+    };
+  }, [load]);
 
   const toggle = useCallback(async () => {
     if (!canRun) {
-      setLiked((prev) => !prev)
-      return
+      setLiked((prev) => !prev);
+      return;
     }
 
-    if (inFlightRef.current) return
-    inFlightRef.current = true
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
 
-    const previousLiked = liked
-    const nextLiked = !previousLiked
-    const previousCount = likeCount
-    const nextCount = Math.max(0, previousCount + (nextLiked ? 1 : -1))
+    const previousLiked = liked;
+    const nextLiked = !previousLiked;
+    const previousCount = likeCount;
+    const nextCount = Math.max(0, previousCount + (nextLiked ? 1 : -1));
 
-    setLiked(nextLiked)
-    setLikeCount(nextCount)
+    setLiked(nextLiked);
+    setLikeCount(nextCount);
 
     try {
       if (nextLiked) {
         const { error } = await supabase
           .from('likes_anon')
-          .upsert({ item_id: safeItemId, device_id: deviceId }, { onConflict: 'item_id,device_id' })
+          .upsert(
+            { item_id: safeItemId, device_id: deviceId },
+            { onConflict: 'item_id,device_id' }
+          );
 
-        if (error) throw error
+        if (error) throw error;
       } else {
         const { error } = await supabase
           .from('likes_anon')
           .delete()
           .eq('item_id', safeItemId)
-          .eq('device_id', deviceId)
+          .eq('device_id', deviceId);
 
-        if (error) throw error
+        if (error) throw error;
       }
 
-      await load()
+      await load();
     } catch (err) {
-      setLiked(previousLiked)
-      setLikeCount(previousCount)
-      console.error('LIKE ERROR:', err)
-      alert('Não foi possível atualizar seu coração agora.')
+      setLiked(previousLiked);
+      setLikeCount(previousCount);
+      console.error('LIKE ERROR:', err);
+      alert('Não foi possível atualizar seu coração agora.');
     } finally {
-      inFlightRef.current = false
+      inFlightRef.current = false;
     }
-  }, [canRun, liked, likeCount, load, safeItemId])
+  }, [canRun, liked, likeCount, load, safeItemId]);
 
   useEffect(() => {
     onStateChange?.({
       liked,
       likeCount,
       loading,
-    })
-  }, [liked, likeCount, loading, onStateChange])
+    });
+  }, [liked, likeCount, loading, onStateChange]);
 
   if (typeof render === 'function') {
     return render({
@@ -125,7 +128,7 @@ export default function LikeButton({ itemId, onStateChange, render }) {
       likeCount,
       loading,
       toggle,
-    })
+    });
   }
 
   return (
@@ -141,5 +144,5 @@ export default function LikeButton({ itemId, onStateChange, render }) {
         <FavoriteIcon sx={{ fontSize: 28 }} />
       </button>
     </div>
-  )
+  );
 }

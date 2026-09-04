@@ -1,13 +1,13 @@
-import { useCallback } from 'react'
-import Particles from 'react-tsparticles'
-import { loadFull } from 'tsparticles'
+import { useCallback } from 'react';
+import Particles from 'react-tsparticles';
+import { loadFull } from 'tsparticles';
 
 export default function ConfettiOverlay({ active }) {
   const init = useCallback(async (engine) => {
-    await loadFull(engine)
-  }, [])
+    await loadFull(engine);
+  }, []);
 
-  if (!active) return null
+  if (!active) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0">
@@ -39,5 +39,5 @@ export default function ConfettiOverlay({ active }) {
         }}
       />
     </div>
-  )
+  );
 }

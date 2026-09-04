@@ -44,9 +44,13 @@ function createClient() {
 
 async function createOpenAIRecommendation(brief, options = {}) {
   const client = options.client || createClient();
-  const moderationInput = [brief.eventType, brief.budget, ...brief.preferences, brief.notes].join(' ');
-  const moderation = await withSpan('openai.moderation', { 'gen_ai.operation.name': 'moderation' }, () =>
-    client.moderations.create({ model: 'omni-moderation-latest', input: moderationInput }),
+  const moderationInput = [brief.eventType, brief.budget, ...brief.preferences, brief.notes].join(
+    ' '
+  );
+  const moderation = await withSpan(
+    'openai.moderation',
+    { 'gen_ai.operation.name': 'moderation' },
+    () => client.moderations.create({ model: 'omni-moderation-latest', input: moderationInput })
   );
   if (moderation.results?.[0]?.flagged) {
     throw new AppError({
@@ -59,7 +63,10 @@ async function createOpenAIRecommendation(brief, options = {}) {
   const safeCatalog = catalog.map(({ id, name, tier, tags }) => ({ id, name, tier, tags }));
   const response = await withSpan(
     'openai.responses.create',
-    { 'gen_ai.operation.name': 'responses', 'gen_ai.request.model': process.env.OPENAI_MODEL || 'gpt-5' },
+    {
+      'gen_ai.operation.name': 'responses',
+      'gen_ai.request.model': process.env.OPENAI_MODEL || 'gpt-5',
+    },
     () =>
       client.responses.create({
         model: process.env.OPENAI_MODEL || 'gpt-5',
@@ -76,7 +83,7 @@ async function createOpenAIRecommendation(brief, options = {}) {
             schema: RECOMMENDATION_JSON_SCHEMA,
           },
         },
-      }),
+      })
   );
 
   const parsed = JSON.parse(response.output_text || '{}');

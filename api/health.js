@@ -39,6 +39,6 @@ module.exports = withRequestContext(async function handler(req, res, context) {
       uptimeSeconds: Math.floor((Date.now() - STARTED_AT) / 1000),
       ...(deep ? { dependencies, missingRequiredDependencies: missing } : {}),
     },
-    requestId,
+    requestId
   );
 });

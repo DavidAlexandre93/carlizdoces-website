@@ -1,7 +1,8 @@
 /* global module, process */
 const REQUIRED_FIELDS = ['project_id', 'private_key', 'client_email'];
 
-const normalizePrivateKey = (value) => (typeof value === 'string' ? value.replace(/\\n/g, '\n').trim() : '');
+const normalizePrivateKey = (value) =>
+  typeof value === 'string' ? value.replace(/\\n/g, '\n').trim() : '';
 
 function parseServiceAccountFromEnv() {
   const rawJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
@@ -19,7 +20,11 @@ function parseServiceAccountFromSeparatedEnv() {
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY);
   if (!projectId && !clientEmail && !privateKey) return null;
-  return { project_id: String(projectId || ''), client_email: String(clientEmail || ''), private_key: privateKey };
+  return {
+    project_id: String(projectId || ''),
+    client_email: String(clientEmail || ''),
+    private_key: privateKey,
+  };
 }
 
 function getFirebaseServiceAccount() {
@@ -29,7 +34,8 @@ function getFirebaseServiceAccount() {
     const value = credentials[fieldName];
     return typeof value !== 'string' || !value.trim();
   });
-  if (missingField) throw new Error(`Credencial Firebase incompleta: campo obrigatório ausente (${missingField}).`);
+  if (missingField)
+    throw new Error(`Credencial Firebase incompleta: campo obrigatório ausente (${missingField}).`);
   return credentials;
 }
 
