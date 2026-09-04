@@ -1,6 +1,19 @@
-import { supabase } from '../../../supabaseClient';
+import { isSupabaseConfigured, supabase } from '../../../supabaseClient';
 
 const STORE_LIKES_ITEM_ID = 'store';
+
+function createEmptyLikesSummary(productIds) {
+  return {
+    store: {
+      likes: 0,
+      likedByCurrentUser: false,
+    },
+    products: {
+      likesById: createNumberMap(productIds),
+      likedByCurrentUserById: createBooleanMap(productIds),
+    },
+  };
+}
 
 function createBooleanMap(ids) {
   return Object.fromEntries(ids.map((id) => [id, false]));
@@ -11,6 +24,10 @@ function createNumberMap(ids) {
 }
 
 export async function requestLikesSummary(currentDeviceId, productIds) {
+  if (!isSupabaseConfigured) {
+    return createEmptyLikesSummary(productIds);
+  }
+
   const itemIds = [STORE_LIKES_ITEM_ID, ...productIds];
 
   const { data: rows, error: rowsError } = await supabase

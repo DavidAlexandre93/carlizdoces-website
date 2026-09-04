@@ -625,11 +625,8 @@ export function HomePage({ skipIntroCurtain = false }) {
         );
       } catch {
         if (!isMounted) return;
-        setSnackbar({
-          open: true,
-          message: 'Não foi possível carregar os corações globais.',
-          severity: 'warning',
-        });
+        setFavoriteCounts({});
+        setFavoriteProductIds([]);
       }
     };
 
